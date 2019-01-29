@@ -1,0 +1,1252 @@
+MainMethod()
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+{CBP_Case_Number=, ADCVD_Case_Type=CVD, Lock_Record=No, Product=MH-0002, Test_Case_Name=Create_Adcvd_Case, Record_Type=Self-Initiate, Active=TRUE, Commodity=Textiles, Product_Short_Name=MH-02, Test_Case_Tag=TC_TAG_001, Country=Spain, Id=1.0, Test_Case_Description=Create AD/CVD Case, ADCVD_Case=A-}
+{Office=III, Initiation_Concurrence_Due_to_DAS=11/6/2019, Actual_Initiation_Concurrence_to_DAS=11/3/2018, Lock_Record=Yes, Product=MH-0002, Record_Type=Self-Initiate, Petition_Outcome=Initiated from Petition, Commodity=Minerals, Litigation_Resolved=Yes, Initiation_Issues_Due_to_DAS=11/4/2018, Next_Office_Deadline=11/10/2023, Next_Announcement_Date=11/5/2018, Test_Case_Tag=TC_TAG_002, CBP_Case_Number=, Status=In Progress, Next_Major_Deadline=11/9/2022, ADCVD_Case_Type=AD ME, Litigation=No, Initiation_Extension=8, Test_Case_Name=Create_And_Validate_Petition, Actual_Initiation_Signature=11/1/2019, Lotus_Notes_History_Data=history test, Lotus_Notes_Litigation_ID=11.0, Active=TRUE, Product_Short_Name=MH-02, Actual_Initiation_Issues_To_DAS=10/31/2018, Country=Spain, Next_Due_to_DAS_Deadline=11/7/2020, Petition_Filed=11/5/2018, Id=1.0, Calculated_Initiation_Signature=11/8/2021, Test_Case_Description=Create petition and validate calculated dates}
+{Active=TRUE, Test_Case_Tag=TC_TAG_003, Test_Case_Name=Create_And_Validate_Investigation, Record_Type=CVD, Id=1.0, Test_Case_Description=Create an investigation and validate calculated dates}
+{Active=TRUE, Test_Case_Tag=TC_TAG_004, Test_Case_Name=Create_Order, Id=1.0, Test_Case_Description=Create New Order}
+{FR_Published_Date=, Preliminary_Determination=, Decision_On_How_To_Proceed=, Request_Filed_Date=, Test_Case_Name=Create_Segment_Administrative_Review, Application_Accepted_Date=, Actual_Date_Of_Decision_How_To_Proceed=, Active=TRUE, Test_Case_Tag=TC_TAG_005, Id=1.0, Calculated_Initiation_Signature=, Test_Case_Description=Create and validate 'Administrative Review' segment, Segment_Type=Administrative Review, Final_Date_Of_Anniversary_Month=11/29/2018, Type_Of_Scope_Ruling=}
+{FR_Published_Date=, Preliminary_Determination=Yes, Decision_On_How_To_Proceed=, Request_Filed_Date=11/29/2018, Test_Case_Name=Create_Segment_Anti_Circumvention_Review, Application_Accepted_Date=11/29/2018, Actual_Date_Of_Decision_How_To_Proceed=, Active=TRUE, Test_Case_Tag=TC_TAG_006, Id=2.0, Calculated_Initiation_Signature=, Test_Case_Description=Create and validate 'Anti-Circumvention Review' segment, Segment_Type=Anti-Circumvention Review, Final_Date_Of_Anniversary_Month=, Type_Of_Scope_Ruling=}
+{FR_Published_Date=, Preliminary_Determination=Yes, Decision_On_How_To_Proceed=, Request_Filed_Date=11/29/2018, Test_Case_Name=Create_Segment_Changed_Circumstances_Review, Application_Accepted_Date=, Actual_Date_Of_Decision_How_To_Proceed=, Active=TRUE, Test_Case_Tag=TC_TAG_007, Id=3.0, Calculated_Initiation_Signature=, Test_Case_Description=Create and validate 'Changed Circumstances Review' segment, Segment_Type=Changed Circumstances Review, Final_Date_Of_Anniversary_Month=, Type_Of_Scope_Ruling=}
+{FR_Published_Date=, Preliminary_Determination=, Decision_On_How_To_Proceed=, Request_Filed_Date=, Test_Case_Name=Create_Segment_Expedited_Review, Application_Accepted_Date=, Actual_Date_Of_Decision_How_To_Proceed=, Active=TRUE, Test_Case_Tag=TC_TAG_008, Id=4.0, Calculated_Initiation_Signature=11/29/2018, Test_Case_Description=Create and validate 'Expedited Review' segment, Segment_Type=Expedited Review, Final_Date_Of_Anniversary_Month=, Type_Of_Scope_Ruling=}
+{FR_Published_Date=, Preliminary_Determination=, Decision_On_How_To_Proceed=, Request_Filed_Date=, Test_Case_Name=Create_Segment_New_Shipper_Review, Application_Accepted_Date=, Actual_Date_Of_Decision_How_To_Proceed=, Active=TRUE, Test_Case_Tag=TC_TAG_009, Id=5.0, Calculated_Initiation_Signature=11/29/2018, Test_Case_Description=Create and validate 'New Shipper Review' segment, Segment_Type=New Shipper Review, Final_Date_Of_Anniversary_Month=, Type_Of_Scope_Ruling=}
+{FR_Published_Date=, Preliminary_Determination=, Decision_On_How_To_Proceed=Formal, Request_Filed_Date=11/29/2018, Test_Case_Name=Create_Segment_Scope_Inquiry, Application_Accepted_Date=, Actual_Date_Of_Decision_How_To_Proceed=12/4/2018, Active=TRUE, Test_Case_Tag=TC_TAG_010, Id=6.0, Calculated_Initiation_Signature=, Test_Case_Description=Create and validate 'Scope Inquiry' segment, Segment_Type=Scope Inquiry, Final_Date_Of_Anniversary_Month=, Type_Of_Scope_Ruling=K (1)}
+{FR_Published_Date=12/4/2018, Preliminary_Determination=, Decision_On_How_To_Proceed=, Request_Filed_Date=, Test_Case_Name=Create_Segment_Sunset_Review, Application_Accepted_Date=, Actual_Date_Of_Decision_How_To_Proceed=, Active=TRUE, Test_Case_Tag=TC_TAG_011, Id=7.0, Calculated_Initiation_Signature=, Test_Case_Description=Create and validate 'Sunset Review' segment, Segment_Type=Sunset Review, Final_Date_Of_Anniversary_Month=, Type_Of_Scope_Ruling=}
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+[TestNGContentHandler] [WARN] It is strongly recommended to add "<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >" at the top of your file, otherwise TestNG may fail or not work as expected.
+Executing Before class
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+{locator_type=xpath, field_tag=userName, locator_value=//input[@id='username'], field_name=user name}
+{locator_type=xpath, field_tag=password, locator_value=//input[@id='password'], field_name=password}
+{locator_type=xpath, field_tag=loginTo, locator_value=//input[@id='Login'], field_name=login button}
+{locator_type=xpath, field_tag=organizationsLink, locator_value=//a[contains(text(), 'Organizations')], field_name=Organizations Tab}
+{locator_type=xpath, field_tag=fcfView, locator_value=//select[@name='fcf'], field_name=view}
+{locator_type=xpath, field_tag=NewToMarketApp, locator_value=//span[contains(text(), 'New To Market App')], field_name=New To Market App}
+{locator_type=xpath, field_tag=testElement, locator_value=//a[contains(text(), '010121')], field_name=testElement}
+{locator_type=xpath, field_tag=copyright, locator_value=//span[contains(text(), 'Copyright')], field_name=Copyright}
+{locator_type=xpath, description=, field_tag=homeObjectLink, locator_value=//span[contains(text(), 'Home')], field_name=Home}
+{locator_type=xpath, field_tag=chaterObjectLink, locator_value=//span[contains(text(), 'Chater')], field_name=Chater}
+{locator_type=xpath, field_tag=adcvdCasesObjectLink, locator_value=//nav/ul/li/a/span[contains(text(), 'ADCVD Cases')], field_name=ADCVD Cases}
+{locator_type=xpath, field_tag=petitionsObjectLink, locator_value=//nav/ul/li/a/span[contains(text(), 'Petitions')], field_name=Petitions}
+{locator_type=xpath, field_tag=investigationsObjectLink, locator_value=//span[contains(text(), 'Investigations')], field_name=Investigations}
+{locator_type=xpath, field_tag=adcvdOrdersObjectLink, locator_value=//span[contains(text(), 'ADCVD Orders')], field_name=ADCVD Orders}
+{locator_type=xpath, field_tag=segmentsOrdersObjectLink, locator_value=//span[contains(text(), 'Segments')], field_name=Segments}
+{locator_type=xpath, description=, field_tag=newCaseLink, locator_value=//div[contains(text(), 'New')], field_name=New Case}
+{locator_type=xpath, field_tag=nextButton, locator_value=//button/span[contains(text(), 'Next')], field_name=next button}
+{locator_type=xpath, description=, field_tag=recTypeFiled, locator_value=//span[contains(text(), 'Filed')]/ancestor::label[1]//input[1], field_name=radio button Filed}
+{locator_type=xpath, field_tag=recTypeSelfInitiated, locator_value=//span[contains(text(), 'Self-Initiated')]/ancestor::label[1]//input[1], field_name=radio button SelfInitiate}
+{locator_type=xpath, field_tag=inputadcvdCase, locator_value=//span[contains(text(), 'ADCVD Case')]/ancestor::label[1]/following-sibling::input[1], field_name=Case Name}
+{locator_type=xpath, field_tag=inputCbpCaseNumber, locator_value=//span[contains(text(), 'CBP Case Number')]/ancestor::label[1]/following-sibling::input[1], field_name=CBP Case Number}
+{locator_type=xpath, field_tag=inputProduct, locator_value=//span[contains(text(), 'Product')]/ancestor::label[1]/following-sibling::input[1], field_name=Product}
+{locator_type=xpath, field_tag=inputProductShortName, locator_value=//span[contains(text(), 'Product Short Name')]/ancestor::label[1]/following-sibling::input[1], field_name=Product Short Name}
+{locator_type=xpath, field_tag=selectCommodity, locator_value=//span[contains(text(), 'Commodity')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Commodity}
+{locator_type=xpath, field_tag=selectCommodityItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Commodity Item}
+{locator_type=xpath, field_tag=selectCaseType, locator_value=//span[contains(text(), 'ADCVD Case Type')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=ADCVD Case Type}
+{locator_type=xpath, field_tag=selectCaseTypeItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=ADCVD Case Type Item}
+{locator_type=xpath, field_tag=selectCountry, locator_value=//span[contains(text(), 'Country')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Country}
+{locator_type=xpath, description=, field_tag=selectCountryItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Country Item}
+{locator_type=xpath, field_tag=checkRecordLock, locator_value=//span[contains(text(), 'Record Locked')]/ancestor::label[1]/following-sibling::input[1], field_name=Record Locked}
+{locator_type=xpath, field_tag=saveCaseButton, locator_value=//div[@class='modal-footer slds-modal__footer']/div/button/span[(contains(text(), 'Save')) and not (contains(text(), 'New'))], field_name=Save Case button}
+{locator_type=xpath, field_tag=newCreateError, locator_value=//span[contains(text(), 'Review the errors on this page.')], field_name=review the error on this page}
+{locator_type=xpath, field_tag=newPetitionButton, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//ul/li/a/div[text()='New'], field_name=new petition button}
+{locator_type=xpath, field_tag=inputPetitionDate, locator_value=//span[contains(text(), '~val~')]/ancestor::label[1]/following-sibling::div[1]/input, field_name=Petition date}
+{locator_type=xpath, field_tag=inputPetitionText, locator_value=//span[text() = '~val~']/ancestor::label[1]/following-sibling::input[1], field_name=Petition Text box}
+{locator_type=xpath, field_tag=inputPetitionDropDown, locator_value=//span[contains(text(), '~val~')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Petition Text drop down}
+{locator_type=xpath, field_tag=inputPetitionDropDownItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Petition Text drop down Item}
+{locator_type=xpath, field_tag=inputlnHistoryData, locator_value=//span[text() = 'Lotus Notes History Data']/ancestor::label[1]/following-sibling::textarea[1], field_name=Lotus note history data}
+{locator_type=xpath, field_tag=textCaseHomePage, locator_value=//li/span[text() = 'ADCVD Case']/ancestor::div[1], field_name=Case home page}
+{locator_type=xpath, field_tag=linkNewPetition, locator_value=//th[contains(text(), 'Petition Number')]//ancestor::thead[1]/following-sibling::tbody[1]/tr/th//a, field_name=New Petition}
+{locator_type=xpath, field_tag=genericPetitionDate, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span[contains(text(), 'Path Key Fields') or contains(text(), 'Task Completion')]//ancestor::div[1]//span[contains(text(), '~val~')]/ancestor::div[1]/following-sibling::div[1]/span/span, field_name=Petition dates to validate}
+{locator_type=xpath, field_tag=linkInvestigation, locator_value=//div/ul//li//span[contains(text(), 'Investigations')], field_name=Investigations link}
+{locator_type=xpath, field_tag=newInvestigationButton, locator_value=//span[contains(text(), 'Investigations')]/ancestor::header[1]/following-sibling::div[1]//a/div, field_name=Investigations button}
+{locator_type=xpath, field_tag=recordTypeInvestigation, locator_value=//label/div//span[contains(text(), 'CVD')], field_name=Investigations record type}
+{locator_type=xpath, field_tag=genericInvestigationField, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span//ancestor::div[1]//span[text() = '~val~']/ancestor::div[1]/following-sibling::div[1]/span/span, field_name=Generic investigation field}
+{locator_type=xpath, field_tag=linkNewCreatedInvestigation, locator_value=//th[contains(text(), 'Investigation Outcome')]/ancestor::table[1]//tbody[1]/tr/th//a[contains(text(), '--I-')], field_name=New created Investigation link}
+{locator_type=xpath, field_tag=nextButtonInvestigation, locator_value=//span[contains(text(), 'Cancel')]/ancestor::button//following-sibling::button[1]/span[contains(text(), 'Next')], field_name=Next button investigation}
+{locator_type=xpath, field_tag=linkAdcvdOrder, locator_value=//li/a/span[contains(text(), 'ADCVD Orders')], field_name=link ADCVD Order}
+{locator_type=xpath, field_tag=buttonNewOrder, locator_value=//li/a/div[contains(text(), 'New')], field_name=New order button}
+{locator_type=xpath, field_tag=buttonCancelOrder, locator_value=//div[@class='modal-footer slds-modal__footer']/div/button/span[contains(text(), 'Cancel')], field_name=cancel order button}
+{locator_type=xpath, field_tag=inputInvestigation, locator_value=//span[contains(text(), 'Investigation')]/ancestor::label[1]/following-sibling::div//input, field_name=Parent Investigtion}
+{locator_type=xpath, field_tag=iInvestigationId, locator_value=//ul/li/a/div/div[contains(text(), '~val~')], field_name=Parent Investigtion Id}
+{locator_type=xpath, field_tag=linkSegments, locator_value=//nav/ul/li/a/span[contains(text(), 'Segments')], field_name=Segments tab}
+{locator_type=xpath, field_tag=buttonNewSegment, locator_value=//ul/li/a/div[text()='New'], field_name=Button new segment}
+{locator_type=xpath, field_tag=radioSegmentType, locator_value=//span[contains(text(), '~val~')]/ancestor::label[1]/div[1], field_name=Radio button segment type}
+{locator_type=xpath, field_tag=nextButtonSegment, locator_value=//span[contains(text(), 'Cancel')]/ancestor::button//following-sibling::button[1]/span[contains(text(), 'Next')], field_name=Next button segment}
+{locator_type=xpath, field_tag=buttonSaveSegment, locator_value=//div[@class='modal-footer slds-modal__footer']/div/button/span[(contains(text(), 'Save')) and not (contains(text(), 'New'))], field_name=Save segment button}
+{locator_type=xpath, field_tag=newSegmentCreated, locator_value=//tbody[1]/tr/th//a[contains(text(), 'S-')], field_name=Created new segment}
+{locator_type=xpath, field_tag=genericSegmentField, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span//ancestor::div[1]//span[text() = '~val~']/ancestor::div[1]/following-sibling::div[1]/span/span, field_name=Generic investigation field}
+{locator_type=xpath, field_tag=segmentType, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span[contains(text(), 'Record Type')]//following-sibling::div/div/div/div/span[contains(text(), '~val~')], field_name=Segment type}
+{locator_type=xpath, field_tag=newCreatedOrder, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span//ancestor::div[1]//span[text() = 'ADCVD Order']/ancestor::div[1]/following-sibling::div[1]/span/span, field_name=Newly created Order}
+{locator_type=xpath, field_tag=inputOrder, locator_value=//span[contains(text(), 'ADCVD Order')]/ancestor::label[1]/following-sibling::div//input, field_name=Parent Order}
+{locator_type=xpath, field_tag=iOrderId, locator_value=//ul/li/a/div/div[contains(text(), '~val~')], field_name=Parent Order Id}
+{locator_type=xpath, field_tag=newCreatedSegment, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span//ancestor::div[1]//span[text() = 'Segment Number']/ancestor::div[1]/following-sibling::div[1]/span/span, field_name=Newly created Segment}
+{locator_type=xpath, field_tag=inputSegmentDate, locator_value=//span[text() = '~val~']/ancestor::label[1]/following-sibling::div/input[1], field_name=segment date}
+{locator_type=xpath, field_tag=buttonCancelSegment, locator_value=//div[@class='modal-footer slds-modal__footer']/div/button/span[contains(text(), 'Cancel')], field_name=cancel segment button}
+{locator_type=xpath, field_tag=inputSegmentText, locator_value=//span[text() = '~val~']/ancestor::label[1]/following-sibling::input[1], field_name=segment text}
+{locator_type=xpath, field_tag=preliminaryDetermination, locator_value=//span[contains(text(), 'Preliminary Determination')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Preliminary Determination}
+{locator_type=xpath, field_tag=preliminaryDeterminationItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Preliminary Determination Item}
+{locator_type=xpath, field_tag=decisiononHowtoProceed, locator_value=//span[contains(text(), 'Decision on How to Proceed')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Decision on How to Proceed}
+{locator_type=xpath, field_tag=decisiononHowtoProceedItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Decision on How to Proceed item}
+{locator_type=xpath, field_tag=scopeRollingType, locator_value=//span[contains(text(), 'Type of Scope Ruling')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Scope Rolling Type}
+{locator_type=xpath, field_tag=scopeRollingTypeItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Scope Rolling Type item}
+{locator_type=xpath, field_tag=objectDetails, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span[text() = 'Details'], field_name=Details}
+{locator_type=xpath, field_tag=objectFRs, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span[text() = 'FRs & Alignments'], field_name=FRs & Alignments}
+{locator_type=xpath, field_tag=newFRButton, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//ul/li/a/div[text()='New'], field_name=New FRs button}
+{locator_type=xpath, field_tag=FederalRegisterType, locator_value=//span[contains(text(), 'Type')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, field_name=Federal Register Type}
+{locator_type=xpath, field_tag=FederalRegisterTypeItem, locator_value=//ul/li/a[contains(text(), '~val~')], field_name=Federal Register Type Item}
+{locator_type=xpath, field_tag=inputFRDate, locator_value=//span[text() = '~val~']/ancestor::label[1]/following-sibling::div/input[1], field_name=Federal Registration date}
+{locator_type=xpath, field_tag=inputFRText, locator_value=//span[text() = '~val~']/ancestor::label[1]/following-sibling::input[1], field_name=segment text}
+{locator_type=xpath, field_tag=sunSetReviewDate, locator_value=//label[text() = '~val~']/ancestor::div[1]/following-sibling::div[1]/span, field_name=sunset review date}
+{locator_type=xpath, field_tag=EditButton, locator_value=//p[text() = 'Segment']/ancestor::div[1]/following-sibling::div[1]//input[@value = 'Edit'], field_name=Edit Button}
+{locator_type=xpath, field_tag=selectOnSunSet, locator_value=//label[text() = '~val~']/ancestor::div[1]/following-sibling::div[1]/select, field_name=select value on sunset review}
+{locator_type=xpath, field_tag=SaveButton, locator_value=//p[text() = 'Segment']/ancestor::div[1]/following-sibling::div[1]//input[@value = 'Save'], field_name=Save Button}
+{locator_type=xpath, field_tag=frameOnSunsetReview, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//iframe, field_name=fram on sunset review}
+{locator_type=xpath, field_tag=sunsetReviewType, locator_value=//legend[contains(text(),  '~val~')], field_name=type of sunset review}
+{locator_type=xpath, field_tag=genericSegmentDate, locator_value=//div[@class='windowViewMode-normal oneContent active lafPageHost']//span[contains(text(), 'Path Key Fields') or contains(text(), 'Task Completion')]//ancestor::div[1]//span[contains(text(), '~val~')]/ancestor::div[1]/following-sibling::div[1]/span/span, field_name=generic segment dates to validate}
+beforeMethod()
+beforeMethod()
+Create_Adcvd_Case
+Create_Adcvd_Case
+start Test
+Creating Process...
+Creating Process...
+"chromedriver.exe","12384","Console","1","14,104 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:16","N/A"
+12384
+Creating Process...
+"chrome.exe","18492","Console","1","94,552 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:02","New Tab - Google Chrome"
+"chrome.exe","17620","Console","1","8,048 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","14120","Console","1","8,744 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","5952","Console","1","146,312 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:01","N/A"
+"chrome.exe","4412","Console","1","80,712 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:01","N/A"
+"chrome.exe","15824","Console","1","21,404 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","6772","Console","1","30,648 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+highlight Home
+Click on element ADCVD Cases
+Click on element New Case
+Click on element radio button SelfInitiate
+Click on element next button
+Enter text for Case Name
+Click on element Commodity
+Click on element Commodity Item
+Click on element ADCVD Case Type
+Click on element ADCVD Case Type Item
+Enter text for CBP Case Number
+Enter text for Product
+Enter text for Product Short Name
+Click on element Country
+Click on element Country Item
+Click on element Save Case button
+get the text of the element Case home page
+highlight Case home page
+afterMethod()
+Create_Adcvd_Case
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Petition
+Create_And_Validate_Petition
+Click on element new petition button
+Click on element radio button SelfInitiate
+Click on element next button
+Enter text for Petition date
+Enter text for Petition Text box
+Click on element Petition Text box
+Click on element Save Case button
+get the text of the element New Petition
+highlight New Petition
+Click on element New Petition
+Scroll to element Petition dates to validate
+get the text of the element Petition dates to validate
+11/5/2018
+get the text of the element Petition dates to validate
+
+get the text of the element Petition dates to validate
+
+get the text of the element Petition dates to validate
+
+get the text of the element Petition dates to validate
+
+get the text of the element Petition dates to validate
+8
+get the text of the element Petition dates to validate
+
+get the text of the element Petition dates to validate
+Calculated Initiation Signature -- 12/3/2018 Versus 12/3/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Next Major Deadline -- 12/3/2018 Versus 12/3/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Initiation Concurrence Due to DAS -- 11/30/2018 Versus 11/30/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Initiation Issues Due to DAS -- 11/28/2018 Versus 11/28/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Next Due to DAS Deadline -- 11/28/2018 Versus 11/28/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Next Office Deadline -- 11/28/2018 Versus 11/28/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Next Announcement Date -- Empty Versus Empty
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+afterMethod()
+Create_And_Validate_Petition
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Investigation
+Create_And_Validate_Investigation
+Click on element Investigations link
+Click on element Investigations button
+Click on element Next button investigation
+Click on element Save Case button
+get the text of the element New created Investigation link
+highlight New created Investigation link
+Click on element New created Investigation link
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+get the text of the element Generic investigation field
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated ITC Prelim Determination -- 12/28/2018 Versus 12/28/2018
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Calculated Prelim Extension Request File -- 3/28/2019 Versus 3/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Postponement of PrelimDeterFR -- 4/2/2019 Versus 4/2/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 4/22/2019 Versus 4/22/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 4/1/2019 Versus 4/1/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 4/8/2019 Versus 4/8/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 4/15/2019 Versus 4/15/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 7/8/2019 Versus 7/8/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 6/17/2019 Versus 6/17/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Est ITC Notification to DOC of Final Det -- 8/22/2019 Versus 8/22/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Estimated Order FR Published -- 8/29/2019 Versus 8/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Order FR Signature -- 8/26/2019 Versus 8/26/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 6/21/2019 Versus 6/21/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 6/28/2019 Versus 6/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Announcement Date -- 7/9/2019 Versus 7/9/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Next Announcement Date -- 4/23/2019 Versus 4/23/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Due to DAS Deadline -- 4/2/2019 Versus 4/2/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Major Deadline -- 4/22/2019 Versus 4/22/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Office Deadline -- 3/28/2019 Versus 3/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_And_Validate_Investigation
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Investigation
+Create_Order
+Click on element link ADCVD Order
+Click on element New order button
+Click on element Parent Investigtion
+Click on element Parent Investigtion Id
+Click on element Save Case button
+get the text of the element Newly created Order
+Scroll to element Newly created Order
+highlight Newly created Order
+afterMethod()
+Create_Order
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 1
+Create_Segment_Administrative_Review
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Enter text for segment date
+Click on element segment text
+Click on element Save segment button
+get the text of the element Newly created Segment
+highlight Segment type
+get the text of the element Generic investigation field
+11/29/2018
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 8/1/2019 Versus 8/1/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 7/11/2019 Versus 7/11/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 7/18/2019 Versus 7/18/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 7/25/2019 Versus 7/25/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Preliminary Announcement Date -- 8/2/2019 Versus 8/2/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 11/29/2019 Versus 11/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 11/8/2019 Versus 11/8/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 11/14/2019 Versus 11/14/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 11/21/2019 Versus 11/21/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Announcement Date -- 12/2/2019 Versus 12/2/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Major Deadline -- 8/1/2019 Versus 8/1/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Due to DAS Deadline -- 7/18/2019 Versus 7/18/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+7/11/2019
+Next Office Deadline -- 7/11/2019 Versus 7/11/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+8/2/2019
+Next Announcement Date -- 8/2/2019 Versus 8/2/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_Segment_Administrative_Review
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 2
+Create_Segment_Anti_Circumvention_Review
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Enter text for segment date
+Click on element segment text
+Enter text for segment date
+Click on element segment text
+Click on element Preliminary Determination
+Click on element Preliminary Determination Item
+Click on element Save segment button
+get the text of the element Newly created Segment
+highlight Segment type
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+11/29/2018
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Initiation Signature -- 1/14/2019 Versus 1/14/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 11/12/2019 Versus 11/12/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Final Announcement Date -- 11/13/2019 Versus 11/13/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Initiation Issues Due to DAS -- 12/28/2018 Versus 12/28/2018
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Initiation Concurrence Due to DAS -- 1/7/2019 Versus 1/7/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 5/14/2019 Versus 5/14/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 4/23/2019 Versus 4/23/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 4/30/2019 Versus 4/30/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 5/7/2019 Versus 5/7/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 10/22/2019 Versus 10/22/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 10/28/2019 Versus 10/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 11/4/2019 Versus 11/4/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Petition dates to validate
+Next Major Deadline -- 1/14/2019 Versus 1/14/2019
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Next Due to DAS Deadline -- 12/28/2018 Versus 12/28/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Petition dates to validate
+Next Office Deadline -- 12/28/2018 Versus 12/28/2018
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Generic investigation field
+5/15/2019
+Next Announcement Date -- 5/15/2019 Versus 5/15/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_Segment_Anti_Circumvention_Review
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 3
+Create_Segment_Changed_Circumstances_Review
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Enter text for segment date
+Click on element segment text
+Click on element Preliminary Determination
+Click on element Preliminary Determination Item
+Click on element segment text
+Click on element Save segment button
+get the text of the element Newly created Segment
+highlight Segment type
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+11/29/2018
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+0
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Initiation Signature -- 1/14/2019 Versus 1/14/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 7/15/2019 Versus 7/15/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 6/24/2019 Versus 6/24/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 6/28/2019 Versus 6/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 7/8/2019 Versus 7/8/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 10/11/2019 Versus 10/11/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 9/27/2019 Versus 9/27/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 10/4/2019 Versus 10/4/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 9/20/2019 Versus 9/20/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Announcement Date -- 10/15/2019 Versus 10/15/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Petition dates to validate
+Next Major Deadline -- 1/14/2019 Versus 1/14/2019
+highlight Petition dates to validate
+unhighlight Petition dates to validate
+get the text of the element Generic investigation field
+Next Announcement Date -- 7/16/2019 Versus 7/16/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_Segment_Changed_Circumstances_Review
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 4
+Create_Segment_Expedited_Review
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Enter text for segment date
+Click on element segment text
+Click on element Save segment button
+get the text of the element Newly created Segment
+highlight Segment type
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+11/29/2018
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 5/28/2019 Versus 5/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 5/7/2019 Versus 5/7/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 5/13/2019 Versus 5/13/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 5/20/2019 Versus 5/20/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Preliminary Announcement Date -- 5/29/2019 Versus 5/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 8/26/2019 Versus 8/26/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 8/5/2019 Versus 8/5/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 8/12/2019 Versus 8/12/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 8/19/2019 Versus 8/19/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Announcement Date -- 8/27/2019 Versus 8/27/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Major Deadline -- 5/28/2019 Versus 5/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Due to DAS Deadline -- 5/13/2019 Versus 5/13/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+5/7/2019
+Next Office Deadline -- 5/7/2019 Versus 5/7/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Announcement Date -- 5/29/2019 Versus 5/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_Segment_Expedited_Review
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 5
+Create_Segment_New_Shipper_Review
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Enter text for segment date
+Click on element segment text
+Click on element Save segment button
+get the text of the element Newly created Segment
+highlight Segment type
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+11/29/2018
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 5/28/2019 Versus 5/28/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 5/7/2019 Versus 5/7/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 5/13/2019 Versus 5/13/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 5/20/2019 Versus 5/20/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 8/26/2019 Versus 8/26/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 8/12/2019 Versus 8/12/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 8/19/2019 Versus 8/19/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 8/5/2019 Versus 8/5/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Final Announcement Date -- 8/27/2019 Versus 8/27/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Announcement Date -- 5/29/2019 Versus 5/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_Segment_New_Shipper_Review
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 6
+Create_Segment_Scope_Inquiry
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Enter text for segment date
+Click on element segment text
+Enter text for segment date
+Click on element segment text
+Click on element Decision on How to Proceed
+Click on element Decision on How to Proceed item
+Click on element Scope Rolling Type
+Click on element Scope Rolling Type item
+Click on element segment text
+Click on element Save segment button
+get the text of the element Newly created Segment
+highlight Segment type
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+0
+get the text of the element Generic investigation field
+Formal
+get the text of the element Generic investigation field
+12/4/2018
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+get the text of the element Generic investigation field
+
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Preliminary Signature -- 2/19/2019 Versus 2/19/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Team Meeting Deadline -- 1/29/2019 Versus 1/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Issues Due to DAS -- 2/4/2019 Versus 2/4/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Prelim Concurrence Due to DAS -- 2/11/2019 Versus 2/11/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Calculated Final Signature -- 4/3/2019 Versus 4/3/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Team Meeting Deadline -- 3/13/2019 Versus 3/13/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Issues Due to DAS -- 3/20/2019 Versus 3/20/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Final Concurrence Due to DAS -- 3/27/2019 Versus 3/27/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+Scroll to element Generic investigation field
+get the text of the element Generic investigation field
+Next Major Deadline -- 2/19/2019 Versus 2/19/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Due to DAS Deadline -- 2/4/2019 Versus 2/4/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Office Deadline -- 1/29/2019 Versus 1/29/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+get the text of the element Generic investigation field
+Next Announcement Date -- 2/20/2019 Versus 2/20/2019
+highlight Generic investigation field
+unhighlight Generic investigation field
+afterMethod()
+Create_Segment_Scope_Inquiry
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+beforeMethod()
+beforeMethod()
+Create_And_Validate_Segment - 7
+Create_Segment_Sunset_Review
+Click on element Segments tab
+Click on element Button new segment
+Click on element Radio button segment type
+Click on element Next button segment
+Scroll to element Parent Order
+Click on element Parent Order
+Click on element Parent Order Id
+Click on element Save segment button
+highlight Segment type
+Click on element FRs & Alignments
+Click on element New FRs button
+Enter text for Federal Registration date
+Enter text for segment text
+Click on element Federal Register Type
+Click on element Federal Register Type Item
+Enter text for segment text
+Enter text for segment text
+Click on element Save segment button
+Click on element Details
+switch to frame  fram on sunset review
+Click on element Edit Button
+select Yes from element select value on sunset review
+select No from element select value on sunset review
+Click on element Save Button
+switch to frame  fram on sunset review
+highlight type of sunset review
+get the text of the element sunset review date
+Notice of Intent to Participate -- 12/19/2018 Versus 12/19/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Notify Cluster Coordinator No Interest -- 12/20/2018 Versus 12/20/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+
+Substantive Response Due For All Parties -- 1/3/2019 Versus 1/3/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Inform Cluster Coordinator if No Respons -- 1/4/2019 Versus 1/4/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Inadequate Domestic Response note to ITC -- 1/14/2019 Versus 1/14/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Calculated Final Signature -- 3/4/2019 Versus 3/4/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Update ACE (Customs Module) -- 3/11/2019 Versus 3/11/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Notify ITC of No Domestic Interest -- 12/24/2018 Versus 12/24/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Issues Due to DAS -- 2/15/2019 Versus 2/15/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Concurrence Due to DAS -- 2/25/2019 Versus 2/25/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Issue Liquidation/Revocation Instruction -- 3/26/2019 Versus 3/26/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Major Deadline -- 3/4/2019 Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Due to DAS Deadline -- Empty Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Office Deadline -- Empty Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+switch to frame  fram on sunset review
+Click on element Edit Button
+select Yes from element select value on sunset review
+Click on element Save Button
+highlight type of sunset review
+get the text of the element sunset review date
+Notice of Intent to Participate -- 12/19/2018 Versus 12/19/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Notify Cluster Coordinator No Interest -- 12/20/2018 Versus 12/20/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+
+Substantive Response Due For All Parties -- 1/3/2019 Versus 1/3/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Inform Cluster Coordinator if No Respons -- 1/4/2019 Versus 1/4/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Calculated Final Signature -- 4/3/2019 Versus 4/3/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Issues Due to DAS -- 3/20/2019 Versus 3/20/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Concurrence Due to DAS -- 3/27/2019 Versus 3/27/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Announcement Date -- 4/4/2019 Versus 4/4/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Memorandum on Adequacy Determination -- 3/25/2019 Versus 3/25/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Rebuttal Comments Due -- 1/8/2019 Versus 1/8/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Comments on Adequacy Determination Filed -- 2/12/2019 Versus 2/12/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Major Deadline -- 4/3/2019 Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Due to DAS Deadline -- Empty Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Office Deadline -- Empty Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+switch to frame  fram on sunset review
+Click on element Edit Button
+select Yes from element select value on sunset review
+select Yes from element select value on sunset review
+Click on element Save Button
+highlight type of sunset review
+get the text of the element sunset review date
+Notice of Intent to Participate -- 12/19/2018 Versus 12/19/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Notify Cluster Coordinator No Interest -- 12/20/2018 Versus 12/20/2018
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+
+Substantive Response Due For All Parties -- 1/3/2019 Versus 1/3/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Inform Cluster Coordinator if No Respons -- 1/4/2019 Versus 1/4/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Calculated Final Signature -- 8/1/2019 Versus 8/1/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Issues Due to DAS -- 7/18/2019 Versus 7/18/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Concurrence Due to DAS -- 7/25/2019 Versus 7/25/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Final Team Meeting Deadline -- 7/11/2019 Versus 7/11/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Adequacy Determination & Letter to ITC -- 1/23/2019 Versus 1/23/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Calculated Preliminary Signature -- 3/25/2019 Versus 3/25/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Prelim Issues Due to DAS -- 3/11/2019 Versus 3/11/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Prelim Concurrence Due to DAS -- 3/18/2019 Versus 3/18/2019
+highlight sunset review date
+unhighlight sunset review date
+get the text of the element sunset review date
+Prelim Team Meeting Deadline -- 3/4/2019 Versus 3/4/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element sunset review date
+get the text of the element sunset review date
+Rebuttal Comments Due -- 1/8/2019 Versus 1/8/2019
+highlight sunset review date
+unhighlight sunset review date
+Scroll to element generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Major Deadline -- 3/25/2019 Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Due to DAS Deadline -- 3/11/2019 Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+get the text of the element generic segment dates to validate
+Next Office Deadline -- 3/4/2019 Versus Empty
+highlight generic segment dates to validate
+unhighlight generic segment dates to validate
+switch to frame  fram on sunset review
+afterMethod()
+Create_Segment_Sunset_Review
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+Executing After class
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ADCVD_SCRIPT\input_data
+New Browser[78]
+
+===============================================
+Suite
+Total tests run: 11, Failures: 0, Skips: 0
+Configuration Failures: 1, Skips: 0
+===============================================
+

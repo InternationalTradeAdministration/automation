@@ -1,0 +1,132 @@
+package OfficeLibs;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class XlsxTools {
+	public static ArrayList<LinkedHashMap<String, String>> readXlsxSheetInOrderAndFilter(String filePath, 
+										  String tabName, 
+										  String filter) throws IOException
+	{
+		ArrayList<LinkedHashMap<String, String>> allPool = new ArrayList<LinkedHashMap<String, String>>();
+		ArrayList<LinkedHashMap<String, String>> filteredTestCases = new ArrayList<LinkedHashMap<String, String>>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		File excelFile = new File(filePath);
+	    FileInputStream fileInputStream = new FileInputStream(excelFile);
+	    Workbook  workbook = new XSSFWorkbook(fileInputStream);
+	    XSSFSheet sheet = (XSSFSheet) workbook.getSheet(tabName);
+	    Iterator<Row> rowIt = sheet.iterator();
+	    Row header = rowIt.next();
+	    while(rowIt.hasNext()) 
+	    {
+	      Iterator<Cell> cellHeaderIterator = header.cellIterator();
+	      Row row = rowIt.next();
+	      Iterator<Cell> cellIterator = row.cellIterator();
+	      while (cellIterator.hasNext() && cellHeaderIterator.hasNext()) 
+	      {
+	    	  Cell cellHeader = cellHeaderIterator.next();
+	          Cell cell = cellIterator.next();
+	          map.put(cellHeader.toString(), cell.toString());
+	      }
+	      System.out.println(map);
+	      allPool.add(new LinkedHashMap<String, String>(map));
+	      map.clear();
+	    }
+	    workbook.close();
+	    fileInputStream.close();
+	    if(!"".equalsIgnoreCase(filter))
+	    {
+		    filteredTestCases = filterArrayList(allPool, filter);
+			return filteredTestCases;
+	    }else
+	    {
+	    	return allPool;
+	    }
+	}
+	
+	public static ArrayList<LinkedHashMap<String, String>> readXlsxSheetAndFilter(String filePath, 
+										  String tabName, 
+										  String filter) throws IOException
+	{
+		ArrayList<LinkedHashMap<String, String>> allPool = new ArrayList<LinkedHashMap<String, String>>();
+		ArrayList<LinkedHashMap<String, String>> filteredTestCases = new ArrayList<LinkedHashMap<String, String>>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		File excelFile = new File(filePath);
+	    FileInputStream fileInputStream = new FileInputStream(excelFile);
+	    Workbook  workbook = new XSSFWorkbook(fileInputStream);
+	    XSSFSheet sheet = (XSSFSheet) workbook.getSheet(tabName);
+	    Iterator<Row> rowIt = sheet.iterator();
+	    Row header = rowIt.next();
+	    
+	    while(rowIt.hasNext()) 
+	    {
+	      Iterator<Cell> cellHeaderIterator = header.cellIterator();
+	      Row row = rowIt.next();
+	      Iterator<Cell> cellIterator = row.cellIterator();
+	      while (cellIterator.hasNext() && cellHeaderIterator.hasNext()) 
+	      {
+	    	  Cell cellHeader = cellHeaderIterator.next();
+	          Cell cell = cellIterator.next();
+	          map.put(cellHeader.toString(), cell.toString());
+	      }
+	      System.out.println(map);
+	      allPool.add(new LinkedHashMap<String, String>(map));
+	      map.clear();
+	    }
+	    workbook.close();
+	    fileInputStream.close();
+	    if(!"".equalsIgnoreCase(filter))
+	    {
+		    filteredTestCases = filterArrayList(allPool, filter);
+			return filteredTestCases;
+	    }else
+	    {
+	    	return allPool;
+	    }
+	}
+	public static LinkedHashMap<String, LinkedHashMap<String, String>> 
+	readGuiMap(ArrayList<LinkedHashMap<String, String>> guiPool) throws IOException
+	{
+		LinkedHashMap<String, LinkedHashMap<String, String>> guiMap = 
+				new LinkedHashMap<String, LinkedHashMap<String, String>>();
+		LinkedHashMap<String, String> tempMap = new LinkedHashMap<String, String>();
+		String filedTag, locType, locValue;
+		for(HashMap<String, String> map : guiPool)
+		{
+			filedTag = map.get("field_tag");
+			locType = map.get("locator_type");
+			locValue = map.get("locator_value");
+			//tempMap.put(locType, locValue);
+			guiMap.put(filedTag, new LinkedHashMap<String, String>(map));
+			//tempMap.clear();
+		}
+		return guiMap;
+	}
+	public static ArrayList<LinkedHashMap<String, String>> filterArrayList(
+				  ArrayList<LinkedHashMap<String, String>> inputArrayList,
+				  String filterWith)
+	{
+		ArrayList<LinkedHashMap<String, String>> outputArrayList = 
+					new ArrayList<LinkedHashMap<String, String>>();
+		String [] filters = filterWith.split("=");
+		
+		for(int i = 0; i< inputArrayList.size(); i++)
+		{
+			if(filters[1].equalsIgnoreCase(inputArrayList.get(i).get(filters[0])))
+			{
+				outputArrayList.add(inputArrayList.get(i));
+			}
+		}
+		return outputArrayList;
+	}
+}
