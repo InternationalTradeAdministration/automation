@@ -1,5 +1,6 @@
 package tests;
 import static GuiLibs.GuiTools.guiMap;
+import static GuiLibs.GuiTools.testCaseStatus;
 import static GuiLibs.GuiTools.holdSeconds;
 import static ReportLibs.ReportTools.printLog;
 import static XmlLibs.XmlTools.buildTestNgFromDataPool;
@@ -32,7 +33,7 @@ public class TestOne {
 	static ArrayList<LinkedHashMap<String, String>> dataPool;
 	ArrayList<LinkedHashMap<String, String>> guiPool;
 	static ADCVDLib adcvdLib;
-	public static boolean testCaseStatus;
+	//public static boolean testCaseStatus;
 	public static Timestamp startTime, suiteStartTime;
 	public static Timestamp endTime;
 	public static Calendar cal = Calendar.getInstance();
@@ -143,31 +144,31 @@ public class TestOne {
 		row.put("ADCVD_Case_Type", "AD ME");
 		HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		
 		row.put("ADCVD_Case", "C-");
 		row.put("ADCVD_Case_Type", "CVD");
 		HtmlReport.addHtmlStepTitle("Create New CVD Investigation","Title");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		
 		HtmlReport.addHtmlStepTitle("Align CVD Investigation To AD Investigation","Title");
 		testCaseStatus =testCaseStatus & ADCVDLib.checkCvdAlignedWithAd();
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 	}
 	
 	/**
 	 * This method is for ADCVD case creation and validation
 	*/
-	@Test(enabled = true, priority=1)
+	@Test(enabled = true, priority=2)
 	void Litigation_Dates_Validation() throws Exception
 	{
 		printLog("Litigation_Dates_Validation");
@@ -199,7 +200,7 @@ public class TestOne {
 	/**
 	 * This method is for ADCVD case creation and validation
 	*/
-	@Test(enabled = true, priority=1)
+	@Test(enabled = true, priority=3)
 	void Self_Initiated_Petition_Investigation_Dates() throws Exception
 	{
 		printLog("Self_Initiated_Petition_Investigation_Dates");
@@ -221,11 +222,11 @@ public class TestOne {
 		row.put("ADCVD_Case_Type", "AD ME");
 		HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		
 		testCaseStatus =testCaseStatus & ADCVDLib.checkSelfInitiatedDates(row);
 		
@@ -235,11 +236,11 @@ public class TestOne {
 		row.put("ADCVD_Case_Type", "CVD");
 		HtmlReport.addHtmlStepTitle("Create New CVD Investigation","Title");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		///if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.checkSelfInitiatedDates(row);
 	
 	}
@@ -247,7 +248,7 @@ public class TestOne {
 	/**
 	 * This method is for ADCVD case creation and validation
 	*/
-	@Test(enabled = true, priority=1)
+	@Test(enabled = true, priority=4)
 	void Align_NSR_To_NR() throws Exception
 	{
 		LinkedHashMap<String, String> arDates, nsrDates;
@@ -260,29 +261,32 @@ public class TestOne {
 		String url = mapConfInfos.get("url");
 		String user = mapConfInfos.get("user_name");
 		String password = mapConfInfos.get("password");		
-		guiTools.openBrowser(browserType);
-		loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
 		holdSeconds(2);
 		row.put("ADCVD_Case", "A-");
 		row.put("ADCVD_Case_Type", "AD ME");
 		HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewOrder(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		
 		row.put("Segment_Type", "Administrative Review");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		arDates = ADCVDLib.readSegmentDates("Segment AR Dates");
 		
 		row.put("Segment_Type", "New Shipper Review");
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		//if(! testCaseStatus) guiTools.tearDown =true;
 		nsrDates = ADCVDLib.readSegmentDates("Segment NFR Dates Before align it to AR Segment");
 		
 		testCaseStatus =testCaseStatus & ADCVDLib.alignNsrToArAndValidate(arDates, nsrDates);

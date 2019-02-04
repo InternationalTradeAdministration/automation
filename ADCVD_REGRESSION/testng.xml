@@ -4,7 +4,7 @@
     <classes>
       <class name="tests.TestOne">
     
-    <methods><include name="CVD_Align_With_AD"/><include name="Litigation_Dates_Validation"/><include name="Self_Initiated_Petition_Investigation_Dates"/><include name="Align_NSR_To_NR"/></methods></class>
+    <methods><include name="CVD_Align_With_AD"/><include name="Litigation_Dates_Validation"/></methods></class>
     </classes>
   </test> 
 </suite>

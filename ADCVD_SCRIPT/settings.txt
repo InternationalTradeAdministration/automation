@@ -1,8 +1,9 @@
 project_name = AD/CVD
-env_name = automation
+env_name = adcvduat
 time_out = 15
-url = https://trade--automation.lightning.force.com/lightning/page/home
-user_name = mouloud.hamdidouche@trade.gov.automation
+# adcvduat
+url = https://trade--adcvduat.lightning.force.com/lightning/page/home
+user_name = mouloud.hamdidouche@trade.gov.adcvduat
 password = 1942#1945Dahbia
 #give browser type= ie, firefox or chrome
 browser_type = chrome

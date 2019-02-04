@@ -9,7 +9,7 @@
           <include name="afterMethod"/>
           <include name="beforeMethod"/>
           <include name="beforeClass"/>
-          <include name="Self_Initiated_Petition_Investigation_Dates"/>
+          <include name="Litigation_Dates_Validation"/>
         </methods>
       </class> <!-- tests.TestOne -->
     </classes>

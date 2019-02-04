@@ -117,10 +117,12 @@ public class ADCVDLib{
 		caseType =  row.get("ADCVD_Case");
 		holdSeconds(2);
 		clickElementJs(guiMap.get("newCaseLink"));
+		holdSeconds(3);
 		String recType = "recTypeFiled";
 		if(row.get("Record_Type").equalsIgnoreCase("Self-Initiate"))
 		recType = "recTypeSelfInitiated";
 		clickElementJs(guiMap.get(recType));
+		holdSeconds(1);
 		clickElementJs(guiMap.get("nextButton"));
 		String caseName =  row.get("ADCVD_Case") + getCaseName();
 		if(caseType.equals("A-")) 
@@ -128,7 +130,7 @@ public class ADCVDLib{
 		else 
 			cvdCaseId=caseName;
 		
-		
+		holdSeconds(1);
 		enterText(guiMap.get("inputadcvdCase"),caseName);
 		caseType = row.get("ADCVD_Case");
 		//setAttributeValue("selectCommodity", "text", row.get("Commodity"));
@@ -159,6 +161,8 @@ public class ADCVDLib{
 			updateHtmlReport("Create ADCVD Case", "User is able to create a case", "Not as expected", "Step", "fail", 
 					"Create a new case");
 			setBrowserTimeOut(currentTimeOut);
+			clickElementJs(guiMap.get("CancelCaseButton"));
+			
 			return false;
 		}else
 		{
@@ -222,6 +226,7 @@ public class ADCVDLib{
 			updateHtmlReport("Create order", "User is able to create a order", "Not as expected", "Step", "fail", 
 					"Create a new order");
 			setBrowserTimeOut(currentTimeOut);
+			clickElementJs(guiMap.get("CancelCaseButton"));
 			return false;
 		}else
 		{
@@ -277,6 +282,7 @@ public class ADCVDLib{
 			updateHtmlReport("Create ADCVD Case", "User is able to create a new Petition", "Not as expected", "Step", 
 					"fail", "Create a new Petition");
 			setBrowserTimeOut(currentTimeOut);
+			clickElementJs(guiMap.get("CancelCaseButton"));
 			return false;
 		}
 		else
@@ -439,6 +445,7 @@ public class ADCVDLib{
 			updateHtmlReport("Create new Investigtion", "User is able to create a new investigation", 
 					"Not as expected", "Step", "fail", "Create a new investigation");
 			setBrowserTimeOut(currentTimeOut);
+			clickElementJs(guiMap.get("CancelCaseButton"));
 			return false;
 		}
 		else
@@ -1074,6 +1081,7 @@ public class ADCVDLib{
 			holdSeconds(2);
 			updateHtmlReport("Create Segment", "User is able to create segment", "Not as expected", 
 							 "Step", "fail", "Create a new segment");
+			clickElementJs(guiMap.get("CancelCaseButton"));
 			return false;
 		}else
 		{
@@ -2917,7 +2925,7 @@ public class ADCVDLib{
 	public static boolean createNewLitigation (LinkedHashMap<String, String> row) throws Exception
 	{
 		String litigationType = row.get("Litigation_Type");
-		clickElementJs(replaceGui(guiMap.get("objectMenuLink"), "Litigation"));
+		clickElementJs(guiMap.get("LitigationObjectLink"));
 		holdSeconds(2);
 		clickElementJs(guiMap.get("newLitigationButton"));
 		holdSeconds(1);
@@ -2951,6 +2959,7 @@ public class ADCVDLib{
 			holdSeconds(5);
 			updateHtmlReport("Create Litigation", "User is able to create a new Litigation", "Not as expected", "Step", 
 					"fail", "Create a new Litigation");
+			clickElementJs(guiMap.get("CancelCaseButton"));
 			setBrowserTimeOut(currentTimeOut);
 			return false;
 		}
@@ -3004,7 +3013,7 @@ public class ADCVDLib{
 					"Expected Final Signature Before Ext"), "text");
 		}
 		//scrollToTheButtomOfPage();
-		scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Next Office Deadline"));
+		scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Prelim Team Meeting Deadline"));
 		//International
 		if(litigationType.equalsIgnoreCase("International Litigation"))
 		{
@@ -3064,6 +3073,7 @@ public class ADCVDLib{
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Calculated Final Signature",
 					calculatedFinalSignature, actualValue);
 		}
+		//scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Next Due to DAS Deadline"));
 		//Final Issues Due to DAS
 		String FinalIssuesDueToDas = "";
 		FinalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS",  "business", calculatedFinalSignature);
@@ -3247,14 +3257,17 @@ public class ADCVDLib{
 	*/
 	public static boolean checkCvdAlignedWithAd() throws Exception
 	{
-		scrollToElement(guiMap.get("editAlignTo"));
+		scrollToElement(guiMap.get("ADInvestigationAlignedToDiv"));
 		highlightElement(guiMap.get("ADInvestigationAlignedToDiv"), "green");
 		updateHtmlReport("before aligning", "CVD is initialy not aligned",
 				"As Expected", "VP", "pass", "Before aligning");
 		unHighlightElement(guiMap.get("ADInvestigationAlignedToDiv"));
 		clickElementJs(guiMap.get("editAlignTo"));
+		holdSeconds(2);
 		clickElementJs(replaceGui(guiMap.get("itemfromalignTo"),adCaseId));
+		holdSeconds(2);
 		clickElementJs(guiMap.get("saveInvestigation"));
+		holdSeconds(3);
 		if(checkElementExists(replaceGui(guiMap.get("linkedADText"),aInvestigation)))
 		{
 			highlightElement(guiMap.get("ADInvestigationAlignedToDiv"), "green");
@@ -3304,7 +3317,8 @@ public class ADCVDLib{
 		pageRefresh();
 		holdSeconds(1);
 		//validate after converted to self-initiated
-		validated = validated & validateDatesPopulatedEmpty("empty", " when petition converted to self-initiated");
+		validated = validated & validateDatesPopulatedEmpty("empty", 
+				" when petition converted to self-initiated");
 		//add initiated FR to the petition
 		clickElementJs(replaceGui(guiMap.get("genericInvestigationLink"), "Petition"));
 		createPetitionFrNotice(row);
@@ -3314,7 +3328,8 @@ public class ADCVDLib{
 		holdSeconds(2);
 		pageRefresh();
 		holdSeconds(1);
-		validated = validated & validateDatesPopulatedEmpty("populated", " when an new initaited FR associated with petition");
+		validated = validated & validateDatesPopulatedEmpty("populated", 
+				" when an initaited FR associated with petition");
 		return validated;
 	}
 	
@@ -3328,30 +3343,43 @@ public class ADCVDLib{
 	public static boolean validateDatesPopulatedEmpty(String dateState, String step) throws Exception
 	{
 		boolean matches = true;
-		scrollToElement(replaceGui(guiMap.get("genericInvestigationField"),"Prelim Issues Due to DAS") );
+		scrollToElement(replaceGui(guiMap.get("genericInvestigationField"),"Prelim Team Meeting Deadline") );
 		matches = validateDateEmptyFilled("Prelim Team Meeting Deadline", dateState);
 		matches = matches & validateDateEmptyFilled("Calculated Postponement of PrelimDeterFR", dateState);
-		matches = validateDateEmptyFilled("Prelim Issues Due to DAS", dateState);
+		matches = matches & validateDateEmptyFilled("Prelim Issues Due to DAS", dateState);
 		matches = matches & validateDateEmptyFilled("Prelim Concurrence Due to DAS", dateState);
-		matches = validateDateEmptyFilled("Calculated Preliminary Signature", dateState);
-		matches = matches & validateDateEmptyFilled("Final Team Meeting Deadline", dateState);
-		matches = validateDateEmptyFilled("Final Issues Due to DAS", dateState);
-		matches = matches & validateDateEmptyFilled("Final Concurrence Due to DAS", dateState);
-		matches = validateDateEmptyFilled("Calculated Final Signature", dateState);
-		matches = matches & validateDateEmptyFilled("Final Announcement Date", dateState);
-		matches = validateDateEmptyFilled("Est ITC Notification to DOC of Final Det", dateState);
-		matches = matches & validateDateEmptyFilled("Estimated Order FR Published", dateState);
+		matches = matches & validateDateEmptyFilled("Calculated Preliminary Signature", dateState);
 		String yN =(matches == true) ? "":"not ";
 		String msg = "Dates are "+yN+dateState+ step;
 		if(matches)
 		{
 			updateHtmlReport("Verify Investigation dates", msg, 
-					"As expected", "VP", "pass", msg);
+					"As expected", "VP", "pass", msg+" - 1");
 		}
 		else
 		{
 			updateHtmlReport("Verify Investigation dates", msg, 
-					"As expected", "VP", "fail", msg);
+					"As expected", "VP", "fail", msg+" - 1");
+		}
+		scrollToElement(replaceGui(guiMap.get("genericInvestigationField"),"Final Team Meeting Deadline") );
+		matches = validateDateEmptyFilled("Final Team Meeting Deadline", dateState);
+		matches = matches & validateDateEmptyFilled("Final Issues Due to DAS", dateState);
+		matches = matches & validateDateEmptyFilled("Final Concurrence Due to DAS", dateState);
+		matches = matches & validateDateEmptyFilled("Calculated Final Signature", dateState);
+		matches = matches & validateDateEmptyFilled("Final Announcement Date", dateState);
+		matches = matches & validateDateEmptyFilled("Est ITC Notification to DOC of Final Det", dateState);
+		matches = matches & validateDateEmptyFilled("Estimated Order FR Published", dateState);
+		yN =(matches == true) ? "":"not ";
+		msg = "Dates are "+yN+dateState+ step;
+		if(matches)
+		{
+			updateHtmlReport("Verify Investigation dates", msg, 
+					"As expected", "VP", "pass", msg+" - 2");
+		}
+		else
+		{
+			updateHtmlReport("Verify Investigation dates", msg, 
+					"As expected", "VP", "fail", msg+" - 2");
 		}
 		return matches;
 	}
@@ -3363,7 +3391,8 @@ public class ADCVDLib{
 	 * @return true if all dates are as expected, false, if not.
 	 * @throws Exception
 	 */
-	public static boolean validateDateEmptyFilled(String date, String dateState) throws Exception
+	public static boolean validateDateEmptyFilled(String date, 
+												  String dateState) throws Exception
 	{
 		boolean matches = true;
 		String dateDisplayedValue = getElementAttribute(replaceGui(guiMap.get("genericInvestigationField"),
@@ -3410,8 +3439,6 @@ public class ADCVDLib{
 		return matches;
 	}
 	
-	
-	
 	/**
 	 * This method read and save segment dates
 	 * @return HashMap of dates
@@ -3420,7 +3447,6 @@ public class ADCVDLib{
 	public static LinkedHashMap<String, String> readSegmentDates(String msg) throws Exception
 	{
 		LinkedHashMap<String, String> dates  = new  LinkedHashMap<String, String> ();
-		
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Prelim Team Meeting Deadline"));
 		updateHtmlReport(msg, "Dates displyed", "As expected", "Step", "pass", msg + " - 1");
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Next Announcement Date"));
@@ -3462,7 +3488,8 @@ public class ADCVDLib{
 	 * @throws Exception
 	 */
 	public static boolean alignNsrToArAndValidate(LinkedHashMap<String, String> arDates, 
-												  LinkedHashMap<String, String> nsrDatesBefore) throws Exception
+												  LinkedHashMap<String, String> nsrDatesBefore)
+												  throws Exception
 	{
 		boolean matches=true;
 		//Align
@@ -3471,11 +3498,8 @@ public class ADCVDLib{
 		updateHtmlReport("Before Aligning NSR segment to AD segment", "user is able to align NSR to AR", 
 				"Not aligned", "VP", "pass", "Before NSR segment to AD segment");
 		unHighlightElement(guiMap.get("editAlignToArDiv"));
-		
 		clickElementJs(guiMap.get("editAlignToAr"));
-		
 		clickElementJs(guiMap.get("alignToAr"));
-		
 		if(checkElementExists(replaceGui(guiMap.get("itemfromalignToAr"),arSegmentId)))
 		{
 			clickElement((replaceGui(guiMap.get("itemfromalignToAr"),arSegmentId)));
@@ -3499,8 +3523,6 @@ public class ADCVDLib{
 			failTestSuite("Aligning NSR to AR segment", "user is able to see the AR created earlier", 
 					"Not as expected", "VP", "fail", arSegmentId+ " couldn't be found");
 		}
-		
-		
 		//Validate
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Prelim Team Meeting Deadline"));
 		for(Entry<String, String> entry: nsrDatesBefore.entrySet()) 
@@ -3516,9 +3538,6 @@ public class ADCVDLib{
         }
 		return matches;
 	}
-	
-	
-	
 
 	/**
 	 * This method verifies if given date is passed or not
@@ -3794,7 +3813,11 @@ public class ADCVDLib{
 										   String nfrDateAfter) throws Exception 
 	{
 		printLog(dateName + " -AR- " + adDate + " NSRBefore " + nfrDateBefore+ " NSRAfter " + nfrDateAfter);
-		if (!adDate.equalsIgnoreCase(nfrDateBefore) && adDate.equalsIgnoreCase(nfrDateAfter))
+		if (
+				(!adDate.equalsIgnoreCase(nfrDateBefore) && adDate.equalsIgnoreCase(nfrDateAfter))||
+				( nfrDateBefore.equalsIgnoreCase(nfrDateAfter)
+				&&(dateName.equals("Next Due to DAS Deadline")||dateName.equals("Next Office Deadline")))
+			)
 		{
 			highlightElement(replaceGui(guiMap.get("genericSegmentField"), dateName), "green");
 			updateHtmlReport("Validate ["+ dateName +"]", "NSR date should equate AR date", 

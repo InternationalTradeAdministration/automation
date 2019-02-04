@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -82,7 +83,7 @@ public class GuiTools extends InitTools{
 	//public HtmlReport htmlReport = new HtmlReport("");
 	public static LinkedHashMap<String, LinkedHashMap<String, String>> guiMap;
 	public static int imgIterator = 1;
-	public static boolean tearDown = false;
+	public static boolean tearDown = false, testCaseStatus=true;
 	public static boolean recordOn = false;
 	public static ScreenRecorder screenRecorder;
 
@@ -477,7 +478,7 @@ public class GuiTools extends InitTools{
 		String screenShotPath = takeScreenShot(msgError, true);
 		String aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
 		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
-		tearDown = true;
+		//tearDown = true;
 		Assert.fail( getTestCaseName()+ ": " +msgError);
 	}
 	/**
@@ -535,7 +536,9 @@ public class GuiTools extends InitTools{
 		
 		String file = ssPath+"\\"+ssName+imgIterator+".png";
 		imgIterator=imgIterator+1;
-		Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(100)).takeScreenshot(driver);
+		Screenshot screenshot = new AShot().
+				shootingStrategy(ShootingStrategies.viewportPasting(100)).
+				takeScreenshot(driver);
 		ImageIO.write(screenshot.getImage(),"PNG",new File(file));
 		return file;
 	}
@@ -585,37 +588,6 @@ public class GuiTools extends InitTools{
 		return file;*/
 	}
 	
-	/**
-	 * This method takes screenshot of the visible part
-	 * @param map: Web element
-	 * @throws Exception 
-	 * 
-	 */
-	public static boolean elementExists(HashMap<String, String> map) throws Exception
-	{
-		return elementExists(map.get("locator_type"), map.get("locator_value"));
-	}
-	
-	/**
-	 * This method verifies if element exists, if not fail test case
-	 * @param locType: The type of locator
-	 * @param locValue: the value of locator
-	 * @throws Exception 
-	 * 
-	 */
-	public static boolean elementExists(String locType, String locValue) throws Exception
-	{
-		boolean present;
-		try {
-		   getDriver().findElement(byType(locType, locValue));
-		   present = true;
-		} catch (NoSuchElementException e) {
-			failTestSuite(locValue +" wasn't found", "Element exists", 
-					"Element not found", "Step", "fail", "Element not found");
-		   present = false;
-		}
-		return present;
-	}
 	
 	/**
 	 * This method checks if element exists
@@ -666,16 +638,50 @@ public class GuiTools extends InitTools{
 		{
 			printLog("Element "+ map.get("field_name")+" was "
 					+ "not found on Gui");
+			testCaseStatus = false;
 			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
 					"Element not found", "Step", "fail", map.get("field_name")+" not found");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
-			element.clear();  
+			WebElement element = null;
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			element.sendKeys(value);
 		}
 	}
+
+	/**
+	 * This method takes screenshot of the visible part
+	 * @param map: Web element
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean elementExists(HashMap<String, String> map) throws Exception
+	{
+		return elementExists(map.get("locator_type"), map.get("locator_value"));
+	}
 	
+	/**
+	 * This method verifies if element exists, if not fail test case
+	 * @param locType: The type of locator
+	 * @param locValue: the value of locator
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean elementExists(String locType, String locValue) throws Exception
+	{
+		boolean present;
+		try {
+		   getDriver().findElement(byType(locType, locValue));
+		   present = true;
+		} catch (NoSuchElementException e) {
+		   present = false;
+		}
+		return present;
+	}
 	/**
 	 * This method sets attribute value of element
 	 * @param map: Web Element
@@ -697,7 +703,12 @@ public class GuiTools extends InitTools{
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			executor.executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", 
 		             element, attribute, value);
@@ -717,7 +728,12 @@ public class GuiTools extends InitTools{
 		String locValue = map.get("locator_value");
 		if (elementExists(locType, locValue))
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isEnabled()) element = e;
+			}
 			JavascriptExecutor executor = (JavascriptExecutor)driver;
 			executor.executeScript("arguments[0].click();", element);
 			
@@ -745,7 +761,12 @@ public class GuiTools extends InitTools{
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = null;
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			element.click();
 		}
 	}
@@ -881,17 +902,24 @@ public class GuiTools extends InitTools{
 		if (!elementExists(locType, locValue))
 		{
 			printLog("Element '"+ map.get("field_name")+"' was "
-					+ "not found on Gui");
+					+ "not found on GUI");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) 
+			    	{
+			    		element = e;
+			    	}
+			}
 			//WebElement element = driver.findElement(By.id("gbqfd"));
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			Point point = element.getLocation();
 			executor.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
 			executor.executeScript("javascript:window.scrollBy("+point.getX()+","+(point.getY()-300)+")");
 		}
-
 	}
 	
 	/**
@@ -991,8 +1019,6 @@ public class GuiTools extends InitTools{
 	public static  LinkedHashMap<String, String> replaceGui (HashMap<String, String> guiRow, 
 													   String...  newValues)
 	{
-		//HashMap<String, String> newMap = null ;
-		//String locType = guiRow.get("locator_type");
 		HashMap<String, String> newGuiRow = new HashMap<String, String>(guiRow);
 		int i=0;
 		for(String str: newValues)
@@ -1028,7 +1054,12 @@ public class GuiTools extends InitTools{
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = null;
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			executor.executeScript("arguments[0].innerHTML ='"+value+"'", element);
 		}
@@ -1046,13 +1077,20 @@ public class GuiTools extends InitTools{
 		printLog("highlight "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
+		
 		if (!elementExists(locType, locValue))
 		{
 			printLog("Element "+ map.get("field_name")+" was "
-					+ "not found on Gui");
+					+ "not found on GUI");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			executor.executeScript("arguments[0].setAttribute('style', 'border:"
 					+ " 2px dashed "+color+";');", element);
@@ -1075,13 +1113,16 @@ public class GuiTools extends InitTools{
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = null;
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			executor.executeScript("arguments[0].style.border='0px'", element);
-			//executor.executeScript("arguments[0].setAttribute('style', 'border: 0px dashed white;');", element);
 		}
 	}
-	
 	
 	/**
 	 * This method switch to frame
@@ -1101,10 +1142,8 @@ public class GuiTools extends InitTools{
 		{
 			WebElement element=driver.findElement(byType(locType, locValue));
 			getDriver().switchTo().frame(element);
-			//executor.executeScript("arguments[0].setAttribute('style', 'border: 0px dashed white;');", element);
 		}
 	}
-	
 	/**
 	 * This method switch to frame
 	 * @param map: gui element
@@ -1114,7 +1153,6 @@ public class GuiTools extends InitTools{
 	{
 		getDriver().switchTo().defaultContent();
 	}
-	
 	/**
 	 * This method gets element attribute
 	 * @param map: gui element
@@ -1124,16 +1162,24 @@ public class GuiTools extends InitTools{
 	public static String getElementAttribute(HashMap<String, String> map, 
 											 String attribute) throws Exception
 	{
-		printLog("get the "+attribute+" of the element "+ map.get("field_name"));
+		printLog("Get the "+attribute+" of the element "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
 		if (!elementExists(locType, locValue))
 		{
 			printLog("Element "+ map.get("field_name")+" was "
-					+ "not found on Gui");
+					+ "not found on GUI");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) 
+			    	{
+			    		element = e;
+			    	}
+			}
 			if ("text".equalsIgnoreCase(attribute))
 			return element.getText();
 			else
@@ -1141,9 +1187,6 @@ public class GuiTools extends InitTools{
 		}
 		return null;
 	}
-	
-	
-	
 	/**
 	 * This method refreshes the current page
 	 */
