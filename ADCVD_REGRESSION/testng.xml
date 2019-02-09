@@ -4,7 +4,7 @@
     <classes>
       <class name="tests.TestOne">
     
-    <methods><include name="CVD_Align_With_AD"/><include name="Litigation_Dates_Validation"/><include name="Self_Initiated_Petition_Investigation_Dates"/><include name="Align_NSR_To_NR"/><include name="Petition_Status_Validation"/><include name="Expedited_Review_Status_Validation"/><include name="New_Shipper_Review_Status_Validation"/><include name="Changed_Circumstance_Review_Status_Validation"/></methods></class>
+    <methods><include name="CVD_Align_With_AD"/><include name="Litigation_Dates_Validation"/><include name="Self_Initiated_Petition_Investigation_Dates"/><include name="Align_NSR_To_NR"/><include name="Petition_Status_Validation"/><include name="Admin_Review_Status_Validation"/><include name="Expedited_Review_Status_Validation"/><include name="New_Shipper_Review_Status_Validation"/><include name="Changed_Circumstance_Review_Status_Validation"/></methods></class>
     </classes>
   </test> 
 </suite>

@@ -53,10 +53,16 @@ public class TestOne {
 		//TestListenerAdapter tla = new TestListenerAdapter();
 		TestNG testng = new TestNG();
 		List<String> suites = Lists.newArrayList();
-		String dataPoolPath = InitTools.getInputDataFolder()+"\\datapool\\Regession_TC.xlsx";
+		
+		
+		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/Regession_TC.xlsx";
+		System.out.println("dataPoolPath "+dataPoolPath);
 		dataPool  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Regression", "Active=TRUE");
-		String testNgTemplate = InitTools.getInputDataFolder()+"\\template\\testng_template.xml";
-		String testNgPath = InitTools.getRootFolder()+"\\testng.xml";
+		
+		String testNgTemplate = InitTools.getInputDataFolder()+"/template/testng_template.xml";
+		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
+		System.out.println("testNgTemplate "+testNgTemplate);
+		System.out.println("testNgPath "+testNgPath);
 		//build
 		buildTestNgFromDataPool(dataPool, testNgPath);
 		suites.add(testNgPath);//path to xml..
