@@ -1,9 +1,10 @@
 package tests;
 import static GuiLibs.GuiTools.guiMap;
-import static GuiLibs.GuiTools.testCaseStatus;
 import static GuiLibs.GuiTools.holdSeconds;
+import static GuiLibs.GuiTools.testCaseStatus;
 import static ReportLibs.ReportTools.printLog;
 import static XmlLibs.XmlTools.buildTestNgFromDataPool;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.testng.TestNG;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -18,11 +20,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
+
 import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import OfficeLibs.XlsxTools;
 import ReportLibs.HtmlReport;
 import libs.ADCVDLib;
+
+
 public class TestOne {
 
 	public static GuiTools guiTools;
@@ -48,7 +53,7 @@ public class TestOne {
 		//TestListenerAdapter tla = new TestListenerAdapter();
 		TestNG testng = new TestNG();
 		List<String> suites = Lists.newArrayList();
-		String dataPoolPath = InitTools.getInputDataFolder()+"\\datapool\\adcvd_datapool.xlsx";
+		String dataPoolPath = InitTools.getInputDataFolder()+"\\datapool\\Regession_TC.xlsx";
 		dataPool  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Regression", "Active=TRUE");
 		String testNgTemplate = InitTools.getInputDataFolder()+"\\template\\testng_template.xml";
 		String testNgPath = InitTools.getRootFolder()+"\\testng.xml";
@@ -292,6 +297,239 @@ public class TestOne {
 		testCaseStatus =testCaseStatus & ADCVDLib.alignNsrToArAndValidate(arDates, nsrDates);
 	}
 	
+	/**
+	 * This method is for ADCVD case creation and validation
+	*/
+	@Test(enabled = true, priority=5)
+	void Petition_Status_Validation() throws Exception
+	{
+		LinkedHashMap<String, String> arDates, nsrDates;
+		printLog("Petition_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_005");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		testCaseStatus = testCaseStatus & ADCVDLib.validatePetitionStatus(row);
+	}
+	
+	/**
+	 * This method is for ADCVD case creation and validation
+	*/
+	@Test(enabled = true, priority=6)
+	void Investigation_Status_Validation() throws Exception
+	{
+		LinkedHashMap<String, String> arDates, nsrDates;
+		printLog("Investigation_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_006");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
+		testCaseStatus = testCaseStatus & ADCVDLib.validateInvestigationStatus(row);
+	}
+
+	/**
+	 * This method is admin review status
+	*/
+	@Test(enabled = true, priority=7)
+	void Admin_Review_Status_Validation() throws Exception
+	{   
+		LinkedHashMap<String, String> arDates, nsrDates;
+		printLog("Admin_Review_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_007");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewOrder(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;		
+		row.put("Segment_Type", "Administrative Review");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
+		ADCVDLib.validateNewShipperReviewStatus_A(row);
+	}
+	
+	
+	/**
+	 * This method is Expedited_Review_Status_Validation status
+	*/
+	@Test(enabled = true, priority=8)
+	void Expedited_Review_Status_Validation() throws Exception
+	{
+		LinkedHashMap<String, String> arDates, nsrDates;
+		printLog("Expedited_Review_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_008");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title"); 
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewOrder(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;		
+		row.put("Segment_Type", "Expedited Review");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
+		ADCVDLib.validateNewShipperReviewStatus_A(row);
+	}
+	/**
+	 * This method is New_Shipper_Review_Status_Validation status
+	*/
+	@Test(enabled = true, priority=9)
+	void New_Shipper_Review_Status_Validation() throws Exception
+	{
+		LinkedHashMap<String, String> arDates, nsrDates;
+		printLog("New_Shipper_Review_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_009");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewOrder(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;		
+		row.put("Segment_Type", "New Shipper Review");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
+		ADCVDLib.validateNewShipperReviewStatus_A(row);
+	}
+	
+	/**
+	 * This method is New_Shipper_Review_Status_Validation status
+	*/
+	@Test(enabled = true, priority=10)
+	void Changed_Circumstance_Review_Status_Validation() throws Exception
+	{
+		LinkedHashMap<String, String> arDates, nsrDates;
+		printLog("Changed_Circumstance_Review_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_010");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewOrder(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;		
+		row.put("Segment_Type", "Changed Circumstances Review");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
+		ADCVDLib.validateChangedCircumstanceReviewStatus(row);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * This method is for ADCVD case creation and validation
@@ -372,6 +610,22 @@ public class TestOne {
 		testCaseStatus = ADCVDLib.createNewSegment(row);
 		testCaseStatus = testCaseStatus && ADCVDLib.validateNewSegmentAdministrativeReview();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * This method is for ADCVD segment(Anti Circumvention Review) 
 	 * creation and validation

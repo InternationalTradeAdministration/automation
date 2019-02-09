@@ -1,149 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" ignored="0" total="11" passed="11">
+<testng-results skipped="0" failed="0" ignored="7" total="11" passed="4">
   <reporter-output>
   </reporter-output>
-  <suite name="Suite" duration-ms="529110" started-at="2019-02-03T02:47:34Z" finished-at="2019-02-03T02:56:23Z">
+  <suite name="Suite" duration-ms="203375" started-at="2019-02-09T00:05:03Z" finished-at="2019-02-09T00:08:27Z">
     <groups>
     </groups>
-    <test name="Test" duration-ms="529110" started-at="2019-02-03T02:47:34Z" finished-at="2019-02-03T02:56:23Z">
+    <test name="Test" duration-ms="203375" started-at="2019-02-09T00:05:03Z" finished-at="2019-02-09T00:08:27Z">
       <class name="tests.TestOne">
-        <test-method status="PASS" signature="beforeClass()[pri:0, instance:tests.TestOne@71809907]" name="beforeClass" is-config="true" duration-ms="411" started-at="2019-02-03T02:47:34Z" finished-at="2019-02-03T02:47:34Z">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:tests.TestOne@71809907]" name="beforeClass" is-config="true" duration-ms="200" started-at="2019-02-09T00:05:03Z" finished-at="2019-02-09T00:05:04Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeClass -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="3" started-at="2019-02-03T02:47:34Z" finished-at="2019-02-03T02:47:34Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-09T00:05:04Z" finished-at="2019-02-09T00:05:04Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Adcvd_Case()[pri:1, instance:tests.TestOne@71809907]" name="Create_Adcvd_Case" duration-ms="102485" started-at="2019-02-03T02:47:34Z" finished-at="2019-02-03T02:49:17Z">
+        <test-method status="PASS" signature="Create_Adcvd_Case()[pri:1, instance:tests.TestOne@71809907]" name="Create_Adcvd_Case" duration-ms="92348" started-at="2019-02-09T00:05:04Z" finished-at="2019-02-09T00:06:36Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_Adcvd_Case -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="19" started-at="2019-02-03T02:49:17Z" finished-at="2019-02-03T02:49:17Z">
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="9" started-at="2019-02-09T00:06:36Z" finished-at="2019-02-09T00:06:36Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:49:17Z" finished-at="2019-02-03T02:49:17Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_And_Validate_Petition()[pri:2, instance:tests.TestOne@71809907]" name="Create_And_Validate_Petition" duration-ms="45093" started-at="2019-02-03T02:49:17Z" finished-at="2019-02-03T02:50:02Z">
+        <test-method status="PASS" signature="Create_And_Validate_Petition()[pri:2, instance:tests.TestOne@71809907]" name="Create_And_Validate_Petition" duration-ms="40969" started-at="2019-02-09T00:06:36Z" finished-at="2019-02-09T00:07:17Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_And_Validate_Petition -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="9" started-at="2019-02-03T02:50:02Z" finished-at="2019-02-03T02:50:02Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-09T00:06:36Z" finished-at="2019-02-09T00:06:36Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="7" started-at="2019-02-09T00:07:17Z" finished-at="2019-02-09T00:07:17Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="Create_And_Validate_Investigation()[pri:3, instance:tests.TestOne@71809907]" name="Create_And_Validate_Investigation" duration-ms="55007" started-at="2019-02-03T02:50:02Z" finished-at="2019-02-03T02:50:57Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-09T00:07:17Z" finished-at="2019-02-09T00:07:17Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="Create_And_Validate_Investigation()[pri:3, instance:tests.TestOne@71809907]" name="Create_And_Validate_Investigation" duration-ms="44709" started-at="2019-02-09T00:07:17Z" finished-at="2019-02-09T00:08:02Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_And_Validate_Investigation -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:50:02Z" finished-at="2019-02-03T02:50:02Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-03T02:50:57Z" finished-at="2019-02-03T02:50:57Z">
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-09T00:08:02Z" finished-at="2019-02-09T00:08:02Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:50:57Z" finished-at="2019-02-03T02:50:57Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-09T00:08:02Z" finished-at="2019-02-09T00:08:02Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Order()[pri:4, instance:tests.TestOne@71809907]" name="Create_Order" duration-ms="26748" started-at="2019-02-03T02:50:57Z" finished-at="2019-02-03T02:51:24Z">
+        <test-method status="PASS" signature="Create_Order()[pri:4, instance:tests.TestOne@71809907]" name="Create_Order" duration-ms="22733" started-at="2019-02-09T00:08:02Z" finished-at="2019-02-09T00:08:24Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_Order -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="46" started-at="2019-02-03T02:51:24Z" finished-at="2019-02-03T02:51:24Z">
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="4" started-at="2019-02-09T00:08:24Z" finished-at="2019-02-09T00:08:24Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="2" started-at="2019-02-03T02:51:24Z" finished-at="2019-02-03T02:51:24Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Segment_Administrative_Review()[pri:5, instance:tests.TestOne@71809907]" name="Create_Segment_Administrative_Review" duration-ms="39772" started-at="2019-02-03T02:51:24Z" finished-at="2019-02-03T02:52:03Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_Administrative_Review -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-03T02:52:03Z" finished-at="2019-02-03T02:52:03Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:52:03Z" finished-at="2019-02-03T02:52:03Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Segment_Anti_Circumvention_Review()[pri:6, instance:tests.TestOne@71809907]" name="Create_Segment_Anti_Circumvention_Review" duration-ms="40951" started-at="2019-02-03T02:52:03Z" finished-at="2019-02-03T02:52:44Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_Anti_Circumvention_Review -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="13" started-at="2019-02-03T02:52:44Z" finished-at="2019-02-03T02:52:44Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:52:44Z" finished-at="2019-02-03T02:52:44Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Segment_Changed_Circumstances_Review()[pri:7, instance:tests.TestOne@71809907]" name="Create_Segment_Changed_Circumstances_Review" duration-ms="38564" started-at="2019-02-03T02:52:44Z" finished-at="2019-02-03T02:53:23Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_Changed_Circumstances_Review -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-03T02:53:23Z" finished-at="2019-02-03T02:53:23Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="Create_Segment_Expedited_Review()[pri:8, instance:tests.TestOne@71809907]" name="Create_Segment_Expedited_Review" duration-ms="40629" started-at="2019-02-03T02:53:23Z" finished-at="2019-02-03T02:54:04Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_Expedited_Review -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:53:23Z" finished-at="2019-02-03T02:53:23Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="13" started-at="2019-02-03T02:54:04Z" finished-at="2019-02-03T02:54:04Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-03T02:54:04Z" finished-at="2019-02-03T02:54:04Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Segment_New_Shipper_Review()[pri:9, instance:tests.TestOne@71809907]" name="Create_Segment_New_Shipper_Review" duration-ms="36050" started-at="2019-02-03T02:54:04Z" finished-at="2019-02-03T02:54:40Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_New_Shipper_Review -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-03T02:54:40Z" finished-at="2019-02-03T02:54:40Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:54:40Z" finished-at="2019-02-03T02:54:40Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Segment_Scope_Inquiry()[pri:10, instance:tests.TestOne@71809907]" name="Create_Segment_Scope_Inquiry" duration-ms="37323" started-at="2019-02-03T02:54:40Z" finished-at="2019-02-03T02:55:17Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_Scope_Inquiry -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="4" started-at="2019-02-03T02:55:17Z" finished-at="2019-02-03T02:55:17Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="Create_Segment_Sunset_Review()[pri:11, instance:tests.TestOne@71809907]" name="Create_Segment_Sunset_Review" duration-ms="63561" started-at="2019-02-03T02:55:17Z" finished-at="2019-02-03T02:56:21Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Segment_Sunset_Review -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-03T02:55:17Z" finished-at="2019-02-03T02:55:17Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="5" started-at="2019-02-03T02:56:21Z" finished-at="2019-02-03T02:56:21Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="FAIL" signature="afterClass()[pri:0, instance:tests.TestOne@71809907]" name="afterClass" is-config="true" duration-ms="2311" started-at="2019-02-03T02:56:21Z" finished-at="2019-02-03T02:56:23Z">
+        <test-method status="FAIL" signature="afterClass()[pri:0, instance:tests.TestOne@71809907]" name="afterClass" is-config="true" duration-ms="2355" started-at="2019-02-09T00:08:24Z" finished-at="2019-02-09T00:08:27Z">
           <exception class="org.openqa.selenium.NoSuchSessionException">
             <message>
               <![CDATA[invalid session id
@@ -152,8 +68,8 @@ Command duration or timeout: 0 milliseconds
 Build info: version: '3.14.0', revision: 'aacccce0', time: '2018-08-02T20:05:20.749Z'
 System info: host: 'DESKTOP-P47OH58', ip: '192.168.0.8', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_191'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:\Users\Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:65284}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.81, webStorageEnabled: true}
-Session ID: 1843a9dbbabe7cbd35e28f3f241511e3]]>
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:\Users\Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:50498}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
+Session ID: a4f8f47a6f7cfaa3df29f5ae82fc3ab7]]>
             </message>
             <full-stacktrace>
               <![CDATA[org.openqa.selenium.NoSuchSessionException: invalid session id
@@ -162,8 +78,8 @@ Command duration or timeout: 0 milliseconds
 Build info: version: '3.14.0', revision: 'aacccce0', time: '2018-08-02T20:05:20.749Z'
 System info: host: 'DESKTOP-P47OH58', ip: '192.168.0.8', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_191'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:\Users\Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:65284}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.81, webStorageEnabled: true}
-Session ID: 1843a9dbbabe7cbd35e28f3f241511e3
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:\Users\Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:50498}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
+Session ID: a4f8f47a6f7cfaa3df29f5ae82fc3ab7
 at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 at sun.reflect.NativeConstructorAccessorImpl.newInstance(Unknown Source)
 at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(Unknown Source)
@@ -179,7 +95,7 @@ at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:548)
 at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:605)
 at org.openqa.selenium.remote.RemoteWebDriver.close(RemoteWebDriver.java:438)
 at GuiLibs.GuiTools.closeBrowser(GuiTools.java:301)
-at tests.TestOne.afterClass(TestOne.java:90)
+at tests.TestOne.afterClass(TestOne.java:94)
 at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -203,7 +119,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
 at org.testng.TestNG.runSuites(TestNG.java:1049)
 at org.testng.TestNG.run(TestNG.java:1017)
-at tests.TestOne.main(TestOne.java:63)
+at tests.TestOne.main(TestOne.java:66)
 ]]>
             </full-stacktrace>
           </exception> <!-- org.openqa.selenium.NoSuchSessionException -->

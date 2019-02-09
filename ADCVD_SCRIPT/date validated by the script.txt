@@ -81,8 +81,8 @@ Anti-Circumvention Review segment:
 - Final Announcement Date
 - Next Major Deadline
 - Next Announcement Date
-- Next Due to DAS Deadline (missing)-------------- calculated initiation issues/concurrence due to das
-- Next Office Deadline	(missing)-----------------
+- Next Due to DAS Deadline 
+- Next Office Deadline	
 
 'Expedited Review' segment
 - Calculated Preliminary Signature
@@ -111,7 +111,7 @@ Anti-Circumvention Review segment:
 - Final Team Meeting Deadline
 - Final Announcement Date
 - Next Announcement Date
-- Next Major Deadline---------missing Added...
+- Next Major Deadline---------missing,  Added, failed ...
 - Next Due to DAS Deadline---------missing--calculated based on initiation dates which are not there.
 - Next Office Deadline---------missing--calculated based on initiation dates which are not not there.
 
@@ -124,7 +124,6 @@ Anti-Circumvention Review segment:
 - Final Team Meeting Deadline
 - Final Issues Due to DAS
 - Final Concurrence Due to DAS
-- Final Announcement Date 	(missing)-----------------
 - Next Major Deadline
 - Next Due to DAS Deadline
 - Next Office Deadline
@@ -141,10 +140,14 @@ Anti-Circumvention Review segment:
 - Notify ITC of No Domestic Interest
 - Final Issues Due to DAS
 - Final Concurrence Due to DAS
+- Final Announcement Date --------------------missing, added
 - Issue Liquidation/Revocation Instruction
 - Next Major Deadline
 - Next Due to DAS Deadline
 - Next Office Deadline
+- Next Announcement Date    ------------------missing
+
+
 
 'Sunset Review' segment (120 Days):
 - Notice of Intent to Participate
@@ -161,7 +164,7 @@ Anti-Circumvention Review segment:
 - Next Major Deadline
 - Next Due to DAS Deadline
 - Next Office Deadline
-
+- Next Announcement Date    ------------------missing
 
 
 'Sunset Review' segment (240 Days):

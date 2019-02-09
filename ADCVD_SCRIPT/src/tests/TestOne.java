@@ -40,6 +40,9 @@ public class TestOne {
 	
 	public static void main(String[] args) throws Exception 
 	{
+		
+		
+		
 		printLog("MainMethod()");
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
@@ -74,7 +77,8 @@ public class TestOne {
 		guiPool = XlsxTools.readXlsxSheetAndFilter(guiMapFilePath, "guiMap", "");
 		guiMap = XlsxTools.readGuiMap(guiPool);
 		HtmlReport.setTestSuiteName(mapConfInfos.get("project_name"));
-		HtmlReport.setEnvironmentName(mapConfInfos.get("env_name"));
+		HtmlReport.setEnvironmentName(mapConfInfos.get("env_name")+
+				" (" +mapConfInfos.get("url")+")");
 		HtmlReport.setTotalTcs(dataPool.size());
 		java.util.Date date = new java.util.Date();
 		suiteStartTime = new Timestamp(date.getTime());
@@ -143,6 +147,7 @@ public class TestOne {
 		guiTools.openBrowser(browserType);
 		ADCVDLib.loginToAdCvd(url, user, password);
 		holdSeconds(2);
+		row.put("TimeStamp", InitTools.getActualResultFolder());
 		testCaseStatus =  ADCVDLib.createNewCase(row);
 		if(! testCaseStatus) guiTools.tearDown =true;
 	}

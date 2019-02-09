@@ -16,6 +16,7 @@ public class InitTools {
 	private static String rootFolder;
 	private static String testCaseName;
 	protected static String testCaseDescription;
+	private static String actualResultFolder;
 	private static String libFolder;
 	private static HashMap<String, String> configInfos;
 	private static int timeOut;
@@ -28,16 +29,24 @@ public class InitTools {
 	 */
 	protected InitTools() throws IOException
 	{
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss").format(new Date());
+		actualResultFolder = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss").format(new Date());
 		setRootFolder(System.getProperty("user.dir"));
 		setLibFolder("C:\\libs");
 		//FileTools fileLibs = new FileTools();
 		setConfigInfos(FileTools.readTextFile(getRootFolder()+"\\settings.txt"));
-		outputResultFolder = getRootFolder()+ "\\output_results\\"+ timeStamp;
+		outputResultFolder = getRootFolder()+ "\\output_results\\"+ actualResultFolder;
 		inputDataFolder = getRootFolder()+ "\\input_data";
 		testerName = System.getProperty("user.name");
 		setTesterName(testerName);
 	}
+	public static String getActualResultFolder() {
+		return actualResultFolder;
+	}
+	public static void setActualResultFolder(String actualRsltFolder) {
+		actualResultFolder = actualRsltFolder;
+	}
+	
+	
 	public static String getTesterName() {
 		return testerName;
 	}

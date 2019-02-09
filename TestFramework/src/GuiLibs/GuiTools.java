@@ -450,6 +450,7 @@ public class GuiTools extends InitTools{
 									String msgError) throws IOException
 	{
 		HtmlReport.setTcStatus(false);
+		testCaseStatus = false;
 		String screenShotPath = takeScreenShot(msgError, true);
 		String aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
 		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
@@ -475,10 +476,11 @@ public class GuiTools extends InitTools{
 									 String msgError) throws IOException
 	{
 		HtmlReport.setTcStatus(false);
+		testCaseStatus = false;
 		String screenShotPath = takeScreenShot(msgError, true);
 		String aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
 		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
-		//tearDown = true;
+		tearDown = true;
 		Assert.fail( getTestCaseName()+ ": " +msgError);
 	}
 	/**
@@ -643,12 +645,13 @@ public class GuiTools extends InitTools{
 					"Element not found", "Step", "fail", map.get("field_name")+" not found");
 		}else
 		{
-			WebElement element = null;
+			WebElement element = driver.findElement(byType(locType, locValue));
 			List<WebElement> items = driver.findElements(byType(locType, locValue));
 			for(WebElement e: items)
 			{
 			    if(e.isDisplayed()) element = e;
 			}
+			element.clear();
 			element.sendKeys(value);
 		}
 	}
@@ -732,7 +735,10 @@ public class GuiTools extends InitTools{
 			List<WebElement> items = driver.findElements(byType(locType, locValue));
 			for(WebElement e: items)
 			{
-			    if(e.isEnabled()) element = e;
+			    if(e.isEnabled()) 
+			    	{
+			    		element = e;
+			    	}
 			}
 			JavascriptExecutor executor = (JavascriptExecutor)driver;
 			executor.executeScript("arguments[0].click();", element);
@@ -943,6 +949,7 @@ public class GuiTools extends InitTools{
 	{
 		JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 		executor.executeScript("window.scrollBy(0,0)");
+		executor.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
 	}
 	
 	/**
@@ -1017,7 +1024,7 @@ public class GuiTools extends InitTools{
 	 * 
 	 */
 	public static  LinkedHashMap<String, String> replaceGui (HashMap<String, String> guiRow, 
-													   String...  newValues)
+													   		 String...  newValues)
 	{
 		HashMap<String, String> newGuiRow = new HashMap<String, String>(guiRow);
 		int i=0;
@@ -1032,7 +1039,6 @@ public class GuiTools extends InitTools{
 			}
 			i++;
 		}
-		
 		return new LinkedHashMap<String, String>(newGuiRow); 
 	}
 	
@@ -1113,7 +1119,7 @@ public class GuiTools extends InitTools{
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element = null;
+			WebElement element = driver.findElement(byType(locType, locValue));
 			List<WebElement> items = driver.findElements(byType(locType, locValue));
 			for(WebElement e: items)
 			{
@@ -1134,13 +1140,20 @@ public class GuiTools extends InitTools{
 		printLog("switch to frame  "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
+		
+		
 		if (!elementExists(locType, locValue))
 		{
 			printLog("frame "+ map.get("field_name")+" was "
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element=driver.findElement(byType(locType, locValue));
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
 			getDriver().switchTo().frame(element);
 		}
 	}

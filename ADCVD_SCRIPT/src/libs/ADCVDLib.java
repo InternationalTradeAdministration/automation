@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
 
+import org.testng.ISuiteListener;
+
 public class ADCVDLib{
 	public static String filedDate,
 	actualInitiationSignature, calculatedInitiationSignature, 
@@ -120,12 +122,13 @@ public class ADCVDLib{
 		//setAttributeValue("selectCommodity", "text", row.get("Commodity"));
 		//clickElement(guiMap.get("selectCommodity"));
 		clickElementJs(guiMap.get("selectCommodity")); holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("selectCommodityItem"),row.get("Commodity"))); holdSeconds(1);//
+		clickElementJs(replaceGui(guiMap.get("selectCommodityItem"),row.get("Commodity"))); 
+		holdSeconds(1);//
 		//setAttributeValue("selectCaseType", "text", row.get("ADCVD_Case_Type"));
 		clickElementJs(guiMap.get("selectCaseType"));
 		clickElementJs(replaceGui(guiMap.get("selectCaseTypeItem"), caseType.equals("A-")? "AD ME":"CVD" ));
 		enterText(guiMap.get("inputCbpCaseNumber"), row.get("CBP_Case_Number"));
-		enterText(guiMap.get("inputProduct"), row.get("Product"));
+		enterText(guiMap.get("inputProduct"), row.get("Product")+"_"+row.get("TimeStamp"));
 		enterText(guiMap.get("inputProductShortName"), row.get("Product_Short_Name"));
 		//setAttributeValue("selectCountry", "text", row.get("Country"));
 		clickElementJs(guiMap.get("selectCountry"));
@@ -1088,33 +1091,15 @@ public class ADCVDLib{
 	{
 		String segmentType = row.get("Segment_Type").trim();
 		String segmentId = "not displaying";
-		
-		
-		
-	/*	holdSeconds(1);
-		clickElementJs(guiMap.get("linkSegments"));
-		holdSeconds(2);
-		clickElementJs(guiMap.get("buttonNewSegment"));
-		holdSeconds(3);*/
-		
 		holdSeconds(1);
 		clickElementJs(guiMap.get("LinkSegmentFromOrder"));
 		holdSeconds(1);
 		clickElementJs(guiMap.get("NewButtonSegmentFromOrder"));
 		holdSeconds(1);
-		
-		
-		
-		
-		
 		clickElementJs(replaceGui(guiMap.get("radioSegmentType"), segmentType) );
 		updateHtmlReport("choosing segment type", "User is able to choose segment type", 
 				"As Expected", "Step", "pass", "Segment "+segmentType);
 		clickElementJs(guiMap.get("nextButtonSegment"));
-		
-		
-		
-		
 		/*
 		holdSeconds(1);
 		scrollToElement(guiMap.get("inputOrder"));
@@ -1142,12 +1127,7 @@ public class ADCVDLib{
 			clickElementJs(guiMap.get("inputOrder"));
 			clickElementJs(replaceGui(guiMap.get("iOrderId"),orderId));//AO-0003084
 		}
-		
-		
-		
 		*/
-		
-		
 		holdSeconds(2);
 		switch (segmentType)
 		{
@@ -1231,8 +1211,12 @@ public class ADCVDLib{
 			return false;
 		}else
 		{
-			
-			clickElementJs(guiMap.get("SegmentsViewAll"));
+			int currentWait = setBrowserTimeOut(3);
+			if(elementExists(guiMap.get("SegmentsViewAll")))
+			{
+				clickElementJs(guiMap.get("SegmentsViewAll"));
+			}
+			setBrowserTimeOut(currentWait);
 			holdSeconds(2);
 			setBrowserTimeOut(currentTimeOut);
 			if(checkElementExists(replaceGui(guiMap.get("segmentType"),segmentType)))
@@ -2651,11 +2635,11 @@ public class ADCVDLib{
 		//Next Major Deadline
 		String nextMajorDeadline = "";
 		String publishedDate="";
-		if(actualInitiationSignature.equals("") && publishedDate.equals(""))
+		/*if(actualInitiationSignature.equals("") && publishedDate.equals(""))
 		{
 			nextMajorDeadline = calculatedInitiationSignature;
 		}
-		else if(actualPreliminarySignature.equals("") && publishedDate.equals(""))
+		else*/ if(actualPreliminarySignature.equals("") && publishedDate.equals(""))
 		{
 			nextMajorDeadline = calculatedPreliminarySignature;
 		}
@@ -3141,6 +3125,9 @@ public class ADCVDLib{
 		selectElementByValue(replaceGui(guiMap.get("selectOnSunSet"),
 				"Domestic Party File Substan. Response?"), "No");
 		clickElementJs(guiMap.get("SaveButton"));
+		holdSeconds(1);
+		pageRefresh();
+		holdSeconds(3);
 		switchBackFromFrame();
 		scrollByPixel(270);
 		switchToFrame(guiMap.get("frameOnSunsetReview"));
@@ -3171,7 +3158,12 @@ public class ADCVDLib{
 		selectElementByValue(replaceGui(guiMap.get("selectOnSunSet"),
 				"Domestic Party File Substan. Response?"), "Yes");
 		clickElementJs(guiMap.get("SaveButton"));
-		holdSeconds(2);
+		holdSeconds(1);
+		pageRefresh();
+		holdSeconds(3);
+		switchBackFromFrame();
+		scrollByPixel(270);
+		switchToFrame(guiMap.get("frameOnSunsetReview"));
 		currentTimeOut = setBrowserTimeOut(4);
 		if(checkElementExists(replaceGui(guiMap.get("sunsetReviewType"),"120 Day")))
 		{
@@ -3180,7 +3172,7 @@ public class ADCVDLib{
 			updateHtmlReport("Create sunset Review segment '120 Day'", 
 					"User is able to create a new segment", 
 					"<span class = 'boldy'>Sunset Segment[120 Day]</span>", "Step", "pass", 
-					"90 days sunset review");
+					"120 days sunset review");
 		}
 		else
 		{
@@ -3201,7 +3193,12 @@ public class ADCVDLib{
 		selectElementByValue(replaceGui(guiMap.get("selectOnSunSet"),
 				"Respondent File Substantive Response?"), "Yes");
 		clickElementJs(guiMap.get("SaveButton"));
-		holdSeconds(2);
+		holdSeconds(1);
+		pageRefresh();
+		holdSeconds(3);
+		switchBackFromFrame();
+		scrollByPixel(270);
+		switchToFrame(guiMap.get("frameOnSunsetReview"));
 		currentTimeOut = setBrowserTimeOut(4);
 		if(checkElementExists(replaceGui(guiMap.get("sunsetReviewType"),"240 Day")))
 		{
@@ -3314,9 +3311,17 @@ public class ADCVDLib{
 				"Calculated Final Signature"), "text");
 		matches = matches & compareAndReport("sunSetReviewDate", "Calculated Final Signature", 
 				calculatedFinalSignature, actualValue);
-		//Update ACE (Customs Module)
+		
 		if(sunSetType.endsWith("90 Day"))
 		{
+			//Final Announcement Date
+			String finalAnnouncementDate = calculateDate(1, "Final Announcement Date", "business",
+					!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);
+			actualValue = getElementAttribute(replaceGui(guiMap.get("sunSetReviewDate"),
+					"Final Announcement Date"), "text");
+			matches = matches & compareAndReport("sunSetReviewDate", "Final Announcement Date", 
+					finalAnnouncementDate, actualValue);
+			//Update ACE (Customs Module)
 			String UpdateAceCustomsModule="";
 			if(actualFinalSignature.equals("") && publishedDateFinal.equals("") && 
 					!calculatedFinalSignature.equals(""))
@@ -3346,7 +3351,7 @@ public class ADCVDLib{
 			//IF Actual_Revocation_or_Continuation_FR__c  is not blank AND Publish_Date__c (type = Revocation) is blank THEN Actual_Revocation_or_Continuation_FR__c  + 6; 
 			//IF Publish_Date__c (type = Revocation) is not blank THEN Publish_Date__c (type = Revocation) -1
 		}
-		//Notify ITC of No Domestic Interest
+		/*//Notify ITC of No Domestic Interest
 		if(sunSetType.endsWith("90 Day"))
 		{
 			String notifyItcOfNoDomesticInterest = calculateDate(20, 
@@ -3357,7 +3362,7 @@ public class ADCVDLib{
 			matches = matches & compareAndReport("sunSetReviewDate", 
 					"Notify ITC of No Domestic Interest", 
 					notifyItcOfNoDomesticInterest, actualValue);
-		}
+		}*/
 		//Final Issues Due to DAS
 		String finalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS", "business",
 				calculatedFinalSignature);
@@ -3525,7 +3530,7 @@ public class ADCVDLib{
 				actualPrelimConcurrenceToDas="", segmentOutcome="", actualFinalIssuesToDas = "",
 						actualFinalConcurrenceToDas = "", calculatedFinalFRSignature="";
 		//Next Major Deadline
-		if(actualPreliminarySignature.equals("") && sunSetType.endsWith("240 Day"))
+		if(sunSetType.equalsIgnoreCase("240 Day") && actualPreliminarySignature.equals(""))
 		{
 			nextMajorDeadline = calculatedPreliminarySignature;
 		}else if(actualFinalSignature.equals(""))
@@ -3538,28 +3543,30 @@ public class ADCVDLib{
 				nextMajorDeadline, actualValue);
 		
 		//Next Due to DAS Deadline
-		if(actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals("") 
-				&& sunSetType.endsWith("240 Day"))
+		if(sunSetType.equalsIgnoreCase("240 Day") && actualPreliminarySignature.equals("") 
+				&& actualPrelimIssuesToDas.equals("") 
+				)
 		{
 			nextDueToDasDeadline = prelimIssuesDueToDas;
 		}else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals("") 
 				&& sunSetType.endsWith("240 Day"))
 		{
 			nextDueToDasDeadline = actualPrelimConcurrenceToDas;
-		}else if(actualPreliminarySignature.equals("") && segmentOutcome.equals("") 
-				&& sunSetType.endsWith("240 Day"))
+		}else if(sunSetType.equalsIgnoreCase("240 Day") && actualPreliminarySignature.equals("") 
+				&& segmentOutcome.equals("") 
+				)
 		{
 			nextDueToDasDeadline = calculatedPreliminarySignature;
 		}
 		else if(actualFinalSignature.equals("") && actualFinalIssuesToDas.equals(""))
 		{
-			nextDueToDasDeadline = prelimIssuesDueToDas;
+			nextDueToDasDeadline = finalIssuesDueToDas;
 		}else if(actualFinalSignature.equals("") && actualFinalConcurrenceToDas.equals(""))
 		{
 			nextDueToDasDeadline = actualPrelimConcurrenceToDas;
 		}else if (actualFinalSignature.equals("") && segmentOutcome.equals(""))
 		{
-			nextDueToDasDeadline = calculatedFinalSignature;
+			nextDueToDasDeadline = calculatedFinalFRSignature;
 		}
 		actualValue = getElementAttribute(replaceGui(guiMap.get("genericSegmentDate"),
 				"Next Due to DAS Deadline"), "text");
@@ -3567,20 +3574,17 @@ public class ADCVDLib{
 				nextDueToDasDeadline, actualValue);
 		
 		//Next Office Deadline
-		if(actualPreliminarySignature.equals("") && !datePassed(prelimTeamMeetingDeadline) 
-				&& sunSetType.endsWith("240 Day"))
+		if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && !datePassed(prelimTeamMeetingDeadline) 
+				)
 		{
 			nextOfficeDeadline = prelimTeamMeetingDeadline;
-		}else if(actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals("")
-				&& sunSetType.endsWith("240 Day"))
+		}else if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals(""))
 		{
 			nextOfficeDeadline = prelimIssuesDueToDas;
-		}else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals("") 
-				&& sunSetType.endsWith("240 Day"))
+		}else if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals(""))
 		{
 			nextOfficeDeadline = actualPrelimConcurrenceToDas;
-		}else if(actualPreliminarySignature.equals("") && segmentOutcome.equals("") 
-				&& sunSetType.endsWith("240 Day"))
+		}else if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && segmentOutcome.equals(""))
 		{
 			nextOfficeDeadline = calculatedPreliminarySignature;
 		}else if(actualFinalSignature.equals("") && !datePassed(finalTeamMeetingDeadline))
@@ -3603,7 +3607,36 @@ public class ADCVDLib{
 				"Next Office Deadline"), "text");
 		matches = matches & compareAndReport("genericSegmentDate", "Next Office Deadline", 
 				nextOfficeDeadline, actualValue);
+		
+		
+		//Preliminary Announcement Date
+		String preliminaryAnnouncementDate = calculateDate(1, "Preliminary Announcement Date", 
+				"calendar",  
+		!actualPreliminarySignature.equals("")?actualPreliminarySignature:calculatedPreliminarySignature);
+		//Final Announcement Date
+		String finalAnnouncementDate = calculateDate(1, "Final Announcement Date", 
+				"calendar", 
+				!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);
+		//Next Announcement Date
+		String nextAnnouncementDate = "";
+		if(!datePassed(preliminaryAnnouncementDate) && (segmentOutcome.equals("") || 
+				segmentOutcome.equalsIgnoreCase("Completed")))
+		{
+			
+			nextAnnouncementDate = preliminaryAnnouncementDate;
+		}
+		else if (!datePassed(finalAnnouncementDate) && (segmentOutcome.equals("") || 
+				segmentOutcome.equalsIgnoreCase("Completed")))
+		{
+			nextAnnouncementDate = finalAnnouncementDate;
+		}
+		actualValue = getElementAttribute(replaceGui(guiMap.get("genericSegmentDate"),
+				"Next Announcement Date"), "text");
+		matches = matches & compareAndReport("genericSegmentDate", 
+				"Next Announcement Date", nextAnnouncementDate, actualValue);	
 		switchToFrame(guiMap.get("frameOnSunsetReview"));
+		//clickElementJs(replaceGui(guiMap.get("orderFromSegment"),orderId));
+		
 		return matches;
 	}
 	/**
@@ -3613,7 +3646,7 @@ public class ADCVDLib{
 	*/
 	static boolean datePassed(String date) throws ParseException
 	{
-		if (date.equals("")) return false;
+		if (date == null || date.equals("")) return true;
 		Date todayDate = new Date();
 		String todayDateStr = new SimpleDateFormat("M/d/yyyy").format(todayDate);
 		if(format.parse(date).compareTo(format.parse(todayDateStr))<0) return true;
