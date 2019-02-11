@@ -91,7 +91,7 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">4 methods,   4 passed</span>
+                    <span class="method-stats">5 methods,   5 passed</span>
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -118,6 +118,11 @@
                       <span>
                         <img width="3%" src="passed.png"/>
                         <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Create_Order">Create_Order</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Create_Segment_Sunset_Review">Create_Segment_Sunset_Review</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Suite -->
@@ -166,6 +171,13 @@
                   <span class="method-name">Create_Order</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Create_Segment_Sunset_Review">
+                  </a> <!-- Create_Segment_Sunset_Review -->
+                  <span class="method-name">Create_Segment_Sunset_Review</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
           </div> <!-- suite-Suite-class-passed -->
         </div> <!-- panel Suite -->
@@ -186,6 +198,7 @@
           &lt;include name=&quot;Create_And_Validate_Petition&quot;/&gt;
           &lt;include name=&quot;Create_And_Validate_Investigation&quot;/&gt;
           &lt;include name=&quot;Create_Order&quot;/&gt;
+          &lt;include name=&quot;Create_Segment_Sunset_Review&quot;/&gt;
         &lt;/methods&gt;
       &lt;/class&gt; &lt;!-- tests.TestOne --&gt;
     &lt;/classes&gt;
@@ -227,28 +240,32 @@ data.addColumn('number', 'Number');
 data.addColumn('string', 'Method');
 data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
-data.addRows(4);
+data.addRows(5);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'Create_Adcvd_Case')
+data.setCell(0, 1, 'Create_Segment_Sunset_Review')
 data.setCell(0, 2, 'tests.TestOne')
-data.setCell(0, 3, 92348);
+data.setCell(0, 3, 132181);
 data.setCell(1, 0, 1)
-data.setCell(1, 1, 'Create_And_Validate_Investigation')
+data.setCell(1, 1, 'Create_Adcvd_Case')
 data.setCell(1, 2, 'tests.TestOne')
-data.setCell(1, 3, 44709);
+data.setCell(1, 3, 106028);
 data.setCell(2, 0, 2)
 data.setCell(2, 1, 'Create_And_Validate_Petition')
 data.setCell(2, 2, 'tests.TestOne')
-data.setCell(2, 3, 40969);
+data.setCell(2, 3, 59091);
 data.setCell(3, 0, 3)
-data.setCell(3, 1, 'Create_Order')
+data.setCell(3, 1, 'Create_And_Validate_Investigation')
 data.setCell(3, 2, 'tests.TestOne')
-data.setCell(3, 3, 22733);
+data.setCell(3, 3, 49794);
+data.setCell(4, 0, 4)
+data.setCell(4, 1, 'Create_Order')
+data.setCell(4, 2, 'tests.TestOne')
+data.setCell(4, 3, 27203);
 window.suiteTableData['Suite']= { tableData: data, tableDiv: 'times-div-Suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 3 minutes</span>
+              <span class="suite-total-time">Total running time: 6 minutes</span>
               <div id="times-div-Suite">
               </div> <!-- times-div-Suite -->
             </div> <!-- times-div -->
@@ -263,7 +280,7 @@ return data;
         </div> <!-- panel -->
         <div panel-name="ignored-methods-Suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">7 ignored methods</span>
+            <span class="header-content">6 ignored methods</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="ignored-class-div">
@@ -276,8 +293,6 @@ return data;
                 <span class="ignored-method-name">Create_Segment_Administrative_Review</span>
                 <br/>
                 <span class="ignored-method-name">Create_Segment_New_Shipper_Review</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Sunset_Review</span>
                 <br/>
                 <span class="ignored-method-name">Create_Segment_Scope_Inquiry</span>
                 <br/>
@@ -300,57 +315,69 @@ return data;
               </div> <!-- configuration-class before -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">216 ms</span>
+                <span class="method-start">338 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Create_Adcvd_Case</span>
-                <span class="method-start">217 ms</span>
+                <span class="method-start">338 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">92566 ms</span>
+                <span class="method-start">106367 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">92577 ms</span>
+                <span class="method-start">106384 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Create_And_Validate_Petition</span>
-                <span class="method-start">92577 ms</span>
+                <span class="method-start">106385 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">133546 ms</span>
+                <span class="method-start">165476 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">133553 ms</span>
+                <span class="method-start">165481 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Create_And_Validate_Investigation</span>
-                <span class="method-start">133554 ms</span>
+                <span class="method-start">165481 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">178263 ms</span>
+                <span class="method-start">215275 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">178270 ms</span>
+                <span class="method-start">215283 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Create_Order</span>
-                <span class="method-start">178270 ms</span>
+                <span class="method-start">215284 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">201004 ms</span>
+                <span class="method-start">242488 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">242493 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Create_Segment_Sunset_Review</span>
+                <span class="method-start">242494 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">374675 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-class after">
                 <img src="failed.png">
                 </img>
                 <span class="method-name">afterClass</span>
-                <span class="method-start">201009 ms</span>
+                <span class="method-start">374681 ms</span>
               </div> <!-- configuration-class after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

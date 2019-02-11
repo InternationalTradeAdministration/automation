@@ -77,7 +77,7 @@ public class TestOne {
 		GuiTools.guiMap = new LinkedHashMap<String, LinkedHashMap<String, String>>();
 		mapConfInfos = guiTools.getConfigInfos();
 		browserType = mapConfInfos.get("browser_type");
-		String guiMapFilePath = InitTools.getInputDataFolder()+"\\script\\gui_map.xlsx";
+		String guiMapFilePath = InitTools.getInputDataFolder()+"/script/gui_map.xlsx";
 		guiPool = XlsxTools.readXlsxSheetAndFilter(guiMapFilePath, "guiMap", "");
 		guiMap = XlsxTools.readGuiMap(guiPool);
 		HtmlReport.setTestSuiteName(mapConfInfos.get("project_name"));
@@ -122,7 +122,7 @@ public class TestOne {
 	    HtmlReport.addTestCaseToSuite(GuiTools.getTestCaseName(), testCaseStatus);
 	    HtmlReport.testCaseSteps.clear();
 	    HtmlReport.setStepNumber(0);
-	    if (guiTools.tearDown)
+	    if (GuiTools.tearDown)
 	    {
 	    	//java.util.Date dateFail = new java.util.Date();
 			endTime = new Timestamp(date.getTime());
@@ -147,7 +147,8 @@ public class TestOne {
 		System.out.println("start Test");
 		String url = mapConfInfos.get("url");
 		String user = mapConfInfos.get("user_name");
-		String password = mapConfInfos.get("password");		
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
 		guiTools.openBrowser(browserType);
 		loginOn = ADCVDLib.loginToAdCvd(url, user, password);
 		holdSeconds(2);
@@ -309,7 +310,6 @@ public class TestOne {
 	@Test(enabled = true, priority=5)
 	void Petition_Status_Validation() throws Exception
 	{
-		LinkedHashMap<String, String> arDates, nsrDates;
 		printLog("Petition_Status_Validation");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_005");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
@@ -339,8 +339,7 @@ public class TestOne {
 	*/
 	@Test(enabled = true, priority=6)
 	void Investigation_Status_Validation() throws Exception
-	{
-		LinkedHashMap<String, String> arDates, nsrDates;
+	{		
 		printLog("Investigation_Status_Validation");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_006");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
@@ -372,8 +371,7 @@ public class TestOne {
 	*/
 	@Test(enabled = true, priority=7)
 	void Admin_Review_Status_Validation() throws Exception
-	{   
-		LinkedHashMap<String, String> arDates, nsrDates;
+	{  
 		printLog("Admin_Review_Status_Validation");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_007");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
@@ -412,7 +410,6 @@ public class TestOne {
 	@Test(enabled = true, priority=8)
 	void Expedited_Review_Status_Validation() throws Exception
 	{
-		LinkedHashMap<String, String> arDates, nsrDates;
 		printLog("Expedited_Review_Status_Validation");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_008");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
@@ -432,7 +429,7 @@ public class TestOne {
 		row.put("ADCVD_Case_Type", "AD ME");
 		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title"); 
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		if(! testCaseStatus) GuiTools.tearDown =true;
 		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
 		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
@@ -449,7 +446,6 @@ public class TestOne {
 	@Test(enabled = true, priority=9)
 	void New_Shipper_Review_Status_Validation() throws Exception
 	{
-		LinkedHashMap<String, String> arDates, nsrDates;
 		printLog("New_Shipper_Review_Status_Validation");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_009");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
@@ -487,7 +483,6 @@ public class TestOne {
 	@Test(enabled = true, priority=10)
 	void Changed_Circumstance_Review_Status_Validation() throws Exception
 	{
-		LinkedHashMap<String, String> arDates, nsrDates;
 		printLog("Changed_Circumstance_Review_Status_Validation");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_010");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
@@ -583,7 +578,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		if(! testCaseStatus) GuiTools.tearDown =true;
 		testCaseStatus = testCaseStatus && ADCVDLib.validateInvestigationFields(row);
 	}
 	/**
@@ -598,7 +593,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewOrder(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		if(! testCaseStatus) GuiTools.tearDown =true;
 	}
 	
 	/**

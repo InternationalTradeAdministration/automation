@@ -7,8 +7,8 @@
         <methods>
           <include name="afterClass"/>
           <include name="afterMethod"/>
-          <include name="Changed_Circumstance_Review_Status_Validation"/>
           <include name="beforeMethod"/>
+          <include name="CVD_Align_With_AD"/>
           <include name="beforeClass"/>
         </methods>
       </class> <!-- tests.TestOne -->

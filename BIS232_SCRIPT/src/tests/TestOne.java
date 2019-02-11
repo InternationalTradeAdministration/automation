@@ -2,7 +2,7 @@ package tests;
 import static GuiLibs.GuiTools.guiMap;
 import static GuiLibs.GuiTools.holdSeconds;
 import static ReportLibs.ReportTools.printLog;
-import static XmlLibs.XmlTools.buildTestNgFromDataPool;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.testng.TestNG;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -18,6 +19,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
+
 import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import OfficeLibs.XlsxTools;
@@ -115,7 +117,7 @@ public class TestOne {
 	    HtmlReport.addTestCaseToSuite(GuiTools.getTestCaseName(), testCaseStatus);
 	    HtmlReport.testCaseSteps.clear();
 	    HtmlReport.setStepNumber(0);
-	    if (guiTools.tearDown)
+	    if (GuiTools.tearDown)
 	    {
 	    	//java.util.Date dateFail = new java.util.Date();
 			endTime = new Timestamp(date.getTime());

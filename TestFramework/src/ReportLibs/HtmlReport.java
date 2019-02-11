@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
+
 import InitLibs.InitTools;
 
 public class HtmlReport extends InitTools{
@@ -87,6 +89,7 @@ public class HtmlReport extends InitTools{
 	 * @throws IOException 
 	 * 
 	 */
+	@SuppressWarnings("deprecation")
 	public static void buildHtmalReportForTestSuite() throws IOException
 	{
 		 SimpleDateFormat sdFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");  
@@ -94,7 +97,7 @@ public class HtmlReport extends InitTools{
 		String templateString = readTemplateFile(getInputDataFolder()+"\\template\\suiteTemplate.html");
 		StringBuilder htmlBody =   new StringBuilder();
 		String line;
-		int secodes=0, minutes=0, hours=0;
+		int minutes=0, hours=0;
 		int seconds = (int) suiteExecutionTime / 1000;
 	    hours = seconds / 3600;
 	    minutes = (seconds % 3600) / 60;
@@ -134,9 +137,9 @@ public class HtmlReport extends InitTools{
 	@SuppressWarnings("deprecation")
 	public static  void buildHtmlReportForTestCase() throws IOException 
 	{
-		SimpleDateFormat sdFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");  
-		Date now = new Date();  
-		int secodes=0, minutes=0, hours=0;
+		//SimpleDateFormat sdFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");  
+		//Date now = new Date();  
+		int  minutes=0, hours=0;
 		int seconds = (int) tcExecutionTime / 1000;
 	    hours = seconds / 3600;
 	    minutes = (seconds % 3600) / 60;
@@ -146,7 +149,7 @@ public class HtmlReport extends InitTools{
 	    String second = seconds<10?"0"+seconds:""+seconds;
 		String templateString = readTemplateFile(getInputDataFolder()+"\\template\\tcTemplate.html");
 		StringBuilder htmlBody =   new StringBuilder();
-		String line, tdStatus;
+		String line;
 		for (int i=0; i < testCaseSteps.size(); i++)
 		{
 			if(testCaseSteps.get(i).get("StepPassFail").equalsIgnoreCase("Title"))

@@ -9,29 +9,28 @@ package libs;
 import static GuiLibs.GuiTools.checkElementExists;
 import static GuiLibs.GuiTools.clickElement;
 import static GuiLibs.GuiTools.clickElementJs;
+import static GuiLibs.GuiTools.elementExists;
 import static GuiLibs.GuiTools.enterText;
-import static GuiLibs.GuiTools.failTestSuite;
 import static GuiLibs.GuiTools.failTestCase;
+import static GuiLibs.GuiTools.failTestSuite;
 import static GuiLibs.GuiTools.getElementAttribute;
 import static GuiLibs.GuiTools.guiMap;
 import static GuiLibs.GuiTools.highlightElement;
-import static GuiLibs.GuiTools.unHighlightElement;
 import static GuiLibs.GuiTools.holdSeconds;
 import static GuiLibs.GuiTools.navigateTo;
 import static GuiLibs.GuiTools.pageRefresh;
 import static GuiLibs.GuiTools.replaceGui;
 import static GuiLibs.GuiTools.scrollByPixel;
 import static GuiLibs.GuiTools.scrollToElement;
+import static GuiLibs.GuiTools.scrollToTheTopOfPage;
 import static GuiLibs.GuiTools.selectElementByValue;
 import static GuiLibs.GuiTools.setBrowserTimeOut;
 import static GuiLibs.GuiTools.switchBackFromFrame;
 import static GuiLibs.GuiTools.switchToFrame;
+import static GuiLibs.GuiTools.unHighlightElement;
 import static GuiLibs.GuiTools.updateHtmlReport;
-import static GuiLibs.GuiTools.elementExists;
-import static GuiLibs.GuiTools.scrollToTheTopOfPage;
 import static ReportLibs.ReportTools.printLog;
 
-import java.awt.geom.RectangularShape;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,12 +40,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import javax.swing.text.Segment;
-
-import org.testng.ISuiteListener;
-
-import InitLibs.InitTools;
 
 public class ADCVDLib{
 	public static String filedDate,
@@ -396,7 +389,6 @@ public class ADCVDLib{
 	 * @return true if all dates matches, false if not
 	 * @exception Exception
 	*/
-	@SuppressWarnings({ "unused", "unused" })
 	public static boolean validatePetitionFields(LinkedHashMap<String, String> row) throws Exception
 	{
 		boolean allMatches = true;
@@ -562,7 +554,6 @@ public class ADCVDLib{
 	 * @return true if all dates matches, false if not
 	 * @exception Exception
 	*/
-	@SuppressWarnings({ "unused", "unused" })
 	public static boolean validateInvestigationFields(LinkedHashMap<String, String> row) throws Exception
 	{
 		boolean allMatches = true;
@@ -1897,12 +1888,12 @@ public class ADCVDLib{
 		String segmentOutcome = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),"Segment Outcome"), "text");
 		System.out.println(segmentOutcome);
 		//Actual Initiation Issues to DAS
-		String actualInitiationIssuesToDas = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
-				"Actual Initiation Issues to DAS"), "text");
+		//String actualInitiationIssuesToDas = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
+			//	"Actual Initiation Issues to DAS"), "text");
 		System.out.println(segmentOutcome);
 		//Actual Initiation Concurrence to DAS
-		String actualInitiationConcurrenceToDas = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
-				"Actual Initiation Concurrence to DAS"), "text");
+		//String actualInitiationConcurrenceToDas = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
+			//	"Actual Initiation Concurrence to DAS"), "text");
 		System.out.println(segmentOutcome);
 		//Actual Prelim Issues to DAS
 		String actualPrelimIssuesToDas = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
@@ -2368,8 +2359,8 @@ public class ADCVDLib{
 				"Final Extension (# of days)"), "text")) ;
 		System.out.println(finalExtensionDays);
 		//Initiation Extension (# of days)
-		int initiationExtensionDays = readNumberFromScreen(getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
-				"Initiation Extension (# of days)"), "text")) ;
+		//int initiationExtensionDays = readNumberFromScreen(getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
+		//		"Initiation Extension (# of days)"), "text")) ;
 		System.out.println(finalExtensionDays);
 		//Prelim Extension (# of days)
 		int prelimExtensionDays = readNumberFromScreen(getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
@@ -2750,7 +2741,6 @@ public class ADCVDLib{
 	public static boolean validateNewSegmentSunsetReview(LinkedHashMap<String, String> row) throws Exception
 	{
 		boolean allMatches = true;
-		String actualValue  = "" ;
 		clickElementJs(guiMap.get("objectFRs"));
 		clickElementJs(guiMap.get("newFRButton"));
 		holdSeconds(1);
@@ -3225,7 +3215,6 @@ public class ADCVDLib{
 	 * @return true if all dates matches, false if not
 	 * @exception Exception
 	*/
-	@SuppressWarnings({ "unused", "unused" })
 	public static boolean validateLitigationFields(LinkedHashMap<String, String> row) throws Exception
 	{
 		boolean allMatches = true;
@@ -3847,9 +3836,7 @@ public class ADCVDLib{
 	*/
 	static String calculateDate(int val, String ...params) throws ParseException
 	{
-		Date todayDate = new Date();
 		int iterator, numberBusinessDays ;
-		String todayDateStr = new SimpleDateFormat("M/d/yyyy").format(todayDate);
 		String newDate = null;
 		iterator = (val<0)? -1:1;
 		numberBusinessDays = iterator * val;

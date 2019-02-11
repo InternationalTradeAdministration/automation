@@ -7,11 +7,6 @@ package GuiLibs;
 //import ReportLibs.ReportTools;
 import static ReportLibs.ReportTools.printLog;
 
-import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -28,26 +23,6 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-
-import static org.monte.media.FormatKeys.EncodingKey;
-import static org.monte.media.FormatKeys.FrameRateKey;
-import static org.monte.media.FormatKeys.KeyFrameIntervalKey;
-import static org.monte.media.FormatKeys.MIME_AVI;
-import static org.monte.media.FormatKeys.MediaTypeKey;
-import static org.monte.media.FormatKeys.MimeTypeKey;
-import static org.monte.media.FormatKeys.MIME_QUICKTIME;
-import static org.monte.media.VideoFormatKeys.CompressorNameKey;
-import static org.monte.media.VideoFormatKeys.DepthKey;
-import static org.monte.media.VideoFormatKeys.ENCODING_QUICKTIME_JPEG;
-import static org.monte.media.VideoFormatKeys.DepthKey;
-import static org.monte.media.VideoFormatKeys.ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE;
-import static org.monte.media.VideoFormatKeys.QualityKey;
-
-import org.monte.*;
-import org.monte.media.Format;
-import org.monte.media.FormatKeys;
-import org.monte.media.FormatKeys.MediaType;
-import org.monte.media.math.Rational;
 import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -234,35 +209,23 @@ public class GuiTools extends InitTools{
 	 */
 	public static ArrayList<String> getAllProcessIds(String browserType)
 	{
-		int i = 0;
 		ArrayList<String> processes = new ArrayList<String>() ;
 		try {
 	         // create a new process
 			 String str, commandeLine = "tasklist /v /fo csv | findstr /i \""+ browserType+"\"";
 	         System.out.println("Creating Process...");
 	         Process p = Runtime.getRuntime().exec("cmd /c "+commandeLine);
-
-	         // get the input stream of the process and print it
 	         InputStream in = p.getInputStream();
 	         BufferedReader br = new BufferedReader(new InputStreamReader(in));
 	         while((str = br.readLine())!=null)
 	         {
-	        	 printLog(str);
-	        	 //if(str.contains(title))
-	        	// {
-	        		 processes.add(str.split(",")[1].replaceAll("\"", ""));
-	        		//return str.split(",")[1].replaceAll("\"", "");
-	        	// }
+	        	printLog(str);
+	        	processes.add(str.split(",")[1].replaceAll("\"", ""));
 	         }
 	         p.destroy();
 	      } catch (Exception ex) {
 	         ex.printStackTrace();
 	      }
-		//ArrayList<ArrayList<String>> b
-		//rowserProcess =   
-		//String jvmName = ManagementFactory.getRuntimeMXBean().getName();
-		//return jvmName.split("@")[0];
-		 //Process[] localByName = Process.GetProcessesByName("notepad");
 		return processes;
 	}
 	/**
@@ -362,10 +325,26 @@ public class GuiTools extends InitTools{
 	 */
 	public WebDriver getChromeDriver()
 	{
-		System.setProperty("webdriver.chrome.driver", getLibFolder()+"\\chromedriver.exe");
-		
+		String osName = System.getProperty("os.name").toLowerCase();
+		String userDir = System.getProperty("user.dir");
+		System.out.println("userDir "+userDir);
+		String Chrome_Profile_Path = "";
+		if(!osName.contains("mac"))
+		{
+			System.out.println("this a windows machine");
+			System.out.println(getLibFolder());
+			System.setProperty("webdriver.chrome.driver", userDir+"/libs/chromedriver.exe");
+			 Chrome_Profile_Path = "C:/Users/"+getTesterName()+"/AppData/Local/Google/Chrome/User Data";
+		}
+		else
+		{
+			System.out.println("this a mac machine");
+			System.out.println(getLibFolder());
+			System.setProperty("webdriver.chrome.driver", getLibFolder()+"/libs/chromedrive");
+			 Chrome_Profile_Path = "/Users/"+getTesterName()+"/Library/Application Support/Google";
+		}
 		/* Storing the Chrome Profile Path in Chrome_Profile_Path variable. */
-		String Chrome_Profile_Path = "C:\\Users\\"+getTesterName()+"\\AppData\\Local\\Google\\Chrome\\User Data";
+		
 		/* Creating an instance of ChromeOptions (i.e objChrome_Profile) */
 		ChromeOptions Chrome_Profile = new ChromeOptions();
 		/* Disabling the chrome browser extensions */
@@ -387,8 +366,19 @@ public class GuiTools extends InitTools{
 	 */
 	public WebDriver getChromeDriverOff()
 	{
-		System.setProperty("webdriver.chrome.driver", getLibFolder()+"\\chromedriver.exe");
-		
+		String osName = System.getProperty("os.name").toLowerCase();
+		String userDir = System.getProperty("user.dir");
+		System.out.println("userDir "+userDir);
+		if(!osName.contains("mac"))
+		{
+			System.out.println(getLibFolder());
+			System.setProperty("webdriver.chrome.driver", userDir+"/libs/chromedriver.exe");
+		}
+		else
+		{
+			System.out.println(getLibFolder());
+			System.setProperty("webdriver.chrome.driver", userDir+"/libs/chromedrive");
+		}
 		/* Storing the Chrome Profile Path in Chrome_Profile_Path variable. */
 		//String Chrome_Profile_Path = "C:\\Users\\"+getTesterName()+"\\AppData\\Local\\Google\\Chrome\\AutomationProfile";
 		/* Creating an instance of ChromeOptions (i.e objChrome_Profile) */
@@ -1236,7 +1226,7 @@ public class GuiTools extends InitTools{
 	 * @param driver: driver name
 	 */
 	public void setDriver(WebDriver driver) {
-		this.driver = driver;
+		GuiTools.driver = driver;
 	}
 	
 	/**

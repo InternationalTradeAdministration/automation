@@ -1,85 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" ignored="7" total="11" passed="4">
+<testng-results skipped="0" failed="0" ignored="6" total="11" passed="5">
   <reporter-output>
   </reporter-output>
-  <suite name="Suite" duration-ms="203375" started-at="2019-02-09T00:05:03Z" finished-at="2019-02-09T00:08:27Z">
+  <suite name="Suite" duration-ms="375234" started-at="2019-02-11T20:10:24Z" finished-at="2019-02-11T20:16:39Z">
     <groups>
     </groups>
-    <test name="Test" duration-ms="203375" started-at="2019-02-09T00:05:03Z" finished-at="2019-02-09T00:08:27Z">
+    <test name="Test" duration-ms="375234" started-at="2019-02-11T20:10:24Z" finished-at="2019-02-11T20:16:39Z">
       <class name="tests.TestOne">
-        <test-method status="PASS" signature="beforeClass()[pri:0, instance:tests.TestOne@71809907]" name="beforeClass" is-config="true" duration-ms="200" started-at="2019-02-09T00:05:03Z" finished-at="2019-02-09T00:05:04Z">
+        <test-method status="PASS" signature="beforeClass()[pri:0, instance:tests.TestOne@51acdf2e]" name="beforeClass" is-config="true" duration-ms="316" started-at="2019-02-11T20:10:24Z" finished-at="2019-02-11T20:10:24Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeClass -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-09T00:05:04Z" finished-at="2019-02-09T00:05:04Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Adcvd_Case()[pri:1, instance:tests.TestOne@71809907]" name="Create_Adcvd_Case" duration-ms="92348" started-at="2019-02-09T00:05:04Z" finished-at="2019-02-09T00:06:36Z">
+        <test-method status="PASS" signature="Create_Adcvd_Case()[pri:1, instance:tests.TestOne@51acdf2e]" name="Create_Adcvd_Case" duration-ms="106028" started-at="2019-02-11T20:10:24Z" finished-at="2019-02-11T20:12:10Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_Adcvd_Case -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="9" started-at="2019-02-09T00:06:36Z" finished-at="2019-02-09T00:06:36Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-11T20:10:24Z" finished-at="2019-02-11T20:10:24Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="afterMethod" is-config="true" duration-ms="15" started-at="2019-02-11T20:12:10Z" finished-at="2019-02-11T20:12:10Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="Create_And_Validate_Petition()[pri:2, instance:tests.TestOne@71809907]" name="Create_And_Validate_Petition" duration-ms="40969" started-at="2019-02-09T00:06:36Z" finished-at="2019-02-09T00:07:17Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-11T20:12:10Z" finished-at="2019-02-11T20:12:10Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="Create_And_Validate_Petition()[pri:2, instance:tests.TestOne@51acdf2e]" name="Create_And_Validate_Petition" duration-ms="59091" started-at="2019-02-11T20:12:10Z" finished-at="2019-02-11T20:13:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_And_Validate_Petition -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-09T00:06:36Z" finished-at="2019-02-09T00:06:36Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="7" started-at="2019-02-09T00:07:17Z" finished-at="2019-02-09T00:07:17Z">
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="afterMethod" is-config="true" duration-ms="5" started-at="2019-02-11T20:13:09Z" finished-at="2019-02-11T20:13:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-09T00:07:17Z" finished-at="2019-02-09T00:07:17Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_And_Validate_Investigation()[pri:3, instance:tests.TestOne@71809907]" name="Create_And_Validate_Investigation" duration-ms="44709" started-at="2019-02-09T00:07:17Z" finished-at="2019-02-09T00:08:02Z">
+        <test-method status="PASS" signature="Create_And_Validate_Investigation()[pri:3, instance:tests.TestOne@51acdf2e]" name="Create_And_Validate_Investigation" duration-ms="49794" started-at="2019-02-11T20:13:09Z" finished-at="2019-02-11T20:13:59Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- Create_And_Validate_Investigation -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-09T00:08:02Z" finished-at="2019-02-09T00:08:02Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- afterMethod -->
-        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@71809907]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-09T00:08:02Z" finished-at="2019-02-09T00:08:02Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="beforeMethod" is-config="true" duration-ms="0" started-at="2019-02-11T20:13:09Z" finished-at="2019-02-11T20:13:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- beforeMethod -->
-        <test-method status="PASS" signature="Create_Order()[pri:4, instance:tests.TestOne@71809907]" name="Create_Order" duration-ms="22733" started-at="2019-02-09T00:08:02Z" finished-at="2019-02-09T00:08:24Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- Create_Order -->
-        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@71809907]" name="afterMethod" is-config="true" duration-ms="4" started-at="2019-02-09T00:08:24Z" finished-at="2019-02-09T00:08:24Z">
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="afterMethod" is-config="true" duration-ms="8" started-at="2019-02-11T20:13:59Z" finished-at="2019-02-11T20:13:59Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- afterMethod -->
-        <test-method status="FAIL" signature="afterClass()[pri:0, instance:tests.TestOne@71809907]" name="afterClass" is-config="true" duration-ms="2355" started-at="2019-02-09T00:08:24Z" finished-at="2019-02-09T00:08:27Z">
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-11T20:13:59Z" finished-at="2019-02-11T20:13:59Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="Create_Order()[pri:4, instance:tests.TestOne@51acdf2e]" name="Create_Order" duration-ms="27203" started-at="2019-02-11T20:13:59Z" finished-at="2019-02-11T20:14:26Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- Create_Order -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="afterMethod" is-config="true" duration-ms="4" started-at="2019-02-11T20:14:26Z" finished-at="2019-02-11T20:14:26Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="beforeMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="beforeMethod" is-config="true" duration-ms="1" started-at="2019-02-11T20:14:26Z" finished-at="2019-02-11T20:14:26Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="Create_Segment_Sunset_Review()[pri:11, instance:tests.TestOne@51acdf2e]" name="Create_Segment_Sunset_Review" duration-ms="132181" started-at="2019-02-11T20:14:26Z" finished-at="2019-02-11T20:16:38Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- Create_Segment_Sunset_Review -->
+        <test-method status="PASS" signature="afterMethod()[pri:0, instance:tests.TestOne@51acdf2e]" name="afterMethod" is-config="true" duration-ms="6" started-at="2019-02-11T20:16:38Z" finished-at="2019-02-11T20:16:38Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="FAIL" signature="afterClass()[pri:0, instance:tests.TestOne@51acdf2e]" name="afterClass" is-config="true" duration-ms="533" started-at="2019-02-11T20:16:38Z" finished-at="2019-02-11T20:16:39Z">
           <exception class="org.openqa.selenium.NoSuchSessionException">
             <message>
               <![CDATA[invalid session id
   (Driver info: chromedriver=2.43.600210 (68dcf5eebde37173d4027fa8635e332711d2874a),platform=Windows NT 10.0.17134 x86_64) (WARNING: The server did not provide any stacktrace information)
 Command duration or timeout: 0 milliseconds
-Build info: version: '3.14.0', revision: 'aacccce0', time: '2018-08-02T20:05:20.749Z'
-System info: host: 'DESKTOP-P47OH58', ip: '192.168.0.8', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_191'
+Build info: version: '3.14.0', revision: 'aacccce0', time: '2018-08-02T20:19:58.91Z'
+System info: host: 'DESKTOP-P47OH58', ip: '172.26.16.67', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_191'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:\Users\Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:50498}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
-Session ID: a4f8f47a6f7cfaa3df29f5ae82fc3ab7]]>
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:/Users/Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:63977}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
+Session ID: 18e9d0644134eb15204daa571304576c]]>
             </message>
             <full-stacktrace>
               <![CDATA[org.openqa.selenium.NoSuchSessionException: invalid session id
   (Driver info: chromedriver=2.43.600210 (68dcf5eebde37173d4027fa8635e332711d2874a),platform=Windows NT 10.0.17134 x86_64) (WARNING: The server did not provide any stacktrace information)
 Command duration or timeout: 0 milliseconds
-Build info: version: '3.14.0', revision: 'aacccce0', time: '2018-08-02T20:05:20.749Z'
-System info: host: 'DESKTOP-P47OH58', ip: '192.168.0.8', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_191'
+Build info: version: '3.14.0', revision: 'aacccce0', time: '2018-08-02T20:19:58.91Z'
+System info: host: 'DESKTOP-P47OH58', ip: '172.26.16.67', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '1.8.0_191'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:\Users\Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:50498}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
-Session ID: a4f8f47a6f7cfaa3df29f5ae82fc3ab7
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:/Users/Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:63977}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
+Session ID: 18e9d0644134eb15204daa571304576c
 at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 at sun.reflect.NativeConstructorAccessorImpl.newInstance(Unknown Source)
 at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(Unknown Source)
@@ -94,8 +106,8 @@ at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverComman
 at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:548)
 at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:605)
 at org.openqa.selenium.remote.RemoteWebDriver.close(RemoteWebDriver.java:438)
-at GuiLibs.GuiTools.closeBrowser(GuiTools.java:301)
-at tests.TestOne.afterClass(TestOne.java:94)
+at GuiLibs.GuiTools.closeBrowser(GuiTools.java:264)
+at tests.TestOne.afterClass(TestOne.java:89)
 at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -119,7 +131,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
 at org.testng.TestNG.runSuites(TestNG.java:1049)
 at org.testng.TestNG.run(TestNG.java:1017)
-at tests.TestOne.main(TestOne.java:66)
+at tests.TestOne.main(TestOne.java:61)
 ]]>
             </full-stacktrace>
           </exception> <!-- org.openqa.selenium.NoSuchSessionException -->

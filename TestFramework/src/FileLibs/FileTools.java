@@ -12,7 +12,6 @@ public class FileTools {
 	public static HashMap<String, String> readTextFile(String settingFile) 
 			throws IOException
 	{
-		String messageLog = "";
 		String str;
 		HashMap <String, String> map= new HashMap<String, String>();
 		File file = new File(settingFile); 

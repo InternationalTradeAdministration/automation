@@ -99,8 +99,11 @@ public class XlsxTools {
 	{
 		LinkedHashMap<String, LinkedHashMap<String, String>> guiMap = 
 				new LinkedHashMap<String, LinkedHashMap<String, String>>();
-		LinkedHashMap<String, String> tempMap = new LinkedHashMap<String, String>();
-		String filedTag, locType, locValue;
+		String filedTag;
+		@SuppressWarnings("unused")
+		String locType;
+		@SuppressWarnings("unused")
+		String locValue;
 		for(HashMap<String, String> map : guiPool)
 		{
 			filedTag = map.get("field_tag");

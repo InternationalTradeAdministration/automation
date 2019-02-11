@@ -18,22 +18,17 @@ import static GuiLibs.GuiTools.navigateTo;
 import static GuiLibs.GuiTools.replaceGui;
 import static GuiLibs.GuiTools.scrollByPixel;
 import static GuiLibs.GuiTools.scrollToElement;
+import static GuiLibs.GuiTools.selectElementByText;
 import static GuiLibs.GuiTools.setBrowserTimeOut;
 import static GuiLibs.GuiTools.unHighlightElement;
 import static GuiLibs.GuiTools.updateHtmlReport;
-import static GuiLibs.GuiTools.selectElementByText;
-import static GuiLibs.GuiTools.selectElementByValue;
 import static GuiLibs.GuiTools.updateHtmlReportOverall;
+
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import bsh.util.GUIConsoleInterface;
 
 public class BisFormLib{
 	public static String filedDate,
@@ -53,8 +48,8 @@ public class BisFormLib{
 	
 	public BisFormLib() throws IOException {
 		//super();
-		this.format = new SimpleDateFormat("M/d/yyyy");
-		this.calendar = Calendar.getInstance();
+		//this.format = new SimpleDateFormat("M/d/yyyy");
+		//this.calendar = Calendar.getInstance();
 	}
 	/**
 	 * This method login to ADCVD web application

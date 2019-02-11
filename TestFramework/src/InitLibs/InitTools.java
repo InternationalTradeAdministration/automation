@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import FileLibs.FileTools;
-import ReportLibs.HtmlReport;
 
 public class InitTools {
 	private static String rootFolder;
@@ -31,11 +30,10 @@ public class InitTools {
 	{
 		actualResultFolder = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss").format(new Date());
 		setRootFolder(System.getProperty("user.dir"));
-		setLibFolder("C:\\libs");
-		//FileTools fileLibs = new FileTools();
-		setConfigInfos(FileTools.readTextFile(getRootFolder()+"\\settings.txt"));
-		outputResultFolder = getRootFolder()+ "\\output_results\\"+ actualResultFolder;
-		inputDataFolder = getRootFolder()+ "\\input_data";
+		setLibFolder("C:/libs");
+		setConfigInfos(FileTools.readTextFile(getRootFolder()+"/settings.txt"));
+		outputResultFolder = getRootFolder()+ "/output_results/"+ actualResultFolder;
+		inputDataFolder = getRootFolder()+ "/input_data";
 		testerName = System.getProperty("user.name");
 		setTesterName(testerName);
 	}
@@ -84,19 +82,19 @@ public class InitTools {
 		return rootFolder;
 	}
 	public void setRootFolder(String rootFolder) {
-		this.rootFolder = rootFolder;
+		InitTools.rootFolder = rootFolder;
 	}
 	public String getLibFolder() {
 		return libFolder;
 	}
 	public void setLibFolder(String libFolder) {
-		this.libFolder = libFolder;
+		InitTools.libFolder = libFolder;
 	}
 	public HashMap<String, String> getConfigInfos() {
 		return configInfos;
 	}
 	public void setConfigInfos(HashMap<String, String> configInfos) {
-		this.configInfos = configInfos;
+		InitTools.configInfos = configInfos;
 	}
 
 	

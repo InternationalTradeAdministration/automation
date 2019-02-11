@@ -40,14 +40,10 @@ public class TestOne {
 	
 	public static void main(String[] args) throws Exception 
 	{
-		
-		
-		
 		printLog("MainMethod()");
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
 		adcvdLib = new ADCVDLib();
-		//TestListenerAdapter tla = new TestListenerAdapter();
 		TestNG testng = new TestNG();
 		List<String> suites = Lists.newArrayList();
 		String dataPoolPath = InitTools.getInputDataFolder()+"\\datapool\\adcvd_datapool.xlsx";
@@ -57,7 +53,6 @@ public class TestOne {
 		dataPoolOrder  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Order", "Active=TRUE");
 		dataPoolSegment = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Segments", "Active=TRUE");
 		dataPool = mergeDataPools(dataPoolCase, dataPoolPetition, dataPoolInvestigation, dataPoolOrder, dataPoolSegment);
-		String testNgTemplate = InitTools.getInputDataFolder()+"\\template\\testng_template.xml";
 		String testNgPath = InitTools.getRootFolder()+"\\testng.xml";
 		//build
 		buildTestNgFromDataPool(dataPool, testNgPath);
@@ -119,7 +114,7 @@ public class TestOne {
 	    HtmlReport.testCaseSteps.clear();
 	    HtmlReport.setStepNumber(0);
 	    
-	    if (guiTools.tearDown)
+	    if (GuiTools.tearDown)
 	    {
 	    	//java.util.Date dateFail = new java.util.Date();
 			endTime = new Timestamp(date.getTime());
@@ -149,7 +144,7 @@ public class TestOne {
 		holdSeconds(2);
 		row.put("TimeStamp", InitTools.getActualResultFolder());
 		testCaseStatus =  ADCVDLib.createNewCase(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		if(! testCaseStatus) GuiTools.tearDown =true;
 	}
 	
 	/**
@@ -164,8 +159,8 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewPetition(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
-		testCaseStatus = testCaseStatus && ADCVDLib.validatePetitionFields(row);
+		if(! testCaseStatus) GuiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.validatePetitionFields(row);
 	}
 	
 	/**
@@ -180,8 +175,8 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewInvestigation(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
-		testCaseStatus = testCaseStatus && ADCVDLib.validateInvestigationFields(row);
+		if(! testCaseStatus) GuiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.validateInvestigationFields(row);
 	}
 	/**
 	 * This method is for ADCVD order creation and validation
@@ -195,7 +190,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewOrder(row);
-		if(! testCaseStatus) guiTools.tearDown =true;
+		if(! testCaseStatus) GuiTools.tearDown = true;
 	}
 	
 	/**
@@ -211,7 +206,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus && ADCVDLib.validateNewSegmentAdministrativeReview();
+		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentAdministrativeReview();
 	}
 	/**
 	 * This method is for ADCVD segment(Anti Circumvention Review) 
@@ -241,7 +236,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus && ADCVDLib.validateNewSegmentChangedCircumstancesReview();
+		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentChangedCircumstancesReview();
 	}
 	
 	/**
@@ -289,7 +284,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus && ADCVDLib.validateNewSegmentNewScoprInquiry();
+		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewScoprInquiry();
 	}
 	/**
 	 * This method is for ADCVD segment(Sunset Inquiry) 
@@ -304,7 +299,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus && ADCVDLib.validateNewSegmentSunsetReview(row);
+		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentSunsetReview(row);
 	}
 	/**
 	 * This method if for getting the current test case information
