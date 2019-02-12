@@ -24,7 +24,7 @@
     <div class="top-banner-root">
       <span class="top-banner-title-font">Test results</span>
       <br/>
-      <span class="top-banner-font-1">1 suite, 1 failed test</span>
+      <span class="top-banner-font-1">1 suite</span>
     </div> <!-- top-banner-root -->
     <div class="navigator-root">
       <div class="navigator-suite-header">
@@ -38,7 +38,7 @@
         <div class="rounded-window">
           <div class="suite-header light-rounded-window-top">
             <a href="#" class="navigator-link" panel-name="suite-Suite">
-              <span class="suite-name border-failed">Suite</span>
+              <span class="suite-name border-passed">Suite</span>
             </a> <!-- navigator-link -->
           </div> <!-- suite-header light-rounded-window-top -->
           <div class="navigator-suite-content">
@@ -91,21 +91,7 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">9 methods, 1 failed,   8 passed</span>
-                  </li>
-                  <li>
-                    <span class="method-list-title failed">Failed methods</span>
-                    <span class="show-or-hide-methods failed">
-                      <a href="#" panel-name="suite-Suite" class="hide-methods failed suite-Suite"> (hide)</a> <!-- hide-methods failed suite-Suite -->
-                      <a href="#" panel-name="suite-Suite" class="show-methods failed suite-Suite"> (show)</a> <!-- show-methods failed suite-Suite -->
-                    </span>
-                    <div class="method-list-content failed suite-Suite">
-                      <span>
-                        <img width="3%" src="failed.png"/>
-                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="CVD_Align_With_AD">CVD_Align_With_AD</a> <!-- method navigator-link -->
-                      </span>
-                      <br/>
-                    </div> <!-- method-list-content failed suite-Suite -->
+                    <span class="method-stats">11 methods,   11 passed</span>
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -122,6 +108,16 @@
                       <span>
                         <img width="3%" src="passed.png"/>
                         <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Align_NSR_To_NR">Align_NSR_To_NR</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Anticircumvention_Status_Validation">Anticircumvention_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="CVD_Align_With_AD">CVD_Align_With_AD</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                       <span>
@@ -151,6 +147,11 @@
                       <br/>
                       <span>
                         <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Scope_Status_Validation">Scope_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
                         <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Self_Initiated_Petition_Investigation_Dates">Self_Initiated_Petition_Investigation_Dates</a> <!-- method navigator-link -->
                       </span>
                       <br/>
@@ -166,47 +167,6 @@
     <div class="wrapper">
       <div class="main-panel-root">
         <div panel-name="suite-Suite" class="panel Suite">
-          <div class="suite-Suite-class-failed">
-            <div class="main-panel-header rounded-window-top">
-              <img src="failed.png"/>
-              <span class="class-name">tests.TestOne</span>
-            </div> <!-- main-panel-header rounded-window-top -->
-            <div class="main-panel-content rounded-window-bottom">
-              <div class="method">
-                <div class="method-content">
-                  <a name="CVD_Align_With_AD">
-                  </a> <!-- CVD_Align_With_AD -->
-                  <span class="method-name">CVD_Align_With_AD</span>
-                  <div class="stack-trace">org.openqa.selenium.StaleElementReferenceException: stale element reference: element is not attached to the page document
-  (Session info: chrome=72.0.3626.96)
-  (Driver info: chromedriver=2.43.600210 (68dcf5eebde37173d4027fa8635e332711d2874a),platform=Windows NT 10.0.17134 x86_64) (WARNING: The server did not provide any stacktrace information)
-Command duration or timeout: 0 milliseconds
-For documentation on this error, please visit: http://seleniumhq.org/exceptions/stale_element_reference.html
-Build info: version: &apos;3.14.0&apos;, revision: &apos;aacccce0&apos;, time: &apos;2018-08-02T20:19:58.91Z&apos;
-System info: host: &apos;DESKTOP-P47OH58&apos;, ip: &apos;172.26.16.67&apos;, os.name: &apos;Windows 10&apos;, os.arch: &apos;amd64&apos;, os.version: &apos;10.0&apos;, java.version: &apos;1.8.0_191&apos;
-Driver info: org.openqa.selenium.chrome.ChromeDriver
-Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.43.600210 (68dcf5eebde371..., userDataDir: C:/Users/Mouloud Hamdidouch...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:64078}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 72.0.3626.96, webStorageEnabled: true}
-Session ID: 316cf091d7f4c896c4cfa089564d7d7d
-	at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:214)
-	at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:166)
-	at org.openqa.selenium.remote.http.JsonHttpResponseCodec.reconstructValue(JsonHttpResponseCodec.java:40)
-	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:80)
-	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:44)
-	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:158)
-	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
-	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:548)
-	at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:276)
-	at org.openqa.selenium.remote.RemoteWebElement.isDisplayed(RemoteWebElement.java:317)
-	at GuiLibs.GuiTools.highlightElement(GuiTools.java:1088)
-	at libs.ADCVDLib.checkCvdAlignedWithAd(ADCVDLib.java:3501)
-	at tests.TestOne.CVD_Align_With_AD(TestOne.java:176)
-	at tests.TestOne.main(TestOne.java:70)
-... Removed 26 stack frames
-</div> <!-- stack-trace -->
-                </div> <!-- method-content -->
-              </div> <!-- method -->
-            </div> <!-- main-panel-content rounded-window-bottom -->
-          </div> <!-- suite-Suite-class-failed -->
           <div class="suite-Suite-class-passed">
             <div class="main-panel-header rounded-window-top">
               <img src="passed.png"/>
@@ -225,6 +185,20 @@ Session ID: 316cf091d7f4c896c4cfa089564d7d7d
                   <a name="Align_NSR_To_NR">
                   </a> <!-- Align_NSR_To_NR -->
                   <span class="method-name">Align_NSR_To_NR</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Anticircumvention_Status_Validation">
+                  </a> <!-- Anticircumvention_Status_Validation -->
+                  <span class="method-name">Anticircumvention_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="CVD_Align_With_AD">
+                  </a> <!-- CVD_Align_With_AD -->
+                  <span class="method-name">CVD_Align_With_AD</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
               <div class="method">
@@ -264,6 +238,13 @@ Session ID: 316cf091d7f4c896c4cfa089564d7d7d
               </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
+                  <a name="Scope_Status_Validation">
+                  </a> <!-- Scope_Status_Validation -->
+                  <span class="method-name">Scope_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
                   <a name="Self_Initiated_Petition_Investigation_Dates">
                   </a> <!-- Self_Initiated_Petition_Investigation_Dates -->
                   <span class="method-name">Self_Initiated_Petition_Investigation_Dates</span>
@@ -294,6 +275,8 @@ Session ID: 316cf091d7f4c896c4cfa089564d7d7d
           &lt;include name=&quot;Expedited_Review_Status_Validation&quot;/&gt;
           &lt;include name=&quot;New_Shipper_Review_Status_Validation&quot;/&gt;
           &lt;include name=&quot;Changed_Circumstance_Review_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;Anticircumvention_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;Scope_Status_Validation&quot;/&gt;
         &lt;/methods&gt;
       &lt;/class&gt; &lt;!-- tests.TestOne --&gt;
     &lt;/classes&gt;
@@ -335,48 +318,56 @@ data.addColumn('number', 'Number');
 data.addColumn('string', 'Method');
 data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
-data.addRows(9);
+data.addRows(11);
 data.setCell(0, 0, 0)
 data.setCell(0, 1, 'Self_Initiated_Petition_Investigation_Dates')
 data.setCell(0, 2, 'tests.TestOne')
-data.setCell(0, 3, 311389);
+data.setCell(0, 3, 255299);
 data.setCell(1, 0, 1)
 data.setCell(1, 1, 'CVD_Align_With_AD')
 data.setCell(1, 2, 'tests.TestOne')
-data.setCell(1, 3, 216850);
+data.setCell(1, 3, 202944);
 data.setCell(2, 0, 2)
-data.setCell(2, 1, 'Changed_Circumstance_Review_Status_Validation')
+data.setCell(2, 1, 'Anticircumvention_Status_Validation')
 data.setCell(2, 2, 'tests.TestOne')
-data.setCell(2, 3, 201399);
+data.setCell(2, 3, 195525);
 data.setCell(3, 0, 3)
-data.setCell(3, 1, 'Expedited_Review_Status_Validation')
+data.setCell(3, 1, 'Changed_Circumstance_Review_Status_Validation')
 data.setCell(3, 2, 'tests.TestOne')
-data.setCell(3, 3, 197920);
+data.setCell(3, 3, 193954);
 data.setCell(4, 0, 4)
-data.setCell(4, 1, 'Admin_Review_Status_Validation')
+data.setCell(4, 1, 'Expedited_Review_Status_Validation')
 data.setCell(4, 2, 'tests.TestOne')
-data.setCell(4, 3, 196684);
+data.setCell(4, 3, 191221);
 data.setCell(5, 0, 5)
-data.setCell(5, 1, 'New_Shipper_Review_Status_Validation')
+data.setCell(5, 1, 'Admin_Review_Status_Validation')
 data.setCell(5, 2, 'tests.TestOne')
-data.setCell(5, 3, 191423);
+data.setCell(5, 3, 189744);
 data.setCell(6, 0, 6)
-data.setCell(6, 1, 'Align_NSR_To_NR')
+data.setCell(6, 1, 'New_Shipper_Review_Status_Validation')
 data.setCell(6, 2, 'tests.TestOne')
-data.setCell(6, 3, 150600);
+data.setCell(6, 3, 185558);
 data.setCell(7, 0, 7)
-data.setCell(7, 1, 'Petition_Status_Validation')
+data.setCell(7, 1, 'Scope_Status_Validation')
 data.setCell(7, 2, 'tests.TestOne')
-data.setCell(7, 3, 76457);
+data.setCell(7, 3, 151128);
 data.setCell(8, 0, 8)
-data.setCell(8, 1, 'Litigation_Dates_Validation')
+data.setCell(8, 1, 'Align_NSR_To_NR')
 data.setCell(8, 2, 'tests.TestOne')
-data.setCell(8, 3, 48833);
+data.setCell(8, 3, 144679);
+data.setCell(9, 0, 9)
+data.setCell(9, 1, 'Petition_Status_Validation')
+data.setCell(9, 2, 'tests.TestOne')
+data.setCell(9, 3, 74089);
+data.setCell(10, 0, 10)
+data.setCell(10, 1, 'Litigation_Dates_Validation')
+data.setCell(10, 2, 'tests.TestOne')
+data.setCell(10, 3, 42707);
 window.suiteTableData['Suite']= { tableData: data, tableDiv: 'times-div-Suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 26 minutes</span>
+              <span class="suite-total-time">Total running time: 30 minutes</span>
               <div id="times-div-Suite">
               </div> <!-- times-div-Suite -->
             </div> <!-- times-div -->
@@ -391,35 +382,13 @@ return data;
         </div> <!-- panel -->
         <div panel-name="ignored-methods-Suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">12 ignored methods</span>
+            <span class="header-content">1 ignored method</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="ignored-class-div">
               <span class="ignored-class-name">tests.TestOne</span>
               <div class="ignored-methods-div">
-                <span class="ignored-method-name">Create_And_Validate_Petition</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Anti_Circumvention_Review</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Changed_Circumstances_Review</span>
-                <br/>
-                <span class="ignored-method-name">Create_Adcvd_Case</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Administrative_Review</span>
-                <br/>
-                <span class="ignored-method-name">Create_Order</span>
-                <br/>
-                <span class="ignored-method-name">Create_And_Validate_Investigation</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_New_Shipper_Review</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Sunset_Review</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Scope_Inquiry</span>
-                <br/>
                 <span class="ignored-method-name">Investigation_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">Create_Segment_Expedited_Review</span>
                 <br/>
               </div> <!-- ignored-methods-div -->
             </div> <!-- ignored-class-div -->
@@ -438,119 +407,141 @@ return data;
               </div> <!-- configuration-class before -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">776 ms</span>
+                <span class="method-start">213 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
-                <img src="failed.png">
-                </img>
                 <span class="method-name">CVD_Align_With_AD</span>
-                <span class="method-start">776 ms</span>
+                <span class="method-start">214 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">217628 ms</span>
+                <span class="method-start">203159 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">217666 ms</span>
+                <span class="method-start">203170 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Litigation_Dates_Validation</span>
-                <span class="method-start">217666 ms</span>
+                <span class="method-start">203170 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">266499 ms</span>
+                <span class="method-start">245877 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">266507 ms</span>
+                <span class="method-start">245883 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Self_Initiated_Petition_Investigation_Dates</span>
-                <span class="method-start">266507 ms</span>
+                <span class="method-start">245883 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">577896 ms</span>
+                <span class="method-start">501182 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">577908 ms</span>
+                <span class="method-start">501193 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Align_NSR_To_NR</span>
-                <span class="method-start">577909 ms</span>
+                <span class="method-start">501194 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">728509 ms</span>
+                <span class="method-start">645874 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">728517 ms</span>
+                <span class="method-start">645881 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Petition_Status_Validation</span>
-                <span class="method-start">728518 ms</span>
+                <span class="method-start">645882 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">804975 ms</span>
+                <span class="method-start">719972 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">804981 ms</span>
+                <span class="method-start">719982 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Admin_Review_Status_Validation</span>
-                <span class="method-start">804982 ms</span>
+                <span class="method-start">719982 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">1001666 ms</span>
+                <span class="method-start">909726 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">1001679 ms</span>
+                <span class="method-start">909737 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Expedited_Review_Status_Validation</span>
-                <span class="method-start">1001680 ms</span>
+                <span class="method-start">909737 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">1199600 ms</span>
+                <span class="method-start">1100958 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">1199607 ms</span>
+                <span class="method-start">1100969 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">New_Shipper_Review_Status_Validation</span>
-                <span class="method-start">1199607 ms</span>
+                <span class="method-start">1100970 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">1391030 ms</span>
+                <span class="method-start">1286528 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">1391037 ms</span>
+                <span class="method-start">1286532 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">Changed_Circumstance_Review_Status_Validation</span>
-                <span class="method-start">1391038 ms</span>
+                <span class="method-start">1286532 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">1592437 ms</span>
+                <span class="method-start">1480487 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">1480492 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Anticircumvention_Status_Validation</span>
+                <span class="method-start">1480492 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">1676017 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">1676021 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Scope_Status_Validation</span>
+                <span class="method-start">1676022 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">1827150 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-class after">
                 <img src="failed.png">
                 </img>
                 <span class="method-name">afterClass</span>
-                <span class="method-start">1592442 ms</span>
+                <span class="method-start">1827153 ms</span>
               </div> <!-- configuration-class after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

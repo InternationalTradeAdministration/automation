@@ -126,7 +126,6 @@ public class ADCVDLib{
 			adCaseId = caseName;
 		else 
 			cvdCaseId=caseName;
-		
 		holdSeconds(1);
 		enterText(guiMap.get("inputadcvdCase"),caseName);
 		caseType = row.get("ADCVD_Case");
@@ -1129,6 +1128,7 @@ public class ADCVDLib{
 						row.get("Actual_Date_Of_Decision_How_To_Proceed"));
 				clickElement(replaceGui(guiMap.get("inputSegmentText"), "HTS Change(s)"));
 				clickElementJs(guiMap.get("decisiononHowtoProceed")); 
+				holdSeconds(1);
 				clickElementJs(replaceGui(guiMap.get("decisiononHowtoProceedItem"),row.get("Decision_On_How_To_Proceed")));//
 				clickElementJs(guiMap.get("scopeRollingType")); 
 				clickElementJs(replaceGui(guiMap.get("scopeRollingTypeItem"),row.get("Type_Of_Scope_Ruling")));//
@@ -4335,7 +4335,7 @@ public class ADCVDLib{
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
-	public static void validateNewShipperReviewStatus_A(LinkedHashMap<String, String> row) throws Exception
+	public static void validateSegmentStatus_A(LinkedHashMap<String, String> row) throws Exception
 	{
 		//segmenetFieldEditIcon
 		//editDateOnSegment
@@ -4449,13 +4449,13 @@ public class ADCVDLib{
 	
 	
 	/**
-	 * This method validate Administrative Review, Expedited Review, New Shipper Review
+	 * This method validate hanged circumstance and Anticircumvention
 	 * statuses
 	 * @param row, row of elements
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
-	public static void validateChangedCircumstanceReviewStatus(LinkedHashMap<String, String> row) throws Exception
+	public static void validateSegmentStatus_B(LinkedHashMap<String, String> row) throws Exception
 	{
 		//segmenetFieldEditIcon
 		//editDateOnSegment
@@ -4463,24 +4463,32 @@ public class ADCVDLib{
 		//selectSegmenetItem2
 		//Initiation
 		String segType = row.get("Segment_Type");
-				
 		Date todayDate = new Date();
 		String today = new SimpleDateFormat("M/d/yyyy").format(todayDate);
-		
 		validateStatus("SegmentStatusLink", "Initiation", segType);
 		System.out.println("dd");
-		
 		//Prelim
 		createSegmentFrNotice(row, "Initiation") ;
-		
-		//scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit All parties in agreement to the outcome?"));
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"All parties in agreement to the outcome?"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"No"));
-		updateHtmlReport("Set 'All parties in agreement to the outcome' to No",
-				"user able to All parties in agreement to the outcome' to No", "As expected", 
-				"Step", "pass", "");
-		
+		if(segType.equalsIgnoreCase("Changed Circumstances Review"))
+		{
+			//scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
+			clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit All parties in agreement to the outcome?"));
+			clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"All parties in agreement to the outcome?"));
+			clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"No"));
+			updateHtmlReport("Set 'All parties in agreement to the outcome' to No",
+					"user able to All parties in agreement to the outcome' to No", "As expected", 
+					"Step", "pass", "");
+		}
+		else
+		{
+			//scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
+			clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Type of Circumvention Inquiry"));
+			clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Type of Circumvention Inquiry"));
+			clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Later-Developed Merchandise"));
+			updateHtmlReport("Set 'Edit Type of Circumvention Inquiry' to Later-Developed Merchandise",
+					"user able to set 'Edit Type of Circumvention Inquiry' to Later-Developed Merchandise", "As expected", 
+					"Step", "pass", "");
+		}
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Initiation Signature"),today);
 		updateHtmlReport("Enter Actual Initiation Signature", "user able to enter Actual Initiation Signature", "As expected", 
@@ -4490,8 +4498,6 @@ public class ADCVDLib{
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
 		validateStatus("SegmentStatusLink", "Prelim", segType);
-
-		
 		//Final
 		createSegmentFrNotice(row, "Preliminary") ;
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
@@ -4512,24 +4518,7 @@ public class ADCVDLib{
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
 		validateStatus("SegmentStatusLink", "Final", segType);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
 		//Hold----------------------------------SSSKISPED
-		
-		
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation Hold Expiration Date"));
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Litigation Hold Expiration Date"));
@@ -4544,7 +4533,6 @@ public class ADCVDLib{
 		updateHtmlReport("Set Litigation to No", "user able to set Litigation to No", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);*/
-		
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Withdrawn"));
 		updateHtmlReport("set 'Segment Outcome' to Withdrawn", "user able to et 'Segment Outcome' to Withdrawn", 
@@ -4556,9 +4544,6 @@ public class ADCVDLib{
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
 		validateStatus("SegmentStatusLink", "Hold", segType);
-		
-		
-		
 		//Litigation
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation"));
 		holdSeconds(1);
@@ -4577,9 +4562,6 @@ public class ADCVDLib{
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
 		validateStatus("SegmentStatusLink", "Litigation", segType);
-		
-		
-		
 		//Customs
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation Resolved"));
 		holdSeconds(1);
@@ -4594,9 +4576,6 @@ public class ADCVDLib{
 		holdSeconds(3);
 		//scrollToTheTopOfPage();
 		validateStatus("SegmentStatusLink", "Customs", segType);
-		
-		
-		
 		//Closed
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"), "Have Custom Instruction been sent?"));
 		holdSeconds(1);
@@ -4616,68 +4595,66 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method validate Administrative review statuses
+	 * This method validate hanged circumstance and Anticircumvention
+	 * statuses
 	 * @param row, row of elements
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
-	public static void validateExpeditedReviewStatus(LinkedHashMap<String, String> row) throws Exception
+	public static void validateSegmentStatus_C(LinkedHashMap<String, String> row) throws Exception
 	{
 		//segmenetFieldEditIcon
 		//editDateOnSegment
 		//editNONDateOnSegment
 		//selectSegmenetItem2
-		//prelim
+		//Prelim
+		String segType = row.get("Segment_Type");
 		Date todayDate = new Date();
 		String today = new SimpleDateFormat("M/d/yyyy").format(todayDate);
-		
-		validateStatus("SegmentStatusLink", "Prelim", "Expedited Review");
+		validateStatus("SegmentStatusLink", "Prelim", segType);
 		System.out.println("dd");
+		
 		//Final
-		createSegmentFrNotice(row, "Preliminary") ;
+		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Decision on How to Proceed"));
+		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Decision on How to Proceed"));
+		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Formal"));
+		updateHtmlReport("Set 'Decision on How to Proceed' to Formal",
+				"user able to set 'Decision on How to Proceed' to Formal", "As expected", 
+				"Step", "pass", "");
+		
+		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Preliminary Determination"));
+		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"No"));
+		updateHtmlReport("Set 'Preliminary Determination' to No",
+				"user able to set 'Preliminary Determination' to No", "As expected", 
+				"Step", "pass", "");
 		holdSeconds(1);
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Preliminary Signature"));
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Preliminary Signature"),today);
-							//row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Update Actual Preliminary Signature", "user able to update Actual Preliminary Signature", "As expected", 
-				"Step", "pass", "Update Actual Preliminary Signature");
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Calculated Preliminary Signature"),today);
-							//row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Update Actual Preliminary Signature", "user able to update Calculated Preliminary Signature", "As expected", 
-				"Step", "pass", "Update Calculated Preliminary Signature");
-		enterText(replaceGui(guiMap.get("editTextOnSegment"),"CBP Case Number"), " ");
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Final", "Expedited Review");
-		//Amend Final
-		createSegmentFrNotice(row, "Final") ;
+		validateStatus("SegmentStatusLink", "Final", segType);
+		
+		
+		
+		//Hold----------------------------------SSSKISPED
+/*		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation Hold Expiration Date"));
 		holdSeconds(1);
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Final Signature"));
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Final Signature"));
+		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Litigation Hold Expiration Date"));
 		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Final Signature"),today);
-							//row.get("Actual_Preliminary_Signature"));
-		//updateHtmlReport("Update Actual Final Signature", "user able to update Actual Final Signature", "As expected", 
-				//"Step", "pass", "Update Actual Final Signature");
+		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Litigation Hold Expiration Date"),today);
+		updateHtmlReport("Enter Litigation Hold Expiration Date", "user able to enter Litigation Hold "
+				+ "Expiration Date", "As expected", 
+				"Step", "pass", "");
+		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Completed"));
-		updateHtmlReport("Update egment Outcome and actual final signature", "user able to update egment Outcome", "As expected", 
-				"Step", "pass", "Update segment Outcome");
+		updateHtmlReport("set 'Segment Outcome' to Completed", "user able to et 'Segment Outcome' to Completed", 
+				"As expected", 
+				"Step", "pass", "");
 		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Will you Amend the Final?"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
+		enterText(replaceGui(guiMap.get("editTextOnSegment"),"CBP Case Number"), "");
 		holdSeconds(1);
-		updateHtmlReport("Update Will you Amend the Final", "user able to update Will you Amend the Final", "As expected", 
-				"Step", "pass", "Update Will you Amend the Final");
-		clickElementJs(guiMap.get("saveEditedSegment"));	
-		holdSeconds(3);	
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Amend Final", "Expedited Review");
-		//Hold----------------------------------SSSKISPED
+		clickElementJs(guiMap.get("saveEditedSegment"));
+		holdSeconds(3);
+		validateStatus("SegmentStatusLink", "Hold", segType);*/
 		//Litigation
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation"));
 		holdSeconds(1);
@@ -4685,123 +4662,23 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
+		updateHtmlReport("Set Litigation to Yes", "user able to set Litigation to Yes", "As expected", 
+				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"No"));
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));
-		holdSeconds(3);
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Litigation", "Expedited Review");
-		//Customs
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation Resolved"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Litigation Resolved"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));
-		holdSeconds(3);
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Customs", "Expedited Review");
-		//Closed
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"), "Have Custom Instruction been sent?"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Have Custom Instruction been sent?"));holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Have Custom Instruction been sent?"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));
-		holdSeconds(3);
-		scrollToTheTopOfPage();
-		holdSeconds(1);
-		validateStatus("SegmentStatusLink", "Closed", "Expedited Review");	
-		//clickElementJs(replaceGui(guiMap.get("orderFromSegment"),orderId));
-	}
-	
-	/**
-	 * This method validate Administrative review statuses
-	 * @param row, row of elements
-	 * @return true if all statuses worked as expected false if not
-	 * @throws Exception
-	 */
-	public static void validateNewShipperReviewStatus(LinkedHashMap<String, String> row) throws Exception
-	{
-		//segmenetFieldEditIcon
-		//editDateOnSegment
-		//editNONDateOnSegment
-		//selectSegmenetItem2
-		//prelim
-		Date todayDate = new Date();
-		String today = new SimpleDateFormat("M/d/yyyy").format(todayDate);
-		
-		validateStatus("SegmentStatusLink", "Prelim", "New Shipper Review");
-		System.out.println("dd");
-		//Final
-		createSegmentFrNotice(row, "Preliminary") ;
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Preliminary Signature"));
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Preliminary Signature"),today);
-							//row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Update Actual Preliminary Signature", "user able to update Actual Preliminary Signature", "As expected", 
-				"Step", "pass", "Update Actual Preliminary Signature");
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Calculated Preliminary Signature"),today);
-							//row.get("Actual_Preliminary_Signature")
-		updateHtmlReport("Update Actual Preliminary Signature", "user able to update Calculated Preliminary Signature", "As expected", 
-				"Step", "pass", "Update Calculated Preliminary Signature");holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editTextOnSegment"),"CBP Case Number"), " ");
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));
-		holdSeconds(3);
-		scrollToTheTopOfPage();
-		holdSeconds(1);
-		validateStatus("SegmentStatusLink", "Final", "New Shipper Review");
-		//Amend Final
-		createSegmentFrNotice(row, "Final") ;
-		holdSeconds(1);
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Final Signature"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Final Signature"));
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Final Signature"),today);
-							//row.get("Actual_Preliminary_Signature"));
-		//updateHtmlReport("Update Actual Final Signature", "user able to update Actual Final Signature", "As expected", 
-				//"Step", "pass", "Update Actual Final Signature");
+		updateHtmlReport("Set Litigation Resolved to No", "user able to set Litigation Resolved to No", "As expected", 
+				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Completed"));
-		updateHtmlReport("Update egment Outcome and actual final signature", "user able to update egment Outcome", "As expected", 
-				"Step", "pass", "Update segment Outcome");
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Will you Amend the Final?"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
-		holdSeconds(1);
-		updateHtmlReport("Update Will you Amend the Final", "user able to update Will you Amend the Final", "As expected", 
-				"Step", "pass", "Update Will you Amend the Final");
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));	
-		holdSeconds(3);	
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Amend Final", "New Shipper Review");
-		//Hold----------------------------------SSSKISPED
-		//Litigation
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Litigation"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
-		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"No"));
+		updateHtmlReport("set 'Segment Outcome' to Completed", "user able to et 'Segment Outcome' to Completed", 
+				"As expected", 
+				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Litigation", "New Shipper Review");
+		validateStatus("SegmentStatusLink", "Litigation", segType);
 		//Customs
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation Resolved"));
 		holdSeconds(1);
@@ -4809,12 +4686,13 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
+		updateHtmlReport("Set Litigation Resolved to Yes", "user able to set Litigation Resolved to Yes", "As expected", 
+				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
-		scrollToTheTopOfPage();
-		validateStatus("SegmentStatusLink", "Customs", "New Shipper Review");
-		holdSeconds(1);
+		//scrollToTheTopOfPage();
+		validateStatus("SegmentStatusLink", "Customs", segType);
 		//Closed
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"), "Have Custom Instruction been sent?"));
 		holdSeconds(1);
@@ -4822,14 +4700,15 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Have Custom Instruction been sent?"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmenetItem2"),"Yes"));
+		updateHtmlReport("Set Have Custom Instruction been sent to Yes", "user able to set Have Custom Instruction"
+				+ " been sent to Yes", "As expected", 
+				"Step", "pass", "");
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
-		scrollToTheTopOfPage();
+//		scrollToTheTopOfPage();
+		validateStatus("SegmentStatusLink", "Closed", segType);	
 		holdSeconds(1);
-		validateStatus("SegmentStatusLink", "Closed", "New Shipper Review");
-		
 		//clickElementJs(replaceGui(guiMap.get("orderFromSegment"),orderId));
-		
 	}
 	
 	/**

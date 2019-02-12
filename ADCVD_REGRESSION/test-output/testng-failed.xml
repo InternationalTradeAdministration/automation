@@ -8,8 +8,8 @@
           <include name="afterClass"/>
           <include name="afterMethod"/>
           <include name="beforeMethod"/>
-          <include name="CVD_Align_With_AD"/>
           <include name="beforeClass"/>
+          <include name="Scope_Status_Validation"/>
         </methods>
       </class> <!-- tests.TestOne -->
     </classes>

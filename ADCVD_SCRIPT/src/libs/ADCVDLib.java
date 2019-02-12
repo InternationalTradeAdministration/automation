@@ -3149,7 +3149,6 @@ public class ADCVDLib{
 		}
 		allMatches = allMatches & validateSunSetReviewDatesByType("90 Day", 
 				row.get("FR_Published_Date"));
-		
 		//120
 		clickElementJs(guiMap.get("EditButton"));
 		selectElementByValue(replaceGui(guiMap.get("selectOnSunSet"),
@@ -3182,7 +3181,6 @@ public class ADCVDLib{
 		//verify
 		allMatches = allMatches & validateSunSetReviewDatesByType("120 Day", 
 				row.get("FR_Published_Date"));
-
 		//240
 		clickElementJs(guiMap.get("EditButton"));
 		selectElementByValue(replaceGui(guiMap.get("selectOnSunSet"),

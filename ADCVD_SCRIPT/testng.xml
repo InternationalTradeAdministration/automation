@@ -4,7 +4,7 @@
     <classes>
       <class name="tests.TestOne">
     
-    <methods><include name="Create_Adcvd_Case"/><include name="Create_And_Validate_Petition"/><include name="Create_And_Validate_Investigation"/><include name="Create_Order"/><include name="Create_Segment_Sunset_Review"/></methods></class>
+    <methods><include name="Create_Adcvd_Case"/><include name="Create_And_Validate_Petition"/><include name="Create_And_Validate_Investigation"/><include name="Create_Order"/><include name="Create_Segment_Administrative_Review"/><include name="Create_Segment_Anti_Circumvention_Review"/><include name="Create_Segment_Changed_Circumstances_Review"/><include name="Create_Segment_Expedited_Review"/><include name="Create_Segment_New_Shipper_Review"/><include name="Create_Segment_Scope_Inquiry"/><include name="Create_Segment_Sunset_Review"/></methods></class>
     </classes>
   </test> 
 </suite>
