@@ -1162,7 +1162,7 @@ public class BisFormLib{
 		{
 			highlightElement(replaceGui(guiMap.get(htmlElment), elementName), "red");
 			updateHtmlReport("validate ["+elementName+"]",  
-			"'"+displayedMessage+"' should display", "As expected", 
+			"'"+displayedMessage+"' should display", "Not as expected", 
 			"VP", "fail", elementName);
 			unHighlightElement(replaceGui(guiMap.get(htmlElment), elementName));
 			match = false;

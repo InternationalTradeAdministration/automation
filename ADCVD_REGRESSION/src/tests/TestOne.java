@@ -535,9 +535,9 @@ public class TestOne {
 	}
 	
 	/**
-	 * This method is scope inquirey status
+	 * This method is for scope inquirey status validation
 	*/
-	@Test(enabled = true, priority=11)
+	@Test(enabled = true, priority=12)
 	void Scope_Status_Validation() throws Exception
 	{
 		printLog("Scope_Status_Validation");
@@ -570,6 +570,101 @@ public class TestOne {
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
 		ADCVDLib.validateSegmentStatus_C(row);
 	}
+	
+	/**
+	 * This method is for Sunset status validation
+	*/
+	@Test(enabled = true, priority=13)
+	void Sunset_Status_Validation() throws Exception
+	{
+		printLog("Sunset_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_013");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");		
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		row.put("ADCVD_Case", "A-");
+		row.put("ADCVD_Case_Type", "AD ME");
+		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewOrder(row);
+		//if(! testCaseStatus) guiTools.tearDown =true;		
+		row.put("Segment_Type", "Sunset Review");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewSegment(row);
+		ADCVDLib.validateSegmentStatus_C(row);
+	}
+	
+	/**
+	 * This method is Remand Litigation statuses
+	*/
+	@Test(enabled = true, priority=14)
+	void Remand_Status_Validation() throws Exception
+	{
+		printLog("Remand_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_014");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		//HtmlReport.addHtmlStepTitle("Create Remand Litigation and Validate Dates","Title");
+		row.put("Litigation_Type", "Remand");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewLitigation(row);
+		ADCVDLib.validateLitigationStatus(row);
+	}
+	
+	
+	/**
+	 * This method is validating International Litigation statuses
+	*/
+	@Test(enabled = true, priority=15)
+	void International_Litigation_Status_Validation() throws Exception
+	{
+		printLog("International_Litigation_Status_Validation");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_015");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");
+		if (! loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
+		}
+		holdSeconds(2);
+		//HtmlReport.addHtmlStepTitle("Create 'International Litigation' and Validate Dates","Title");
+		row.put("Litigation_Type", "International Litigation");
+		testCaseStatus =testCaseStatus & ADCVDLib.createNewLitigation(row);
+		ADCVDLib.validateLitigationStatus(row);
+	}
+	
+	
+	
 	/**
 	 * This method if for getting the current test case information
 	*/

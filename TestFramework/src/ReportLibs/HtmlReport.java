@@ -112,7 +112,7 @@ public class HtmlReport extends InitTools{
 		    	 tcName = key;
 		         tcStatus = entry.get(key);
 		    }
-		    line = "<tr><td><a href = '"+getOutputResultFolder()+"\\html\\"+tcName+".html"+"'>"+tcName+"</a></td>"
+		    line = "<tr><td><a href = 'html\\"+tcName+".html"+"'>"+tcName+"</a></td>"
 					+ "<td style='text-align: center;'><span class='~stepsts~'>".replace("~stepsts~", tcStatus)
 					+ tcStatus+"</span></td></tr>";
 			htmlBody.append(line);
@@ -161,14 +161,16 @@ public class HtmlReport extends InitTools{
 			}
 			else
 			{
-					line = "<tr><td>"+testCaseSteps.get(i).get("stepNumber")+"</td>"
+					line = "<tr id='"+testCaseSteps.get(i).get("StepPassFail")+"'>"
+					+ "<td>"+testCaseSteps.get(i).get("stepNumber")+"</td>"
 					+ "<td>"+testCaseSteps.get(i).get("stepDesc")+"</td>"
 					+ "<td>"+testCaseSteps.get(i).get("stepExpectResult")+"</td>"
 					+ "<td>"+testCaseSteps.get(i).get("stepActualResult")+"</td>"
 					+ "<td>"+testCaseSteps.get(i).get("StepVpStep")+"</td>"
 					+ "<td><span class='~stepsts~'>".replace("~stepsts~", testCaseSteps.get(i).get("StepPassFail"))
 					+ testCaseSteps.get(i).get("StepPassFail")+"</span></td>"
-					+ "<td>"+testCaseSteps.get(i).get("StepSs")+"</td></tr>";
+					+ "<td>"+testCaseSteps.get(i).get("StepSs")+"</td>"
+					+ "</tr>";
 			}
 			htmlBody.append(line);
 		}

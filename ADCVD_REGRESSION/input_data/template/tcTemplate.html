@@ -145,10 +145,88 @@ body {
 	font-weight: bold;
 }
 </style>
-<div class='div1'>	
+
+<SCRIPT>
+    function toggleOption(thisselect) {
+        var selected = thisselect.options[thisselect.selectedIndex].value;
+        toggleRow(selected);
+    }
+
+    function toggleRow(id) 
+	{
+		if(id == "All")
+		{
+			showAll()
+		}
+		else
+		{
+			var elements = document.getElementsByTagName("tr");
+			for(var i=0; i<elements.length; i++) 
+			{
+				var row = elements[i];
+				if((row.id == id) || (row.id=="menu"))
+				{
+					row.style.display = '';
+				}
+				else
+				{
+					row.style.display = 'none';
+				}
+			}
+		}      
+    }
+
+    function showRow(id) {
+	
+	var elements = document.getElementsByTagName("tr");
+	for(var i=0; i<elements.length; i++) 
+	{
+		var row = elements[i];
+		if(row.id == "Pass")
+		{
+			row.style.display = '';
+		}
+		else 
+		{
+			row.style.display = 'none';
+		}
+	}
+	
+    }
+
+    function hideRow(id) 
+	{
+		var elements = document.getElementsByTagName("tr");
+		for(var i=0; i<elements.length; i++) 
+		{
+			var row = elements[i];
+			if(row.id == "Fail")
+			{
+				row.style.display = '';
+			}
+			else
+			{
+				row.style.display = 'none';
+			}
+		}      
+    }
+
+    function showAll() {
+     var elements = document.getElementsByTagName("tr");
+		for(var i=0; i<elements.length; i++) 
+		{
+			var row = elements[i];
+			row.style.display = '';
+		}  
+   
+   }
+
+</SCRIPT>
+
+
 <div class="container">
 	<div class="column0">&ensp;</div>
-    <div class="column"><span>  </span><img height="40" src='C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\firstProject\input_data\template\milcorp.png'></div>
+    <div class="column"><span>  </span><img height="40" src='..\..\..\input_data\template\milcorp.png'></div>
     <div class="column">MilCorp <br> Automation</div>
 </div>
 <meta charset="utf-8">
@@ -157,34 +235,44 @@ body {
 
 <body  >
 
+<div>
+<div>
 <table width="30%" >
   <tbody>
-    <tr >
+    <tr id = 'menu'>
       <th width="40%" >Test Case Name:</th>
       <td width="60%" >~TestCaseName~</td>
     </tr>
-	<tr >
+	<tr id = 'menu'>
       <th>Test Case Description:</td>
       <td >~TestCaseDescription~</td>
     </tr>
-    <tr>
+    <tr id = 'menu'>
       <th>Test Execution Status:</th>
       <td class = '~TestStatus~'>~TestStatus~</td>
     </tr>
-    <tr>
+    <tr id = 'menu'>
       <th>Test Execution Time:</th>
       <td>~TestDuration~</td>
     </tr>
 	
   </tbody>
 </table>
-
+</div>
 	
-	
+<div>
+<div width='50'></div>
+<h4> Show: <SELECT id="options" onchange="toggleOption(this)">
+    <OPTION value="Pass">Pass</OPTION>
+    <OPTION value="Fail">Fail</OPTION>
+	 <OPTION value="All" selected=true>All</OPTION>
+</SELECT>
+</div>	
 
+<div>
 	<table width="80%" >
 	<thead>
-		<tr >
+		<tr id = 'menu'>
 		<th width="8%">Test Step</th>
 		<th width="30%">Test Step Description</th>
 		<th width="20%">Expected Result</th>
@@ -203,5 +291,7 @@ body {
 		~Body~
 	</tbody>
 </div>
+</div>
+
 </body>
 </html>
