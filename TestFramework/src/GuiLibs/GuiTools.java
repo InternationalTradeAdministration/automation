@@ -134,8 +134,8 @@ public class GuiTools extends InitTools{
 		else if (browser.equalsIgnoreCase("chrome"))
 		{
 			//rowserExe = "chrome.exe";
-			killProcesses(getAllProcessIds(browserExe));
-			killProcesses(getAllProcessIds("chromedriver.exe"));
+			//killProcesses(getAllProcessIds(browserExe));
+			//killProcesses(getAllProcessIds("chromedriver.exe"));
 			setDriver(getChromeDriver());
 		}
 		else
@@ -144,7 +144,7 @@ public class GuiTools extends InitTools{
 					+ "chrome in settings.txt file");
 		}
 		setBrowserTimeOut(20);
-		setUpBrowserProcessId(browserExe);
+		//setUpBrowserProcessId(browserExe);
 		getDriver().manage().window().setPosition(new Point(0,0));
 		getDriver().manage().window().maximize();
 	}
@@ -263,8 +263,8 @@ public class GuiTools extends InitTools{
 		System.out.println(getBrowserProcessId());
 		getDriver().close();
 		getDriver().quit();
-		Runtime.getRuntime().exec("cmd /c taskkill /PID " + 
-		getBrowserProcessId());
+		//Runtime.getRuntime().exec("cmd /c taskkill /PID " + 
+		//getBrowserProcessId());
 		
 	}
 	/**
@@ -914,6 +914,7 @@ public class GuiTools extends InitTools{
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			Point point = element.getLocation();
 			executor.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
+			holdSeconds(1);
 			executor.executeScript("javascript:window.scrollBy("+point.getX()+","+(point.getY()-300)+")");
 		}
 	}

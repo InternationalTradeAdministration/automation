@@ -260,14 +260,7 @@ body {
 </table>
 </div>
 	
-<div>
-<div width='50'></div>
-<h4> Show: <SELECT id="options" onchange="toggleOption(this)">
-    <OPTION value="Pass">Pass</OPTION>
-    <OPTION value="Fail">Fail</OPTION>
-	 <OPTION value="All" selected=true>All</OPTION>
-</SELECT>
-</div>	
+	
 
 <div>
 	<table width="80%" >
@@ -278,7 +271,15 @@ body {
 		<th width="20%">Expected Result</th>
 		<th width="10%">Actual Result</th>
 		<th width="8%">Step/VP</th>
-		<th width="8%">Pass/Fail</th>
+		<th width="12%"><h4>Pass/Fail:&ensp; 
+		
+		<SELECT id="options" onchange="toggleOption(this)">
+    <OPTION value="Pass">Passs</OPTION>
+    <OPTION value="Fail">Fail</OPTION>
+	 <OPTION value="All" selected=true>All</OPTION>
+	</SELECT>
+
+</th>
 		<th width="20%">Test Results</th>
 		</tr>
 	</thead>

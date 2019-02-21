@@ -74,7 +74,7 @@ public class ADCVDLib{
 			highlightElement(guiMap.get("homeObjectLink"), "green");
 			holdSeconds(2);
 			updateHtmlReport("Login to AD/CVD App with user "+user,  
-					"User able to log", "As expected", "Step", 
+					"User is able to login", "As expected", "Step", 
 					"pass", "Login Screen Shot");
 			setBrowserTimeOut(currentTimeOut);
 			return true;
@@ -95,7 +95,7 @@ public class ADCVDLib{
 		{
 			highlightElement(guiMap.get("homeObjectLink"), "green");
 			holdSeconds(2);
-			updateHtmlReport("Login to AD/CVD App with user "+user,  "User able to login", "As expected", 
+			updateHtmlReport("Login to AD/CVD App with user "+user,  "User is able to login", "As expected", 
 					"Step", "pass", "Login to ADCVD");
 		}
 		return loginStatus;
@@ -500,11 +500,11 @@ public class ADCVDLib{
 		holdSeconds(2); 
 		if(caseType.equals("C-"))
 		clickElementJs(guiMap.get("recordTypeInvestigation"));
-		updateHtmlReport("choose record type", "choose record pops up", "As expected", "Step", "pass", 
+		updateHtmlReport("Choose record type", "Choose record-type pops up", "As expected", "Step", "pass", 
 				"New investigation record popup");
 		clickElementJs(guiMap.get("nextButtonInvestigation"));
 		holdSeconds(2);
-		updateHtmlReport("Open and fill up investigation form", "new investigation form opens", "As expected", 
+		updateHtmlReport("Open and fill up investigation form", "New investigation form opens", "As expected", 
 				"Step", "pass", "New Investigation Form");
 		clickElementJs(guiMap.get("saveCaseButton"));
 		holdSeconds(2);
@@ -3241,7 +3241,7 @@ public class ADCVDLib{
 					"Expected Final Signature Before Ext"), "text");
 		}
 		//scrollToTheButtomOfPage();
-		scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Prelim Team Meeting Deadline"));
+		scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Status"));
 		//International
 		if(litigationType.equalsIgnoreCase("International Litigation"))
 		{
@@ -3301,7 +3301,7 @@ public class ADCVDLib{
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Calculated Final Signature",
 					calculatedFinalSignature, actualValue);
 		}
-		//scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Next Due to DAS Deadline"));
+		
 		//Final Issues Due to DAS
 		String FinalIssuesDueToDas = "";
 		FinalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS",  "business", calculatedFinalSignature);
@@ -3328,6 +3328,7 @@ public class ADCVDLib{
 		String nextMajorDeadline = "";
 		String actualPrelimIssuesToDas="";
 		String actualPrelimConcurrenceToDas="";
+		scrollToElement(replaceGui(guiMap.get("genericLitigationField"),"Next Major Deadline"));
 		//next dates
 		if(litigationType.equalsIgnoreCase("International Litigation"))
 		{
@@ -4122,7 +4123,7 @@ public class ADCVDLib{
 		clickElementJs(guiMap.get("selectPetitionOutcome"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem"),"Self-Initiated"));
 		holdSeconds(1);
-		updateHtmlReport("Update Petition Outcome", "user able to update Petition Outcome", "As expected", 
+		updateHtmlReport("Update Petition Outcome", "User able to update Petition Outcome", "As expected", 
 				"Step", "pass", "Update Petition Outcome");
 		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
@@ -4130,7 +4131,7 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"No"));
 		holdSeconds(1);
-		updateHtmlReport("Update litigation", "user able to update litigaation", "As expected", 
+		updateHtmlReport("Update litigation", "User able to update litigaation", "As expected", 
 				"Step", "pass", "Update litigation");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedPetition"));
@@ -4144,7 +4145,7 @@ public class ADCVDLib{
 				"");
 		clickElementJs(guiMap.get("selectPetitionOutcome"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem"),"Deficient Petition/Did Not Initiate"));
-		updateHtmlReport("Update Petition Outcome", "user able to update Petition Outcome", "As expected", 
+		updateHtmlReport("Update Petition Outcome", "User able to update Petition Outcome", "As expected", 
 				"Step", "pass", "Update Petition Outcome");
 		//clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation"));
 		//clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
@@ -4152,7 +4153,7 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
 		holdSeconds(1);
-		updateHtmlReport("Update litigation", "user able to update litigation", "As expected", 
+		updateHtmlReport("Update litigation", "User able to update litigation", "As expected", 
 				"Step", "pass", "Update litigation");
 		holdSeconds(2);
 		clickElementJs(guiMap.get("saveEditedPetition"));
@@ -4198,7 +4199,7 @@ public class ADCVDLib{
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Preliminary Signature"),today);
 						//	row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Actual Preliminary Signature", "user able to enter Actual Preliminary Signature", "As expected", 
+		updateHtmlReport("Enter Actual Preliminary Signature", "User able to enter Actual Preliminary Signature", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editTextOnSegment"),"Final Extension (# of days)"), "");
@@ -4217,7 +4218,7 @@ public class ADCVDLib{
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Final Signature"),today);
 						//	row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Actual Preliminary Signature", "user able to enter Actual Final Signature", "As expected", 
+		updateHtmlReport("Enter Actual Preliminary Signature", "User able to enter Actual Final Signature", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editTextOnSegment"),"Final Extension (# of days)"), "");
@@ -4283,7 +4284,7 @@ public class ADCVDLib{
 				row.get("Actual_Initiation_Signature"));
 		clickElementJs(guiMap.get("selectPetitionOutcome"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem"),"Self-Initiated"));
-		updateHtmlReport("Update Petition Outcome", "user able to update Petition Outcome", "As expected", 
+		updateHtmlReport("Update Petition Outcome", "User able to update Petition Outcome", "As expected", 
 				"Step", "pass", "Update Petition Outcome");
 		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
@@ -4291,7 +4292,7 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"No"));
 		holdSeconds(1);
-		updateHtmlReport("Update litigation", "user able to update litigaation", "As expected", 
+		updateHtmlReport("Update litigation", "User able to update litigaation", "As expected", 
 				"Step", "pass", "Update litigation");
 		
 		
@@ -4314,16 +4315,13 @@ public class ADCVDLib{
 		}
 				
 		//closed
-		
-		
-		
 		scrollToElement(replaceGui(guiMap.get("genericPetitionDate"),"Actual Initiation Signature"));
 		clickElementJs(guiMap.get("editPetitionOutCome"));
 		enterText(replaceGui(guiMap.get("inputPetitionDate"),"Actual Initiation Signature"),
 				"");
 		clickElementJs(guiMap.get("selectPetitionOutcome"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem"),"Deficient Petition/Did Not Initiate"));
-		updateHtmlReport("Update Petition Outcome", "user able to update Petition Outcome", "As expected", 
+		updateHtmlReport("Update Petition Outcome", "User able to update Petition Outcome", "As expected", 
 				"Step", "pass", "Update Petition Outcome");
 		//clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation"));
 		//clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
@@ -4331,7 +4329,7 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
 		holdSeconds(1);
-		updateHtmlReport("Update litigation", "user able to update litigation", "As expected", 
+		updateHtmlReport("Update litigation", "User able to update litigation", "As expected", 
 				"Step", "pass", "Update litigation");
 		
 		
@@ -4388,12 +4386,12 @@ public class ADCVDLib{
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Preliminary Signature"),today);
 						//	row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Actual Preliminary Signature", "user able to enter Actual Preliminary Signature", "As expected", 
+		updateHtmlReport("Enter Actual Preliminary Signature", "User able to enter Actual Preliminary Signature", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Calculated Preliminary Signature"),today);
 							//row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Calculated Preliminary Signature", "user able to enter Calculated Preliminary Signature", "As expected", 
+		updateHtmlReport("Enter Calculated Preliminary Signature", "User able to enter Calculated Preliminary Signature", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editTextOnSegment"),"CBP Case Number"), "");
@@ -4410,24 +4408,46 @@ public class ADCVDLib{
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Final Signature"),today);
 		holdSeconds(1);
-		updateHtmlReport("Enter actual Final Signature", "user able to enter Actual Final Signature", "As expected", 
+		updateHtmlReport("Enter actual Final Signature", "User able to enter Actual Final Signature", "As expected", 
 				"Step", "pass", "");
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Completed"));
-		updateHtmlReport("Set segment outcome to Complete", "user able to set segment outcome to Complete", "As expected", 
+		updateHtmlReport("Set segment outcome to Complete", "User able to set 'Segment Outcome' to Complete", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Will you Amend the Final?"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
 		holdSeconds(1);
-		updateHtmlReport("Set Will you Amend the Final to Yes", "user able to set Will you Amend the Final to Yes", "As expected", 
+		updateHtmlReport("Set 'Will you Amend the Final' to Yes", "User able to set 'Will you Amend the Final' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));	
 		holdSeconds(3);	
 		holdSeconds(1);
 		validateStatus("SegmentStatusLink", "Amend Final", segType);
-		//Hold----------------------------------SSSKISPED
+		//Hold----------------------------------confirm with Paul
+		
+		
+		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Will you Amend the Final?"));
+		holdSeconds(1);
+		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Will you Amend the Final?"));
+		holdSeconds(1);
+		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Will you Amend the Final?"));
+		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
+		holdSeconds(1);
+		updateHtmlReport("Set 'Will you Amend the Final' to No", "User able to set 'Will you Amend the Final' to No", "As expected", 
+				"Step", "pass", "");
+		holdSeconds(1);
+		
+		
+		holdSeconds(1);
+		clickElementJs(guiMap.get("saveEditedSegment"));
+		holdSeconds(3);
+		validateStatus("SegmentStatusLink", "Hold", segType);
+		
+		
+		
+		
 		//Litigation
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation"));
 		holdSeconds(1);
@@ -4435,12 +4455,12 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Litigation to Yes", "user able to set Litigation to Yes", "As expected", 
+		updateHtmlReport("Set 'Litigation' to Yes", "User is able to set 'Litigation' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
-		updateHtmlReport("Set Litigation Resolved to No", "user able to set Litigation Resolved to No", "As expected", 
+		updateHtmlReport("Set 'Litigation Resolved' to No", "User is able to set 'Litigation Resolved' to No", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4453,7 +4473,7 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Litigation Resolved to Yes", "user able to set Litigation Resolved to Yes", "As expected", 
+		updateHtmlReport("Set 'Litigation Resolved' to Yes", "User is able to set 'Litigation Resolved' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4467,8 +4487,8 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Have Custom Instruction been sent?"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Have Custom Instruction been sent to Yes", "user able to set Have Custom Instruction"
-				+ " been sent to Yes", "As expected", 
+		updateHtmlReport("Set 'Have Custom Instruction been sent' to Yes", "User is able to set 'Have Custom Instruction"
+				+ " been sent' to Yes", "As expected", 
 				"Step", "pass", "");
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
@@ -4507,7 +4527,7 @@ public class ADCVDLib{
 			clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"All parties in agreement to the outcome?"));
 			clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
 			updateHtmlReport("Set 'All parties in agreement to the outcome' to No",
-					"user able to All parties in agreement to the outcome' to No", "As expected", 
+					"User is able to set 'All parties in agreement to the outcome' to No", "As expected", 
 					"Step", "pass", "");
 		}
 		else
@@ -4517,12 +4537,12 @@ public class ADCVDLib{
 			clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Type of Circumvention Inquiry"));
 			clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Later-Developed Merchandise"));
 			updateHtmlReport("Set 'Edit Type of Circumvention Inquiry' to Later-Developed Merchandise",
-					"user able to set 'Edit Type of Circumvention Inquiry' to Later-Developed Merchandise", "As expected", 
+					"User is able to set 'Edit Type of Circumvention Inquiry' to Later-Developed Merchandise", "As expected", 
 					"Step", "pass", "");
 		}
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Initiation Signature"),today);
-		updateHtmlReport("Enter Actual Initiation Signature", "user able to enter Actual Initiation Signature", "As expected", 
+		updateHtmlReport("Enter Actual Initiation Signature", "User is able to enter Actual Initiation Signature", "As expected", 
 				"Step", "pass", "");
 		enterText(replaceGui(guiMap.get("editTextOnSegment"),"CBP Case Number"), "");
 		holdSeconds(1);
@@ -4536,37 +4556,37 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Preliminary Signature"));
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Preliminary Signature"),today);
-		updateHtmlReport("Enter Actual Preliminary Signature", "user able to enter Actual Preliminary Signature", "As expected", 
+		updateHtmlReport("Enter Actual Preliminary Signature", "User is able to enter Actual Preliminary Signature", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
-		/*enterText(replaceGui(guiMap.get("editDateOnSegment"), "Calculated Preliminary Signature"),today);
+		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Calculated Preliminary Signature"),today);
 							//row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Calculated Preliminary Signature", "user able to enter Calculated Preliminary Signature", "As expected", 
+		updateHtmlReport("Enter Calculated Preliminary Signature", "User is able to enter Calculated Preliminary Signature", "As expected", 
 				"Step", "pass", "");
-		holdSeconds(1);*/
+		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editTextOnSegment"),"CBP Case Number"), "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
 		validateStatus("SegmentStatusLink", "Final", segType);
-		//Hold----------------------------------SSSKISPED
+		
 		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Litigation Hold Expiration Date"));
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Litigation Hold Expiration Date"));
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Litigation Hold Expiration Date"),today);
-		updateHtmlReport("Enter Litigation Hold Expiration Date", "user able to enter Litigation Hold "
+		updateHtmlReport("Enter Litigation Hold Expiration Date", "User is able to enter Litigation Hold "
 				+ "Expiration Date", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		/*clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
-		updateHtmlReport("Set Litigation to No", "user able to set Litigation to No", "As expected", 
+		updateHtmlReport("Set 'Litigation' to No", "User is able to set 'Litigation' to No", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);*/
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Withdrawn"));
-		updateHtmlReport("set 'Segment Outcome' to Withdrawn", "user able to et 'Segment Outcome' to Withdrawn", 
+		updateHtmlReport("set 'Segment Outcome' to Withdrawn", "User is able to et 'Segment Outcome' to Withdrawn", 
 				"As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
@@ -4582,12 +4602,12 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Litigation to Yes", "user able to set Litigation to Yes", "As expected", 
+		updateHtmlReport("Set 'Litigation' to Yes", "User is able to set 'Litigation' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
-		updateHtmlReport("Set Litigation Resolved to No", "user able to set Litigation Resolved to No", "As expected", 
+		updateHtmlReport("Set 'Litigation Resolved' to No", "User is able to set 'Litigation Resolved' to No", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4600,7 +4620,7 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Litigation Resolved to Yes", "user able to set Litigation Resolved to Yes", "As expected", 
+		updateHtmlReport("Set 'Litigation Resolved' to Yes", "User is able to set 'Litigation Resolved' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4614,8 +4634,8 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Have Custom Instruction been sent?"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Have Custom Instruction been sent to Yes", "user able to set Have Custom Instruction"
-				+ " been sent to Yes", "As expected", 
+		updateHtmlReport("Set Have Custom Instruction been sent to Yes", "User is able to set 'Have Custom Instruction"
+				+ " been sent' to Yes", "As expected", 
 				"Step", "pass", "");
 		clickElementJs(guiMap.get("saveEditedSegment"));
 		holdSeconds(3);
@@ -4626,7 +4646,7 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method validate hanged circumstance and Anticircumvention
+	 * This method validate changed circumstance and Anticircumvention
 	 * statuses
 	 * @param row, row of elements
 	 * @return true if all statuses worked as expected false if not
@@ -4650,13 +4670,13 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Decision on How to Proceed"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Formal"));
 		updateHtmlReport("Set 'Decision on How to Proceed' to Formal",
-				"user able to set 'Decision on How to Proceed' to Formal", "As expected", 
+				"User is able to set 'Decision on How to Proceed' to Formal", "As expected", 
 				"Step", "pass", "");
 		
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Preliminary Determination"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
 		updateHtmlReport("Set 'Preliminary Determination' to No",
-				"user able to set 'Preliminary Determination' to No", "As expected", 
+				"User is able to set 'Preliminary Determination' to No", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4671,13 +4691,13 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Litigation Hold Expiration Date"));
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Litigation Hold Expiration Date"),today);
-		updateHtmlReport("Enter Litigation Hold Expiration Date", "user able to enter Litigation Hold "
+		updateHtmlReport("Enter Litigation Hold Expiration Date", "User is able to enter Litigation Hold "
 				+ "Expiration Date", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Completed"));
-		updateHtmlReport("set 'Segment Outcome' to Completed", "user able to et 'Segment Outcome' to Completed", 
+		updateHtmlReport("set 'Segment Outcome' to Completed", "User is able to et 'Segment Outcome' to Completed", 
 				"As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
@@ -4693,17 +4713,17 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Litigation to Yes", "user able to set Litigation to Yes", "As expected", 
+		updateHtmlReport("Set 'Litigation' to Yes", "User is able to set 'Litigation' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"No"));
-		updateHtmlReport("Set Litigation Resolved to No", "user able to set Litigation Resolved to No", "As expected", 
+		updateHtmlReport("Set 'Litigation Resolved' to No", "User is able to set 'Litigation Resolved' to No", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Segment Outcome"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Completed"));
-		updateHtmlReport("set 'Segment Outcome' to Completed", "user able to et 'Segment Outcome' to Completed", 
+		updateHtmlReport("set 'Segment Outcome' to Completed", "User is able to et 'Segment Outcome' to Completed", 
 				"As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
@@ -4717,7 +4737,7 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Litigation Resolved"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Litigation Resolved to Yes", "user able to set Litigation Resolved to Yes", "As expected", 
+		updateHtmlReport("Set 'Litigation Resolved' to Yes", "User is able to set 'Litigation Resolved' to Yes", "As expected", 
 				"Step", "pass", "");
 		holdSeconds(1);
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4731,7 +4751,7 @@ public class ADCVDLib{
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Have Custom Instruction been sent?"));
 		clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Yes"));
-		updateHtmlReport("Set Have Custom Instruction been sent to Yes", "user able to set Have Custom Instruction"
+		updateHtmlReport("Set 'Have Custom Instruction been sent' to Yes", "User is able to set Have Custom Instruction"
 				+ " been sent to Yes", "As expected", 
 				"Step", "pass", "");
 		clickElementJs(guiMap.get("saveEditedSegment"));
@@ -4770,7 +4790,7 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("LitigationFieldEditIcon"), "Edit Actual Draft Remand (released to party)"));
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnLitigation"), "Actual Draft Remand (released to party)"),today);
-		updateHtmlReport("Enter Actual Draft Remand (released to party)", "user able to Actual Draft Remand (released to party)"
+		updateHtmlReport("Enter Actual Draft Remand (released to party)", "User is able to Actual Draft Remand (released to party)"
 				, "As expected", 
 				"Step", "pass", "");
 		enterText(replaceGui(guiMap.get("editTextOnLitigation"),"Final Extension (# of days)"), "");
@@ -4785,7 +4805,7 @@ public class ADCVDLib{
 		clickElementJs(replaceGui(guiMap.get("LitigationFieldEditIcon"), "Edit Actual Final Signature"));
 		holdSeconds(1);
 		enterText(replaceGui(guiMap.get("editDateOnLitigation"), "Actual Final Signature"),today);
-		updateHtmlReport("Enter Actual Final Signature", "user able to enter Actual Final Signature"
+		updateHtmlReport("Enter Actual Final Signature", "User is able to enter Actual Final Signature"
 				+ "Expiration Date", "As expected", 
 				"Step", "pass", "");
 		enterText(replaceGui(guiMap.get("editTextOnLitigation"),"Final Extension (# of days)"), "");

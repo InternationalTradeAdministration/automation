@@ -12,7 +12,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TestFramework"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TestFramework">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Mouloud Hamdidouche/Desktop/eclipse/SeleniumProjects/TestFramework"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

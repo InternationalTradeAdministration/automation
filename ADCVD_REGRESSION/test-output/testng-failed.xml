@@ -8,8 +8,8 @@
           <include name="afterClass"/>
           <include name="afterMethod"/>
           <include name="beforeMethod"/>
+          <include name="International_Litigation_Status_Validation"/>
           <include name="beforeClass"/>
-          <include name="Scope_Status_Validation"/>
         </methods>
       </class> <!-- tests.TestOne -->
     </classes>

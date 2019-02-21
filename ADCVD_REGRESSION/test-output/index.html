@@ -24,7 +24,7 @@
     <div class="top-banner-root">
       <span class="top-banner-title-font">Test results</span>
       <br/>
-      <span class="top-banner-font-1">1 suite</span>
+      <span class="top-banner-font-1">1 suite, 1 failed test</span>
     </div> <!-- top-banner-root -->
     <div class="navigator-root">
       <div class="navigator-suite-header">
@@ -38,7 +38,7 @@
         <div class="rounded-window">
           <div class="suite-header light-rounded-window-top">
             <a href="#" class="navigator-link" panel-name="suite-Suite">
-              <span class="suite-name border-passed">Suite</span>
+              <span class="suite-name border-failed">Suite</span>
             </a> <!-- navigator-link -->
           </div> <!-- suite-header light-rounded-window-top -->
           <div class="navigator-suite-content">
@@ -91,7 +91,21 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">1 method,   1 passed</span>
+                    <span class="method-stats">7 methods, 1 failed,   6 passed</span>
+                  </li>
+                  <li>
+                    <span class="method-list-title failed">Failed methods</span>
+                    <span class="show-or-hide-methods failed">
+                      <a href="#" panel-name="suite-Suite" class="hide-methods failed suite-Suite"> (hide)</a> <!-- hide-methods failed suite-Suite -->
+                      <a href="#" panel-name="suite-Suite" class="show-methods failed suite-Suite"> (show)</a> <!-- show-methods failed suite-Suite -->
+                    </span>
+                    <div class="method-list-content failed suite-Suite">
+                      <span>
+                        <img width="3%" src="failed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="International_Litigation_Status_Validation">International_Litigation_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                    </div> <!-- method-list-content failed suite-Suite -->
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -102,7 +116,32 @@
                     <div class="method-list-content passed suite-Suite">
                       <span>
                         <img width="3%" src="passed.png"/>
-                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Litigation_Dates_Validation">Litigation_Dates_Validation</a> <!-- method navigator-link -->
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Admin_Review_Status_Validation">Admin_Review_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Anticircumvention_Status_Validation">Anticircumvention_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Changed_Circumstance_Review_Status_Validation">Changed_Circumstance_Review_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Expedited_Review_Status_Validation">Expedited_Review_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="New_Shipper_Review_Status_Validation">New_Shipper_Review_Status_Validation</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img width="3%" src="passed.png"/>
+                        <a href="#" class="method navigator-link" panel-name="suite-Suite" title="tests.TestOne" hash-for-method="Scope_Status_Validation">Scope_Status_Validation</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Suite -->
@@ -117,6 +156,29 @@
     <div class="wrapper">
       <div class="main-panel-root">
         <div panel-name="suite-Suite" class="panel Suite">
+          <div class="suite-Suite-class-failed">
+            <div class="main-panel-header rounded-window-top">
+              <img src="failed.png"/>
+              <span class="class-name">tests.TestOne</span>
+            </div> <!-- main-panel-header rounded-window-top -->
+            <div class="main-panel-content rounded-window-bottom">
+              <div class="method">
+                <div class="method-content">
+                  <a name="International_Litigation_Status_Validation">
+                  </a> <!-- International_Litigation_Status_Validation -->
+                  <span class="method-name">International_Litigation_Status_Validation</span>
+                  <div class="stack-trace">java.lang.AssertionError: International_Litigation_Status_Validation: edit Date on Litigation not found
+	at GuiLibs.GuiTools.failTestCase(GuiTools.java:447)
+	at GuiLibs.GuiTools.enterText(GuiTools.java:634)
+	at libs.ADCVDLib.validateLitigationStatus(ADCVDLib.java:4806)
+	at tests.TestOne.International_Litigation_Status_Validation(TestOne.java:663)
+	at tests.TestOne.main(TestOne.java:64)
+... Removed 23 stack frames
+</div> <!-- stack-trace -->
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+            </div> <!-- main-panel-content rounded-window-bottom -->
+          </div> <!-- suite-Suite-class-failed -->
           <div class="suite-Suite-class-passed">
             <div class="main-panel-header rounded-window-top">
               <img src="passed.png"/>
@@ -125,9 +187,44 @@
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="Litigation_Dates_Validation">
-                  </a> <!-- Litigation_Dates_Validation -->
-                  <span class="method-name">Litigation_Dates_Validation</span>
+                  <a name="Admin_Review_Status_Validation">
+                  </a> <!-- Admin_Review_Status_Validation -->
+                  <span class="method-name">Admin_Review_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Anticircumvention_Status_Validation">
+                  </a> <!-- Anticircumvention_Status_Validation -->
+                  <span class="method-name">Anticircumvention_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Changed_Circumstance_Review_Status_Validation">
+                  </a> <!-- Changed_Circumstance_Review_Status_Validation -->
+                  <span class="method-name">Changed_Circumstance_Review_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Expedited_Review_Status_Validation">
+                  </a> <!-- Expedited_Review_Status_Validation -->
+                  <span class="method-name">Expedited_Review_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="New_Shipper_Review_Status_Validation">
+                  </a> <!-- New_Shipper_Review_Status_Validation -->
+                  <span class="method-name">New_Shipper_Review_Status_Validation</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="Scope_Status_Validation">
+                  </a> <!-- Scope_Status_Validation -->
+                  <span class="method-name">Scope_Status_Validation</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -146,7 +243,13 @@
     &lt;classes&gt;
       &lt;class name=&quot;tests.TestOne&quot;&gt;
         &lt;methods&gt;
-          &lt;include name=&quot;Litigation_Dates_Validation&quot;/&gt;
+          &lt;include name=&quot;Admin_Review_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;Expedited_Review_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;New_Shipper_Review_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;Changed_Circumstance_Review_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;Anticircumvention_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;Scope_Status_Validation&quot;/&gt;
+          &lt;include name=&quot;International_Litigation_Status_Validation&quot;/&gt;
         &lt;/methods&gt;
       &lt;/class&gt; &lt;!-- tests.TestOne --&gt;
     &lt;/classes&gt;
@@ -188,16 +291,40 @@ data.addColumn('number', 'Number');
 data.addColumn('string', 'Method');
 data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
-data.addRows(1);
+data.addRows(7);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'Litigation_Dates_Validation')
+data.setCell(0, 1, 'Admin_Review_Status_Validation')
 data.setCell(0, 2, 'tests.TestOne')
-data.setCell(0, 3, 147391);
+data.setCell(0, 3, 333642);
+data.setCell(1, 0, 1)
+data.setCell(1, 1, 'New_Shipper_Review_Status_Validation')
+data.setCell(1, 2, 'tests.TestOne')
+data.setCell(1, 3, 232850);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'Expedited_Review_Status_Validation')
+data.setCell(2, 2, 'tests.TestOne')
+data.setCell(2, 3, 232092);
+data.setCell(3, 0, 3)
+data.setCell(3, 1, 'Changed_Circumstance_Review_Status_Validation')
+data.setCell(3, 2, 'tests.TestOne')
+data.setCell(3, 3, 228380);
+data.setCell(4, 0, 4)
+data.setCell(4, 1, 'Anticircumvention_Status_Validation')
+data.setCell(4, 2, 'tests.TestOne')
+data.setCell(4, 3, 226413);
+data.setCell(5, 0, 5)
+data.setCell(5, 1, 'Scope_Status_Validation')
+data.setCell(5, 2, 'tests.TestOne')
+data.setCell(5, 3, 174936);
+data.setCell(6, 0, 6)
+data.setCell(6, 1, 'International_Litigation_Status_Validation')
+data.setCell(6, 2, 'tests.TestOne')
+data.setCell(6, 3, 85102);
 window.suiteTableData['Suite']= { tableData: data, tableDiv: 'times-div-Suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 2 minutes</span>
+              <span class="suite-total-time">Total running time: 25 minutes</span>
               <div id="times-div-Suite">
               </div> <!-- times-div-Suite -->
             </div> <!-- times-div -->
@@ -212,35 +339,23 @@ return data;
         </div> <!-- panel -->
         <div panel-name="ignored-methods-Suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">14 ignored methods</span>
+            <span class="header-content">8 ignored methods</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="ignored-class-div">
               <span class="ignored-class-name">tests.TestOne</span>
               <div class="ignored-methods-div">
-                <span class="ignored-method-name">Anticircumvention_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">Admin_Review_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">Expedited_Review_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">Petition_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">Align_NSR_To_NR</span>
-                <br/>
-                <span class="ignored-method-name">New_Shipper_Review_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">Changed_Circumstance_Review_Status_Validation</span>
-                <br/>
-                <span class="ignored-method-name">International_Litigation_Status_Validation</span>
-                <br/>
                 <span class="ignored-method-name">Sunset_Status_Validation</span>
                 <br/>
                 <span class="ignored-method-name">CVD_Align_With_AD</span>
                 <br/>
-                <span class="ignored-method-name">Scope_Status_Validation</span>
+                <span class="ignored-method-name">Petition_Status_Validation</span>
                 <br/>
                 <span class="ignored-method-name">Remand_Status_Validation</span>
+                <br/>
+                <span class="ignored-method-name">Litigation_Dates_Validation</span>
+                <br/>
+                <span class="ignored-method-name">Align_NSR_To_NR</span>
                 <br/>
                 <span class="ignored-method-name">Investigation_Status_Validation</span>
                 <br/>
@@ -263,21 +378,95 @@ return data;
               </div> <!-- configuration-class before -->
               <div class="configuration-method before">
                 <span class="method-name">beforeMethod</span>
-                <span class="method-start">823 ms</span>
+                <span class="method-start">869 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
-                <span class="method-name">Litigation_Dates_Validation</span>
-                <span class="method-start">824 ms</span>
+                <span class="method-name">Admin_Review_Status_Validation</span>
+                <span class="method-start">870 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">afterMethod</span>
-                <span class="method-start">148216 ms</span>
+                <span class="method-start">334517 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">334539 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Expedited_Review_Status_Validation</span>
+                <span class="method-start">334540 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">566633 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">566655 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">New_Shipper_Review_Status_Validation</span>
+                <span class="method-start">566655 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">799505 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">799520 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Changed_Circumstance_Review_Status_Validation</span>
+                <span class="method-start">799520 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">1027900 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">1027944 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Anticircumvention_Status_Validation</span>
+                <span class="method-start">1027945 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">1254358 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">1254370 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">Scope_Status_Validation</span>
+                <span class="method-start">1254371 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">1429307 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">beforeMethod</span>
+                <span class="method-start">1429314 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <img src="failed.png">
+                </img>
+                <span class="method-name">International_Litigation_Status_Validation</span>
+                <span class="method-start">1429314 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">afterMethod</span>
+                <span class="method-start">1514417 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-class after">
                 <img src="failed.png">
                 </img>
                 <span class="method-name">afterClass</span>
-                <span class="method-start">148229 ms</span>
+                <span class="method-start">1514423 ms</span>
               </div> <!-- configuration-class after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

@@ -250,10 +250,10 @@ public class TestOne {
 	 * This method is for ADCVD case creation and validation
 	*/
 	@Test(enabled = true, priority=4)
-	void Align_NSR_To_NR() throws Exception
+	void Align_NSR_To_AR() throws Exception
 	{
 		LinkedHashMap<String, String> arDates, nsrDates;
-		printLog("Align_NSR_To_NR");
+		printLog("Align_NSR_To_AR");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_004");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
