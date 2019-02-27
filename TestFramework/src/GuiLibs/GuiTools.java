@@ -55,15 +55,11 @@ public class GuiTools extends InitTools{
 	private String currentTestCaseName;
 	private String browserName;
 	private long threadId;
-	//public HtmlReport htmlReport = new HtmlReport("");
 	public static LinkedHashMap<String, LinkedHashMap<String, String>> guiMap;
 	public static int imgIterator = 1;
 	public static boolean tearDown = false, testCaseStatus=true;
 	public static boolean recordOn = false;
 	public static ScreenRecorder screenRecorder;
-
-	
-	
 	/**
 	 * This function will start recording
 	 * @param folder: where the video will be saved
@@ -78,22 +74,22 @@ public class GuiTools extends InitTools{
 
 		 // set the graphics configuration
 	    GraphicsConfiguration gc = GraphicsEnvironment
-	            .getLocalGraphicsEnvironment()
-	            .getDefaultScreenDevice()
-	            .getDefaultConfiguration();
-	    
-	    
-	    		screenRecorder = new ScreenRecorder(gc,null,
-	    		new Format(MediaTypeKey, MediaType.FILE, MimeTypeKey, MIME_AVI),
-	    		new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE,
-	    		CompressorNameKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE,
-	    		DepthKey, 24, FrameRateKey, Rational.valueOf(15),
-	    		QualityKey, 1.0f,
-	    		KeyFrameIntervalKey, 15 * 60),
-	    		new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, "black",
-	    		FrameRateKey, Rational.valueOf(30)),
-	    		null, file);
-	    		screenRecorder.start();
+        .getLocalGraphicsEnvironment()
+        .getDefaultScreenDevice()
+        .getDefaultConfiguration();
+
+
+		screenRecorder = new ScreenRecorder(gc,null,
+		new Format(MediaTypeKey, MediaType.FILE, MimeTypeKey, MIME_AVI),
+		new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE,
+		CompressorNameKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE,
+		DepthKey, 24, FrameRateKey, Rational.valueOf(15),
+		QualityKey, 1.0f,
+		KeyFrameIntervalKey, 15 * 60),
+		new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, "black",
+		FrameRateKey, Rational.valueOf(30)),
+		null, file);
+		screenRecorder.start();
 	    
 	}
 	*//**
@@ -133,9 +129,8 @@ public class GuiTools extends InitTools{
 		}
 		else if (browser.equalsIgnoreCase("chrome"))
 		{
-			//rowserExe = "chrome.exe";
-			//killProcesses(getAllProcessIds(browserExe));
-			//killProcesses(getAllProcessIds("chromedriver.exe"));
+			killProcesses(getAllProcessIds(browserExe));
+			killProcesses(getAllProcessIds("chromedriver.exe"));
 			setDriver(getChromeDriver());
 		}
 		else
@@ -254,7 +249,6 @@ public class GuiTools extends InitTools{
 	 */
 	public void closeBrowser() throws IOException
 	{
-		
 		for(String window : getAllWindows())
 		{
 			switchToWindow(window);
@@ -263,8 +257,8 @@ public class GuiTools extends InitTools{
 		System.out.println(getBrowserProcessId());
 		getDriver().close();
 		getDriver().quit();
-		//Runtime.getRuntime().exec("cmd /c taskkill /PID " + 
-		//getBrowserProcessId());
+		Runtime.getRuntime().exec("cmd /c taskkill /PID " + 
+		getBrowserProcessId());
 		
 	}
 	/**

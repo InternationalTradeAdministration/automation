@@ -3222,7 +3222,8 @@ public class ADCVDLib{
 		String calculatedFinalSignature = "", calculatedPreliminarySignature="",
 			   calculatedDraftRemandreleaseToparty = "",  prelimIssuesDueToDas="",
 					   prelimConcurrenceDueToDas="", prelimTeamMeetingDeadline="";
-		String draftRemandIssuesDueToDas="", draftRemandConcurrenceDueToDas="" ;
+		String draftRemandIssuesDueToDas="", draftRemandConcurrenceDueToDas="",
+			   finalTeamMeetingDeadline = "";
 		//boolean matches = true;
 		String litigationType = row.get("Litigation_Type");
 		//Prelim Extension (# of days)
@@ -3317,11 +3318,11 @@ public class ADCVDLib{
 		if(litigationType.equalsIgnoreCase("International Litigation"))
 		{
 		//Final Team Meeting Deadline
-		String FinalTeamMeetingDeadline = "";
-		FinalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
+		
+		finalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
 		actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Final Team Meeting Deadline"), "text");
 		allMatches = allMatches & compareAndReport("genericLitigationField", "Final Team Meeting Deadline",
-				FinalTeamMeetingDeadline, actualValue);
+				finalTeamMeetingDeadline, actualValue);
 		}
 		String actualPreliminarySignature = "";
 		String actualFinalSignature = "";
@@ -3372,7 +3373,7 @@ public class ADCVDLib{
 					nextDueToDasDeadline, actualValue);
 			//Next Office Deadline
 			String nextOfficeDeadline="";
-			if (! "".equals(prelimTeamMeetingDeadline))
+			if ("".equals(actualPreliminarySignature) && datePassed(prelimTeamMeetingDeadline))
 			{
 				nextOfficeDeadline = prelimTeamMeetingDeadline;
 			}
@@ -3386,7 +3387,10 @@ public class ADCVDLib{
 			{
 				nextOfficeDeadline = calculatedPreliminarySignature;
 			}
-			
+			else if ("".equals(actualFinalSignature) && datePassed(finalTeamMeetingDeadline))
+			{
+				nextOfficeDeadline = finalTeamMeetingDeadline;
+			}
 			else if("".equals(actualFinalSignature) && "".equals(actualFinalIssuesToDas))
 			{
 				nextOfficeDeadline = FinalIssuesDueToDas;
@@ -3447,7 +3451,7 @@ public class ADCVDLib{
 					nextDueToDasDeadline, actualValue);
 			//Next Office Deadline
 			String nextOfficeDeadline="";
-			if (! "".equals(prelimTeamMeetingDeadline))
+			if ("".equals(actualDraftRemandReleasedToParty) && datePassed(prelimTeamMeetingDeadline))
 			{
 				nextOfficeDeadline = prelimTeamMeetingDeadline;
 			}
@@ -3460,6 +3464,10 @@ public class ADCVDLib{
 			}else if("".equals(actualDraftRemandReleasedToParty))
 			{
 				nextOfficeDeadline = calculatedDraftRemandreleaseToparty;
+			}
+			else if ("".equals(actualFinalSignature) && datePassed(finalTeamMeetingDeadline))
+			{
+				nextOfficeDeadline = finalTeamMeetingDeadline;
 			}
 			else if("".equals(actualFinalSignature) && "".equals(actualFinalIssuesToDas))
 			{
