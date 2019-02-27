@@ -1,2 +1,2 @@
-java -Xmx1024m -jar adcvd.jar > test.log
+java -Xmx1024m -jar adcvd_regression.jar> test.log
 pause

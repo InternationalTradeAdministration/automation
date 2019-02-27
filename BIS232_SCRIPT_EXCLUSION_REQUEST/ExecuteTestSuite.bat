@@ -1,2 +1,2 @@
-java -Xmx1024m -jar Bis232.jar > test.log
+java -Xmx1024m -jar Bis232_exclusion_req.jar > test.log
 pause
