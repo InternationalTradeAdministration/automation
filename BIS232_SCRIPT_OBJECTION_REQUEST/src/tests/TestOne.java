@@ -70,7 +70,7 @@ public class TestOne {
 		guiMap = XlsxTools.readGuiMap(guiPool);
 		HtmlReport.setTestSuiteName(mapConfInfos.get("project_name"));
 		HtmlReport.setEnvironmentName(mapConfInfos.get("env_name"));
-		HtmlReport.setTotalTcs(dataPoolStep3.size());
+		HtmlReport.setTotalTcs(scenarios.size());
 		java.util.Date date = new java.util.Date();
 		suiteStartTime = new Timestamp(date.getTime());
 	}

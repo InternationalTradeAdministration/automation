@@ -94,11 +94,11 @@ public class BisFormLib{
 				continue;
 			}else if (elementName.equalsIgnoreCase("State"))
 			{
-				selectElementByText(replaceGui(guiMap.get("RE_StepOneElementSelect"), elementName), entry.getValue());
+				selectElementByText(replaceGui(guiMap.get("OR_StepOneElementSelect"), elementName), entry.getValue());
 			}
 			else
 			{
-				enterText(replaceGui(guiMap.get("RE_StepOneElement"), elementName), entry.getValue());
+				enterText(replaceGui(guiMap.get("OR_StepOneElement"), elementName), entry.getValue());
 			}
 		}
 		updateHtmlReportOverall("Fillup the form of step 1",  "User fill up the form of step 1", "As expected", 
@@ -140,7 +140,7 @@ public class BisFormLib{
 				}
 				else
 				{
-					enterText(replaceGui(guiMap.get("RE_StepTwoElement"), loc, elementName), entry.getValue());
+					enterText(replaceGui(guiMap.get("OR_StepTwoElement"), loc, elementName), entry.getValue());
 				}
 			}
 		}
@@ -166,7 +166,7 @@ public class BisFormLib{
 			elementName = entry.getKey().trim();
 			if(!elementName.equalsIgnoreCase("Scenarios") && !elementName.equalsIgnoreCase("Active"))
 			{
-				selectElementByText(replaceGui(guiMap.get("RE_StepThreeElementSelect"), elementName), entry.getValue());
+				selectElementByText(replaceGui(guiMap.get("OR_StepThreeElementSelect"), elementName), entry.getValue());
 			}
 		}
 		updateHtmlReportOverall("Fillup the form of step 3",  "User fill up the form of step 3", "As expected", 
@@ -190,7 +190,7 @@ public class BisFormLib{
 			elementName = entry.getKey().trim();
 			if(!elementName.equalsIgnoreCase("Scenarios") && !elementName.equalsIgnoreCase("Active"))
 			{
-				enterText(replaceGui(guiMap.get("RE_StepFourElement"), elementName), entry.getValue());
+				enterText(replaceGui(guiMap.get("OR_StepFourElement"), elementName), entry.getValue());
 			}
 		}
 		updateHtmlReportOverall("Fillup the form of step 4",  "User fill up the form of step 4", "As expected", 
@@ -219,7 +219,7 @@ public class BisFormLib{
 			}
 			else
 			{
-				enterText(replaceGui(guiMap.get("RE_StepFiveElement"), elementName), entry.getValue());
+				enterText(replaceGui(guiMap.get("OR_StepFiveElement"), elementName), entry.getValue());
 			}
 		}
 		updateHtmlReportOverall("Fillup the form of step 5",  "User fill up the form of step 5", "As expected", 
@@ -248,19 +248,19 @@ public class BisFormLib{
 			{
 				if (elementName.equalsIgnoreCase("Street Address"))
 				{
-					scrollToElement(replaceGui(guiMap.get("RE_StepOneElement"), "Street Address"));
+					scrollToElement(replaceGui(guiMap.get("OR_StepOneElement"), "Street Address"));
 				}	
 				
 				if (elementName.equalsIgnoreCase("State"))
 				{
-					errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepOneElementSelectMessage"),
+					errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepOneElementSelectMessage"),
 							elementName), "text");
-					htmlToValidate ="RE_StepOneElementSelectDiv";
+					htmlToValidate ="OR_StepOneElementSelectDiv";
 				}
 				else
 				{
-					errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepOneElementMessage"), elementName), "text");	
-					htmlToValidate = "RE_StepOneElementDiv";
+					errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepOneElementMessage"), elementName), "text");	
+					htmlToValidate = "OR_StepOneElementDiv";
 				}
 				switch(elementName)
 				{
@@ -433,7 +433,7 @@ public class BisFormLib{
 	*/
 	public static boolean ValidateStepTwo(HashMap<String, String> row) throws Exception
 	{
-		String  elementName = "", elementValue="", errorMsg="", htmlToValidate="RE_StepTwoElementDiv";
+		String  elementName = "", elementValue="", errorMsg="", htmlToValidate="OR_StepTwoElementDiv";
 		holdSeconds(1);
 		clickElementJs(replaceGui(guiMap.get("tabName"), "Step 2") );
 		//holdSeconds(2);
@@ -464,12 +464,12 @@ public class BisFormLib{
 				 )
 				{
 					if (elementName.equalsIgnoreCase("City"))
-						scrollToElement(replaceGui(guiMap.get("RE_StepTwoElement"), loc, elementName));
+						scrollToElement(replaceGui(guiMap.get("OR_StepTwoElement"), loc, elementName));
 					continue;
 				}
 				else
 				{
-						errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepTwoElementMessage"), 
+						errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepTwoElementMessage"), 
 								loc, elementName), "text");
 					if (elementName.equalsIgnoreCase("Days") || 
 						elementName.equalsIgnoreCase("CurrentProductionCapacity"))
@@ -529,18 +529,18 @@ public class BisFormLib{
 			elementName = entry.getKey().trim();
 			elementValue = entry.getValue().trim();
 			if("Insufficient Volume".equals(elementName))
-				scrollToElement(replaceGui(guiMap.get("RE_StepThreeElementSelectMessage"), elementName));
+				scrollToElement(replaceGui(guiMap.get("OR_StepThreeElementSelectMessage"), elementName));
 			if(!elementName.equalsIgnoreCase("Scenarios") && !elementName.equalsIgnoreCase("Active"))
 			{
-				errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepThreeElementSelectMessage"), elementName), "text");
+				errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepThreeElementSelectMessage"), elementName), "text");
 				if(elementValue.trim().equals("Please Select"))
 				{
-					matches = matches & validateElementAndReport(elementName, "RE_StepThreeElementSelectDiv", 
+					matches = matches & validateElementAndReport(elementName, "OR_StepThreeElementSelectDiv", 
 							"This field is required.", errorMsg);
 				}
 				else
 				{
-					matches = matches & validateElementAndReport(elementName, "RE_StepThreeElementSelectDiv", 
+					matches = matches & validateElementAndReport(elementName, "OR_StepThreeElementSelectDiv", 
 							"", errorMsg);
 				}
 			}
@@ -559,7 +559,7 @@ public class BisFormLib{
 		clickElementJs(replaceGui(guiMap.get("tabName"), "Step 4") );
 		holdSeconds(1);
 		String errorMsg, elementValue, elementName;
-		String htmlToValidate="RE_StepFourElementDiv";
+		String htmlToValidate="OR_StepFourElementDiv";
 		for (HashMap.Entry<String, String> entry : row.entrySet()) 
 		{
 			elementName = entry.getKey();
@@ -567,9 +567,9 @@ public class BisFormLib{
 			if(elementName.equalsIgnoreCase("Scenarios") || elementName.equalsIgnoreCase("Active"))
 			continue;
 			if(elementName.equalsIgnoreCase("PctManugactureByReqOrg"))
-			errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepFourElementMessage2"), elementName), "text");
+			errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepFourElementMessage2"), elementName), "text");
 			else				
-			errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepFourElementMessage"), elementName), "text");
+			errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepFourElementMessage"), elementName), "text");
 			switch(elementName)
 			{
 				case "PctManugactureByReqOrg":
@@ -674,7 +674,7 @@ public class BisFormLib{
 		clickElementJs(replaceGui(guiMap.get("tabName"), "Step 5") );
 		holdSeconds(1);
 		String errorMsg, elementValue, elementName;
-		String htmlToValidate="RE_StepFiveElementDiv";
+		String htmlToValidate="OR_StepFiveElementDiv";
 		scrollToElement(replaceGui(guiMap.get(htmlToValidate), "PhoneNumber"));
 		for (HashMap.Entry<String, String> entry : row.entrySet()) 
 		{
@@ -682,7 +682,7 @@ public class BisFormLib{
 			elementValue = entry.getValue();
 			if(elementName.equalsIgnoreCase("Scenarios") || elementName.equalsIgnoreCase("Active"))
 			continue;
-			errorMsg = getElementAttribute(replaceGui(guiMap.get("RE_StepFiveElementMessage"), elementName), "text");
+			errorMsg = getElementAttribute(replaceGui(guiMap.get("OR_StepFiveElementMessage"), elementName), "text");
 			switch(elementName)
 			{
 				case "CompanyName": 
@@ -919,6 +919,7 @@ public class BisFormLib{
 		if(checkElementExists(replaceGui(guiMap.get("tdSearchedId"),reqId)) )
 		{
 			setBrowserTimeOut(currentTimeOut);
+			holdSeconds(2);
 			String statusReq = getElementAttribute(replaceGui(guiMap.get("tdSearchedStatus"),reqId), "text");
 			if(statusReq.equalsIgnoreCase("Pending-Objection Window Open"))
 			{
@@ -932,6 +933,7 @@ public class BisFormLib{
 			}
 			else
 			{
+				highlightElement(replaceGui(guiMap.get("tdSearchedStatus"),reqId), "red");
 				failTestCase("Search for exclusive request: "+reqId, "The request is at 'Pending-Objection Window Open'", 
 						"Status of the request is '"+statusReq+"'", "Step", 
 						"fail", "Search for exclusive request");
