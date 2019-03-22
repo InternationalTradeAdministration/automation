@@ -10,6 +10,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.testng.TestNG;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -37,9 +42,45 @@ public class TestOne {
 	public static Timestamp startTime, suiteStartTime;
 	public static Timestamp endTime;
 	public static Calendar cal = Calendar.getInstance();
-	
+	public static HttpClient httpclient;
 	public static void main(String[] args) throws Exception 
 	{
+		
+		
+		
+		String accessToken = "00Df4000004lF33!AQsAQL8V46KMUdketRjZaZwLn7O1vS29JbXXHYFA3FB7qexkPnjaMDrLBO2d7VxoLS4cOKjWshpEcV6yRXjByhONAjTboWpp";
+		String instanceUrl = "https://na59.salesforce.com";
+		
+		final URIBuilder builder = new URIBuilder(instanceUrl);
+		builder.setPath("/services/data/v45.0/query/")
+		       .setParameter("q", "SELECT Id, Name FROM Contact");
+		final HttpGet get = new HttpGet(builder.build());
+		get.setHeader("Authorization", "Bearer " + accessToken);
+		final HttpResponse queryResponse = httpclient.execute(get);
+		//final JsonNode queryResults = mapper.readValue(queryResponse.getEntity().getContent(), JsonNode.class);
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		printLog("MainMethod()");
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();

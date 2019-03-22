@@ -7,6 +7,10 @@ package GuiLibs;
 //import ReportLibs.ReportTools;
 import static ReportLibs.ReportTools.printLog;
 
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +41,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
@@ -459,10 +465,14 @@ public class GuiTools extends InitTools{
 									 String StepPassFail,
 									 String msgError) throws IOException
 	{
-		HtmlReport.setTcStatus(false);
+		String aLink = "";
+		//HtmlReport.setTcStatus(false);
 		testCaseStatus = false;
-		String screenShotPath = takeScreenShot(msgError, true);
-		String aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
+		if(!msgError.equals(""))
+		{
+			String screenShotPath = takeScreenShot(msgError, true);
+			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
+		}
 		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
 		tearDown = true;
 		Assert.fail( getTestCaseName()+ ": " +msgError);
@@ -639,6 +649,64 @@ public class GuiTools extends InitTools{
 			element.sendKeys(value);
 		}
 	}
+	
+	/**
+	 * This method uploads file
+	 * @param map: Web Element
+	 * @param value: value to put in the text field
+	 * @throws Exception 
+	 * 
+	 */
+	public static void uploadFile(String file) throws Exception
+	{
+		
+		
+		StringSelection ss = new StringSelection(file);
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+		
+		Robot robot = new Robot();
+
+		robot.keyPress(KeyEvent.VK_CONTROL);
+		robot.keyPress(KeyEvent.VK_V);
+		robot.keyRelease(KeyEvent.VK_V);
+		robot.keyRelease(KeyEvent.VK_CONTROL);
+		robot.keyPress(KeyEvent.VK_ENTER);
+		robot.keyRelease(KeyEvent.VK_ENTER);
+		
+		
+		
+		
+		
+		/*printLog("Upload file "+ file);
+		String locType = map.get("locator_type");
+		//String locValue = map.get("locator_value");
+		String locValue = "//input[@id='ctl00_ctl00_ContentPlaceHolder1_maincontent_txtTitle1']";
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			testCaseStatus = false;
+			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
+					"Element not found", "Step", "fail", map.get("field_name")+" not found");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
+			
+			
+			//JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+			//executor.executeScript("arguments[0].style='';arguments[0].style.display = 'block'; arguments[0].style.visibility = 'visible';", element);
+
+			//((ChromeDriver) getDriver()).setFileDetector(new LocalFileDetector());
+			element.clear();
+			clickElementJs(map);
+			element.sendKeys(file);
+		}*/
+	}
 
 	/**
 	 * This method takes screenshot of the visible part
@@ -710,7 +778,7 @@ public class GuiTools extends InitTools{
 	 */
 	public static void clickElementJs(HashMap<String, String> map) throws Exception
 	{
-		printLog("Click on element "+ map.get("field_name"));
+		printLog("Click  on  element "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
 		if (elementExists(locType, locValue))
@@ -724,6 +792,7 @@ public class GuiTools extends InitTools{
 			    		element = e;
 			    	}
 			}
+
 			JavascriptExecutor executor = (JavascriptExecutor)driver;
 			executor.executeScript("arguments[0].click();", element);
 			
@@ -732,6 +801,95 @@ public class GuiTools extends InitTools{
 			printLog("Element "+ map.get("field_name")+" was "
 					+ "not found on Gui");
 		}
+	}
+	
+	/**
+	 * This method enter file name into file type input
+	 * @param map: Web Element
+	 * @throws Exception 
+	 * 
+	 */
+	public static void enterTextFile(HashMap<String, String> map, String file) throws Exception
+	{	//String str = "C:\\Users\\Mouloud Hamdidouche\\Desktop\\eclipse\\SeleniumProjects\\ACCESS_SCRIPT\\input_data\\input_files\\test_file_1.xlsx";
+        //String str = "C:\\libs\\"+file;
+		printLog("Enter text for "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			testCaseStatus = false;
+			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
+					"Element not found", "Step", "fail", map.get("field_name")+" not found");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
+			 ((JavascriptExecutor) getDriver()).executeScript(
+	         "arguments[0].style.visibility = 'visible'; "
+	         + " ",
+	         element);
+			 try
+			 {
+				 element.sendKeys(file);
+			 }catch(Exception e)
+			 {
+				  System.out.println("File issue "+ file);
+		          failTestCase("Entering File", "File should be entered", 
+		        		  "File doesn't exist or path is too long: "+file, "Step", "fail", "file upload fail");;
+			 }
+			
+		}
+		
+	}
+	
+	
+	/**
+	 * This method clicks on element
+	 * @param map: Web Element
+	 * @throws Exception 
+	 * 
+	 */
+	public static void clickElementJs2(HashMap<String, String> map) throws Exception
+	{
+		printLog("Click  on element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		
+		((JavascriptExecutor) driver).executeScript(
+                "arguments[0].style.visibility = 'visible'; "
+                + " ",
+                driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")));
+
+        driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")).sendKeys("C:\\libs\\test file 1.xlsx"); // please provide absolute path of the file to upload.
+
+        //
+       
+		/*if (elementExists(locType, locValue))
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isEnabled()) 
+			    	{
+			    		element = e;
+			    	}
+			}
+
+			JavascriptExecutor executor = (JavascriptExecutor)driver;
+			executor.executeScript("arguments[0].click();", element);
+			
+		}else
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+		}*/
 	}
 	
 	/**
