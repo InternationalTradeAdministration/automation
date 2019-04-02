@@ -1,29 +1,28 @@
+/*Mouloud Hamdidouche
+March, 2019*/
 package ServiceLibs;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.io.BufferedReader;
- 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.HttpStatus;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONObject;
 import org.json.JSONArray;
-import org.json.JSONTokener;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class APITools {
 	
@@ -38,14 +37,14 @@ public class APITools {
 	//static HttpClient httpclient=  HttpClientBuilder.create().build();
 	
 	/**
-	 * This function is used to fetch access Token from salesForce application
-	 * @param url: base url
+	 * This function is used to fetch access Token from SALESFORCE application
+	 * @param url: base URL
 	 * @param grantService, granted service
 	 * @param clientId, client id
 	 * @param clientSecret, client secret
 	 * @param userName user name
 	 * @param password,password
-	 * @return access token access token from salesforce
+	 * @return access token access token from SALESFORCE
 	 * @throws Exception
 	 */
 	@SuppressWarnings("deprecation")
@@ -122,25 +121,20 @@ public class APITools {
         if(httpClient!=null)
         httpClient.getConnectionManager().shutdown();
 		return loginAccessToken;
-	
 	}
 	
 	/**
-	 * This function is used to fetch access Token from salesForce application
+	 * This function is used to fetch record from SALESFORCE application
 	 * @param query: query
 	 * @return JSON object
-	 * @throws Exception
 	 */
-     public static JSONObject getRecordObject(String query) 
+     public static JSONObject getRecordFromObject(String query) 
      {
         System.out.println("\n_______________ Query to return record from Object _______________");
         JSONObject jsonObject = null;
         HttpClient httpClient = null;
         HttpGet httpGet = null;
         try {
-        	//query = "Select+Name,+Petition_Outcome__c+From+Petition__c+Where+Name='P-05375'";
-        	//query = "SELECT+Name+Petition_Outcome__c+From+Petition__c+Where+Name='P-05375'";
-            //Set up the HTTP objects needed to make the request.
             httpClient = HttpClientBuilder.create().build();
             String uri = baseUri + "/query?q="+query;
             System.out.println("Query URL: " + uri);
@@ -166,7 +160,8 @@ public class APITools {
                 }
             } else {
                 System.out.println("Query was unsuccessful. Status code returned is " + statusCode);
-                System.out.println("An error has occured. Http status: " + response.getStatusLine().getStatusCode());
+                System.out.println("An error has occured. Http status: " + 
+                response.getStatusLine().getStatusCode());
                 System.out.println(getBody(response.getEntity().getContent()));
                 return jsonObject;
             }
@@ -184,14 +179,11 @@ public class APITools {
   	/**
   	 * This function is used to create record in any object
   	 * @param apiObjectName: API Object Name
-  	 * @param idToReturn: the id of the created record
   	 * @param rowRec, Map containing fields name/value of the record
   	 * to be created
-  	 * @return  id of the record created.
-  	 * @return JSON object
-  	 * @throws Exception
+  	 * @return SALESFORCE identifier
   	 */
- 	 public static String createRecordObject(String apiObjectName, 
+ 	 public static String createObjectRecord(String apiObjectName, 
  											 LinkedHashMap<String, String> rowRec) 
  	 {
          System.out.println("\n_______________ INSERT Record to "+apiObjectName+" _______________");
@@ -203,16 +195,12 @@ public class APITools {
          try {
              //create the JSON object containing the new lead details. "A-209-464"
              JSONObject jsonObject = new JSONObject();
-            for (Entry<String, String> entry : rowRec.entrySet())  
+             for (Entry<String, String> entry : rowRec.entrySet())  
              {
                  System.out.println("Key =  " + entry.getKey() + 
                                   ", Value = " + entry.getValue()); 
                  jsonObject.put(entry.getKey(), entry.getValue());
              }
-              /*jsonObject.put("Segment_Outcome__c", "Deficient");//"ADCVD_Case__c":"A-070-707"
-            jsonObject.put("ADCVD_Case__c", "a3fr00000009NzLAAU");
-             jsonObject.put("Initiation_Extension_of_days__c", "3");//"ADCVD_Case__c":"A-070-707"
-             jsonObject.put("Petition_Filed__c", "2019-03-16");*/
              System.out.println("JSON for record to be inserted:\n" + jsonObject.toString(1));
              //Construct the objects needed for the request
              httpClient = HttpClientBuilder.create().build();
@@ -250,13 +238,12 @@ public class APITools {
          return returnId;
      }
  	/**
- 	 * This function is used to create record in any object
+ 	 * This function is used to update record in any object
  	 * @param apiObjectName: API Object Name
- 	 * @param idToReturn: the id of the created record
+ 	 * @param recordId: SALESFORCE id of the record to be updated
  	 * @param rowRec, Map containing fields name/value of the record
- 	 * to be created
- 	 * @return  id of the record created.
- 	 * @return JSON object
+ 	 * to be updated
+ 	 * @return  ID of the record created.
  	 * @throws Exception
  	 */
 	 public static String updateRecordObject(String apiObjectName,
@@ -278,10 +265,6 @@ public class APITools {
                                  ", Value = " + entry.getValue()); 
                 jsonObject.put(entry.getKey(), entry.getValue());
             }
-           // jsonObject.put("Segment_Outcome__c", "Deficient");//"ADCVD_Case__c":"A-070-707"
-           /* jsonObject.put("ADCVD_Case__c", "a3fr00000009NzLAAU");
-            jsonObject.put("Initiation_Extension_of_days__c", "3");//"ADCVD_Case__c":"A-070-707"
-            jsonObject.put("Petition_Filed__c", "2019-03-16");*/
             System.out.println("JSON for record to be inserted:\n" + jsonObject.toString(1));
             //Construct the objects needed for the request
             httpClient = HttpClientBuilder.create().build();
@@ -298,15 +281,11 @@ public class APITools {
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == 204) {
             	returnId = statusCode+"";
-                /*String response_string = EntityUtils.toString(response.getEntity());
-                JSONObject json = new JSONObject(response_string);
-                // Store the retrieved lead id to use when we update the lead.
-                returnId = json.getString("id");*/
             } else {
-                System.out.println("Insertion unsuccessful. Status code returned is " + statusCode);
+                System.out.println("updating unsuccessful. Status code returned is " + statusCode);
             }
         } catch (JSONException e) {
-            System.out.println("Issue creating JSON or processing results");
+            System.out.println("Issue updating JSON or processing results");
             e.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -321,7 +300,11 @@ public class APITools {
     } 
 	 
 	 
-	     
+	/**
+	 * This function get body of JSON file
+	 * @param inputStream: input stream
+	 * @return  body in text format.
+	 */	     
     private static String getBody(InputStream inputStream) {
         String result = "";
         try {
@@ -340,7 +323,25 @@ public class APITools {
         return result;
     }
     
-   
-
-   
+  /*  *//**
+	 * This function get body of JSON file
+	 * @param inputStream: input stream
+	 * @return  body in text format.
+	 *//*	     
+    private static JSONObject noNullJObject(JSONObject jObj)
+    {
+    	JSONObject jObject = new JSONObject();
+    	
+    	 for (Entry<String, String> entry : jObject.entrySet())  
+         {
+             System.out.println("Key =  " + entry.getKey() + 
+                              ", Value = " + entry.getValue()); 
+             jsonObject.put(entry.getKey(), entry.getValue());
+         }
+    	
+    	return jObject;
+    }
+    
+    */
+    
 }

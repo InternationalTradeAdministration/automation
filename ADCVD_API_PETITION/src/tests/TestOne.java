@@ -7,8 +7,11 @@ import static ReportLibs.ReportTools.printLog;
 import static XmlLibs.XmlTools.buildTestNgFromDataPool;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,7 +42,7 @@ public class TestOne {
 	static XlsxTools xlsxTools;
 	static LinkedHashMap<String, String> recordType = new LinkedHashMap<String, String>();
 	static ArrayList<LinkedHashMap<String, String>> dataPool, dataPoolCase, dataPoolPetition, 
-	dataPoolInvestigation, dataPoolOrder, dataPoolSegment;
+	dataPoolInvestigation, dataPoolOrder, dataPoolSegment,dataPoolLitigation;
 	ArrayList<LinkedHashMap<String, String>> guiPool;
 	//public static boolean testCaseStatus;
 	public static Timestamp startTime, suiteStartTime;
@@ -47,13 +50,19 @@ public class TestOne {
 	public static Calendar cal = Calendar.getInstance();
 	public static HttpClient httpclient;
 	public static String caseId, caseName, petitionId, petitionName,
-	investigationId, investigationName, orderId, orderName,adminReviewId,adminReviewName;
+	investigationId, investigationName, orderId, orderName,adminReviewId,
+	adminReviewName, litigationId, litigationName, remandId, remandName;
 	public static void main(String[] args) throws Exception 
 	{
-		printLog("MainMethod()");
+		/*Date todayDate = new Date();
+		String todayDateStr = new SimpleDateFormat("yyyy-MM-dd").format(todayDate);
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = format.parse("2019-04-12");
+		printLog("MainMethod()");*/
 		initiateRecordType();
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
+		ADCVDLib adcvdLibs = new ADCVDLib();
 		TestNG testng = new TestNG();
 		List<String> suites = Lists.newArrayList();
 		String dataPoolPath = InitTools.getInputDataFolder()+"\\datapool\\adcvd_datapool.xlsx";
@@ -61,9 +70,11 @@ public class TestOne {
 		dataPoolPetition  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Petition", "Active=TRUE");
 		dataPoolInvestigation  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Invetigation", "Active=TRUE");
 		dataPoolOrder  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Order", "Active=TRUE");
-		dataPoolSegment = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Segments", "Active=TRUE");
+		dataPoolSegment = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Segments", "Active=TRUE"); 
+		dataPoolLitigation = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Litigations", "Active=TRUE");
 		ADCVDLib.tollingDates = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Tolling Dates", "Active=TRUE");
-		dataPool = mergeDataPools(dataPoolCase, dataPoolPetition, dataPoolInvestigation, dataPoolOrder, dataPoolSegment);
+		dataPool = mergeDataPools(dataPoolCase, dataPoolPetition, dataPoolInvestigation, dataPoolOrder, dataPoolSegment,
+				dataPoolLitigation);
 		String testNgPath = InitTools.getRootFolder()+"\\testng.xml";
 		//build
 		buildTestNgFromDataPool(dataPool, testNgPath);
@@ -165,7 +176,7 @@ public class TestOne {
 				entry.getKey().equalsIgnoreCase("Product_Short_Name__c")||entry.getKey().equalsIgnoreCase("Country__c"))
 				record.put(entry.getKey(), entry.getValue());
             } 
-			caseId = APITools.createRecordObject("ADCVD_Case__c", record);
+			caseId = APITools.createObjectRecord("ADCVD_Case__c", record);
 			if(caseId!=null)
 			{
 				caseName = record.get("Name");
@@ -210,13 +221,14 @@ public class TestOne {
 		record.put("Petition_Filed__c", row.get("Petition_Filed__c"));
 		record.put("Initiation_Extension_of_days__c", row.get("Initiation_Extension_of_days__c"));
 		
-		petitionId = APITools.createRecordObject("Petition__c", record);
+		petitionId = APITools.createObjectRecord("Petition__c", record);
 		if(petitionId != null)
 	    {
-		    JSONObject jObj = APITools.getRecordObject("Select+Name+From+Petition__c+Where+id='"+petitionId+"'");
-		   	petitionName = jObj.getString("Name");
+		    JSONObject rObj = APITools.getRecordFromObject(row.get("Query").replace("petitionId", petitionId));
+		   	petitionName = rObj.getString("Name");
 		   	updateHtmlReport("Create Petition", "User is able to create a new Petition", 
 					"Petition <span class = 'boldy'>"+" "+petitionName+"</span>", "Step", "pass", "" );
+		   	testCaseStatus = testCaseStatus & ADCVDLib.validatePetitionFields(rObj);
 	    }
 		else 
 		{
@@ -224,11 +236,6 @@ public class TestOne {
 						"Not as expected", "Step", "fail", "");
 		}
 		
-		//JSONObject petitionJsonObj = APITools.getRecordObject(row.get("Query").replace("Petition_id", petitonId));
-		//System.out.println(petitionJsonObj.getString("Name"));
-		//testCaseStatus = ADCVDLib.createNewPetition(row);
-		//if(! testCaseStatus) GuiTools.tearDown =true;
-		//testCaseStatus = testCaseStatus & ADCVDLib.validatePetitionFields(row);
 	}
 	
 	/**
@@ -246,13 +253,14 @@ public class TestOne {
 		
 		//Investigation__c
 		record.put("Petition__c", petitionId);
-		investigationId = APITools.createRecordObject("Investigation__c", record);
+		investigationId = APITools.createObjectRecord("Investigation__c", record);
 		if(investigationId != null)
        {
-	       	JSONObject jObj = APITools.getRecordObject("Select+Name+From+Investigation__c+Where+id='"+investigationId+"'");
+	       	JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("investigationId", investigationId));
 	       	investigationName = jObj.getString("Name");
 	       	updateHtmlReport("Create Investigation", "User is able to create a new Investigation", 
 					"investigatioon id: <span class = 'boldy'>"+" "+investigationName+"</span>", "Step", "pass", "" );
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateInvestigationFields(jObj);
        }
 		else 
 		{
@@ -277,10 +285,10 @@ public class TestOne {
 		printLog(GuiTools.getTestCaseName());
 		
 		record.put("Investigation__c", investigationId);
-		orderId = APITools.createRecordObject("ADCVD_Order__c", record);
+		orderId = APITools.createObjectRecord("ADCVD_Order__c", record);
 		if(orderId != null)
        {
-	       	JSONObject jObj = APITools.getRecordObject("Select+Name+From+ADCVD_Order__c+Where+id='"+orderId+"'");
+	       	JSONObject jObj = APITools.getRecordFromObject("Select+Name+From+ADCVD_Order__c+Where+id='"+orderId+"'");
 	       	orderName = jObj.getString("Name");
 	       	updateHtmlReport("Create Order", "User is able to create a new Order", 
 					"Order <span class = 'boldy'>"+" "+orderName+"</span>", "Step", "pass", "" );
@@ -307,18 +315,19 @@ public class TestOne {
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		//JSONObject jObj = APITools.getRecordObject("Select+id+From+RecordType+Where+Name='"+row.get("Segment_Type")+"'");
+		//JSONObject jObj = APITools.getRecordFromObject("Select+id+From+RecordType+Where+Name='"+row.get("Segment_Type")+"'");
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
 		record.put("Final_Date_of_Anniversary_Month__c", row.get("Final_Date_of_Anniversary_Month__c"));
-		adminReviewId = APITools.createRecordObject("Segment__c", record);
-		if(orderId != null)
+		adminReviewId = APITools.createObjectRecord("Segment__c", record);
+		if(adminReviewId != null)
        {
-			JSONObject jObj = APITools.getRecordObject("Select+Name+From+Segment__c+Where+id='"+adminReviewId+"'");
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
 	       	adminReviewName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+adminReviewName+"</span>", "Step", "pass", "" );
-	       	//update
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentAdministrativeReview(jObj);
+	       /*	//update
 	       	record.clear();
 	       	record.put("Segment_Outcome__c", "Deficient");
 	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
@@ -331,7 +340,7 @@ public class TestOne {
 	       	{
 	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
 	       				"Not as expected",	"Step", "fail", "");
-	       	}
+	       	}*/
        }
 	   else 
 	   {
@@ -349,13 +358,49 @@ public class TestOne {
 	@Test(enabled = true, priority=6)
 	void Create_Segment_Anti_Circumvention_Review() throws Exception
 	{
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		printLog("Create_And_Validate_Segment - 2");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_006");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentAntiCircumventionReview();
+		record.put("ADCVD_Order__c", orderId);
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Request_Filed__c", row.get("Request_Filed__c"));
+		record.put("Application_Accepted__c", row.get("Application_Accepted__c"));		
+		String antiCircumventionId = APITools.createObjectRecord("Segment__c", record);
+		if(antiCircumventionId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
+	       	String antiCircumventionName = jObj.getString("Name");
+	       	updateHtmlReport("Create Anti-Circumvention Review", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+antiCircumventionName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj);
+	       	//update
+	       	/*record.clear();
+	       	record.put("Segment_Outcome__c", "Deficient");
+	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	if(code.equals("204"))
+	       	{
+	       		updateHtmlReport("update admin review", "User is able to update admin review", 
+	       				record.toString(), "Step", "pass", "");
+	       	}
+	       	else
+	       	{
+	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
+	       				"Not as expected",	"Step", "fail", "");
+	       	}*/
+       }
+	   else 
+	   {
+			failTestSuite("Create new Anti-Circumvention Review", "user is able to create segment", "Not as expected",
+					"Step", "fail", "");
+	   }
+		
+		
+		
+		//testCaseStatus = ADCVDLib.createNewSegment(row);
+		//testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentAntiCircumventionReview();
 	}
 	/**
 	 * This method is for ADCVD segment(Changed Circumstances Review) 
@@ -365,12 +410,49 @@ public class TestOne {
 	void Create_Segment_Changed_Circumstances_Review() throws Exception
 	{
 		printLog("Create_And_Validate_Segment - 3");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_007");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentChangedCircumstancesReview();
+		
+		record.put("ADCVD_Order__c", orderId);
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Request_Filed__c", row.get("Request_Filed__c"));
+		record.put("Preliminary_Determination__c", row.get("Preliminary_Determination__c"));
+		String changedCircumstanceId = APITools.createObjectRecord("Segment__c", record);
+		if(changedCircumstanceId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	       	String changedCircumstanceName = jObj.getString("Name");
+	       	updateHtmlReport("Create Changed Circumstances Review", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+changedCircumstanceName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentChangedCircumstancesReview(jObj);
+	       	
+	       	//update
+	       	/*record.clear();
+	       	record.put("Segment_Outcome__c", "Deficient");
+	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	if(code.equals("204"))
+	       	{
+	       		updateHtmlReport("update admin review", "User is able to update admin review", 
+	       				record.toString(), "Step", "pass", "");
+	       	}
+	       	else
+	       	{
+	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
+	       				"Not as expected",	"Step", "fail", "");
+	       	}*/
+       }
+	   else 
+	   {
+			failTestSuite("Create new Circumstances Review", "user is able to create segment", "Not as expected",
+					"Step", "fail", "");
+	   }
+		
+		
+		//testCaseStatus = ADCVDLib.createNewSegment(row);
+		//testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentChangedCircumstancesReview();
 	}
 	
 	/**
@@ -381,12 +463,47 @@ public class TestOne {
 	void Create_Segment_Expedited_Review() throws Exception
 	{
 		printLog("Create_And_Validate_Segment - 4");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_008");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentExpeditedReview();
+		
+		record.put("ADCVD_Order__c", orderId);
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Calculated_Initiation_Signature__c", row.get("Calculated_Initiation_Signature__c"));
+		String expiditedReviewId = APITools.createObjectRecord("Segment__c", record);
+		if(expiditedReviewId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	       	String expiditedReviewName = jObj.getString("Name");
+	       	updateHtmlReport("Create Admin Review", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+expiditedReviewName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentExpeditedReview(jObj);
+	       	
+	       	//update
+	       	/*record.clear();
+	       	record.put("Segment_Outcome__c", "Deficient");
+	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	if(code.equals("204"))
+	       	{
+	       		updateHtmlReport("update admin review", "User is able to update admin review", 
+	       				record.toString(), "Step", "pass", "");
+	       	}
+	       	else
+	       	{
+	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
+	       				"Not as expected",	"Step", "fail", "");
+	       	}*/
+       }
+	   else 
+	   {
+			failTestSuite("Create new Expidited Review", "user is able to create segment", "Not as expected",
+					"Step", "fail", "");
+	   }
+		
+		//testCaseStatus = ADCVDLib.createNewSegment(row);
+		//testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentExpeditedReview();
 	}
 	
 	/**
@@ -397,12 +514,48 @@ public class TestOne {
 	void Create_Segment_New_Shipper_Review() throws Exception
 	{
 		printLog("Create_And_Validate_Segment - 5");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_009");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewShipperReview();
+		
+		record.put("ADCVD_Order__c", orderId);
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Calculated_Initiation_Signature__c", row.get("Calculated_Initiation_Signature__c"));
+		String newShipperReviewId = APITools.createObjectRecord("Segment__c", record);
+		if(newShipperReviewId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	       	String newShipperReviewName = jObj.getString("Name");
+	       	updateHtmlReport("Create New Shipper Review", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+newShipperReviewName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewShipperReview(jObj);
+	       	
+	       	//update
+	       	/*record.clear();
+	       	record.put("Segment_Outcome__c", "Deficient");
+	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	if(code.equals("204"))
+	       	{
+	       		updateHtmlReport("update admin review", "User is able to update admin review", 
+	       				record.toString(), "Step", "pass", "");
+	       	}
+	       	else
+	       	{
+	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
+	       				"Not as expected",	"Step", "fail", "");
+	       	}*/
+       }
+	   else 
+	   {
+			failTestSuite("Create New Shipper Review", "user is able to create segment", "Not as expected",
+					"Step", "fail", "");
+	   }
+		
+		
+		//testCaseStatus = ADCVDLib.createNewSegment(row);
+		//testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewShipperReview();
 	}
 	
 	/**
@@ -413,12 +566,50 @@ public class TestOne {
 	void Create_Segment_Scope_Inquiry() throws Exception
 	{
 		printLog("Create_And_Validate_Segment - 6");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_010");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewScoprInquiry();
+		record.put("ADCVD_Order__c", orderId);
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Request_Filed__c", row.get("Request_Filed__c"));
+		record.put("Actual_Date_of_Decision_on_HoP__c", row.get("Actual_Date_of_Decision_on_HoP__c"));
+		record.put("Decision_on_How_to_Proceed__c", row.get("Decision_on_How_to_Proceed__c"));
+		record.put("Type_of_Scope_Ruling__c", row.get("Type_of_Scope_Ruling__c"));
+		String ScopeInquiryId = APITools.createObjectRecord("Segment__c", record);
+		if(ScopeInquiryId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", ScopeInquiryId));
+	       	String ScopeInquiryName = jObj.getString("Name");
+	       	updateHtmlReport("Create Scope Inquiry", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+ScopeInquiryName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewScoprInquiry(jObj);
+	       	
+	       	//update
+	       	/*record.clear();
+	       	record.put("Segment_Outcome__c", "Deficient");
+	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	if(code.equals("204"))
+	       	{
+	       		updateHtmlReport("update admin review", "User is able to update admin review", 
+	       				record.toString(), "Step", "pass", "");
+	       	}
+	       	else
+	       	{
+	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
+	       				"Not as expected",	"Step", "fail", "");
+	       	}*/
+       }
+	   else 
+	   {
+			failTestSuite("Create Scope Inquiry", "user is able to create segment", "Not as expected",
+					"Step", "fail", "");
+	   }
+		
+		
+		//testCaseStatus = ADCVDLib.createNewSegment(row);
+		//testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewScoprInquiry();
 	}
 	/**
 	 * This method is for ADCVD segment(Sunset Inquiry) 
@@ -428,13 +619,128 @@ public class TestOne {
 	void Create_Segment_Sunset_Review() throws Exception
 	{
 		printLog("Create_And_Validate_Segment - 7");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_011");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		testCaseStatus = ADCVDLib.createNewSegment(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentSunsetReview(row);
+		
+		record.put("ADCVD_Order__c", orderId);
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Notice_of_intent_to_participate_Ips__c", "Yes");
+		record.put("Domestic_Party_File_Substan_Response__c", "No");
+		
+		String sunsetReviewId = APITools.createObjectRecord("Segment__c", record);
+		
+		if(sunsetReviewId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	       	String sunsetReviewName = jObj.getString("Name");
+	       	updateHtmlReport("Create Sunset Review", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+sunsetReviewName+"</span>", "Step", "pass", "" );
+	       	//create FR init Federal_Register__c Federal_Register__c Published_Date__c Cite_Number__c
+	       	record.clear();
+	       	record.put("segment__c", sunsetReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Initiation");
+			String frid = APITools.createObjectRecord("Federal_Register__c", record);
+			//90Days
+			HtmlReport.addHtmlStepTitle("Validate sunset 90 Day","Title");
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "90 Day", 
+					row.get("Published_Date__c"));
+			
+			//120 Day
+			record.clear();
+			record.put("Domestic_Party_File_Substan_Response__c", "Yes");
+			String code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+			HtmlReport.addHtmlStepTitle("Validate sunset 120 Day","Title");
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "120 Day", 
+					row.get("Published_Date__c"));
+			
+			//240 Day
+			record.clear();
+			record.put("Review_to_address_zeroing_in_Segments__c", "Yes");
+			record.put("Respondent_File_Substantive_Response__c", "Yes");
+			code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+			HtmlReport.addHtmlStepTitle("Validate sunset 140 Day","Title");
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "240 Day", 
+					row.get("Published_Date__c"));
+       }
+	   else 
+	   {
+			failTestSuite("Create new Sunset Review", "user is able to create segment", "Not as expected",
+					"Step", "fail", "");
+	   }
 	}
+	
+
+	/**
+	 * This method is creating Litigation
+	 * creation and validation
+	*/
+	@Test(enabled = true, priority=12)
+	void Create_International_Litigation() throws Exception
+	{
+		printLog("Create_And_Validate_litigation");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_012");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		record.put("Petition__c", petitionId);
+		record.put("RecordTypeId", recordType.get("Remand"));
+		record.put("Expected_Final_Signature_Before_Ext__c", row.get("Expected_Final_Signature_Before_Ext__c"));
+		litigationId = APITools.createObjectRecord("Litigation__c", record);
+		if(litigationId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	       	litigationName = jObj.getString("Name");
+	       	updateHtmlReport("Create International Litigation", "User is able to create a new litigation", 
+					"Litigation id: <span class = 'boldy'>"+" "+litigationName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus = testCaseStatus & ADCVDLib.validateLitigationFields(jObj, "International Litigation");
+       }
+	   else 
+	   {
+			failTestSuite("Create new Litigation", "user is able to create Litigation", "Not as expected",
+					"Step", "fail", "");
+	   }
+	}
+	/**
+	 * This method is creating Remand
+	 * creation and validation
+	*/
+	@Test(enabled = true, priority=13)
+	void Create_Remand() throws Exception
+	{
+		printLog("Create_And_Validate_Remand");
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_013");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		record.put("Petition__c", petitionId);
+		record.put("RecordTypeId", recordType.get("International Litigation"));
+		record.put("Request_Filed__c", row.get("Request_Filed__c"));
+		litigationId = APITools.createObjectRecord("Litigation__c", record);
+		if(litigationId != null)
+       {
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	       	litigationName = jObj.getString("Name");
+	       	updateHtmlReport("Create Remand", "User is able to create a new Remand", 
+					"Remand id: <span class = 'boldy'>"+" "+litigationName+"</span>", "Step", "pass", "" );
+	       	testCaseStatus =testCaseStatus & ADCVDLib.validateLitigationFields(jObj, "Remand");
+       }
+	   else 
+	   {
+			failTestSuite("Create new Remand", "user is able to create Remand", "Not as expected",
+					"Step", "fail", "");
+	   }
+	}
+	
 	/**
 	 * This method if for getting the current test case information
 	*/
@@ -454,7 +760,8 @@ public class TestOne {
 	*/
 	static ArrayList<LinkedHashMap<String, String>> mergeDataPools(ArrayList<LinkedHashMap<String, String>> dataPool1, 
 			ArrayList<LinkedHashMap<String, String>> dataPool2, ArrayList<LinkedHashMap<String, String>> dataPool3, 
-			ArrayList<LinkedHashMap<String, String>> dataPool4, ArrayList<LinkedHashMap<String, String>> dataPool5)
+			ArrayList<LinkedHashMap<String, String>> dataPool4, ArrayList<LinkedHashMap<String, String>> dataPool5,
+			ArrayList<LinkedHashMap<String, String>> dataPool6)
 	{
 		ArrayList<LinkedHashMap<String, String>> dataPoolMerged = new ArrayList<LinkedHashMap<String, String>>();
 		for(LinkedHashMap<String, String> map: dataPool1)
@@ -477,18 +784,24 @@ public class TestOne {
 		{
 		dataPoolMerged.add(map);
 		}
+		for(LinkedHashMap<String, String> map: dataPool6)
+		{
+		dataPoolMerged.add(map);
+		}
 		return dataPoolMerged;
 	}
 	
 	 public static void initiateRecordType()
     {
     	recordType.put("Administrative Review","012t0000000TSjxAAG");
-    	recordType.put("Anti-Circumvention Review","012t0000000TSjxAAG");
-    	recordType.put("Changed Circumstances Review","012t0000000TSjxAAG");
-    	recordType.put("Expedited Review","012t0000000TSjxAAG");
-    	recordType.put("New Shipper Review","012t0000000TSjxAAG");
-    	recordType.put("Scope Inquiry","012t0000000TSjxAAG");
-    	recordType.put("Sunset Review","012t0000000TSjxAAG");
+    	recordType.put("Anti-Circumvention Review","012t0000000TSjyAAG");
+    	recordType.put("Changed Circumstances Review","012t0000000TSjzAAG");
+    	recordType.put("Expedited Review","012t0000000TSk0AAG");
+    	recordType.put("New Shipper Review","012t0000000TSk1AAG");
+    	recordType.put("Scope Inquiry","012t0000000TSk2AAG");
+    	recordType.put("Sunset Review","012t0000000TSk3AAG");
+    	recordType.put("Remand","012t0000000TSjsAAG");
+    	recordType.put("International Litigation","012t0000000TSjrAAG");
     	
     }
 }
