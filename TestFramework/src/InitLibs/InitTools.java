@@ -33,7 +33,7 @@ public class InitTools {
 		setLibFolder("C:/libs");
 		setConfigInfos(FileTools.readTextFile(getRootFolder()+"/settings.txt"));
 		outputResultFolder = getRootFolder()+ "/output_results/"+ actualResultFolder;
-		inputDataFolder = getRootFolder()+ "\\input_data";
+		inputDataFolder = getRootFolder()+ "/input_data";
 		testerName = System.getProperty("user.name");
 		setTesterName(testerName);
 	}
