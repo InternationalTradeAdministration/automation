@@ -1,5 +1,5 @@
 PROJECTNAME = AD/CVD
-ENVNAME = automation
+ENVNAME = adcvduat
 USERNAME = mouloud.hamdidouche@trade.gov.adcvduat
 PASSWORD = Hamdidouche_12ZA7narM119jJjixebFQFdTdR
 LOGINURL = https://trade--adcvduat.my.salesforce.com

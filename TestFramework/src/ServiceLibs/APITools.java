@@ -12,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
@@ -153,7 +154,6 @@ public class APITools {
                     System.out.println("JSON result of Query:\n" + json.toString(1));
                     JSONArray jsonArray = json.getJSONArray("records");
                     jsonObject = jsonArray.getJSONObject(0);
-                    System.out.println(jsonObject.get("Name"));
                     
                 } catch (JSONException je) {
                     je.printStackTrace();
@@ -250,7 +250,7 @@ public class APITools {
 			 								 String recordId, 
 											 LinkedHashMap<String, String> rowRec) 
 	 {
-        System.out.println("\n_______________ INSERT Record to "+apiObjectName+" _______________");
+        System.out.println("\n_______________ Update Record to "+apiObjectName+" _______________");
         String uri = baseUri + "/sobjects/"+apiObjectName+"/"+recordId;
         System.out.println("uri" +uri);
         String returnId = null;
@@ -262,7 +262,10 @@ public class APITools {
            for (Entry<String, String> entry : rowRec.entrySet())  
             {
                 System.out.println("Key =  " + entry.getKey() + 
-                                 ", Value = " + entry.getValue()); 
+                                 ", Value = " + entry.getValue());
+                if(entry.getValue().equalsIgnoreCase("Empty") || entry.getValue().equals(""))
+                jsonObject.put(entry.getKey(), JSONObject.NULL);
+                else
                 jsonObject.put(entry.getKey(), entry.getValue());
             }
             System.out.println("JSON for record to be inserted:\n" + jsonObject.toString(1));
@@ -299,7 +302,57 @@ public class APITools {
         return returnId;
     } 
 	 
-	 
+	 /**
+	 	 * This function is used to delete record in any object
+	 	 * @param apiObjectName: API Object Name
+	 	 * @param recordId: SALESFORCE id of the record to be updated
+	 	 * @param rowRec, Map containing fields name/value of the record
+	 	 * to be updated
+	 	 * @return  ID of the record created.
+	 	 * @throws Exception
+	 	 */
+		 public static String deleteRecordObject(String apiObjectName,
+				 								 String recordId) 
+		 {
+	        System.out.println("\n_______________ Delete Record to "+apiObjectName+" _______________");
+	        String uri = baseUri + "/sobjects/"+apiObjectName+"/"+recordId;
+	        System.out.println("uri" +uri);
+	        String returnId = null;
+	        HttpClient httpClient = null;
+	        HttpDelete httpDelete = null;
+	        try {
+	            //create the JSON object containing the new lead details. "A-209-464"
+	           
+	            //System.out.println("JSON for record to be inserted:\n" + jsonObject.toString(1));
+	            //Construct the objects needed for the request
+	            httpClient = HttpClientBuilder.create().build();
+	            httpDelete = new HttpDelete(uri);
+	            httpDelete.addHeader(oauthHeader);
+	            httpDelete.addHeader(prettyPrintHeader);
+	            // The message we are going to post
+	           // StringEntity body = new StringEntity(jsonObject.toString(1));
+	            //body.setContentType("application/json");
+	            //httpPatch.setEntity(body);
+	            //Make the request
+	            HttpResponse response = httpClient.execute(httpDelete);
+	            //Process the results
+	            int statusCode = response.getStatusLine().getStatusCode();
+	            if (statusCode == 204) {
+	            	returnId = statusCode+"";
+	            } else {
+	                System.out.println("updating unsuccessful. Status code returned is " + statusCode);
+	            }
+	        }  catch (IOException ioe) {
+	            ioe.printStackTrace();
+	        } catch (NullPointerException npe) {
+	            npe.printStackTrace();
+	        }
+	        if(httpDelete!=null)
+	        	httpDelete.releaseConnection();
+	        if(httpClient!=null)
+	        httpClient.getConnectionManager().shutdown();
+	        return returnId;
+	    } 
 	/**
 	 * This function get body of JSON file
 	 * @param inputStream: input stream

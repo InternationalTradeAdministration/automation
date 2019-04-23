@@ -45,8 +45,7 @@ public class XmlTools {
 		 			Transformer tFormer = 
 				  TransformerFactory.newInstance().newTransformer();
 				//  Set system id
-				  tFormer.setOutputProperty(
-				  OutputKeys.DOCTYPE_SYSTEM, "http://testng.org/testng-1.0.dtd");
+				  //tFormer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://testng.org/testng-1.0.dtd");
 
 				  Source source = new DOMSource(doc);
 				  Result result = new StreamResult(fileSource);

@@ -54,13 +54,6 @@ public class TestOne {
 	adminReviewName, litigationId, litigationName, remandId, remandName;
 	public static void main(String[] args) throws Exception 
 	{
-		/*Date todayDate = new Date();
-		String todayDateStr = new SimpleDateFormat("yyyy-MM-dd").format(todayDate);
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = format.parse("2019-04-12");
-		printLog("MainMethod()");*/
-		
-				
 		initiateRecordType();
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
@@ -317,24 +310,23 @@ public class TestOne {
 		//JSONObject jObj = APITools.getRecordFromObject("Select+id+From+RecordType+Where+Name='"+row.get("Segment_Type")+"'");
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("Will_you_Amend_the_Final__c", "Yes");
 		record.put("Final_Date_of_Anniversary_Month__c", row.get("Final_Date_of_Anniversary_Month__c"));
 		adminReviewId = APITools.createObjectRecord("Segment__c", record);
 		if(adminReviewId != null)
        {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
+			String sqlString = "select+Name+from+segment__c+where+id='"+adminReviewId+"'";
+			//HtmlReport.addHtmlStepTitle("Validate all dates for a happy path","Title");
+			JSONObject jObj = APITools.getRecordFromObject(sqlString);
 	       	adminReviewName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+adminReviewName+"</span>", "Step", "pass", "" );
-	       //	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentAdministrativeReview(jObj);
-	       	
-	       	
-	       	
-	        String datesSheet = InitTools.getInputDataFolder()+"\\datapool\\validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"\\datapool\\validate_admin_review_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> adminReviewDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "admin review", "");
-	       	
-	       	
-	       	for(LinkedHashMap<String, String> dates:adminReviewDates)
+	        HtmlReport.addHtmlStepTitle("VALIDATE DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:adminReviewDates)
 	       	{
 	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
 	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
@@ -368,26 +360,558 @@ public class TestOne {
 		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"), "Tolling Day", dates.get("Date_For_Tolling"));
 	       		}
 	       	}
-	       	
-	       		
-
-	       	
-	       	
-	       	
-	       /*	//update
-	       	record.clear();
-	       	record.put("Segment_Outcome__c", "Deficient");
+	        //Validate statuses 
+       	//A)-//Prelim
+	        HtmlReport.addHtmlStepTitle("VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS","Title");
+	        String condition = "Initial Status";
+	        sqlString = "select+Status__c+from+segment__c+where+id='"+adminReviewId+"'";
+	        HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition); 
+	        //-1
+	        condition = "If the Published Date (Type: Full recission) is not blank "
+	        		+ "AND Segment Outcome is 'Full Rescission'";
+	    	record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			String frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+	        record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	record.put("Will_you_Amend_the_Final__c", "");
 	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-	       	if(code.equals("204"))
-	       	{
-	       		updateHtmlReport("update admin review", "User is able to update admin review", 
-	       				record.toString(), "Step", "pass", "");
-	       	}
-	       	else
-	       	{
-	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
-	       				"Not as expected",	"Step", "fail", "");
-	       	}*/
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition); 
+			//-2
+			condition = "If the Published Date (Type: Preliminary) is not blank "
+					+ "AND Segment Outcome is 'Full Rescission'";
+			record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Preliminary");
+			String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+					ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition); 
+			//-3
+			condition = "If the Published Date (Type: Preliminary) is not blank "
+					+ "AND Segment Outcome is not 'Full Rescission'";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();	
+	       	record.put("Segment_Outcome__c", "Withdrawn");	       
+	    	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+					ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition); 
+		//B)-Final
+			//1-
+			condition = "The Published Date (Type: Preliminary) is not blank AND Actual_Final_Signature is blank "
+					+ "AND Actual_Preliminary_Signature is not blank AND Segment Outcome is not 'Full Rescission'";
+	        HtmlReport.addHtmlStepTitle("Validate Status - Final","Title");
+	        record.clear();
+	       	record.put("Actual_Preliminary_Signature__c", "2019-08-31");
+	       	record.put("Segment_Outcome__c", "");
+	    	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition); 
+	        //3-
+	        condition = "If the Published Date (Type: Preliminary) is not blank AND Actual_Final_Signature is not blank"
+	        		+ " AND Actual_Preliminary_Signature is not blank AND Segment Outcome is not 'Full Rescission'";
+			record.clear();
+	       	record.put("Actual_Final_Signature__c", "2019-08-31"); 
+	       	record.put("Segment_Outcome__c", "Withdrawn");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus &
+	       		 ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+	        //4-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Actual_Final_Signature is blank"
+	       			+ " AND Actual_Preliminary_Signature is blank AND Segment Outcome is not 'Full Rescission'";
+	    	record.clear();
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	record.put("Actual_Final_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+	       	//5-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Actual_Final_Signature is blank "
+	       			+ "AND Actual_Preliminary_Signature is not blank AND Segment Outcome is 'Full Rescission'";
+	        record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+	     	record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	record.put("Actual_Preliminary_Signature__c", "2019-08-31");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+	        //2-
+	        condition="If the Published Date (Type: Preliminary) is blank AND Actual_Final_Signature is blank "
+	        		+ "AND Actual_Preliminary_Signature is not blank AND Segment Outcome is not 'Full Rescission'";
+	        APITools.deleteRecordObject("Federal_Register__c", frIdP);
+	        APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	        record.clear();
+	       	record.put("Segment_Outcome__c", "Withdrawn");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+       	//C) Amend final
+	        HtmlReport.addHtmlStepTitle("Validate Status - Amend Final","Title");
+	       	//-1
+	       	condition = "The Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) "
+	       			+ "is not blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is "
+	       			+ "not blank AND Will_You_Amend_The_Final is Yes "
+	       			+ "AND Actual_Amended_Final_Determination_Sig is blank AND Segment_Outcome is not Full Rescission'";
+	       	record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Preliminary");
+			frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			String frIdF = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Completed");
+	       	record.put("Actual_Final_Signature__c", "2019-08-31");
+	       	record.put("Actual_Preliminary_Signature__c", "2019-08-31");
+	       	record.put("Will_you_Amend_the_Final__c", "Yes");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//2-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) is "
+	       			+ "blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is not blank AND "
+	       			+ "Will_You_Amend_The_Final is Yes AND Actual_Amended_Final_Determination_Sig is blank AND"
+	       			+ " Segment_Outcome is not 'Full Rescission'";
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdF);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//3-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) "
+	       			+ "is not blank AND Actual_Preliminary_Signature is blank AND Actual_Final_Signature is not blank AND "
+	       			+ "Will_You_Amend_The_Final is Yes AND Actual_Amended_Final_Determination_Sig is blank AND "
+	       			+ "Segment_Outcome is not 'Full Rescission'";
+	       	record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			frIdF = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//4-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) "
+	       			+ "is not blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is blank"
+	       			+ " AND Will_You_Amend_The_Final is Yes "
+	       			+ "AND Actual_Amended_Final_Determination_Sig is blank AND Segment_Outcome is not 'Full Rescission'";
+	       	record.clear();
+	       	record.put("Actual_Preliminary_Signature__c", "2019-08-31");
+	       	record.put("Actual_Final_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//5-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) is not "
+	       			+ "blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is not "
+	       			+ "blank AND Will_You_Amend_The_Final is "
+	       			+ "NO AND Actual_Amended_Final_Determination_Sig is blank AND Segment_Outcome is not 'Full Rescission'";
+	       	record.clear();
+	       	record.put("Will_you_Amend_the_Final__c", "No");
+	       	record.put("Actual_Final_Signature__c", "2019-08-31");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//6-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) is not "
+	       			+ "blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is not blank AND "
+	       			+ "Will_You_Amend_The_Final is Yes"
+	       			+ " AND Actual_Amended_Final_Determination_Sig is NOT blank AND Segment_Outcome is not 'Full Rescission'";
+	    	record.clear();
+	       	record.put("Will_you_Amend_the_Final__c", "Yes");
+	       	record.put("Actual_Amended_Final_Determination_Sig__c", "2019-08-31");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//7-
+	       	condition = "If the Published Date (Type: Preliminary) is not blank AND Published Date (Type: Final) is "
+	       			+ "not blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is "
+	       			+ "not blank AND Will_You_Amend_The_Final is Yes"
+	       			+ "AND Actual_Amended_Final_Determination_Sig is blank AND Segment_Outcome is 'Full Rescission'";
+	       	record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	record.put("Actual_Amended_Final_Determination_Sig__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//8-
+	       	condition = "If the Published Date (Type: ITC Final) is not blank AND Published Date (Type: Final)"
+	       			+ " is not blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is not "
+	       			+ "blank AND Will_You_Amend_The_Final is Yes "
+	       			+ "AND Actual_Amended_Final_Determination_Sig is blank AND Segment_Outcome is not 'Full Rescission'";
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdP);
+	       	record.clear();record.put("segment__c", adminReviewId);
+	    	record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "ITC Final");
+			String frIdITC = APITools.createObjectRecord("Federal_Register__c", record);
+	       	record.clear();
+	       	record.put("Segment_Outcome__c", "WithDrawn");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//9-
+	       	condition = "If the Published Date (Type: ITC Final) is not blank AND Published Date (Type: Initiation) is"
+	       			+ " not blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature is not blank AND "
+	       			+ "Will_You_Amend_The_Final is Yes AND Actual_Amended_Final_Determination_Sig is blank AND "
+	       			+ "Segment_Outcome is not 'Full Rescission'";
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdF);
+	    	record.clear();record.put("segment__c", adminReviewId);
+	    	record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Initiation");
+			String frIdI = APITools.createObjectRecord("Federal_Register__c", record);
+			jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	//10-
+	       	condition = "If the Published Date (Type: Preliminary) is blank AND Published Date (Type: Final) "
+	       			+ "is not blank AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature "
+	       			+ "is not blank AND Will_You_Amend_The_Final is"
+	       			+ " Yes AND Actual_Amended_Final_Determination_Sig is blank AND Segment_Outcome is not 'Full Rescission'";
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdP);
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdITC);
+	       	record.clear();record.put("segment__c", adminReviewId);
+	    	record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Amend Final", jObj.getString("Status__c"), condition);
+	       	
+       //D) - Hold
+	        HtmlReport.addHtmlStepTitle("Validate Status - Hold","Title");
+	       	//1
+	       	condition = "The Litigation is Null AND Segment_Outcome is 'Full Rescission' "
+	       			+ "THEN Published date (Type:Rescission) +30 or 45 days";
+	      // 	APITools.deleteRecordObject("Federal_Register__c", frIdI);
+	     	record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Actual_Final_Signature__c", "2019-10-31"); //>45
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
+	       	//2
+	       	condition = "If the Litigation is not Null AND Segment_Outcome is "
+	       			+ "'Full Rescission' THEN Published date (Type:Rescission) +30 or 45 days";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes"); record.put("Litigation_YesNo__c", "No");//Litigation is not Null
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	       			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+	       	//3
+	       	condition = "If the Litigation is Null AND Segment_Outcome is not "
+	       			+ "'Full Rescission' THEN Published date (Type:Rescission) +30 or 45 days";
+	       	//code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	       	record.clear();
+	       	record.put("Segment_Outcome__c", "Withdrawn"); 
+	       	record.put("Litigation_YesNo__c", ""); record.put("Litigation_Resolved__c", ""); //Litigation is Null
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+	       	//4
+	       	condition = "If the Litigation is Null AND Segment_Outcome is 'Full Rescission' THEN Published date "
+	       			+ "(Type: Final) +30 or 45 days";
+	    	record.clear();
+	       	record.put("segment__c", adminReviewId);
+			record.put("Actual_Final_Signature__c", "2019-10-31"); //>45
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+	       	record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+	       	//5
+	       	condition = "If the Litigation is Yes AND Segment_Outcome is not 'Full Rescission' THEN Published date"
+	       			+ "(Type:Rescission) +30 or 45 days";
+	       	APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	    	record.clear();
+	    	record.put("Segment_Outcome__c", "Withdrawn");
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+   		//E) - Litigation
+	        HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
+	       	//1
+	       	condition = "The Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status "
+	       			+ "is blank OR Litigation_Status is 'Not Active'";
+	       	record.clear();
+	    	//record.put("Segment_Outcome__c", "Withdrawn");//Litigation_Status  is 'Not Active'
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
+	       	//2
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is No AND Litigation_Status "
+	       			+ "is blank OR Litigation_Status is 'Not Active'";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	       	//3
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is YES AND Litigation_Status is "
+	       			+ "blank OR Litigation_Status is 'Not Active'";
+	       	record.clear();
+	    	record.put("Litigation_YesNo__c", "Yes");//Litigation  is 'Yes'
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	       	//4
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status is 'Active'";
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	    	record.clear();
+	    	record.put("Litigation_Status__c", "Active");//Litigation_Status is 'Active'
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	       	//5
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is YES AND  Litigation_Status is 'Active'";
+	       	record.clear();
+	    	record.put("Litigation_YesNo__c", "No");//Litigation  is 'No'
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+       	//F) - Customs
+	        HtmlReport.addHtmlStepTitle("Validate Status - Customs","Title");
+	       	//1
+	       	condition = "The Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is No";
+	     	record.clear();
+	    	record.put("Litigation_YesNo__c", "Yes");//Litigation  is 'Yes'
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Customs", jObj.getString("Status__c"), condition);
+	       	//2
+	       	condition = "If the Litigation is No AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	    	record.put("Litigation_YesNo__c", "No");//Litigation  is 'No'
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//3
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	    	record.put("Litigation_YesNo__c", "Yes");//Litigation  is 'Yes'
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//4
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is YES";
+	    	record.clear();
+	    	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is YES
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//5
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	    	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	record.put("Litigation_YesNo__c", "No");//Litigation
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//6
+	       	condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is No";
+	    	record.clear();
+	       	record.put("Litigation_Resolved__c", "");//Litigation_Resolved is EMPTY
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Customs", jObj.getString("Status__c"), condition);
+	       	//7
+	       	condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is YES 
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//8
+	       	condition = "If the Litigation is No AND Have_Custom_Instruction_been_sent is YES";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is YES
+	       	record.put("Litigation_Resolved__c", "");//Litigation_Resolved EMPTY
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//9
+	       	condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is YES";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+       	//G) - Close
+	        HtmlReport.addHtmlStepTitle("Validate Status - Close","Title");
+	       	//1
+	       	condition = "The Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is Yes";
+	    	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	       	//2
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is Yes";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//3
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is Yes";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//4
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//5
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//6
+	       	condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is Yes";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "Empty");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	       	//7
+	       	condition = "The Litigation is YES AND Have_Custom_Instruction_been_sent is Yes";
+	    	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//8
+	       	condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "Empty");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//9
+	       	condition = "The Litigation is YES AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	
        }
 	   else 
 	   {
@@ -462,7 +986,6 @@ public class TestOne {
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
 		record.put("Request_Filed__c", row.get("Request_Filed__c"));
@@ -671,14 +1194,11 @@ public class TestOne {
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
 		record.put("Notice_of_intent_to_participate_Ips__c", "Yes");
 		record.put("Domestic_Party_File_Substan_Response__c", "No");
-		
 		String sunsetReviewId = APITools.createObjectRecord("Segment__c", record);
-		
 		if(sunsetReviewId != null)
        {
 			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
@@ -697,7 +1217,6 @@ public class TestOne {
 			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
 			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "90 Day", 
 					row.get("Published_Date__c"));
-			
 			//120 Day
 			record.clear();
 			record.put("Domestic_Party_File_Substan_Response__c", "Yes");
@@ -706,7 +1225,6 @@ public class TestOne {
 			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
 			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "120 Day", 
 					row.get("Published_Date__c"));
-			
 			//240 Day
 			record.clear();
 			record.put("Review_to_address_zeroing_in_Segments__c", "Yes");
