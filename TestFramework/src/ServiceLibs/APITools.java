@@ -250,7 +250,7 @@ public class APITools {
 			 								 String recordId, 
 											 LinkedHashMap<String, String> rowRec) 
 	 {
-        System.out.println("\n_______________ Update Record to "+apiObjectName+" _______________");
+        System.out.println("\n_______________ Update Record In "+apiObjectName+" _______________");
         String uri = baseUri + "/sobjects/"+apiObjectName+"/"+recordId;
         System.out.println("uri" +uri);
         String returnId = null;
@@ -314,7 +314,7 @@ public class APITools {
 		 public static String deleteRecordObject(String apiObjectName,
 				 								 String recordId) 
 		 {
-	        System.out.println("\n_______________ Delete Record to "+apiObjectName+" _______________");
+	        System.out.println("\n_______________ Delete Record from "+apiObjectName+" _______________");
 	        String uri = baseUri + "/sobjects/"+apiObjectName+"/"+recordId;
 	        System.out.println("uri" +uri);
 	        String returnId = null;

@@ -1,7 +1,42 @@
-Litigation_YesNo__c
-Litigation_Resolved__c
-Litigation_Status__c
-Have_Custom_Instruction_been_sent__c
+
+record.put("Actual_Prelim_Issues_to_DAS__c", "");
+
+record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+record.put("Actual_Preliminary_Signature__c", "");
+record.put("Actual_Final_Issues_to_DAS__c", "");
+record.put("Actual_Final_Concurrence_to_DAS__c", "");
+record.put("Actual_Final_Signature__c", "");
+record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+record.put("xxxx", "");
+record.put("xxxx", "");
+record.put("xxxx", "");
 
 
-Litigation_Hold_Expiration_Date__c
+
+
+
+
+
+
+
+
+String calculatedPreliminarySignature = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
+String calculatedAmendedFinalSignature = noNullVal(rObj.getString("Calculated_Amended_Final_Signature__c"));
+String prelimTeamMeetingDeadline = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
+String prelimIssuesDueToDas = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
+String calculatedFinalSignature = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
+String prelimConcurrenceDueToDas = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+String preliminaryAnnouncementDate = noNullVal(rObj.getString("Preliminary_Announcement_Date__c"));
+String finalTeamMeetingDeadline = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
+String finalIssuesDueToDas = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
+String finalConcurrenceDueToDas = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
+String finalAnnouncementDate = noNullVal(rObj.getString("Final_Announcement_Date__c"));
+String amendFinalConcurrenceDueToDas = noNullVal(rObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
+String amendFinalIssuesDueToDas = noNullVal(rObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
+String amendedFinalAnnouncementDate = noNullVal(rObj.getString("Amended_Final_Announcement_Date__c"));
+
+String nextMajorDeadline = noNullVal(rObj.getString("Next_Major_Deadline__c"));
+String nextDueToDasDeadline = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c"));
+String nextOfficeDeadline = noNullVal(rObj.getString("Next_Office_Deadline__c"));
+String nextAnnouncementDate = noNullVal(rObj.getString("Next_Announcement_Date__c"));

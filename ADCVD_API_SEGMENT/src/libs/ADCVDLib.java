@@ -2330,8 +2330,6 @@ public class ADCVDLib{
 		String amendFinalIssuesDueToDas;
 		String amendFinalConcurrenceDueToDas;
 		String amendedFinalAnnouncementDate;
-		
-		
 		calculatedPreliminarySignature = calculateDate(prelimExtensionDays + 245, 
 						"Calculated Preliminary Signature", "calendar",finalDateOfAnniversaryMonth);
 		System.out.println("calculatedPreliminarySignature = " +calculatedPreliminarySignature);
@@ -2346,7 +2344,6 @@ public class ADCVDLib{
 					"Calculated Final Signature", "Calendar", publishedDate);
 		}
 		System.out.println("calculatedFinalSignature = " +calculatedFinalSignature);
-		
 		//String calculatedAmendedFinalSignature = noNullVal(rObj.getString("Calculated_Amended_Final_Signature__c"));
 		//Calculated Amended Final Signature
 		if (!willYouAmendTheFinal.equalsIgnoreCase("Yes"))
@@ -2361,8 +2358,6 @@ public class ADCVDLib{
 			calculatedAmendedFinalSignature = calculateDate(37, "Calculated Amended Final Signature", 
 					"calendar", actualFinalSignature);
 		}
-		
-		
 		prelimTeamMeetingDeadline = calculateDate(-21, "Prelim Team Meeting Deadline", "calendar", 
 		calculatedPreliminarySignature);
 		prelimIssuesDueToDas = calculateDate(-10, "Prelim Issues Due to DAS", 
@@ -2373,9 +2368,6 @@ public class ADCVDLib{
 				"Preliminary Announcement Date", "business", 
 				!actualPreliminarySignature.equals("")?actualPreliminarySignature:
 					calculatedPreliminarySignature);
-		
-		
-		
 		///
 		amendFinalIssuesDueToDas = calculateDate(-10, "Amend Final Issues Due to DAS", 
 				"business", calculatedAmendedFinalSignature);
@@ -2386,7 +2378,6 @@ public class ADCVDLib{
 				!actualPreliminarySignature.equals("")?actualPreliminarySignature:
 					calculatedAmendedFinalSignature);
 		///
-		
 		finalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", 
 						"calendar", calculatedFinalSignature);
 		finalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS",  
@@ -2395,12 +2386,6 @@ public class ADCVDLib{
 				"business", calculatedFinalSignature);
 		finalAnnouncementDate = calculateDate(1, "Final Announcement Date", "business", 
 				!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);		
-		
-		
-		
-		
-		
-		
 		if(publishedDate.equals("") )
 		{
 			nextMajorDeadline = calculatedPreliminarySignature;
@@ -2641,6 +2626,7 @@ public class ADCVDLib{
 		}
 		return allMatches;
 	}
+	
 	/**
 	 * This method validates new Anti-Circumvention review segment
 	 * @return true if all dates matches, false if not
@@ -3222,11 +3208,13 @@ public class ADCVDLib{
 		String applicationAccepted = noNullVal(rObj.getString("Application_Accepted__c"));
 		String actualInitiationIssuesToDas = noNullVal(rObj.getString("Actual_Initiation_Issues_to_DAS__c"));
 		String actualInitiationConcurrenceToDas = noNullVal(rObj.getString("Actual_Initiation_Concurrence_to_DAS__c"));
+		String actualInitiationSignature = "";
 		///////////////////////////////////////////
-		String calculatedInitiationSignature =  calculateDate(45+initiationExtensionDays, 
+		String calculatedInitiationSignature =  calculateDate(45+initiationExtensionDays,
 				"Calculated Initiation Signature",
 				"calendar",applicationAccepted);
-				String calculatedFinalSignature =  calculateDate(300 + finalExtensionDays,"Calculated Final Signature", "calendar", 
+		String calculatedFinalSignature =  calculateDate(300 + finalExtensionDays, 
+						"Calculated Final Signature", "calendar", 
 				!actualInitiationSignature.equals("")?actualInitiationSignature:calculatedInitiationSignature);
 		String finalAnnouncementDate = calculateDate(1, "Final Announcement Date", "calendar", 
 				!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);
@@ -3367,9 +3355,8 @@ public class ADCVDLib{
 			//Calculated Initiation Signature
 			case "Calculated_Initiation_Signature__c":
 			{
-				
 				actualValue = noNullVal(rObj.getString("Calculated_Initiation_Signature__c"));
-				allMatches = allMatches & compareAndReport("Calculated Initiation Signature", 
+				allMatches = allMatches & compareAndReport(dateType, date,  
 						calculatedInitiationSignature, actualValue);
 				break;
 			}
@@ -3377,7 +3364,7 @@ public class ADCVDLib{
 			case "Calculated_Final_Signature__c":
 			{
 				actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
-				allMatches = allMatches & compareAndReport("Calculated Final Signature", 
+				allMatches = allMatches & compareAndReport(dateType, date,  
 						calculatedFinalSignature, actualValue);
 				break;
 			}
@@ -3385,14 +3372,14 @@ public class ADCVDLib{
 			case "Final_Announcement_Date__c":
 			{
 				actualValue = noNullVal(rObj.getString("Final_Announcement_Date__c"));
-				allMatches = allMatches & compareAndReport("Final Announcement Date", finalAnnouncementDate, actualValue);
+				allMatches = allMatches & compareAndReport(dateType, date, finalAnnouncementDate, actualValue);
 				break;
 			}
 			//Initiation Issues Due to DAS
 			case "Initiation_Issues_Due_to_DAS__c":
 			{
 				actualValue = noNullVal(rObj.getString("Initiation_Issues_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport("Initiation Issues Due to DAS", 
+				allMatches = allMatches & compareAndReport(dateType, date, 
 						initiationIssuesDueToDas, actualValue);
 				break;
 			}
@@ -3400,7 +3387,7 @@ public class ADCVDLib{
 			case "Initiation_Concurrence_Due_to_DAS__c":
 			{
 				actualValue = noNullVal(rObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport("Initiation Concurrence Due to DAS", 
+				allMatches = allMatches & compareAndReport(dateType, date, 
 						initiationConcurrenceDueToDas, actualValue);
 				break;
 			}
@@ -3408,7 +3395,7 @@ public class ADCVDLib{
 			case "Calculated_Preliminary_Signature__c":
 			{
 				actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
-				allMatches = allMatches & compareAndReport("Calculated Preliminary Signature", 
+				allMatches = allMatches & compareAndReport(dateType, date,  
 						calculatedPreliminarySignature, actualValue);
 				break;
 			}
@@ -3416,15 +3403,15 @@ public class ADCVDLib{
 			case "Prelim_Team_Meeting_Deadline__c":
 			{
 				actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
-				allMatches = allMatches & compareAndReport("Prelim Team Meeting Deadline", prelimTeamMeetingDeadline, 
+				allMatches = allMatches & compareAndReport(dateType, date, prelimTeamMeetingDeadline, 
 						actualValue);
 				break;
 			}
 			//Prelim Issues Due to DAS
-			case "":
+			case "Prelim_Issues_Due_to_DAS__c":
 			{
 				actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport("Prelim Issues Due to DAS", prelimIssuesDueToDas,
+				allMatches = allMatches & compareAndReport(dateType, date, prelimIssuesDueToDas,
 						actualValue);
 				break;
 			}
@@ -3432,7 +3419,7 @@ public class ADCVDLib{
 			case "Prelim_Concurrence_Due_to_DAS__c":
 			{
 				actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport("Prelim Concurrence Due to DAS", prelimConcurrenceDueToDas,
+				allMatches = allMatches & compareAndReport(dateType, date, prelimConcurrenceDueToDas,
 						actualValue);
 				break;
 			}
@@ -3440,7 +3427,7 @@ public class ADCVDLib{
 			case "Final_Team_Meeting_Deadline__c":
 			{
 				actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
-				allMatches = allMatches & compareAndReport("Final Team Meeting Deadline", finalTeamMeetingDeadline,
+				allMatches = allMatches & compareAndReport(dateType, date, finalTeamMeetingDeadline,
 						actualValue);
 				break;
 			}
@@ -3448,7 +3435,7 @@ public class ADCVDLib{
 			case "Final_Issues_Due_to_DAS__c":
 			{
 				actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport("Final Issues Due to DAS", finalIssuesDueToDas, 
+				allMatches = allMatches & compareAndReport(dateType, date, finalIssuesDueToDas, 
 						actualValue);
 				break;
 			}
@@ -3456,7 +3443,7 @@ public class ADCVDLib{
 			case "Final_Concurrence_Due_to_DAS__c":
 			{
 				actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport("Final Concurrence Due to DAS", finalConcurrenceDueToDas,
+				allMatches = allMatches & compareAndReport(dateType, date, finalConcurrenceDueToDas,
 						actualValue);
 				break;
 			}
@@ -3465,7 +3452,7 @@ public class ADCVDLib{
 			{
 				
 				actualValue = noNullVal(rObj.getString("Next_Major_Deadline__c"));
-				allMatches = allMatches &  compareAndReport("Next Major Deadline", nextMajorDeadline, actualValue);
+				allMatches = allMatches &  compareAndReport(dateType, date, nextMajorDeadline, actualValue);
 				break;
 			}
 			//Next Due to DAS Deadline 
@@ -3473,7 +3460,7 @@ public class ADCVDLib{
 			{
 				
 				actualValue = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c"));
-				allMatches = allMatches &  compareAndReport("Next Due to DAS Deadline", nextDueToDasDeadline, 
+				allMatches = allMatches &  compareAndReport(dateType, date, nextDueToDasDeadline, 
 						actualValue);
 				break;
 			}
@@ -3482,7 +3469,7 @@ public class ADCVDLib{
 			{
 				
 				actualValue = noNullVal(rObj.getString("Next_Office_Deadline__c"));
-				allMatches = allMatches &  compareAndReport("Next Office Deadline", nextOfficeDeadline, 
+				allMatches = allMatches &  compareAndReport(dateType, date, nextOfficeDeadline, 
 						actualValue);
 				break;
 			}
@@ -3494,7 +3481,7 @@ public class ADCVDLib{
 				
 				actualValue = noNullVal(rObj.getString("Next_Announcement_Date__c"));
 				System.out.println(actualValue);
-				allMatches = allMatches & compareAndReport("Next Announcement Date", nextAnnouncementDate, 
+				allMatches = allMatches & compareAndReport(dateType, date, nextAnnouncementDate, 
 						actualValue);
 				break;
 			}
@@ -3597,8 +3584,7 @@ public class ADCVDLib{
 		String calculatedInitiationSignature =  
 				calculateDate(45+initiationExtensionDays, "Calculated Initiation Signature", 
 				"calendar",requestFiled);
-		actualValue = 
-				getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
+		actualValue = getElementAttribute(replaceGui(guiMap.get("genericSegmentField"),
 						"Calculated Initiation Signature"), "text");
 		allMatches = allMatches & compareAndReport("genericSegmentField", "Calculated Initiation Signature", 
 				calculatedInitiationSignature, actualValue);
@@ -7093,7 +7079,7 @@ public class ADCVDLib{
 				//System.out.println(calendar.getTime());
 				while(toll>0)
 				{
-					System.out.println(toll+"___"+calendar.getTime());
+					//System.out.println(toll+"___"+calendar.getTime());
 					if(isBusinessDay(calendar))
 					{
 						toll--;
@@ -7181,7 +7167,7 @@ public class ADCVDLib{
 				//System.out.println(calendar.getTime());
 				while(toll>0)
 				{
-					System.out.println(toll+"___"+calendar.getTime());
+					//System.out.println(toll+"___"+calendar.getTime());
 					if(params[0].contains("DAS"))
 					{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
@@ -7584,9 +7570,41 @@ public class ADCVDLib{
 	}
 	
 	     
-    private static String noNullVal(String str)
+    public static String noNullVal(String str)
     {
     	String  strC = (str==null||str.equals("null"))?"":str;
     	return strC;
     }
+    
+
+	/**
+	 * This method gets validate element and report
+	 * @param clause: conditions
+	 * @param actualValue: actual value
+	 * @param expectedValues, expected value
+	 * @return if the element value is as expected, false if not
+	 * @throws Exception
+	 */
+	public static boolean validateNextDeadlineDate( String clause,
+													String expectedValue, 
+													String actualValue) throws Exception 
+	{
+		if( expectedValue.equals("")) expectedValue = "Empty";
+		if(actualValue.equals("")) actualValue = "Empty";
+		printLog(expectedValue + " Versus " + actualValue);
+		if (expectedValue.equalsIgnoreCase(actualValue))
+		{
+			updateHtmlReport("Scenario: "+ clause, 
+					expectedValue, actualValue, 
+					"VP", "pass", "");
+			return true;
+		}
+		else
+		{
+			updateHtmlReport("Scenario: "+ clause, 
+					expectedValue, actualValue, 
+					"VP", "fail", "");
+			return false;
+		}
+	}
 }
