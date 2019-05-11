@@ -439,10 +439,17 @@ public class GuiTools extends InitTools{
 									String StepPassFail,
 									String msgError) throws IOException
 	{
+		
+		
 		HtmlReport.setTcStatus(false);
 		testCaseStatus = false;
-		String screenShotPath = takeScreenShot(msgError, true);
-		String aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
+		String aLink = "";
+		if(!msgError.equals(""))
+		{
+			String screenShotPath = takeScreenShot(msgError, true);
+			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
+		}
+		
 		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
 		Assert.fail( getTestCaseName()+ ": " +msgError);
 	}

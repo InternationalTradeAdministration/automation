@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -52,6 +53,44 @@ public class XlsxTools {
 	    {
 	    	return allPool;
 	    }
+	}
+	
+	public static LinkedHashMap<String, String> readXlsxSheetWithFirstColKey(String filePath, 
+			  																String tabName) throws IOException
+	{
+		String key="";
+		String conditions ="";
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		File excelFile = new File(filePath);
+		FileInputStream fileInputStream = new FileInputStream(excelFile);
+		Workbook  workbook = new XSSFWorkbook(fileInputStream);
+		XSSFSheet sheet = (XSSFSheet) workbook.getSheet(tabName);
+		Iterator<Row> rowIt = sheet.iterator();
+		Row header = rowIt.next();
+		while(rowIt.hasNext()) 
+		{
+			//Iterator<Cell> cellHeaderIterator = header.cellIterator();
+			Row row = rowIt.next();
+			Iterator<Cell> cellIterator = row.cellIterator();
+			DataFormatter df = new DataFormatter();
+			Cell cell1= cellIterator.next();
+			key = df.formatCellValue(cell1);
+			while (cellIterator.hasNext()) 
+			{
+				Cell cell = cellIterator.next();
+				if(!cell.toString().equals(""))
+				conditions = conditions+","+df.formatCellValue(cell);
+			}
+			map.put(key, conditions.substring(1));
+			conditions="";
+		}
+		workbook.close();
+		fileInputStream.close();
+		for (HashMap.Entry<String, String> entry : map.entrySet()) 
+		{
+			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+		}
+		return map;
 	}
 	
 	public static ArrayList<LinkedHashMap<String, String>> readXlsxSheetAndFilter(String filePath, 
