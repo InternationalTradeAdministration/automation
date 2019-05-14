@@ -1,16 +1,23 @@
 package tests;
 import static GuiLibs.GuiTools.guiMap;
 import static GuiLibs.GuiTools.holdSeconds;
+import static GuiLibs.GuiTools.updateHtmlReport;
 import static ReportLibs.ReportTools.printLog;
-
+import static GuiLibs.GuiTools.clickElementJs;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-
+import java.util.Map;
+import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.simple.parser.JSONParser;
 import org.testng.TestNG;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -19,11 +26,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
-
 import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import OfficeLibs.XlsxTools;
 import ReportLibs.HtmlReport;
+import bsh.ParseException;
 import libs.BisFormLib;
 public class TestOne {
 
@@ -169,32 +176,40 @@ public class TestOne {
 		if(step5Row != null)
 		BisFormLib.fillUpStepFive(step5Row);
 		///Validate
-		BisFormLib.submitBisForm();
-		if(step1Row != null)
+		if (!BisFormLib.submitBisForm())
 		{
-			HtmlReport.addHtmlStepTitle("					Validate the form of step 1","Title");
-			testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepOne(step1Row);
-		}
-		if(step2Row != null)
+			if(step1Row != null)
+			{
+				HtmlReport.addHtmlStepTitle("					Validate the form of step 1","Title");
+				testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepOne(step1Row);
+			}
+			if(step2Row != null)
+			{
+				HtmlReport.addHtmlStepTitle("					Validate the form of step 2","Title");
+				testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepTwo(step2Row);
+			}
+			if(step3Row != null)
+			{
+				HtmlReport.addHtmlStepTitle("					Validate the form of step 3","Title");
+			    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepThree(step3Row);
+			}
+			if(step4Row != null)
+			{
+				HtmlReport.addHtmlStepTitle("					Validate the form of step 4","Title");
+			    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepFour(step4Row);
+			}
+			if(step5Row != null)
+			{
+				HtmlReport.addHtmlStepTitle("					Validate the form of step 5","Title");
+			    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepFive(step5Row);
+			}
+		}else
 		{
-			HtmlReport.addHtmlStepTitle("					Validate the form of step 2","Title");
-			testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepTwo(step2Row);
-		}
-		if(step3Row != null)
-		{
-			HtmlReport.addHtmlStepTitle("					Validate the form of step 3","Title");
-		    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepThree(step3Row);
-		}
-		if(step4Row != null)
-		{
-			HtmlReport.addHtmlStepTitle("					Validate the form of step 4","Title");
-		    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepFour(step4Row);
-		}
-		
-		if(step5Row != null)
-		{
-			HtmlReport.addHtmlStepTitle("					Validate the form of step 5","Title");
-		    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepFive(step5Row);
+			updateHtmlReport("Preview", "At least one error "
+					+ "should be fired in order to verify the error messages", 
+					"All pass", "VP", "warning", "Preview");
+			clickElementJs(guiMap.get("Home"));
+			clickElementJs(guiMap.get("CreateNewExclusionRequest"));
 		}
 	}
 

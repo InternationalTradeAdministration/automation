@@ -63,18 +63,40 @@ public class BisFormLib{
 	{
 		boolean loginStatus = true;
 		navigateTo(url);
-		if(! checkElementExists(guiMap.get("HomePage")))
+		if(! checkElementExists(guiMap.get("CreateNewExclusionRequest")))
 		{
-			failTestSuite("Login to BIS 232 App", "User is able to login", 
-				"Not as expected", "Step", "fail", "Login failed");
+			failTestSuite("navigate to bis 232 url", "User is not able to navigate", 
+				"Not as expected", "Step", "fail", "navigation failed");
 			loginStatus = false;
 		}else
 		{
-			highlightElement(guiMap.get("HomePage"), "green");
+			highlightElement(guiMap.get("CreateNewExclusionRequest"), "green");
 			holdSeconds(2);
-			updateHtmlReport("Login to BIS232 App",  "User able to login", "As expected", 
-					"Step", "pass", "Login to BIS 232");
 			clickElementJs(guiMap.get("CreateNewExclusionRequest"));
+			int currentWait = setBrowserTimeOut(5);
+			if(! checkElementExists(guiMap.get("ExclusiveRequestForm")))
+			{
+				setBrowserTimeOut(currentWait);
+				enterText(guiMap.get("UserName"), user);
+				enterText(guiMap.get("Password"), password);
+				clickElementJs(guiMap.get("loginB"));
+				if(! checkElementExists(guiMap.get("ExclusiveRequestForm")))
+				{
+					updateHtmlReport("Login to BIS232 App",  "User is not able to login", "Not as expected", 
+							"Step", "fail", "Login to BIS 232");
+					loginStatus = false;
+				}else
+				{
+					updateHtmlReport("Login to BIS232 App",  "User is able to login", "As expected", 
+						"Step", "pass", "Login to BIS 232");
+				}
+			}else
+			{
+				setBrowserTimeOut(currentWait);
+				updateHtmlReport("Login to BIS232 App",  "User is able to login", "As expected", 
+						"Step", "pass", "Login to BIS 232");
+			}
+			
 		}
 		return loginStatus;
 	}
@@ -195,6 +217,7 @@ public class BisFormLib{
 		scrollToElement(guiMap.get("OriginCountry"));
 		selectElementByText(guiMap.get("OriginCountry"), row.get("Origin Country"));
 		selectElementByText(guiMap.get("ExportCountry"), row.get("Export Country"));
+		enterText(guiMap.get("ExclusionQuantity"), row.get("Exclusion Quantity"));
 		enterText(guiMap.get("CBPDistinguishComments"), row.get("CBP Distinguish Comments"));
 		updateHtmlReportOverall("Fillup the form of step 4",  "User fill up the form of step 4", "As expected", 
 				"Step", "pass", "Fill up the form step 4");
@@ -1107,12 +1130,29 @@ public class BisFormLib{
 	 * filled 
 	 * @exception Exception
 	*/
-	public static void submitBisForm() throws Exception
+	public static boolean submitBisForm() throws Exception
 	{
+		holdSeconds(2);//
 		clickElementJs(replaceGui(guiMap.get("tabName"), "Step 5"));
+		holdSeconds(2);//
+		scrollToElement(guiMap.get("PreviewBeforeSubmit"));
+		clickElementJs(guiMap.get("PreviewBeforeSubmit"));
 		holdSeconds(2);
-		scrollToElement(guiMap.get("submitForm"));
-		clickElementJs(guiMap.get("submitForm"));
+		int currentWait = setBrowserTimeOut(4);
+		//scrollToElement(guiMap.get("submitForm"));
+		//clickElementJs(guiMap.get("submitForm"));
+		if(checkElementExists(guiMap.get("submitForm")))
+		{
+			setBrowserTimeOut(currentWait);
+			return true;
+		}
+		else
+		{
+			setBrowserTimeOut(currentWait);
+			return false;
+		}
+		
+		
 	}
 	
 	/**

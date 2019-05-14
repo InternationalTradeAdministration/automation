@@ -76,7 +76,7 @@ public class GuiTools extends InitTools{
 	/*public static void startRecording(String folder, String fileName, boolean voice) throws Exception
 	{
 		recordOn = true;
-		File file = new File(folder + "\\"+ fileName);
+		File file = new File(folder + "/"+ fileName);
 
 		 // set the graphics configuration
 	    GraphicsConfiguration gc = GraphicsEnvironment
@@ -292,7 +292,7 @@ public class GuiTools extends InitTools{
 	public WebDriver getIeDriver()
 	{
 		printLog("Get IE Driver");
-		System.setProperty("webdriver.ie.driver", getLibFolder()+"\\IEDriverServer.exe");
+		System.setProperty("webdriver.ie.driver", getLibFolder()+"/IEDriverServer.exe");
 		DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
 		capabilities.setCapability("EnableNativeEvents", false);
 		capabilities.setCapability("ignoreZoomSetting", true);
@@ -315,7 +315,7 @@ public class GuiTools extends InitTools{
 		return new FirefoxDriver(capabilities);*/
 		
 		System.out.println(getLibFolder());
-		 System.setProperty("WebDriver.gecko.driver",getLibFolder()+"\\geckodriver.exe");
+		 System.setProperty("WebDriver.gecko.driver",getLibFolder()+"/geckodriver.exe");
 
 		    return new FirefoxDriver();
 		//geckodriver.exe
@@ -355,7 +355,7 @@ public class GuiTools extends InitTools{
 		/*Initializing the Webdriver instance (i.e. driver) to open Chrome Browser and passing the Chrome Profile as argument */
 		//driver = new ChromeDriver(Chrome_Profile);
 		return new ChromeDriver(Chrome_Profile);
-		//System.setProperty("webdriver.chrome.driver", getLibFolder()+"\\chromedriver.exe");
+		//System.setProperty("webdriver.chrome.driver", getLibFolder()+"/chromedriver.exe");
 		//DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		//capabilities.setBrowserName("chrome");
 		//return new ChromeDriver(capabilities);
@@ -380,7 +380,7 @@ public class GuiTools extends InitTools{
 			System.setProperty("webdriver.chrome.driver", userDir+"/libs/chromedrive");
 		}
 		/* Storing the Chrome Profile Path in Chrome_Profile_Path variable. */
-		//String Chrome_Profile_Path = "C:\\Users\\"+getTesterName()+"\\AppData\\Local\\Google\\Chrome\\AutomationProfile";
+		//String Chrome_Profile_Path = "C:/Users/"+getTest/Name()+"/AppData/Local/Google/Chrome/AutomationProfile";
 		/* Creating an instance of ChromeOptions (i.e objChrome_Profile) */
 		ChromeOptions Chrome_Profile = new ChromeOptions();
 		/* Disabling the chrome browser extensions */
@@ -390,7 +390,7 @@ public class GuiTools extends InitTools{
 		/*Initializing the Webdriver instance (i.e. driver) to open Chrome Browser and passing the Chrome Profile as argument */
 		//driver = new ChromeDriver(Chrome_Profile);
 		return new ChromeDriver(Chrome_Profile);
-		//System.setProperty("webdriver.chrome.driver", getLibFolder()+"\\chromedriver.exe");
+		//System.setProperty("webdriver.chrome.driver", getLibFolder()+"/chromedriver.exe");
 		//DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		//capabilities.setBrowserName("chrome");
 		//return new ChromeDriver(capabilities);
@@ -497,11 +497,11 @@ public class GuiTools extends InitTools{
 		if(fullPage)
 		{
 			ssPath =  takeScreenShotAllPage(getDriver(), 
-			   getOutputResultFolder()+"\\html", ssName);
+			   getOutputResultFolder()+"/html", ssName);
 		}else
 		{
 			ssPath =  takeVisibleScreenShot(getDriver(), 
-					   getOutputResultFolder()+"\\html", ssName);
+					   getOutputResultFolder()+"/html", ssName);
 		}
 		//HtmlReport.addLinkStepToHtmlReport(ssName, ssDescription, ssPath);
 		return ssPath;
@@ -518,7 +518,7 @@ public class GuiTools extends InitTools{
 			throws IOException
 	{
 		String ssPath = takeVisibleScreenShot(getDriver(), 
-				getOutputResultFolder()+"\\html", ssName);
+				getOutputResultFolder()+"/html", ssName);
 		HtmlReport.addLinkStepToHtmlReport(ssName, ssDescription, ssPath);
 		return ssPath;
 	}*/
@@ -537,7 +537,7 @@ public class GuiTools extends InitTools{
 											throws IOException
 	{
 		
-		String file = ssPath+"\\"+ssName+imgIterator+".png";
+		String file = ssPath+"/"+ssName+imgIterator+".png";
 		imgIterator=imgIterator+1;
 		Screenshot screenshot = new AShot().
 				shootingStrategy(ShootingStrategies.viewportPasting(100)).
@@ -561,7 +561,7 @@ public class GuiTools extends InitTools{
 	{
 		TakesScreenshot takeScreenShot = (TakesScreenshot) driver;
 		File source =  takeScreenShot.getScreenshotAs(OutputType.FILE);
-		String file = ssPath+"\\"+ssName+imgIterator+".png";
+		String file = ssPath+"/"+ssName+imgIterator+".png";
 		imgIterator=imgIterator+1;
 		FileUtils.copyFile(source, new File(file));
 		return file;
@@ -569,7 +569,7 @@ public class GuiTools extends InitTools{
 		
 		/*TakesScreenshot takeScreenShot = (TakesScreenshot) driver;\
 		File source =  takeScreenShot.getScreenshotAs(OutputType.FILE);
-		String file = ssPath+"\\"+ssName+imgIterator+".png";
+		String file = ssPath+"/"+ssName+imgIterator+".png";
 		imgIterator=imgIterator+1;
 		FileUtils.copyFile(source, new File(file));
 		org.openqa.selenium.Dimension dim =  driver.manage().window().getSize();
@@ -585,7 +585,7 @@ public class GuiTools extends InitTools{
 		//long currentPosition = (long) executor.executeAsyncScript("return page.pageYOffset;");
 		bufferImage.getGraphics().drawImage(img, 0, 0, width, height, 0, 
 				(int)scrollYPos, width, height+(int)scrollYPos, null);
-		file = ssPath+"\\"+ssName+imgIterator+".png";
+		file = ssPath+"/"+ssName+imgIterator+".png";
 		ImageIO.write(bufferImage, "jpg", new File(file));
 		imgIterator = imgIterator+1;
 		return file;*/
@@ -817,8 +817,8 @@ public class GuiTools extends InitTools{
 	 * 
 	 */
 	public static void enterTextFile(HashMap<String, String> map, String file) throws Exception
-	{	//String str = "C:\\Users\\Mouloud Hamdidouche\\Desktop\\eclipse\\SeleniumProjects\\ACCESS_SCRIPT\\input_data\\input_files\\test_file_1.xlsx";
-        //String str = "C:\\libs\\"+file;
+	{	//String str = "C:/Users/Mouloud Hamdidouche/Desktop/eclipse/SeleniumProjects/ACCESS_SCRIPT/input_data/input_files/test_file_1.xlsx";
+        //String str = "C:/libs/"+file;
 		printLog("Enter text for "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
@@ -873,7 +873,7 @@ public class GuiTools extends InitTools{
                 + " ",
                 driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")));
 
-        driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")).sendKeys("C:\\libs\\test file 1.xlsx"); // please provide absolute path of the file to upload.
+        driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")).sendKeys("C:/libs/test file 1.xlsx"); // please provide absolute path of the file to upload.
 
         //
        

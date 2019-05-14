@@ -94,7 +94,7 @@ public class HtmlReport extends InitTools{
 	{
 		 SimpleDateFormat sdFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");  
 		 Date now = new Date();  
-		String templateString = readTemplateFile(getInputDataFolder()+"\\template\\suiteTemplate.html");
+		String templateString = readTemplateFile(getInputDataFolder()+"/template/suiteTemplate.html");
 		StringBuilder htmlBody =   new StringBuilder();
 		String line;
 		int minutes=0, hours=0;
@@ -112,7 +112,7 @@ public class HtmlReport extends InitTools{
 		    	 tcName = key;
 		         tcStatus = entry.get(key);
 		    }
-		    line = "<tr><td><a href = 'html\\"+tcName+".html"+"'>"+tcName+"</a></td>"
+		    line = "<tr><td><a href = 'html/"+tcName+".html"+"'>"+tcName+"</a></td>"
 					+ "<td style='text-align: center;'><span class='~stepsts~'>".replace("~stepsts~", tcStatus)
 					+ tcStatus+"</span></td></tr>";
 			htmlBody.append(line);
@@ -126,7 +126,7 @@ public class HtmlReport extends InitTools{
 		templateString = templateString.replace("~TestCaseNumberPassed~", ""+tcsPassed);
 		templateString = templateString.replace("~TestCaseNumberFailed~", ""+(totalTcs - tcsPassed));
 		templateString = templateString.replace("~Body~", htmlBody.toString());
-		FileUtils.writeStringToFile(new File(getOutputResultFolder()+"\\results.html"), templateString);
+		FileUtils.writeStringToFile(new File(getOutputResultFolder()+"/results.html"), templateString);
 	}
 	
 	/**
@@ -147,7 +147,7 @@ public class HtmlReport extends InitTools{
 	    String hour = (hours<10)?"0"+hours:""+hours;
 	    String minute = minutes<10?"0"+minutes:""+minutes;
 	    String second = seconds<10?"0"+seconds:""+seconds;
-		String templateString = readTemplateFile(getInputDataFolder()+"\\template\\tcTemplate.html");
+		String templateString = readTemplateFile(getInputDataFolder()+"/template/tcTemplate.html");
 		StringBuilder htmlBody =   new StringBuilder();
 		String line;
 		for (int i=0; i < testCaseSteps.size(); i++)
@@ -181,7 +181,7 @@ public class HtmlReport extends InitTools{
 		templateString = templateString.replace("~TestDuration~", hour+" : "+minute+" : "+second);
 		//templateString = templateString.replace("~ExecutedBy~", testerName);
 		templateString = templateString.replace("~Body~", htmlBody.toString());
-		FileUtils.writeStringToFile(new File(getOutputResultFolder()+"\\html\\"+title+".html"), templateString);
+		FileUtils.writeStringToFile(new File(getOutputResultFolder()+"/html/"+title+".html"), templateString);
 	}
 	
 	/**
@@ -257,7 +257,7 @@ public class HtmlReport extends InitTools{
 		map.put("stepName", stepName);
 		map.put("stepType", "Screen Shot");
 		map.put("stepTime", strTime);
-		map.put("StepAction", "<a href = '"+ssPath+"'  target='_blank' >"+linkDesc+"<//a>");
+		map.put("StepAction", "<a href = '"+ssPath+"'  target='_blank' >"+linkDesc+"</a>");
 		map.put("StepStatus", "sshot");
 		testCaseSteps.add(map);
 	}

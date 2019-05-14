@@ -1212,18 +1212,17 @@ public class BisFormLib{
 			return Integer.parseInt(strNumber);
 		}
 	}
-	
-	
 	/**
 	 * This method reads number from the screen
-	 * @param strNumber: number is string format
+	 * @param jObj: json object containing form information
+	 * @param productType: product type, steel, aluminum
+	 * @param conditions: list of conditions to be checked
 	 * @return number in integer format
-	 * @throws IOException 
 	 * @exception Exception
 	*/
 	public static boolean ValidateConditions(JSONObject jObj, 
 											 String productType, 
-											 String conditions) throws IOException
+											 String conditions) throws Exception
 	{
 		boolean ovralResult=true;
 		String conditionDetails;
@@ -1234,10 +1233,6 @@ public class BisFormLib{
 			String condition = listConditions[i];
 			if (productType.equalsIgnoreCase("Steel"))
 			{
-				
-				
-				
-				
 				switch(condition.toLowerCase())
 				{
 				case "condition 1":
@@ -1251,17 +1246,8 @@ public class BisFormLib{
 							+ "less and the minimum percentage of chromium must be 10.5 percent or more.";
 					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 					String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
-					if (Float.parseFloat(carbonMax)<=1.2 && Float.parseFloat(chromiumMin)>=10.5)
-					{
-						HtmlReport.addHtmlStep("Condition 2", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 2", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, (Float.parseFloat(carbonMax)<=1.2 
+							&& Float.parseFloat(chromiumMin)>=10.5));
 					break;
 				}
 				case "condition 3":{
@@ -1272,34 +1258,14 @@ public class BisFormLib{
 				{
 					conditionDetails = "...then the minimum width must be 600 mm or more.";
 					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
-					if (Float.parseFloat(widthMin)>=600)
-					{
-						HtmlReport.addHtmlStep("Condition 4", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 4", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 4", conditionDetails, (Float.parseFloat(widthMin)>=600));
 					break;
 				}
 				case "condition 5":
 				{
 					conditionDetails = "...then the maximum width must be less than 600 mm.";
-					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
-					if (Float.parseFloat(widthMax)<600)
-					{
-						HtmlReport.addHtmlStep("Condition 5", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 5", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 5", conditionDetails, (Float.parseFloat(widthMax)<600)); 
 					break;
 				}
 				case "condition 6":{
@@ -1335,18 +1301,9 @@ public class BisFormLib{
 					String siliconMin = getProdValue(jObj, "ChemicalComposition", "Silicon", "Minimum");
 					String siliconMax = getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
 					String aluminumMax = getProdValue(jObj, "ChemicalComposition", "Aluminum", "Maximum");
-					if (Float.parseFloat(carbonMax)<=0.08 && Float.parseFloat(siliconMin)>=0.6
-							&& Float.parseFloat(siliconMax) <=6 && Float.parseFloat(aluminumMax) <=1 )
-					{
-						HtmlReport.addHtmlStep("Condition 12", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 12", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 12", conditionDetails, (Float.parseFloat(carbonMax)<=0.08 
+							&& Float.parseFloat(siliconMin)>=0.6 && Float.parseFloat(siliconMax) <=6 
+							&& Float.parseFloat(aluminumMax) <=1)); 
 					break;
 				}
 				case "condition 13":
@@ -1360,19 +1317,9 @@ public class BisFormLib{
 					String manganeseMax = getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum");
 					String siliconMin = getProdValue(jObj, "ChemicalComposition", "Silicon", "Minimum");
 					String siliconMax = getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
-					if (Float.parseFloat(carbonMax)<=0.7 && Float.parseFloat(manganeseMin)>=0.5
-							&& Float.parseFloat(manganeseMax) <=1.9 && Float.parseFloat(siliconMin)>=0.6 
-							&& Float.parseFloat(siliconMax)<=2.3)
-					{
-						HtmlReport.addHtmlStep("Condition 13", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 13", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 13", conditionDetails, (Float.parseFloat(carbonMax)<=0.7 
+							&& Float.parseFloat(manganeseMin)>=0.5 && Float.parseFloat(manganeseMax) <=1.9 
+							&& Float.parseFloat(siliconMin)>=0.6 && Float.parseFloat(siliconMax)<=2.3)); 
 					break;
 				}
 				case "condition 14":{
@@ -1384,21 +1331,11 @@ public class BisFormLib{
 					conditionDetails = "Razor blade steel ...then the maximum thickness must be equal to or less than "
 							+ "0.25 mm, and the maximum width must be equal to or less than 23 mm, and the maximum percent "
 							+ "chromium must be equal to or less than 14.7.";
-					String cthicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 					String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
-					if (Float.parseFloat(cthicknessMax)<=0.25 && Float.parseFloat(widthMax)<=23 
-							&& Float.parseFloat(chromiumMax)<=14.7)
-					{
-						HtmlReport.addHtmlStep("Condition 15", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 15", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 15", conditionDetails, (Float.parseFloat(thicknessMax)<=0.25 
+							&& Float.parseFloat(widthMax)<=23 && Float.parseFloat(chromiumMax)<=14.7));
 					break;
 				}
 				case "condition 16":
@@ -1408,20 +1345,9 @@ public class BisFormLib{
 							+ " be equal to or greater than 4 mm.";
 					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
 					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
-					String cthicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
-					
-					if (Float.parseFloat(widthMin)>150 && Float.parseFloat(widthMax)<=1250 
-							&& Float.parseFloat(cthicknessMin)>=4)
-					{
-						HtmlReport.addHtmlStep("Condition 16", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 16", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");					
+					ovralResult = ovralResult & checkAndReport("Condition 16", conditionDetails, (Float.parseFloat(widthMin)>150
+							&& Float.parseFloat(widthMax)<=1250 && Float.parseFloat(thicknessMin)>=4)); 
 					break;
 				}
 				case "condition 17":
@@ -1433,19 +1359,8 @@ public class BisFormLib{
 					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 					String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
 					String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
-					if (Float.parseFloat(carbonMax)<0.3 && Float.parseFloat(chromiumMin)>=4 
-							&& Float.parseFloat(chromiumMax)<10.5)
-					{
-						HtmlReport.addHtmlStep("Condition 17", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 17", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
-					
+					ovralResult = ovralResult & checkAndReport("Condition 17", conditionDetails, (Float.parseFloat(carbonMax)<0.3 
+							&& Float.parseFloat(chromiumMin)>=4 && Float.parseFloat(chromiumMax)<10.5)); 
 					break;
 				}
 				case "condition 18":{
@@ -1461,18 +1376,8 @@ public class BisFormLib{
 					String sulfurMax = getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
 					String phosphorusMax = getProdValue(jObj, "ChemicalComposition", "Phosphorus", "Maximum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(carbonMax)<0.2 && Float.parseFloat(sulfurMax)<0.04 
-							&& Float.parseFloat(phosphorusMax)<0.04 && Float.parseFloat(outsideDiameterMax)<10)
-					{
-						HtmlReport.addHtmlStep("Condition 17", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 17", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 19", conditionDetails, (Float.parseFloat(carbonMax)<0.2 && Float.parseFloat(sulfurMax)<0.04 
+							&& Float.parseFloat(phosphorusMax)<0.04 && Float.parseFloat(outsideDiameterMax)<10)); 
 					break;
 				}
 				case "condition 20":{
@@ -1488,17 +1393,7 @@ public class BisFormLib{
 					conditionDetails = "High nickel alloy steel ...then the minimum percent nickel must be "
 							+ "equal to or greater than 24.";
 					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
-					if (Float.parseFloat(nickelMin)>=24)
-					{
-						HtmlReport.addHtmlStep("Condition 22", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 22", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 22", conditionDetails, (Float.parseFloat(nickelMin)>=24)); 
 					break;
 				}
 				case "condition 23":{
@@ -1515,17 +1410,8 @@ public class BisFormLib{
 							+ "less and the minimum percentage of chromium must be 10.5 percent or more.";
 					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 					String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
-					if (Float.parseFloat(carbonMax)<=1.2 && Float.parseFloat(chromiumMin)>=10.5 )
-					{
-						HtmlReport.addHtmlStep("Condition 25", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 25", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 25", conditionDetails, (Float.parseFloat(carbonMax)<=1.2
+							&& Float.parseFloat(chromiumMin)>=10.5)); 
 					break;
 				}
 				case "condition 26":
@@ -1534,17 +1420,8 @@ public class BisFormLib{
 							+ " diameter must be equal to or less than 114.3 mm.";
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
-					if (Float.parseFloat(outsideDiameterMax)<=114.3 && Float.parseFloat(outsideDiameterMin)<=114.3)
-					{
-						HtmlReport.addHtmlStep("Condition 26", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 26", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 26", conditionDetails, (Float.parseFloat(outsideDiameterMax)<=114.3 
+							&& Float.parseFloat(outsideDiameterMin)<=114.3)); 
 					break;
 				}
 				case "condition 27":
@@ -1555,18 +1432,9 @@ public class BisFormLib{
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 					
-					if (Float.parseFloat(outsideDiameterMin)>=114.3 && Float.parseFloat(outsideDiameterMin)<406.4
-							&& Float.parseFloat(outsideDiameterMax)>=114.3 && Float.parseFloat(outsideDiameterMax)<406.4 )
-					{
-						HtmlReport.addHtmlStep("Condition 27", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 27", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 27", conditionDetails, (Float.parseFloat(outsideDiameterMin)>=114.3 
+							&& Float.parseFloat(outsideDiameterMin)<406.4 && Float.parseFloat(outsideDiameterMax)>=114.3
+							&& Float.parseFloat(outsideDiameterMax)<406.4)); 
 					break;
 				}
 				case "condition 28":
@@ -1575,17 +1443,8 @@ public class BisFormLib{
 							+ "diameter must be greater than 406.4 mm.";
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
-					if (Float.parseFloat(outsideDiameterMax)>406.4 && Float.parseFloat(outsideDiameterMin)>406.4)
-					{
-						HtmlReport.addHtmlStep("Condition 28", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 28", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 28", conditionDetails, (Float.parseFloat(outsideDiameterMax)>406.4 
+							&& Float.parseFloat(outsideDiameterMin)>406.4)); 
 					break;
 				}
 				case "condition 29":
@@ -1595,92 +1454,42 @@ public class BisFormLib{
 							+ "than 114.3 mm and less than 215.9 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					
-					if (Float.parseFloat(outsideDiameterMin)>=114.3 && Float.parseFloat(outsideDiameterMin)<215.9
-							&& Float.parseFloat(outsideDiameterMax)>=114.3 && Float.parseFloat(outsideDiameterMax)<215.9 )
-					{
-						HtmlReport.addHtmlStep("Condition 29", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 29", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 29", conditionDetails, (Float.parseFloat(outsideDiameterMin)>=114.3 &&
+							Float.parseFloat(outsideDiameterMin)<215.9&& Float.parseFloat(outsideDiameterMax)>=114.3 
+							&& Float.parseFloat(outsideDiameterMax)<215.9)); 
 					break;
 				}
 				case "condition 30":
 				{
 					conditionDetails = "...then the maximum thickness must be less than 12.7 mm.";
 					String cthicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(cthicknessMax)<12.7 )
-					{
-						HtmlReport.addHtmlStep("Condition 30", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 30", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 30", conditionDetails, (Float.parseFloat(cthicknessMax)<12.7 ));
 					break;
 				}
 				case "condition 31":
 				{
 					conditionDetails = "...then the minimum thickness must be greater than or equal to 12.7 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
-					if (Float.parseFloat(thicknessMin)>=12.7 )
-					{
-						HtmlReport.addHtmlStep("Condition 31", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 31", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 31", conditionDetails, (Float.parseFloat(thicknessMin)>=12.7)); 
 					break;
 				}
 				case "condition 32":
 				{
-					conditionDetails = "...then the outside diameter must be equal to or less than 168.3 mm.";
+					conditionDetails = "....then the outside diameter must be equal to or less than 168.3 mm.";
 					break;
 				}
 				case "condition 33":
 				{
 					conditionDetails = "...then the minimum thickness must be greater than 9.5 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
-					if (Float.parseFloat(thicknessMin)>9.5 )
-					{
-						HtmlReport.addHtmlStep("Condition 33", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 33", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 33", conditionDetails, (Float.parseFloat(thicknessMin)>9.5 )); 
 					break;
 				}
 				case "condition 34":
 				{
 					conditionDetails = "...then the maximum thickness must be equal to or less than 9.5 mm.";
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMax)<=9.5 )
-					{
-						HtmlReport.addHtmlStep("Condition 34", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 34", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 34", conditionDetails, (Float.parseFloat(thicknessMax)<=9.5)); 
 					break;
 				}
 				case "condition 35":
@@ -1688,9 +1497,10 @@ public class BisFormLib{
 					conditionDetails = "...then the outside diameter must be greater than 168.3 mm.";
 					break;
 				}
-				case "condition 36":{
-		
-				break;
+				case "condition 36":
+				{
+					conditionDetails = "...then the outside diameter must be less than 215.9 mm.";
+					break;
 				}
 				case "condition 37":
 				{
@@ -1699,18 +1509,9 @@ public class BisFormLib{
 							+ " greater than 215.9 mm and equal to or less than 406.4 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin)>=215.9 && Float.parseFloat(outsideDiameterMin)<=406.4
-							&& Float.parseFloat(outsideDiameterMax)>=215.9 && Float.parseFloat(outsideDiameterMax)<=406.4 )
-					{
-						HtmlReport.addHtmlStep("Condition 37", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 37", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 37", conditionDetails, (Float.parseFloat(outsideDiameterMin)>=215.9
+							&& Float.parseFloat(outsideDiameterMin)<=406.4 && Float.parseFloat(outsideDiameterMax)>=215.9
+							&& Float.parseFloat(outsideDiameterMax)<=406.4));
 					break;
 				}
 				case "condition 38":
@@ -1720,18 +1521,9 @@ public class BisFormLib{
 							+ "and equal to or less than 406.4 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin)>=215.9 && Float.parseFloat(outsideDiameterMin)<=285.8
-							&& Float.parseFloat(outsideDiameterMax)>=285.8 && Float.parseFloat(outsideDiameterMax)<=406.4 )
-					{
-						HtmlReport.addHtmlStep("Condition 38", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 38", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 38", conditionDetails, (Float.parseFloat(outsideDiameterMin)>=215.9 
+							&& Float.parseFloat(outsideDiameterMin)<=285.8 && Float.parseFloat(outsideDiameterMax)>=285.8 
+							&& Float.parseFloat(outsideDiameterMax)<=406.4));
 					break;
 				}
 				case "condition 39":
@@ -1741,35 +1533,16 @@ public class BisFormLib{
 							+ "to or less than 406.4 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) > 285.8 && Float.parseFloat(outsideDiameterMin)<=406.4
-							&& Float.parseFloat(outsideDiameterMax)> 285.8 && Float.parseFloat(outsideDiameterMax)<=406.4 )
-					{
-						HtmlReport.addHtmlStep("Condition 39", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 39", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 39", conditionDetails, (Float.parseFloat(outsideDiameterMin) > 285.8 
+							&& Float.parseFloat(outsideDiameterMin)<=406.4 && Float.parseFloat(outsideDiameterMax)> 285.8
+							&& Float.parseFloat(outsideDiameterMax)<=406.4 )); 
 					break;
 				}
 				case "condition 40":
 				{
 					conditionDetails = "...then the minimum outside diameter must be greater than 406.4 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
-					if (Float.parseFloat(outsideDiameterMin) > 406.4)
-					{
-						HtmlReport.addHtmlStep("Condition 40", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 40", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 40", conditionDetails, (Float.parseFloat(outsideDiameterMin) > 406.4)); 
 					break;
 				}
 				case "condition 41":
@@ -1777,17 +1550,8 @@ public class BisFormLib{
 					conditionDetails = "...then the minimum outside diameter and the maximum outside diameter must be less than 38.1 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) < 38.1 && Float.parseFloat(outsideDiameterMax) < 38.1)
-					{
-						HtmlReport.addHtmlStep("Condition 41", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 41", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 41", conditionDetails, (Float.parseFloat(outsideDiameterMin) < 38.1 
+							&& Float.parseFloat(outsideDiameterMax) < 38.1));
 					break;
 				}
 				case "condition 42":
@@ -1796,18 +1560,9 @@ public class BisFormLib{
 							+ " than 190.5 mm, and the maximum outside diameter must be greater than 38.1 mm and less than 190.5 mm";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) >= 38.1 && Float.parseFloat(outsideDiameterMin) < 190.5
-							&& Float.parseFloat(outsideDiameterMax)> 38.1 && Float.parseFloat(outsideDiameterMax) < 190.5 )
-					{
-						HtmlReport.addHtmlStep("Condition 42", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 42", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 42", conditionDetails, (Float.parseFloat(outsideDiameterMin) >= 38.1 
+							&& Float.parseFloat(outsideDiameterMin) < 190.5	&& Float.parseFloat(outsideDiameterMax)> 38.1
+							&& Float.parseFloat(outsideDiameterMax) < 190.5 )); 
 					break;
 				}
 				case "condition 43":
@@ -1815,34 +1570,15 @@ public class BisFormLib{
 					conditionDetails = "...then the minimum outside diameter and the maximum outside diameter must be greater than 285.8 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) > 285.8 && Float.parseFloat(outsideDiameterMax) > 285.8)
-					{
-						HtmlReport.addHtmlStep("Condition 43", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 43", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 43", conditionDetails, (Float.parseFloat(outsideDiameterMin) > 285.8 
+							&& Float.parseFloat(outsideDiameterMax) > 285.8));
 					break;
 				}
 				case "condition 44":
 				{
 					conditionDetails = "...then the maximum thickness must be less than 6.4 mm.";
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMax)< 6.4 )
-					{
-						HtmlReport.addHtmlStep("Condition 44", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 44", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 44", conditionDetails, (Float.parseFloat(thicknessMax)< 6.4 )); 
 					break;
 				}
 				case "condition 45":
@@ -1851,17 +1587,8 @@ public class BisFormLib{
 							+ "and the maximum thickness must be equal to or less than 12.7 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMin)>= 6.4 && Float.parseFloat(thicknessMax) <=12.7)
-					{
-						HtmlReport.addHtmlStep("Condition 45", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 45", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 45", conditionDetails, (Float.parseFloat(thicknessMin)>= 6.4 
+							&& Float.parseFloat(thicknessMax) <=12.7)); 
 					break;
 				}
 				case "condition 46":
@@ -1870,18 +1597,9 @@ public class BisFormLib{
 							+ "and the maximum outside diameter must be greater than 114.3 mm and less than 190.5 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) > 114.3 && Float.parseFloat(outsideDiameterMin) < 190.5 &&
-							Float.parseFloat(outsideDiameterMax) > 114.3 && Float.parseFloat(outsideDiameterMax) < 190.5)
-					{
-						HtmlReport.addHtmlStep("Condition 46", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 46", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 46", conditionDetails, (Float.parseFloat(outsideDiameterMin) > 114.3 
+							&& Float.parseFloat(outsideDiameterMin) < 190.5 && Float.parseFloat(outsideDiameterMax) > 114.3 
+							&& Float.parseFloat(outsideDiameterMax) < 190.5));
 					break;
 				}
 				case "condition 47":
@@ -1890,34 +1608,15 @@ public class BisFormLib{
 							+ "and the maximum thickness must be less than 19 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMin)>= 12.7 && Float.parseFloat(thicknessMax) < 19)
-					{
-						HtmlReport.addHtmlStep("Condition 47", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 47", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 47", conditionDetails, (Float.parseFloat(thicknessMin)>= 12.7 
+							&& Float.parseFloat(thicknessMax) < 19)); 
 					break;
 				}
 				case "condition 48":
 				{
 					conditionDetails = "...then the minimum thickness must be equal to or greater than 19 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
-					if (Float.parseFloat(thicknessMin)>= 19 )
-					{
-						HtmlReport.addHtmlStep("Condition 48", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 48", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 48", conditionDetails, (Float.parseFloat(thicknessMin)>= 19 )); 
 					break;
 				}
 				case "condition 49":
@@ -1926,18 +1625,9 @@ public class BisFormLib{
 							+ "and the maximum outside diameter must be greater than 38.1 mm and less than 114.3 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) >=38.1 && Float.parseFloat(outsideDiameterMin) < 114.3 &&
-							Float.parseFloat(outsideDiameterMax) > 38.1 && Float.parseFloat(outsideDiameterMax) < 114.3)
-					{
-						HtmlReport.addHtmlStep("Condition 49", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 49", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 49", conditionDetails, (Float.parseFloat(outsideDiameterMin) >=38.1 
+							&& Float.parseFloat(outsideDiameterMin) < 114.3 &&	Float.parseFloat(outsideDiameterMax) > 38.1
+							&& Float.parseFloat(outsideDiameterMax) < 114.3)); 
 					break;
 				}
 				case "condition 50":
@@ -1948,18 +1638,9 @@ public class BisFormLib{
 							+ "and less than 285.8 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) >=190.5 && Float.parseFloat(outsideDiameterMin) <= 285.8 &&
-							Float.parseFloat(outsideDiameterMax) >= 190.5 && Float.parseFloat(outsideDiameterMax) < 285.8)
-					{
-						HtmlReport.addHtmlStep("Condition 50", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 50", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 50", conditionDetails, (Float.parseFloat(outsideDiameterMin) >=190.5 
+							&& Float.parseFloat(outsideDiameterMin) <= 285.8 &&	Float.parseFloat(outsideDiameterMax) >= 190.5 
+							&& Float.parseFloat(outsideDiameterMax) < 285.8));
 					break;
 				}
 				case "condition 51":
@@ -1978,104 +1659,44 @@ public class BisFormLib{
 							+ " and the maximum outside diameter must be equal to or greater than 406.4 mm and less than 609.6 mm.";
 					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-					if (Float.parseFloat(outsideDiameterMin) > 406.4 && Float.parseFloat(outsideDiameterMin) <= 609.6 &&
-							Float.parseFloat(outsideDiameterMax) >= 406.4&& Float.parseFloat(outsideDiameterMax) < 609.6)
-					{
-						HtmlReport.addHtmlStep("Condition 53", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 53", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
-				
+					ovralResult = ovralResult & checkAndReport("Condition 53", conditionDetails, (Float.parseFloat(outsideDiameterMin) > 406.4
+							&& Float.parseFloat(outsideDiameterMin) <= 609.6 &&	Float.parseFloat(outsideDiameterMax) >= 406.4
+							&& Float.parseFloat(outsideDiameterMax) < 609.6)); 
 					break;
 				}
 				case "condition 54":
 				{
 					conditionDetails = "...then the maximum thickness must be less than 1.65 mm.";
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMax) < 1.65 )
-					{
-						HtmlReport.addHtmlStep("Condition 54", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 54", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 54", conditionDetails, (Float.parseFloat(thicknessMax) < 1.65 )); 
 					break;
 				}
 				case "condition 55":
 				{
 					conditionDetails = "...then the maximum thickness must be equal to or less than 2.54 mm.";
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMax) <= 2.54 )
-					{
-						HtmlReport.addHtmlStep("Condition 55", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 55", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 55", conditionDetails, (Float.parseFloat(thicknessMax) <= 2.54 )); 
 					break;
 				}
 				case "condition 56":
 				{
 					conditionDetails = "...then the maximum thickness must be less than 6.4 mm.";
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMax) < 6.4 )
-					{
-						HtmlReport.addHtmlStep("Condition 56", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 56", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 56", conditionDetails, (Float.parseFloat(thicknessMax) < 6.4 )); 
 					break;
 				}
 				case "condition 57":
 				{
 					conditionDetails = "...then the minimum percent nickel must be greater than 0.5.";
 					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
-					if (Float.parseFloat(nickelMin)> 0.5)
-					{
-						HtmlReport.addHtmlStep("Condition 57", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 57", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 57", conditionDetails, (Float.parseFloat(nickelMin)> 0.5)); 
 					break;
 				}
 				case "condition 58":
 				{
 					conditionDetails = "...then the maximum percent nickel must be equal to or less than 0.5.";
 					String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
-					if (Float.parseFloat(nickelMax)<= 0.5)
-					{
-						HtmlReport.addHtmlStep("Condition 58", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 58", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 58", conditionDetails, (Float.parseFloat(nickelMax)<= 0.5)); 
 					break;
 				}
 				case "condition 59":
@@ -2084,17 +1705,8 @@ public class BisFormLib{
 							+ "maximum percent molybdenum must be less than 5.";
 					String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
 					String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
-					if (Float.parseFloat(molybdenumMin)> 1.5 && Float.parseFloat(molybdenumMax) < 5)
-					{
-						HtmlReport.addHtmlStep("Condition 59", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 59", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 59", conditionDetails, (Float.parseFloat(molybdenumMin)> 1.5 
+							&& Float.parseFloat(molybdenumMax) < 5)); 
 					break;
 				}
 				case "condition 60":
@@ -2103,17 +1715,8 @@ public class BisFormLib{
 							+ "or the maximum percent molybdenum must be equal to or greater than 5.";
 					String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
 					String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
-					if (Float.parseFloat(molybdenumMin) <= 1.5 && Float.parseFloat(molybdenumMax) >= 5)
-					{
-						HtmlReport.addHtmlStep("Condition 60", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 60", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 60", conditionDetails, (Float.parseFloat(molybdenumMin) <= 1.5 
+							&& Float.parseFloat(molybdenumMax) >= 5)); 
 				break;
 				}
 				case "condition 61":
@@ -2122,17 +1725,8 @@ public class BisFormLib{
 							+ "maximum percent nickel must be less than 24.";
 					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 					String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
-					if (Float.parseFloat(nickelMin)> 0.5 && Float.parseFloat(nickelMax) < 24)
-					{
-						HtmlReport.addHtmlStep("Condition 61", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 61", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 61", conditionDetails, (Float.parseFloat(nickelMin)> 0.5 
+							&& Float.parseFloat(nickelMax) < 24)); 
 					break;
 				}
 				case "condition 62":
@@ -2141,136 +1735,58 @@ public class BisFormLib{
 							+ " than 0.5 or the maximum percent nickel must be equal to or greater than 24.";
 					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 					String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
-					if (Float.parseFloat(nickelMin) <= 0.5 || Float.parseFloat(nickelMax) >= 24)
-					{
-						HtmlReport.addHtmlStep("Condition 62", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 62", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 62", conditionDetails, (Float.parseFloat(nickelMin) <= 0.5 
+							|| Float.parseFloat(nickelMax) >= 24)); 
 					break;
 				}
 				case "condition 63":
 				{
 					conditionDetails = "...then the maximum percent chromium must be less than 15.";
 					String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
-					if (Float.parseFloat(chromiumMax)<15)
-					{
-						HtmlReport.addHtmlStep("Condition 63", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 63", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 63", conditionDetails, (Float.parseFloat(chromiumMax)<15)); 
 					break;
 				}
 				case "condition 64":
 				{
 					conditionDetails = "...then the maximum percent chromium must be equal to or greater than 15.";
 					String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
-					if (Float.parseFloat(chromiumMax) >= 15)
-					{
-						HtmlReport.addHtmlStep("Condition 64", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 64", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 64", conditionDetails, 
+							(Float.parseFloat(chromiumMax) >= 15)); 
 					break;
 				}
 				case "condition 65":
 				{
 					conditionDetails = "...then the minimum thickness must be equal to or greater than 1.65 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
-					if (Float.parseFloat(thicknessMin) >= 1.65 )
-					{
-						HtmlReport.addHtmlStep("Condition 65", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 65", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 65", conditionDetails, (Float.parseFloat(thicknessMin) >= 1.65 ));
 					break;
 				}
 				case "condition 66":
 				{
 					conditionDetails = "...then the maximum thickness must be less than 4 mm.";
 					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-					if (Float.parseFloat(thicknessMax) < 4)
-					{
-						HtmlReport.addHtmlStep("Condition 66", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 66", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
-				break;
+					ovralResult = ovralResult & checkAndReport("Condition 66", conditionDetails, (Float.parseFloat(thicknessMax) < 4));
+					break;
 				}
 				case "condition 67":
 				{
 					conditionDetails = "...then the minimum thickness must be equal to or greater than 4 mm.";
 					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
-					if (Float.parseFloat(thicknessMin) >= 4 )
-					{
-						HtmlReport.addHtmlStep("Condition 67", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 67", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport( "condition 67", conditionDetails, (Float.parseFloat(thicknessMin) >= 4 )); 
 					break;
 				}
 				case "condition 68":
 				{
 					conditionDetails = "...then the maximum carbon must be less than 0.25 percent.";
 					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
-					if (Float.parseFloat(carbonMax) < 0.25)
-					{
-						HtmlReport.addHtmlStep("Condition 68", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 68", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 68", conditionDetails, (Float.parseFloat(carbonMax) < 0.25)); 
 					break;
 				}
 				case "condition 69":
 				{
 					conditionDetails = "...then the minimum carbon must be equal to or greater than 0.25 percent.";
 					String carbonMin = getProdValue(jObj, "ChemicalComposition", "Carbon", "Minimum");
-					if (Float.parseFloat(carbonMin) >= 0.25)
-					{
-						HtmlReport.addHtmlStep("Condition 69", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>", 
-								condition+" is met", "VP", "pass", "");
-					}
-					else
-					{
-						ovralResult = false;
-						HtmlReport.addHtmlStep("Condition 69", "<abbr title='"+conditionDetails+"'>Hover here for "+condition+"'s details ...</abbr>",
-								condition+" is not met", "VP", "fail", "");
-					}
+					ovralResult = ovralResult & checkAndReport("Condition 69", conditionDetails, (Float.parseFloat(carbonMin) >= 0.25)); 
 					break;
 				}
 				case "condition 70":{
@@ -2285,277 +1801,576 @@ public class BisFormLib{
 		
 				break;
 				}
-				case "condition 73":{
-		
+				case "condition 73":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 4.75 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 73", conditionDetails, (Float.parseFloat(thicknessMin) >= 4.75));
+					break;
+				}
+				case "condition 74":
+				{
+					conditionDetails = "...then the maximum thickness must be less than 4.75 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 74", conditionDetails, (Float.parseFloat(thicknessMax) < 4.75));
+					break;
+				}
+				case "condition 75":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 3 mm and the maximum "
+							+ "thickness must be less than 4.75 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 75", conditionDetails, 
+							(Float.parseFloat(thicknessMin) >= 3 && Float.parseFloat(thicknessMax)<4.75));
+					break;
+				}
+				case "condition 76":
+				{
+					conditionDetails = "...then the maximum thickness must be less than 3 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 76", conditionDetails, 
+							(Float.parseFloat(thicknessMax)<3));
+					break;
+				}
+				case "condition 77":
+				{
+					conditionDetails = "...then the minimum thickness must be greater than 10 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 77", conditionDetails, 
+							(Float.parseFloat(thicknessMin)>10));
+					break;
+				}
+				case "condition 78":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater "
+							+ "than 4.75 mm and the maximum thickness must be less than 10 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 78", conditionDetails, 
+							(Float.parseFloat(thicknessMin) >= 4.75 && Float.parseFloat(thicknessMax)<10));
+					break;
+				}
+				case "condition 79":
+				{
+					conditionDetails = "...then the minimum thickness must be greater than 1 mm "
+							+ "and the maximum thickness must be less than 3 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 79", conditionDetails, 
+							(Float.parseFloat(thicknessMin) > 1 && Float.parseFloat(thicknessMax)<3));
+					break;
+				}
+				case "condition 80":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 0.5 "
+							+ "mm and the maximum thickness must be less than 1 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 80", conditionDetails, 
+							(Float.parseFloat(thicknessMin) >= 0.5 && Float.parseFloat(thicknessMax)<1));
+					break;
+				}
+				case "condition 81":
+				{
+					conditionDetails = "...then the maximum thickness must be less than 0.361 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 81", conditionDetails, 
+							(Float.parseFloat(thicknessMax)<0.361));
+					break;
+				}
+				case "condition 82":
+				{
+					conditionDetails = "...then the maximum thickness must be equal to or greater than 3 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 82", conditionDetails, 
+							(Float.parseFloat(thicknessMax)>=3));
+					break;
+				}
+				case "condition 83":
+				{
+					conditionDetails = "...then the maximum thickness must be less than 0.5 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 83", conditionDetails, 
+							(Float.parseFloat(thicknessMax)<0.5));
+					break;
+				}
+				case "condition 84":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 0.5 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 84", conditionDetails, 
+							(Float.parseFloat(thicknessMin)>=0.5));
+					break;
+				}
+				case "condition 85":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 0.4 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 85", conditionDetails, 
+							(Float.parseFloat(thicknessMin)>=0.4));
+					break;
+				}
+				case "condition 86":
+				{
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 4.75 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 86", conditionDetails, 
+							(Float.parseFloat(thicknessMin)>=4.75));
+					break;
+				}
+				case "condition 87":
+				{
+					conditionDetails = "...then the maximum width must be less than 300 mm.";
+					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 87", conditionDetails, 
+							(Float.parseFloat(widthMax)<300));
+					break;
+				}
+				case "condition 88":
+				{
+					conditionDetails = "...then the minimum thickness must be greater than 1.25 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 88", conditionDetails, 
+							(Float.parseFloat(thicknessMin) > 1.25));
+					break;
+				}
+				case "condition 89":
+				{
+					conditionDetails = "...then the minimum thickness must be greater than"
+							+ " 0.25 mm and the maximum thickness must be less than or equal to 1.25 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 89", conditionDetails, 
+							(Float.parseFloat(thicknessMin) > 0.25 && Float.parseFloat(thicknessMax)<=1.25));
+					break;
+				}
+				case "condition 90":
+				{
+					conditionDetails = "...then the maximum thickness must be equal to or less than 0.25 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 90", conditionDetails, 
+							(Float.parseFloat(thicknessMax)<=0.25));
 				break;
 				}
-				case "condition 74":{
-		
+				case "condition 91":
+				{
+					conditionDetails = "...then the maximum width must be less than 51 mm.";
+					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 91", conditionDetails, 
+							(Float.parseFloat(widthMax)<51));
 				break;
 				}
-				case "condition 75":{
+				case "condition 92":
+				{
+					conditionDetails = "...then the minimum percentage of lead must be equal to or greater than 0.1 percent.";
+					String leadMin = getProdValue(jObj, "ChemicalComposition", "Lead", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 92", conditionDetails, 
+							(Float.parseFloat(leadMin)>=0.1));
+					break; 
+				}
+				case "condition 93":
+				{
+					conditionDetails = "...then the minimum percentage of carbon is equal to or greater than 0.6 percent.";
+					String carbonMin = getProdValue(jObj, "ChemicalComposition", "Carbon", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 93", conditionDetails, 
+							(Float.parseFloat(carbonMin)>=0.6));
 		
+					break;
+				}
+				case "condition 94":
+				{
+					conditionDetails = "...then the minimum percentage of carbon is greater than or equal to 0.25 percent "
+							+ "of carbon and the maximum percentage of carbon is less than 0.6 percent.";
+					String carbonMin = getProdValue(jObj, "ChemicalComposition", "Carbon", "Minimum");
+					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 94", conditionDetails,
+							( Float.parseFloat(carbonMin)>=0.25 && Float.parseFloat(carbonMax)<0.6));
+				
+					break;
+				}
+				case "condition 95":
+				{
+					conditionDetails = "...then the maximum percentage of carbon is less than 0.6 percent.";
+					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 95", conditionDetails,
+							(Float.parseFloat(carbonMax)<0.6));
+					break;
+				}
+				case "condition 96":
+				{
+					conditionDetails = "...then the maximum outside diameter must be less than 76 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 96", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) < 76)); 
+					break;
+				}
+				case "condition 97":
+				{
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 76 mm and "
+							+ "less than 228 mm, and the maximum outside diameter must be equal to or greater than "
+							+ "76 mm and less than 228 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 97", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 76 && Float.parseFloat(outsideDiameterMin) < 228
+							&&Float.parseFloat(outsideDiameterMax) >= 76 && Float.parseFloat(outsideDiameterMax) < 228)); 
+					break;
+				}
+				case "condition 98":
+				{
+					conditionDetails = "...then the minimum outside diameter must be greater than 228 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 98", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) > 228)); 
+					break;
+				}
+				case "condition 99":
+				{
+					conditionDetails = "...then the maximum height must be less than 80 mm.";
+					String heightMax = getProdValue(jObj, "ProductDimensions", "Height", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 99", conditionDetails, 
+							(Float.parseFloat(heightMax) < 80));
 				break;
 				}
-				case "condition 76":{
-		
-				break;
+				case "condition 100":
+				{
+					conditionDetails = "...then the minimum height must be equal to or greater than 80 mm.";
+					String heightMin = getProdValue(jObj, "ProductDimensions", "Height", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 100", conditionDetails, 
+							(Float.parseFloat(heightMin) >= 80));
+					break;
 				}
-				case "condition 77":{
-		
-				break;
+				case "condition 101":
+				{
+					conditionDetails = "...then the maximum outside diameter must be less than 1.5 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 101", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) < 1.5)); 
+					break;
 				}
-				case "condition 78":{
-		
-				break;
+				case "condition 102":
+				{
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 1.5 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 102", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 1.5)); 
+					
+					break;
 				}
-				case "condition 79":{
-		
-				break;
-				}
-				case "condition 80":{
-		
-				break;
-				}
-				case "condition 81":{
-		
-				break;
-				}
-				case "condition 82":{
-		
-				break;
-				}
-				case "condition 83":{
-		
-				break;
-				}
-				case "condition 84":{
-		
-				break;
-				}
-				case "condition 85":{
-		
-				break;
-				}
-				case "condition 86":{
-		
-				break;
-				}
-				case "condition 87":{
-		
-				break;
-				}
-				case "condition 88":{
-		
-				break;
-				}
-				case "condition 89":{
-		
-				break;
-				}
-				case "condition 90":{
-		
-				break;
-				}
-				case "condition 91":{
-		
-				break;
-				}
-				case "condition 92":{
-		
-				break;
-				}
-				case "condition 93":{
-		
-				break;
-				}
-				case "condition 94":{
-		
-				break;
-				}
-				case "condition 95":{
-		
-				break;
-				}
-				case "condition 96":{
-		
-				break;
-				}
-				case "condition 97":{
-		
-				break;
-				}
-				case "condition 98":{
-		
-				break;
-				}
-				case "condition 99":{
-		
-				break;
-				}
-				case "condition 100":{
-		
-				break;
-				}
-				case "condition 101":{
-		
-				break;
-				}
-				case "condition 102":{
-		
-				break;
-				}
-				case "condition 103":{
-		
-				break;
+				case "condition 103":
+				{
+					conditionDetails = "...then the maximum width must be equal to or less than 1575 mm.";
+					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 103", conditionDetails, 
+							(Float.parseFloat(widthMax)<=1575));
+					break;
 				}
 				case "condition 104":{
+					conditionDetails = "...then the minimum width must be greater than 1575 mm.";
+					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 104", conditionDetails, 
+							(Float.parseFloat(widthMin)>1575));
 		
-				break;
+					break;
 				}
 				case "condition 105":{
-		
-				break;
+					conditionDetails = "...then the minimum width must be equal to or greater than 1370 mm.";
+					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 105", conditionDetails, 
+							(Float.parseFloat(widthMin)>=1370));
+					break;
 				}
 				case "condition 106":{
-		
-				break;
+					conditionDetails = "...then the minimum width must be equal to or greater than 1370 mm.";
+					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 106", conditionDetails, 
+							(Float.parseFloat(widthMin)>=1370));
+					break;
 				}
 				case "condition 107":{
-		
-				break;
+					conditionDetails = "...then the minimum percentage of nickel must be greater than 0.5 percent.";
+					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
+					//String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 107", conditionDetails, 
+							(Float.parseFloat(nickelMin) > 0.5 )); 
+					break;
 				}
 				case "condition 108":{
-		
-				break;
+					conditionDetails = "...then the minimum percentage of molybdenum must be greater than 1.5 percent "
+							+ "and the maximum percentage of molybdenum must be less than 5 percent.";
+					String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
+					String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 108", conditionDetails, 
+							(Float.parseFloat(molybdenumMin) > 1.5 && Float.parseFloat(molybdenumMax) < 5)); 
+					break;
 				}
 				case "condition 109":{
-		
-				break;
+					conditionDetails = "...then the minimum percentage of molybdenum must equal to or less than 1.5 percent or "
+							+ "the maximum percentage of molybdenum must be equal to or greater than 5 percent.";
+					String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
+					String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 109", conditionDetails, 
+							(Float.parseFloat(molybdenumMin) <= 1.5	|| Float.parseFloat(molybdenumMax) >= 5));
+					break;
 				}
 				case "condition 110":{
-		
-				break;
+					conditionDetails = "...then the maximum thickness must be less than 4.75 mm and the minimum thickness must "
+							+ "be equal to or greater than 3 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 110", conditionDetails, 
+							(Float.parseFloat(thicknessMax)< 4.75 && Float.parseFloat(thicknessMin) >= 3 ));
+					break;
 				}
 				case "condition 111":{
-		
-				break;
+					conditionDetails = "...then the minimum percentage of nickel must be greater than 0.5 percent and the maximum "
+							+ "percentage of nickel must be less than 24 percent.";
+					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
+					String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 111", conditionDetails, 
+							(Float.parseFloat(nickelMin) > 0.5  && Float.parseFloat(nickelMax) < 24)); 
+					break;
 				}
 				case "condition 112":{
-		
-				break;
+					conditionDetails = "...then the minimum width must be greater than 1575 mm, and the maximum width must "
+							+ "equal to or less than 1880 mm.";
+					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
+					String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 112", conditionDetails, 
+							(Float.parseFloat(widthMin)> 1575 && Float.parseFloat(widthMax) <= 1880));
+					break;
 				}
 				case "condition 113":{
-		
-				break;
+					conditionDetails = "...then the minimum width must be greater than 1880 mm.";
+					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 113", conditionDetails, 
+							(Float.parseFloat(widthMin)> 1880));
+					break;
 				}
 				case "condition 114":{
-		
-				break;
+					conditionDetails = "...then the maximum percentage of chromium must be less than 15 percent.";
+					String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 114", conditionDetails, 
+							(Float.parseFloat(chromiumMax) < 15)); 
+					break;
 				}
 				case "condition 115":{
-		
-				break;
+					conditionDetails = "...then the minimum width must be equal to or greater than 300 mm.";
+					String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 115", conditionDetails, 
+							(Float.parseFloat(widthMin)>= 300));
+					break;
 				}
 				case "condition 116":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be less than 14 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 116", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) < 14)); 
+					break;
 				}
 				case "condition 117":{
-		
-				break;
+					conditionDetails = "...then the maximum percentage of nickel must be less than 8 percent.";
+					//String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
+					String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 117", conditionDetails, 
+							(Float.parseFloat(nickelMax) < 8 ));
+					break;
 				}
 				case "condition 118":{
-		
-				break;
+					conditionDetails = "...then the minimum percentage of nickel must be equal to or greater than 8 percent, "
+							+ "and the maximum percentage of nickel must be less than 24 percent.";
+					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
+					String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 118", conditionDetails, 
+							(Float.parseFloat(nickelMin) >= 8 && Float.parseFloat(nickelMax) < 24 ));
+					break;
 				}
 				case "condition 119":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 14 mm and "
+							+ "less than 19 mm, and the maximum outside diameter must be equal to or greater than 14 mm and "
+							+ "less than 19 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 119", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 14 && Float.parseFloat(outsideDiameterMin) < 19
+							&& Float.parseFloat(outsideDiameterMax) >= 14 && Float.parseFloat(outsideDiameterMax) < 19));
+					break;
 				}
 				case "condition 120":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be equal to or greater than 19 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 120", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) >= 19));
+					break;
 				}
 				case "condition 121":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be less than 0.25 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 121", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) < 0.25));
+					break;
 				}
 				case "condition 122":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 0.25 mm and less "
+							+ "than 0.76 mm, and the maximum outside diameter must be equal to or greater than 0.25 mm and less than 0.76 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 122", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 0.25 && Float.parseFloat(outsideDiameterMin) < 0.76
+							&& Float.parseFloat(outsideDiameterMax) >= 0.25 && Float.parseFloat(outsideDiameterMax) < 0.76));
+					break;
 				}
 				case "condition 123":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 0.76 mm and less than "
+							+ "1.52 mm, and the maximum outside diameter must be equal to or greater than 0.76 mm and less than 1.52 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 123", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 0.76 && Float.parseFloat(outsideDiameterMin) < 1.52
+							&& Float.parseFloat(outsideDiameterMax) >= 0.76 && Float.parseFloat(outsideDiameterMax) < 1.52));
+					break;
 				}
 				case "condition 124":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 1.52 mm and less "
+							+ "than 5.1 mm, and the maximum outside diameter must be equal to or greater than 1.52 mm and less than 5.1 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 124", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 1.52 && Float.parseFloat(outsideDiameterMin) < 5.1
+							&& Float.parseFloat(outsideDiameterMax) >= 1.52 && Float.parseFloat(outsideDiameterMax) < 5.1));
+					break;
 				}
 				case "condition 125":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 5.1 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 125", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 5.1));
+					break;
 				}
 				case "condition 126":{
-		
-				break;
+					conditionDetails = "...then the maximum thickness must be less than 0.25 mm.";
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 126", conditionDetails, 
+							(Float.parseFloat(thicknessMax) < 0.25));
+					break;
 				}
 				case "condition 127":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 76 mm and less than 152 mm, "
+							+ "and the maximum outside diameter must be equal to or greater than 76 mm and less than 152 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 127", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 76 && Float.parseFloat(outsideDiameterMin) < 152
+							&& Float.parseFloat(outsideDiameterMax) >= 76 && Float.parseFloat(outsideDiameterMax) < 152));
+					break;
 				}
 				case "condition 128":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 152 mm and less than 228 mm,"
+							+ " and the maximum outside diameter must be equal to or greater than 152 mm and less than 228 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 128", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 152 && Float.parseFloat(outsideDiameterMin) < 228
+							&& Float.parseFloat(outsideDiameterMax) >= 152 && Float.parseFloat(outsideDiameterMax) < 228));
+					break;
 				}
 				case "condition 129":{
-		
-				break;
+					conditionDetails = "Flat-rolled straight at least 4.75 mm thickness ...then the minimum width must be greater than 150mm,"
+							+ " and the minimum width must be greater than or equal to 2* the maximum thickness.";
+					break;
 				}
 				case "condition 130":{
-		
-				break;
+					conditionDetails = "Hot-rolled ...then the cold rolled cell must say 'No' or be blank.";
+					break;
 				}
 				case "condition 131":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be equal to or less than 1.6 mm, "
+							+ "and the maximum percentage of carbon must be less than 0.20 percent, and the minimum percentage of nickel must"
+							+ " be greater than 0.3 percent, and the minimum percentage of molybdenum must be greater than 0.08 percent.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
+					String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
+					String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 131", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) <= 1.6 && Float.parseFloat(carbonMax) < 0.20
+							&& Float.parseFloat(nickelMin)> 0.3 && Float.parseFloat(molybdenumMin)>0.08));
+					break;
 				}
 				case "condition 132":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be equal to or less than 1.6 mm, and the maximum percentage "
+							+ "of carbon must be less than 0.20 percent, and the minimum percentage of manganese must be greater than 0.9 percent, "
+							+ "and the minimum percentage of silicon must be greater than 0.6 percent.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
+					String manganeseMin = getProdValue(jObj, "ChemicalComposition", "Magnesium", "Minimum");
+					String siliconMin = getProdValue(jObj, "ChemicalComposition", "Silicon", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 132", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) <= 1.6 && Float.parseFloat(carbonMax) < 0.20 
+							&& Float.parseFloat(manganeseMin)> 0.9 && Float.parseFloat(siliconMin)>0.6));
+					break;
 				}
 				case "condition 133":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be less than 1.0 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 133", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) < 1.0));
+					break;
 				}
 				case "condition 134":{
-		
-				break;
+					conditionDetails = "...then the minimum outside diameter must be equal to or greater than 1.0 mm and less "
+							+ "than 1.5 mm, and the maximum outside diameter must be equal to or greater than 1.0 mm and less than 1.5 mm.";
+					String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 134", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMin) >= 1 && Float.parseFloat(outsideDiameterMin) < 1.5
+							&& Float.parseFloat(outsideDiameterMax) >= 1 && Float.parseFloat(outsideDiameterMax) < 1.5));
+					break;
 				}
 				case "condition 135":{
-		
-				break;
+					conditionDetails = "...then the minimum thickness must be equal to or greater than 0.361 mm, and the maximum thickness "
+							+ "must be less than 0.5 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 135", conditionDetails, 
+							(Float.parseFloat(thicknessMin) >= 0.361 && Float.parseFloat(thicknessMax)< 0.5));
+					break;
 				}
 				case "condition 136":{
-		
-				break;
+					conditionDetails = "...then the minimum thickness must be less than 0.361 mm.";
+					String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 136", conditionDetails, 
+							(Float.parseFloat(thicknessMin) < 0.361 ));
+					break;
 				}
 				case "condition 137":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be less than 19 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 137", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) < 19));
+					break;
 				}
 				case "condition 138":{
-		
-				break;
+					conditionDetails = "...then the maximum outside diameter must be equal to or greater than 19 mm.";
+					String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+					ovralResult = ovralResult & checkAndReport("Condition 138", conditionDetails, 
+							(Float.parseFloat(outsideDiameterMax) >= 19));
+					break;
 				}
 				case "condition 139":{
-		
-				break;
+					conditionDetails = "Stainless ...then the maximum percentage of carbon must be 1.2 percent or less and the "
+							+ "minimum percentage of chromium must be 10.5 percent or more.";
+					String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
+					String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
+					ovralResult = ovralResult & checkAndReport("Condition 139", conditionDetails, 
+							(Float.parseFloat(carbonMax) <= 1.2 && Float.parseFloat(chromiumMin) >= 10.5));
+					break;
 				}
 				case "condition 140":{
-		
-				break;
+					conditionDetails = "Covered by the proclamation but no chemical or dimensional information, 'other' ..."
+							+ "then it receives an automatic pass.";
+					
+					break;
 				}
 				default :
 				{
@@ -2577,8 +2392,45 @@ public class BisFormLib{
 		//HtmlReport.addHtmlStep("Validate "+jObj.get("HTSUSCode"), conditions, "stepActualResult", "VP", "pass", "");
 		return ovralResult;
 	}
+	/**
+	 * This method reports pass/failed to report based on condition value
+	 * @param conditionName: condition name
+	 * @param condDetails: condition's details
+	 * @param condition: condition name
+	 * @return true if condition is true, false if not
+	*/
+	public static boolean checkAndReport(String conditionName,
+										String condDetails, 
+										boolean condition)
+	{
+		boolean checked = true;
+		if (condition)
+		{
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+condDetails+"'>"
+					+ conditionName+" details ...(!)</abbr>", 
+					conditionName+" is met", "VP", "pass", "");
+		}
+		else
+		{
+			checked = false;
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+condDetails+"'>"
+					+ conditionName+" details ...(!)</abbr>",
+					conditionName+" is not met", "VP", "fail", "");
+		}
+		return checked;
+	}
 	
-	public static String getProdValue(JSONObject obj, String blockName, String productName, String minMax)
+	/**
+	 * This method reads values from json object
+	 * @param jObj: json object containing form information
+	 * @param blockName: name of the container
+	 * @param minMax: the value searched, min or max
+	 * @return the min/max value
+	*/
+	public static String getProdValue(JSONObject obj, 
+									String blockName, 
+									String productName,
+									String minMax)
 	{
 		String prodVal = "";
 		String key;
