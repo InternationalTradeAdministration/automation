@@ -807,6 +807,8 @@ public class GuiTools extends InitTools{
 		{
 			printLog("Element "+ map.get("field_name")+" was "
 					+ "not found on Gui");
+			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
 		}
 	}
 	
@@ -817,8 +819,7 @@ public class GuiTools extends InitTools{
 	 * 
 	 */
 	public static void enterTextFile(HashMap<String, String> map, String file) throws Exception
-	{	//String str = "C:/Users/Mouloud Hamdidouche/Desktop/eclipse/SeleniumProjects/ACCESS_SCRIPT/input_data/input_files/test_file_1.xlsx";
-        //String str = "C:/libs/"+file;
+	{	
 		printLog("Enter text for "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
@@ -850,54 +851,9 @@ public class GuiTools extends InitTools{
 		          failTestCase("Entering File", "File should be entered", 
 		        		  "File doesn't exist or path is too long: "+file, "Step", "fail", "file upload fail");;
 			 }
-			
 		}
-		
 	}
 	
-	
-	/**
-	 * This method clicks on element
-	 * @param map: Web Element
-	 * @throws Exception 
-	 * 
-	 */
-	public static void clickElementJs2(HashMap<String, String> map) throws Exception
-	{
-		printLog("Click  on element "+ map.get("field_name"));
-		String locType = map.get("locator_type");
-		String locValue = map.get("locator_value");
-		
-		((JavascriptExecutor) driver).executeScript(
-                "arguments[0].style.visibility = 'visible'; "
-                + " ",
-                driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")));
-
-        driver.findElement(By.id("ctl00_ctl00_ContentPlaceHolder1_maincontent_fileupload1")).sendKeys("C:/libs/test file 1.xlsx"); // please provide absolute path of the file to upload.
-
-        //
-       
-		/*if (elementExists(locType, locValue))
-		{
-			WebElement element = driver.findElement(byType(locType, locValue));
-			List<WebElement> items = driver.findElements(byType(locType, locValue));
-			for(WebElement e: items)
-			{
-			    if(e.isEnabled()) 
-			    	{
-			    		element = e;
-			    	}
-			}
-
-			JavascriptExecutor executor = (JavascriptExecutor)driver;
-			executor.executeScript("arguments[0].click();", element);
-			
-		}else
-		{
-			printLog("Element "+ map.get("field_name")+" was "
-					+ "not found on Gui");
-		}*/
-	}
 	
 	/**
 	 * This method clicks on element
@@ -914,6 +870,8 @@ public class GuiTools extends InitTools{
 		{
 			printLog("Element "+ map.get("field_name")+" was "
 					+ "not found on Gui");
+			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
 		}else
 		{
 			WebElement element = null;
@@ -943,10 +901,18 @@ public class GuiTools extends InitTools{
 		{
 			printLog("Element '"+ map.get("field_name")+"' was "
 					+ "not found on Gui");
+			failTestCase("Filling element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Filling element " + map.get("field_name"));
 		}else
 		{
 			Select dropdown = new Select(driver.findElement(byType(locType, locValue)));
-			dropdown.selectByVisibleText(textValue);
+			try
+			{
+				dropdown.selectByVisibleText(textValue);
+			}catch(Exception e){
+				failTestCase("Select element "+ textValue, "Element ["+textValue+ "] should be in the list of options",
+						"Not as expected", "VP", "fail", "Select element "+ textValue);
+			}
 		}
 	}
 	
