@@ -28,6 +28,7 @@ public class XlsxTools {
 	    XSSFSheet sheet = (XSSFSheet) workbook.getSheet(tabName);
 	    Iterator<Row> rowIt = sheet.iterator();
 	    Row header = rowIt.next();
+	    DataFormatter df = new DataFormatter();
 	    while(rowIt.hasNext()) 
 	    {
 	      Iterator<Cell> cellHeaderIterator = header.cellIterator();
@@ -37,7 +38,7 @@ public class XlsxTools {
 	      {
 	    	  Cell cellHeader = cellHeaderIterator.next();
 	          Cell cell = cellIterator.next();
-	          map.put(cellHeader.toString(), cell.toString());
+	          map.put(cellHeader.toString(), df.formatCellValue(cell));
 	      }
 	      System.out.println(map);
 	      allPool.add(new LinkedHashMap<String, String>(map));
@@ -81,7 +82,10 @@ public class XlsxTools {
 				if(!cell.toString().equals(""))
 				conditions = conditions+","+df.formatCellValue(cell);
 			}
+			if (conditions.startsWith(","))
 			map.put(key, conditions.substring(1));
+			else
+			map.put(key, conditions);
 			conditions="";
 		}
 		workbook.close();

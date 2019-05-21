@@ -3,10 +3,17 @@ import static GuiLibs.GuiTools.guiMap;
 import static GuiLibs.GuiTools.holdSeconds;
 import static ReportLibs.ReportTools.printLog;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,7 +22,25 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.naming.ServiceUnavailableException;
+import javax.net.ssl.HttpsURLConnection;
+
 import org.json.simple.JSONObject;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.testng.TestNG;
@@ -26,6 +51,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
+
+import com.google.gson.Gson;
+import com.independentsoft.share.Service;
+import com.independentsoft.share.ServiceException;
+import com.microsoft.aad.adal4j.AuthenticationContext;
+import com.microsoft.aad.adal4j.AuthenticationResult;
+import com.microsoft.aad.adal4j.ClientCredential;
+
 import static GuiLibs.GuiTools.failTestSuite;
 import static GuiLibs.GuiTools.failTestCase;
 import static GuiLibs.GuiTools.testCaseStatus;
@@ -39,7 +72,7 @@ import libs.BisFormLib;
 public class TestOne {
 
 	public static GuiTools guiTools;
-	HashMap<String, String> mapConfInfos;
+	static HashMap<String, String> mapConfInfos;
 	String browserType;
 	static XlsxTools xlsxTools;
 	static ArrayList<LinkedHashMap<String, String>> scenarios, dataPoolStep1, dataPoolStep2, 
@@ -48,38 +81,41 @@ public class TestOne {
 	static BisFormLib bisFormLib;
 	//public static boolean testCaseStatus;
 	public static Timestamp startTime, suiteStartTime;
-	public static LinkedHashMap<String, String> steelConditions;
+	public static LinkedHashMap<String, String> steelConditions, aluminumConditions;
 	public static Timestamp endTime;
 	public static boolean logged = false;
 	public static Calendar cal = Calendar.getInstance();
 	public static String jsonFolder;
-	public static LinkedHashMap<String, String> jFile;
+	//public static LinkedHashMap<String, String> jFile;
 	public static void main(String[] args) throws Exception 
 	{
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
 		bisFormLib = new BisFormLib();
 		TestNG testng = new TestNG();
+		mapConfInfos = guiTools.getConfigInfos();
 		List<String> suites = Lists.newArrayList();
-		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/EXCLUSION_REQUEST.xlsx";
+		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/"+mapConfInfos.get("data_pool_sheet");
 		String conditionSheet = InitTools.getInputDataFolder()+"/script/232_Conditions.xlsx";
 		steelConditions = 
 				XlsxTools.readXlsxSheetWithFirstColKey(conditionSheet, "Steel");
+		aluminumConditions = 
+				XlsxTools.readXlsxSheetWithFirstColKey(conditionSheet, "Aluminum");
 		
 		///
-		jsonFolder = InitTools.getInputDataFolder()+"\\json_files";
-		jFile = new LinkedHashMap<String, String>();
+		jsonFolder = InitTools.getInputDataFolder()+"/json_files";
+		/*jFile = new LinkedHashMap<String, String>();
 		File folder = new File(jsonFolder);
 		File[] listOfFiles = folder.listFiles();
 		for (File file : listOfFiles) {
 		    if (file.isFile() && file.getName().endsWith(".json")) {
 		    	jFile.put(file.getName(), file.getAbsolutePath());
 		    }
-		}
+		}*/
 	
 		///
-		/*scenarios = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Scenarios", "Active=TRUE");
-		dataPoolStep1  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 1", "Active=TRUE");
+		scenarios = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Query", "");
+		/*dataPoolStep1  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 1", "Active=TRUE");
 		dataPoolStep2  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 2", "Active=TRUE");
 		dataPoolStep3  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 3", "Active=TRUE");
 		dataPoolStep4  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 4", "Active=TRUE");
@@ -96,14 +132,14 @@ public class TestOne {
 	{
 		printLog("Executing Before class");
 		GuiTools.guiMap = new LinkedHashMap<String, LinkedHashMap<String, String>>();
-		mapConfInfos = guiTools.getConfigInfos();
+		
 		browserType = mapConfInfos.get("browser_type");
 		String guiMapFilePath = InitTools.getInputDataFolder()+"\\script\\gui_map.xlsx";
 		guiPool = XlsxTools.readXlsxSheetInOrderAndFilter(guiMapFilePath, "guiMap", "");
 		guiMap = XlsxTools.readGuiMap(guiPool);
 		HtmlReport.setTestSuiteName(mapConfInfos.get("project_name"));
 		HtmlReport.setEnvironmentName(mapConfInfos.get("env_name"));
-		HtmlReport.setTotalTcs(jFile.size());
+		HtmlReport.setTotalTcs(scenarios.size());
 		java.util.Date date = new java.util.Date();
 		suiteStartTime = new Timestamp(date.getTime());
 	}
@@ -153,23 +189,24 @@ public class TestOne {
 	public static Object[][] fetchData() 
 	{
 		
-		Object obj [][]= new  Object[jFile.size()][2];
-		int i=0;
+		Object obj [][]= new  Object[scenarios.size()][3];
+		/*int i=0;
 		for (HashMap.Entry<String, String> entry : jFile.entrySet()) 
 		{
 			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
 			obj[i][0] = entry.getKey();
 			obj[i][1] = entry.getValue();
 			i++;
-		}
+		}*/
 				
-		/*int i = 0;
+		int i = 0;
 		for (HashMap<String, String> map : scenarios)
 		{
-			obj[i][0] = i;
-			obj[i][1] =  map;
+			obj[i][0] = map.get("ID");
+			obj[i][1] = map.get("HTSUSCode");
+			obj[i][2] = map.get("JSONData");
 			i++;
-		}*/
+		}
 		return (Object[][]) obj;
 		
   }
@@ -177,50 +214,56 @@ public class TestOne {
 	 * This method is validation of all scenarios
 	*/
 	 @Test(dataProvider = "fetchingData")
-	void validate(String fileName, String filePath) throws Exception
+	void validate(String id, String htsusCode, String jsonData) throws Exception
 	{
-		 	String htsUsCode ="", productType = "";
-		 	JSONObject jsonObject = null;
-		 	FileReader file = new  FileReader(filePath);
-			// parsing file "JSONExample.json" 
-			JSONParser parser = new JSONParser();
-			try
-			{
-				Object object = parser.parse(file);
-				jsonObject = (JSONObject) object;
-				htsUsCode= (String) jsonObject.get("HTSUSCode");
-				productType= (String) jsonObject.get("Product");
-				
-	          // JSONObject  xxx = (JSONObject) jsonObject.get("ChemicalComposition");
-			}
-			catch(FileNotFoundException e) {e.printStackTrace();}
-			catch(IOException e){e.printStackTrace();}
-			catch(Exception e) {e.printStackTrace();}
-		 
-		 GuiTools.setTestCaseName(fileName.replace(".json", "_")+htsUsCode);
-		 GuiTools.setTestCaseDescription(fileName.replace(".json", "_")+htsUsCode+"_"+productType);
-		 
-		 
+		 String scenarioName = id+"_"+htsusCode;
+		 String filePath = jsonFolder+"/"+scenarioName+".json";
+		 FileOutputStream out = new FileOutputStream(filePath);
+		 out.write(jsonData.getBytes());
+		 out.close();
+	 	 String htsUsCode ="", productType = "", conditionList = "";
+	 	 JSONObject jsonObject = null;
+	 	 FileReader file = new  FileReader(filePath);
+		 // parsing file "JSONExample.json" 
+		 JSONParser parser = new JSONParser();
+		 try
+		 {
+			Object object = parser.parse(file);
+			jsonObject = (JSONObject) object;
+			htsUsCode= (String) jsonObject.get("HTSUSCode");
+			productType= (String) jsonObject.get("Product");
+			
+          // JSONObject  xxx = (JSONObject) jsonObject.get("ChemicalComposition");
+		 }
+		 catch(FileNotFoundException e) {e.printStackTrace();}
+		 catch(IOException e){e.printStackTrace();}
+		 catch(Exception e) {e.printStackTrace();}
+		 GuiTools.setTestCaseName(scenarioName);
+		 GuiTools.setTestCaseDescription(scenarioName+"_"+productType);
+		 if (productType.equalsIgnoreCase("Steel"))
+		 {
+			 conditionList = steelConditions.get(htsUsCode);
+		 } else if (productType.equalsIgnoreCase("Aluminium"))
+		 {
+			 conditionList = aluminumConditions.get(htsUsCode);
+		 }
+		 else
+		 {
+			 failTestSuite("Validate "+ scenarioName, "Product should be steel or aluminium", 
+					 "Not as expected", "Step", "fail", "");
+		 }
 		 if (!steelConditions.containsKey(htsUsCode))
 		 {
 			 testCaseStatus=false;
-			 failTestCase(fileName.replace(".json", "_")+htsUsCode,htsUsCode+" Should be In The List" , 
+			 failTestCase(scenarioName,htsUsCode+" Should be In The List" , 
 					 "Not As Expected", "VP", "fail", "");
 		 }
 		 else
 		 {
 			 testCaseStatus =  testCaseStatus & 
-				BisFormLib.ValidateConditions(jsonObject, productType, steelConditions.get(htsUsCode));
+				BisFormLib.ValidateConditions(jsonObject, productType, conditionList);
 		 }
-		//GuiTools.setTestCaseDescription(row.get("Scenarios"));
 		printLog(GuiTools.getTestCaseName());
-		
-		/*
-		if(step5Row != null)
-		{
-			HtmlReport.addHtmlStepTitle("					Validate the form of step 5","Title");
-		    testCaseStatus =  testCaseStatus & BisFormLib.ValidateStepFive(step5Row);
-		}*/
 	}
 
 	/**
