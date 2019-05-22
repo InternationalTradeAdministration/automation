@@ -101,7 +101,6 @@ public class TestOne {
 				XlsxTools.readXlsxSheetWithFirstColKey(conditionSheet, "Steel");
 		aluminumConditions = 
 				XlsxTools.readXlsxSheetWithFirstColKey(conditionSheet, "Aluminum");
-		
 		///
 		jsonFolder = InitTools.getInputDataFolder()+"/json_files";
 		/*jFile = new LinkedHashMap<String, String>();
@@ -114,7 +113,7 @@ public class TestOne {
 		}*/
 	
 		///
-		scenarios = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Query", "");
+		scenarios = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "", "");
 		/*dataPoolStep1  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 1", "Active=TRUE");
 		dataPoolStep2  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 2", "Active=TRUE");
 		dataPoolStep3  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 3", "Active=TRUE");
@@ -134,9 +133,9 @@ public class TestOne {
 		GuiTools.guiMap = new LinkedHashMap<String, LinkedHashMap<String, String>>();
 		
 		browserType = mapConfInfos.get("browser_type");
-		String guiMapFilePath = InitTools.getInputDataFolder()+"\\script\\gui_map.xlsx";
-		guiPool = XlsxTools.readXlsxSheetInOrderAndFilter(guiMapFilePath, "guiMap", "");
-		guiMap = XlsxTools.readGuiMap(guiPool);
+		//String guiMapFilePath = InitTools.getInputDataFolder()+"\\script\\gui_map.xlsx";
+		//guiPool = XlsxTools.readXlsxSheetInOrderAndFilter(guiMapFilePath, "guiMap", "");
+		//guiMap = XlsxTools.readGuiMap(guiPool);
 		HtmlReport.setTestSuiteName(mapConfInfos.get("project_name"));
 		HtmlReport.setEnvironmentName(mapConfInfos.get("env_name"));
 		HtmlReport.setTotalTcs(scenarios.size());
@@ -150,6 +149,7 @@ public class TestOne {
 		java.util.Date date = new java.util.Date();
 		endTime = new Timestamp(date.getTime());
 		HtmlReport.setSuiteExecutionTime(endTime.getTime() - suiteStartTime.getTime());
+		System.out.println(endTime.getTime() +" suite-_"+ suiteStartTime.getTime());
 		HtmlReport.buildHtmalReportForTestSuite();
 		guiTools.closeBrowser();
 	}
@@ -172,6 +172,7 @@ public class TestOne {
 	    HtmlReport.setTitle(GuiTools.getTestCaseName());
 	    HtmlReport.setTcStatus(testCaseStatus);
 	    HtmlReport.setTcExecutionTime(endTime.getTime() - startTime.getTime());
+	    System.out.println(endTime.getTime() +" -test case-_"+ startTime.getTime());
 	    HtmlReport.buildHtmlReportForTestCase();
 	    HtmlReport.addTestCaseToSuite(GuiTools.getTestCaseName(), testCaseStatus);
 	    HtmlReport.testCaseSteps.clear();
@@ -243,7 +244,7 @@ public class TestOne {
 		 if (productType.equalsIgnoreCase("Steel"))
 		 {
 			 conditionList = steelConditions.get(htsUsCode);
-		 } else if (productType.equalsIgnoreCase("Aluminium"))
+		 } else if (productType.equalsIgnoreCase("Aluminum"))
 		 {
 			 conditionList = aluminumConditions.get(htsUsCode);
 		 }

@@ -25,7 +25,11 @@ public class XlsxTools {
 		File excelFile = new File(filePath);
 	    FileInputStream fileInputStream = new FileInputStream(excelFile);
 	    Workbook  workbook = new XSSFWorkbook(fileInputStream);
-	    XSSFSheet sheet = (XSSFSheet) workbook.getSheet(tabName);
+	    XSSFSheet sheet;
+	    if(tabName.equals("")){
+	    sheet = (XSSFSheet) workbook.getSheetAt(0);
+	    }else{
+	    sheet = (XSSFSheet) workbook.getSheet(tabName);}
 	    Iterator<Row> rowIt = sheet.iterator();
 	    Row header = rowIt.next();
 	    DataFormatter df = new DataFormatter();

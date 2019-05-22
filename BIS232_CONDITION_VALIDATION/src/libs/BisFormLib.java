@@ -3051,7 +3051,6 @@ public class BisFormLib{
 						String aluminumMin =  getProdValue(jObj, "ChemicalComposition", "Aluminum", "Minimum");
 						String ironMax =  getProdValue(jObj, "ChemicalComposition", "Iron", "Maximum");
 						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
-
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
 						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
 						String boronMax =  getProdValue(jObj, "ChemicalComposition", "Boron", "Maximum");
@@ -3073,9 +3072,7 @@ public class BisFormLib{
 						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
 						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
 						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
-
 						String copperMin =  getProdValue(jObj, "ChemicalComposition", "Copper", "Minimum");
-
 						resultValues = getFormatedResultValues("aluminumMin", aluminumMin, "ironMax", ironMax, "siliconMax", siliconMax,
 								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax, "carbonMax", carbonMax, 
 								"chromiumMax", chromiumMax, "cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, 
@@ -3099,7 +3096,6 @@ public class BisFormLib{
 								Float.parseFloat(zincMax) <= 0.1;
 						boolean c2 = Float.parseFloat(copperMin) > 0.1 && Float.parseFloat(copperMax) <= 0.2 && 
 								Float.parseFloat(chromiumMax) <= 0.05 && Float.parseFloat(manganeseMax) <= 0.05; 
-						
 						ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, resultValues, 
 								((a2&&b2)||(a2&&c2)));
 						break;
@@ -3261,12 +3257,97 @@ public class BisFormLib{
 					}
 					case "condition 6":
 					{
-						conditionDetails ="xxxx";
+						conditionDetails ="Body stock ...then the minimum percent manganese must be greater than the maximum percentage "
+								+ "of antimony, bismuth, boron, chromium, cobalt, copper, iron, lead, magnesium, nickel, niobium, nitrogen, "
+								+ "phosphorous, selenium, silicon, sulfur, tin, titanium, tungsten, vanadium, or zinc and the minimum tensile "
+								+ "strength must be greater than or equal to 262 MPa.";
+						float manganeseMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum"));
+						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
+						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
+						String boronMax =  getProdValue(jObj, "ChemicalComposition", "Boron", "Maximum");
+						String chromiumMax =  getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");						
+						String cobaltMax =  getProdValue(jObj, "ChemicalComposition", "Cobalt", "Maximum");
+						String copperMax =  getProdValue(jObj, "ChemicalComposition", "Copper", "Maximum");
+						String ironMax =  getProdValue(jObj, "ChemicalComposition", "Iron", "Maximum");
+						String leadMax =  getProdValue(jObj, "ChemicalComposition", "Lead", "Maximum");
+						String magnesiumMax =  getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum");
+						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
+						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
+						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
+						String phosphorousMax =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Maximum");
+						String seleniumMax =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Maximum");
+						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
+						String sulfurMax =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
+						String TinMax =  getProdValue(jObj, "ChemicalComposition", "Tin", "Maximum");
+						String titaniumMax =  getProdValue(jObj, "ChemicalComposition", "Titanium", "Maximum");
+						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
+						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
+						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
+						String yieldStrengthMin = getProdValue(jObj, "ProductStrength", "YieldStrength", "Minimum");
+						resultValues = getFormatedResultValues("manganeseMin", manganeseMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
+								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax,	"chromiumMax", chromiumMax, 
+								"cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, 
+								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorousMax", phosphorousMax, 
+								"seleniumMax", seleniumMax, "sulfurMax", sulfurMax,	"TinMax", TinMax, "titaniumMax", titaniumMax, "tungstenMax",
+								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "yieldStrengthMin", yieldStrengthMin);
+						ovralResult = ovralResult & checkAndReport("Condition 6", conditionDetails, resultValues, 
+								(
+								(manganeseMin>Float.parseFloat(antimonyMax) || manganeseMin>Float.parseFloat(bismuthMax) ||manganeseMin>Float.parseFloat(boronMax) ||
+								manganeseMin>Float.parseFloat(chromiumMax) ||manganeseMin>Float.parseFloat(cobaltMax) ||manganeseMin>Float.parseFloat(copperMax) ||
+								manganeseMin>Float.parseFloat(ironMax) ||manganeseMin>Float.parseFloat(leadMax) ||manganeseMin>Float.parseFloat(magnesiumMax) ||
+								manganeseMin>Float.parseFloat(nickelMax) ||manganeseMin>Float.parseFloat(niobiumMax) ||manganeseMin>Float.parseFloat(nitrogenMax) ||
+								manganeseMin>Float.parseFloat(phosphorousMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
+								manganeseMin>Float.parseFloat(sulfurMax) ||manganeseMin>Float.parseFloat(TinMax) ||manganeseMin>Float.parseFloat(titaniumMax) ||
+								manganeseMin>Float.parseFloat(tungstenMax) ||manganeseMin>Float.parseFloat(vanadiumMax) ||manganeseMin>Float.parseFloat(zincMax) ) &&
+								(Float.parseFloat(yieldStrengthMin)>262))
+								);
 						break;
 					}
 					case "condition 7":
 					{
-						conditionDetails ="xxxx";
+						conditionDetails ="Lid stock ...then the minimum percent magnesium must be greater than the maximum percentage of antimony, "
+								+ "bismuth, boron, chromium, cobalt, copper, iron, lead, manganese, nickel, niobium, nitrogen, phosphorous, selenium, "
+								+ "silicon, sulfur, tin, titanium, tungsten, vanadium, or zinc and the minimum tensile strength must be 345 MPa.";
+						float manganeseMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum"));
+						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
+						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
+						String boronMax =  getProdValue(jObj, "ChemicalComposition", "Boron", "Maximum");
+						String chromiumMax =  getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");						
+						String cobaltMax =  getProdValue(jObj, "ChemicalComposition", "Cobalt", "Maximum");
+						String copperMax =  getProdValue(jObj, "ChemicalComposition", "Copper", "Maximum");
+						String ironMax =  getProdValue(jObj, "ChemicalComposition", "Iron", "Maximum");
+						String leadMax =  getProdValue(jObj, "ChemicalComposition", "Lead", "Maximum");
+						String magnesiumMax =  getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum");
+						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
+						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
+						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
+						String phosphorousMax =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Maximum");
+						String seleniumMax =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Maximum");
+						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
+						String sulfurMax =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
+						String TinMax =  getProdValue(jObj, "ChemicalComposition", "Tin", "Maximum");
+						String titaniumMax =  getProdValue(jObj, "ChemicalComposition", "Titanium", "Maximum");
+						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
+						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
+						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
+						String yieldStrengthMin = getProdValue(jObj, "ProductStrength", "YieldStrength", "Minimum");
+						resultValues = getFormatedResultValues("manganeseMin", manganeseMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
+								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax,	"chromiumMax", chromiumMax, 
+								"cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, 
+								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorousMax", phosphorousMax, 
+								"seleniumMax", seleniumMax, "sulfurMax", sulfurMax,	"TinMax", TinMax, "titaniumMax", titaniumMax, "tungstenMax",
+								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "yieldStrengthMin", yieldStrengthMin);
+						ovralResult = ovralResult & checkAndReport("Condition 6", conditionDetails, resultValues, 
+								(
+								(manganeseMin>Float.parseFloat(antimonyMax) || manganeseMin>Float.parseFloat(bismuthMax) ||manganeseMin>Float.parseFloat(boronMax) ||
+								manganeseMin>Float.parseFloat(chromiumMax) ||manganeseMin>Float.parseFloat(cobaltMax) ||manganeseMin>Float.parseFloat(copperMax) ||
+								manganeseMin>Float.parseFloat(ironMax) ||manganeseMin>Float.parseFloat(leadMax) ||manganeseMin>Float.parseFloat(magnesiumMax) ||
+								manganeseMin>Float.parseFloat(nickelMax) ||manganeseMin>Float.parseFloat(niobiumMax) ||manganeseMin>Float.parseFloat(nitrogenMax) ||
+								manganeseMin>Float.parseFloat(phosphorousMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
+								manganeseMin>Float.parseFloat(sulfurMax) ||manganeseMin>Float.parseFloat(TinMax) ||manganeseMin>Float.parseFloat(titaniumMax) ||
+								manganeseMin>Float.parseFloat(tungstenMax) ||manganeseMin>Float.parseFloat(vanadiumMax) ||manganeseMin>Float.parseFloat(zincMax) ) &&
+								(Float.parseFloat(yieldStrengthMin) == 345))
+								);
 						break;
 					}
 					case "condition 8":
@@ -3308,22 +3389,70 @@ public class BisFormLib{
 					}
 					case "condition 12":
 					{
-						conditionDetails ="xxxx"; 
+						conditionDetails ="Other bars and rods ...then the square root of the sum of the maximum width squared "
+								+ "and the maximum height squared must be less than 10 mm.";
+						float widthMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Width", "Maximum"));
+						float heightMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Height", "Maximum"));
+						float squaredWidthMax = widthMax*widthMax;
+						float squaredHeightMax = heightMax*heightMax;
+						float sqrt = (float) Math.sqrt(squaredWidthMax+squaredHeightMax);
+						resultValues = getFormatedResultValues("widthMax", widthMax+"", "heightMax", heightMax+"",
+								"sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
+						ovralResult = ovralResult & checkAndReport("Condition 12", conditionDetails, resultValues, 
+								(sqrt < 10));
 						break;
 					}
 					case "condition 13":
 					{
-						conditionDetails ="xxxx";
+						conditionDetails ="Other bars and rods ...then the square root of the sum of the maximum width squared "
+								+ "and the maximum height squared must be equal to or greater than 10 mm.";
+						float widthMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Width", "Maximum"));
+						float heightMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Height", "Maximum"));
+						float squaredWidthMax = widthMax*widthMax;
+						float squaredHeightMax = heightMax*heightMax;
+						float sqrt = (float) Math.sqrt(squaredWidthMax+squaredHeightMax);
+						resultValues = getFormatedResultValues("widthMax", widthMax+"", "heightMax", heightMax+"",
+								"sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
+						ovralResult = ovralResult & checkAndReport("Condition 13", conditionDetails, resultValues, 
+								(sqrt >= 10));
 						break;
 					}
 					case "condition 14":
 					{
-						conditionDetails ="xxxx";
+						conditionDetails ="Aluminum wire ...then the square root of the sum of the maximum width squared "
+								+ "and the maximum height squared or the minimum outside diameter must be greater than 7 mm "
+								+ "and the square root of the sum of the maximum width squared and the maximum height squared "
+								+ "or the maximum outside diameter must be equal to or less than 9.5 mm.";
+						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+						float widthMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Width", "Maximum"));
+						float heightMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Height", "Maximum"));
+						float squaredWidthMax = widthMax*widthMax;
+						float squaredHeightMax = heightMax*heightMax;
+						float sqrt = (float) Math.sqrt(squaredWidthMax+squaredHeightMax);
+						resultValues = getFormatedResultValues("widthMax", widthMax+"",  "heightMax", heightMax+"", 
+								"sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
+						ovralResult = ovralResult & checkAndReport("Condition 11", conditionDetails, resultValues, 
+								( (sqrt > 7 || Float.parseFloat(outsideDiameterMin) > 7) && 
+								  (sqrt > 7 || Float.parseFloat(outsideDiameterMax) <=9.5)
+								));
 						break;
 					}
 					case "condition 15":
 					{
-						conditionDetails ="xxxx";
+						conditionDetails ="Aluminum wire ...then the square root of the sum of the maximum width squared "
+								+ "and the maximum height squared or the maximum outside diameter must be greater than 9.5 mm.";
+						//String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
+						float widthMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Width", "Maximum"));
+						float heightMax = Float.parseFloat(getProdValue(jObj, "ProductDimensions", "Height", "Maximum"));
+						float squaredWidthMax = widthMax*widthMax;
+						float squaredHeightMax = heightMax*heightMax;
+						float sqrt = (float) Math.sqrt(squaredWidthMax+squaredHeightMax);
+						resultValues = getFormatedResultValues("squaredWidthMax", squaredWidthMax+"", "squaredHeightMax", 
+								squaredHeightMax+"", "sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
+						ovralResult = ovralResult & checkAndReport("Condition 11", conditionDetails, resultValues, 
+								( sqrt > 7 || Float.parseFloat(outsideDiameterMax) > 9.5));
 						break;
 					}
 					case "condition 16":
@@ -3364,7 +3493,14 @@ public class BisFormLib{
 					}
 					case "condition 20":
 					{
-						conditionDetails ="xxxx";
+						conditionDetails ="...then the maximum thickness must be less than or equal to 0.15 mm. Note:"
+								+ " 7607116000 is in the 2018 version of the HTSUS. In the 2019 version, this number is"
+								+ " split into 7607116010 and 7607116090. "
+								+ "Once all 2018 requests are processed, 7607116000 will be deleted from this condition.";
+						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
+						ovralResult = ovralResult & checkAndReport("Condition 20", conditionDetails, resultValues, 
+								(Float.parseFloat(thicknessMax) <= 0.15 ));
 						break;
 					}
 					case "condition 21":
@@ -3378,11 +3514,20 @@ public class BisFormLib{
 					}
 					case "condition 22":
 					{
-						conditionDetails ="xxxx"; 
+						conditionDetails ="...then the minimum thickness must be greater than 0.01 mm. Note: "
+								+ "7607116000 is in the 2018 version of the HTSUS. In the 2019 version, "
+								+ "this number is split into 7607116010 and 7607116090. Once all 2018 requests "
+								+ "are processed, 7607116000 will be deleted from this condition.";
+						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
+						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
+						ovralResult = ovralResult & checkAndReport("Condition 22", conditionDetails, resultValues, 
+								(Float.parseFloat(thicknessMin) > 0.01 ));
 						break;
 					}
 					default:
 					{
+						failTestSuite("Validate condition", "All conditions are valid", 
+								condition+" is not a valid condition", "Step", "fail", "");
 						break;
 					}
 				}//switch
@@ -3402,17 +3547,19 @@ public class BisFormLib{
 										 String resValues,
 										 boolean condition)
 	{
+		String resultStr = condDetails+System.lineSeparator()+"--------------------------"+
+				System.lineSeparator()+resValues;
 		boolean checked = true;
 		if (condition)
 		{
-			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+condDetails+"'>"
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+resultStr+"'>"
 					+ conditionName+" details ...(!)</abbr>", 
 					"<abbr title='"+resValues+"'>Products values ...(!)</abbr>", "VP", "pass", "");
 		}
 		else
 		{
 			checked = false;
-			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+condDetails+"'>"
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+resultStr+"'>"
 					+ conditionName+" details ...(!)</abbr>",
 					"<abbr title='"+resValues+"'>Products values ...(!)</abbr>", "VP", "fail", "");
 		}
@@ -3500,10 +3647,6 @@ public class BisFormLib{
 			JSONObject item = (JSONObject)blockArray.get(0);
 			elem = (String) item.get("Designation");
 		}
-		
-		
-		
-	
 		return elem;
 	}
 	
@@ -3513,7 +3656,7 @@ public class BisFormLib{
 		String formatedRes="";
 		for(int i=0; i<values.length;i=i+2)
 		{
-			formatedRes = formatedRes +values[i]+" = "+values[i+1]+System.lineSeparator();
+			formatedRes =  formatedRes + values[i]+" = "+values[i+1]+System.lineSeparator();
 		}
 		return formatedRes;
 	}

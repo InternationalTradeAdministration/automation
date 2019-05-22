@@ -80,12 +80,7 @@
     "Description": "descriotion test",
     "Comments": null
   },
-  "ProductStandards": [
-	{
-      "Organization": "British",
-      "Designation": "ASTM-108"
-    }
-	],
+  "ProductStandards": [],
   "ProductClassification": [
     {
       "Key": "Slab",
