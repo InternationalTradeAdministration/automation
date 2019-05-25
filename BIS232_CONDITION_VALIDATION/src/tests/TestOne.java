@@ -89,6 +89,7 @@ public class TestOne {
 	//public static LinkedHashMap<String, String> jFile;
 	public static void main(String[] args) throws Exception 
 	{
+		
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
 		bisFormLib = new BisFormLib();
@@ -190,7 +191,7 @@ public class TestOne {
 	public static Object[][] fetchData() 
 	{
 		
-		Object obj [][]= new  Object[scenarios.size()][3];
+		Object obj [][]= new  Object[scenarios.size()][4];
 		/*int i=0;
 		for (HashMap.Entry<String, String> entry : jFile.entrySet()) 
 		{
@@ -206,6 +207,7 @@ public class TestOne {
 			obj[i][0] = map.get("ID");
 			obj[i][1] = map.get("HTSUSCode");
 			obj[i][2] = map.get("JSONData");
+			obj[i][3] = map.get("Product Validation Conditions");
 			i++;
 		}
 		return (Object[][]) obj;
@@ -215,8 +217,22 @@ public class TestOne {
 	 * This method is validation of all scenarios
 	*/
 	 @Test(dataProvider = "fetchingData")
-	void validate(String id, String htsusCode, String jsonData) throws Exception
+	void validate(String id, String htsusCode, String jsonData, String actualResult) throws Exception
 	{
+		 if (htsusCode.equals("") || jsonData.equals("")|| actualResult.equals(""))
+		 {
+			 GuiTools.setTestCaseName(id+" - "+htsusCode);
+			 GuiTools.setTestCaseDescription(id+" - "+htsusCode);
+			 testCaseStatus=false;
+			 failTestCase("Validate form id: "+id ,"htsusCode, jsonData,"
+			 		+ " and actualResult shouldn't be empty", 
+					"Not as expected", "VP", "fail", "");
+		 }
+		 
+		 if (id.equals("416"))
+		 {
+			 System.out.println(id);
+		 }
 		 String scenarioName = id+"_"+htsusCode;
 		 String filePath = jsonFolder+"/"+scenarioName+".json";
 		 FileOutputStream out = new FileOutputStream(filePath);
@@ -239,8 +255,15 @@ public class TestOne {
 		 catch(FileNotFoundException e) {e.printStackTrace();}
 		 catch(IOException e){e.printStackTrace();}
 		 catch(Exception e) {e.printStackTrace();}
-		 GuiTools.setTestCaseName(scenarioName);
-		 GuiTools.setTestCaseDescription(scenarioName+"_"+productType);
+		 GuiTools.setTestCaseName(scenarioName+" - "+productType);
+		 GuiTools.setTestCaseDescription(scenarioName+" - "+productType);
+		 
+		 if (!steelConditions.containsKey(htsUsCode) && !aluminumConditions.containsKey(htsUsCode) )
+		 {
+			 testCaseStatus=false;
+			 failTestCase(scenarioName,htsUsCode+" Should be found in the condition sheet" , 
+					"No row found in the condition sheet for the code: "+htsUsCode, "VP", "fail", "");
+		 }
 		 if (productType.equalsIgnoreCase("Steel"))
 		 {
 			 conditionList = steelConditions.get(htsUsCode);
@@ -250,20 +273,11 @@ public class TestOne {
 		 }
 		 else
 		 {
-			 failTestSuite("Validate "+ scenarioName, "Product should be steel or aluminium", 
-					 "Not as expected", "Step", "fail", "");
+			 failTestSuite("Validate "+ scenarioName, "Product should be Steel or Aluminum", 
+					 "Json file should have producat name as Steel or Aluminum", "Step", "fail", "");
 		 }
-		 if (!steelConditions.containsKey(htsUsCode))
-		 {
-			 testCaseStatus=false;
-			 failTestCase(scenarioName,htsUsCode+" Should be In The List" , 
-					 "Not As Expected", "VP", "fail", "");
-		 }
-		 else
-		 {
-			 testCaseStatus =  testCaseStatus & 
-				BisFormLib.ValidateConditions(jsonObject, productType, conditionList);
-		 }
+		 testCaseStatus =  testCaseStatus & 
+					BisFormLib.ValidateConditions(jsonObject, productType, conditionList, actualResult);
 		printLog(GuiTools.getTestCaseName());
 	}
 

@@ -1,7 +1,7 @@
 /**
  * MilCorp
  * Mouloud Hamdidouche
- * January, 2019
+ * January, 0.2019
 */
 
 package libs;
@@ -26,20 +26,23 @@ import static GuiLibs.GuiTools.updateHtmlReport;
 import static GuiLibs.GuiTools.updateHtmlReportOverall;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.sound.sampled.Line;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import ReportLibs.HtmlReport;
 import bsh.ParseException;
 
 public class BisFormLib{
-	public static String filedDate,
+	public static String filedDate, displayedResult,
 	actualInitiationSignature, calculatedInitiationSignature, petitionOutcome;
 	public static int petitionInitiationExtension;
 	static DateFormat format;
@@ -1221,13 +1224,16 @@ public class BisFormLib{
 	 * @param productType: product type, steel, aluminum
 	 * @param conditions: list of conditions to be checked
 	 * @return number in integer format
+	 * @param actualResult displayed Result
 	 * @exception Exception
 	*/
 	public static boolean ValidateConditions(JSONObject jObj, 
 											 String productType, 
-											 String conditions) throws Exception
+											 String conditions,
+											 String actualResult) throws Exception
 	{
 		boolean ovralResult=true;
+		displayedResult = actualResult;
 		String conditionDetails, resultValues = "";
 		if (conditions.equals("")) return true;
 		String[] listConditions = conditions.split(",");
@@ -1275,15 +1281,15 @@ public class BisFormLib{
 								"telluriumMax", telluriumMax, "titaniumMax", titaniumMax, "tungstenMax", tungstenMax, 
 								"vanadiumMax", vanadiumMax, "zirconiumMax", zirconiumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 1", conditionDetails, resultValues, 
-								(Float.parseFloat(aluminumMax)<0.3 && Float.parseFloat(antimonyMax)<0.1 &&
-								 Float.parseFloat(bismuthMax)<0.1 && Float.parseFloat(boronMax)<0.0008 &&
-								 Float.parseFloat(chromiumMax)<0.3 && Float.parseFloat(cobaltMax)<0.3 &&	
-								 Float.parseFloat(copperMax)<0.4 && Float.parseFloat(leadMax)<0.4 &&
-								 Float.parseFloat(manganeseMax)<1.65 && Float.parseFloat(molybdenumMax)<0.08 &&
-								 Float.parseFloat(nickelMax)<0.3 && Float.parseFloat(niobiumMax)<0.06 &&
-								 Float.parseFloat(seleniumMax)<0.1 && Float.parseFloat(siliconMax)<0.6 &&
-								 Float.parseFloat(telluriumMax)<0.1 && Float.parseFloat(titaniumMax)<0.05 &&
-								 Float.parseFloat(tungstenMax)<0.3 && Float.parseFloat(vanadiumMax)<0.1 &&
+								(Float.parseFloat(aluminumMax)<0.3f && Float.parseFloat(antimonyMax)<0.1f &&
+								 Float.parseFloat(bismuthMax)<0.1f && Float.parseFloat(boronMax)<0.0008f &&
+								 Float.parseFloat(chromiumMax)<0.3f && Float.parseFloat(cobaltMax)<0.3f &&	
+								 Float.parseFloat(copperMax)<0.4f && Float.parseFloat(leadMax)<0.4f &&
+								 Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f &&
+								 Float.parseFloat(nickelMax)<0.3f && Float.parseFloat(niobiumMax)<0.06f &&
+								 Float.parseFloat(seleniumMax)<0.1f && Float.parseFloat(siliconMax)<0.6f &&
+								 Float.parseFloat(telluriumMax)<0.1f && Float.parseFloat(titaniumMax)<0.05f &&
+								 Float.parseFloat(tungstenMax)<0.3f && Float.parseFloat(vanadiumMax)<0.1f &&
 								 Float.parseFloat(zirconiumMax)<0.05));
 						
 						break;
@@ -1296,7 +1302,7 @@ public class BisFormLib{
 						String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "chromiumMin", chromiumMin);
 						ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, resultValues, (Float.parseFloat(carbonMax)<=1.2 
-								&& Float.parseFloat(chromiumMin)>=10.5));
+								&& Float.parseFloat(chromiumMin)>=10.5f));
 						break;
 					}
 					case "condition 3":
@@ -1340,16 +1346,16 @@ public class BisFormLib{
 						"vanadiumMin", vanadiumMin, "zirconiumMin", zirconiumMin);
 						ovralResult = ovralResult & checkAndReport("Condition 3", conditionDetails, resultValues, 
 						(
-						Float.parseFloat(aluminumMin)>=0.3 || Float.parseFloat(antimonyMin)>=0.1 ||
-						Float.parseFloat(bismuthMin)>=0.1 || Float.parseFloat(boronMin)>=0.0008 ||
-						Float.parseFloat(chromiumMin)>=0.3 || Float.parseFloat(cobaltMin)>=0.3 ||	
-						Float.parseFloat(copperMin)>=0.4 || Float.parseFloat(leadMin)>=0.4 ||
-						Float.parseFloat(manganeseMin)>=1.65 || Float.parseFloat(molybdenumMin)>=0.08 ||
-						Float.parseFloat(nickelMin)>=0.3 || Float.parseFloat(niobiumMin)>=0.06 ||
-						Float.parseFloat(seleniumMin)>=0.1 || Float.parseFloat(siliconMin)>=0.6 ||
-						Float.parseFloat(telluriumMin)>=0.1 || Float.parseFloat(titaniumMin)>=0.05 ||
-						Float.parseFloat(tungstenMin)>=0.3 || Float.parseFloat(vanadiumMin)>=0.1 ||
-						Float.parseFloat(zirconiumMin)>=0.05));
+						Float.parseFloat(aluminumMin)>=0.3f || Float.parseFloat(antimonyMin)>=0.1f ||
+						Float.parseFloat(bismuthMin)>=0.1f || Float.parseFloat(boronMin)>=0.0008f ||
+						Float.parseFloat(chromiumMin)>=0.3f || Float.parseFloat(cobaltMin)>=0.3f ||	
+						Float.parseFloat(copperMin)>=0.4f || Float.parseFloat(leadMin)>=0.4f ||
+						Float.parseFloat(manganeseMin)>=1.65f || Float.parseFloat(molybdenumMin)>=0.08f ||
+						Float.parseFloat(nickelMin)>=0.3f || Float.parseFloat(niobiumMin)>=0.06f ||
+						Float.parseFloat(seleniumMin)>=0.1f || Float.parseFloat(siliconMin)>=0.6f ||
+						Float.parseFloat(telluriumMin)>=0.1f || Float.parseFloat(titaniumMin)>=0.05f ||
+						Float.parseFloat(tungstenMin)>=0.3f || Float.parseFloat(vanadiumMin)>=0.1f ||
+						Float.parseFloat(zirconiumMin)>=0.05f));
 						break;
 					}
 					case "condition 4":
@@ -1358,7 +1364,7 @@ public class BisFormLib{
 						String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", widthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 4", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)>=600));
+								(Float.parseFloat(widthMin)>=600f));
 						break;
 					}
 					case "condition 5":
@@ -1367,7 +1373,7 @@ public class BisFormLib{
 						String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 						resultValues = getFormatedResultValues("widthMax", widthMax);
 						ovralResult = ovralResult & checkAndReport("Condition 5", conditionDetails, resultValues,
-								(Float.parseFloat(widthMax)<600)); 
+								(Float.parseFloat(widthMax)<600f)); 
 						break;
 					}
 					case "condition 6":
@@ -1400,13 +1406,13 @@ public class BisFormLib{
 						
 						ovralResult = ovralResult & checkAndReport("Condition 6", conditionDetails, resultValues, 
 								(
-								(Float.parseFloat(carbonMin)>1.2 && Float.parseFloat(chromiumMin)>10.5)|| 
-								(Float.parseFloat(carbonMin)>=0.3 && Float.parseFloat(chromiumMin)>=1.25 && Float.parseFloat(chromiumMax)<10.5)|| 
-								(Float.parseFloat(carbonMin)>=0.85 && Float.parseFloat(manganeseMin)>=1 && Float.parseFloat(manganeseMax)<=1.8)|| 
-								(Float.parseFloat(chromiumMin)>=0.9 && Float.parseFloat(chromiumMax)<=1.2 && Float.parseFloat(molybdenumMin)>=0.9 
-								&& Float.parseFloat(molybdenumMax)<=1.4)|| 
-								(Float.parseFloat(carbonMin)>=0.5 && Float.parseFloat(molybdenumMin)>=3.5)|| 
-								(Float.parseFloat(carbonMin)>=0.5 && Float.parseFloat(tungstenMin)>=5.5))); 
+								(Float.parseFloat(carbonMin)>1.2f && Float.parseFloat(chromiumMin)>10.5f)|| 
+								(Float.parseFloat(carbonMin)>=0.3f && Float.parseFloat(chromiumMin)>=1.25f && Float.parseFloat(chromiumMax)<10.5f)|| 
+								(Float.parseFloat(carbonMin)>=0.85f && Float.parseFloat(manganeseMin)>=1f && Float.parseFloat(manganeseMax)<=1.8f)|| 
+								(Float.parseFloat(chromiumMin)>=0.9f && Float.parseFloat(chromiumMax)<=1.2f && Float.parseFloat(molybdenumMin)>=0.9f 
+								&& Float.parseFloat(molybdenumMax)<=1.4f)|| 
+								(Float.parseFloat(carbonMin)>=0.5f && Float.parseFloat(molybdenumMin)>=3.5f)|| 
+								(Float.parseFloat(carbonMin)>=0.5f && Float.parseFloat(tungstenMin)>=5.5f))); 
 						
 						break;
 					}
@@ -1439,13 +1445,13 @@ public class BisFormLib{
 								"siliconMax", siliconMax, "chromiumMin", chromiumMin, "chromiumMax", chromiumMax, "nickelMax", nickelMax,
 								"copperMax", copperMax, "molybdenumMax", molybdenumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 7", conditionDetails, resultValues, 
-								(	Float.parseFloat(carbonMin)>=0.95 && Float.parseFloat(carbonMax)<=1.13 &&
-									Float.parseFloat(manganeseMin)>=0.22 && Float.parseFloat(manganeseMax)<=0.48 &&
-									Float.parseFloat(sulfurMax)<=0.03 && Float.parseFloat(phosphorusMax)<=0.03 &&
-									Float.parseFloat(siliconMin)>=0.18 && Float.parseFloat(siliconMax)<=0.37 &&
-									Float.parseFloat(chromiumMin)>=1.25 && Float.parseFloat(chromiumMax)<=1.65&&
-									Float.parseFloat(nickelMax)<=0.28 && Float.parseFloat(copperMax)<=0.38&&
-									Float.parseFloat(molybdenumMax)<=0.09
+								(	Float.parseFloat(carbonMin)>=0.95f && Float.parseFloat(carbonMax)<=1.13f &&
+									Float.parseFloat(manganeseMin)>=0.22f && Float.parseFloat(manganeseMax)<=0.48f &&
+									Float.parseFloat(sulfurMax)<=0.03f && Float.parseFloat(phosphorusMax)<=0.03f &&
+									Float.parseFloat(siliconMin)>=0.18f && Float.parseFloat(siliconMax)<=0.37f &&
+									Float.parseFloat(chromiumMin)>=1.25f && Float.parseFloat(chromiumMax)<=1.65f&&
+									Float.parseFloat(nickelMax)<=0.28f && Float.parseFloat(copperMax)<=0.38f&&
+									Float.parseFloat(molybdenumMax)<=0.09f
 								)); 
 						
 						break;
@@ -1469,10 +1475,10 @@ public class BisFormLib{
 								"carbonMin", carbonMin, "chromiumMin", chromiumMin, "chromiumMax", chromiumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 8", conditionDetails, resultValues, 
 							((Float.parseFloat(molybdenumMin)+Float.parseFloat(tungstenMin)+Float.parseFloat(vanadiumMin)>=7)||	
-								(Float.parseFloat(molybdenumMin)+Float.parseFloat(tungstenMin)>=7)||	
-								(Float.parseFloat(molybdenumMin)+Float.parseFloat(vanadiumMin)>=7)||	
-								(Float.parseFloat(tungstenMin)+Float.parseFloat(vanadiumMin)>=7 && Float.parseFloat(carbonMin)>=0.6
-								&& Float.parseFloat(chromiumMin)>=3 && Float.parseFloat(chromiumMax)<=6))); 
+								(Float.parseFloat(molybdenumMin)+Float.parseFloat(tungstenMin)>=7f)||	
+								(Float.parseFloat(molybdenumMin)+Float.parseFloat(vanadiumMin)>=7f)||	
+								(Float.parseFloat(tungstenMin)+Float.parseFloat(vanadiumMin)>=7f && Float.parseFloat(carbonMin)>=0.6f
+								&& Float.parseFloat(chromiumMin)>=3f && Float.parseFloat(chromiumMax)<=6f))); 
 						break;
 					}
 					case "condition 9":
@@ -1489,9 +1495,9 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("sulfurMin", sulfurMin, "leadMin", leadMin, "seleniumMin", seleniumMin,
 								"telluriumMin", telluriumMin, "bismuthMin", bismuthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 9", conditionDetails, resultValues, 
-								(Float.parseFloat(sulfurMin)>=0.08 || Float.parseFloat(leadMin)>=0.1 ||
-								Float.parseFloat(seleniumMin)>0.05 || Float.parseFloat(telluriumMin)>0.01 ||
-								Float.parseFloat(bismuthMin)>0.05
+								(Float.parseFloat(sulfurMin)>=0.08f || Float.parseFloat(leadMin)>=0.1f ||
+								Float.parseFloat(seleniumMin)>0.05f || Float.parseFloat(telluriumMin)>0.01f ||
+								Float.parseFloat(bismuthMin)>0.05f
 								)); 
 						break;
 					}
@@ -1503,8 +1509,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("widthMin", widthMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 10", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)>= 10*Float.parseFloat(thicknessMax))); 
-						
+								(Float.parseFloat(widthMin)>= 10f*Float.parseFloat(thicknessMax)));
 						
 						break;
 					}
@@ -1538,11 +1543,11 @@ public class BisFormLib{
 								"tungstenMax", tungstenMax, "vanadiumMin", vanadiumMin, "vanadiumMax", vanadiumMax);
 						
 						ovralResult = ovralResult & checkAndReport("Condition 11", conditionDetails, resultValues, 
-								(Float.parseFloat(ironMin)> 0 && Float.parseFloat(carbonMin)>=0.48 && Float.parseFloat(carbonMax) <= 0.55 &&
-								 Float.parseFloat(manganeseMin)>=0.2 && Float.parseFloat(manganeseMax) <=0.5 && Float.parseFloat(siliconMin)>=0.75 &&
-								 Float.parseFloat(siliconMax)<=1.05 && Float.parseFloat(chromiumMin)>=7.25 && Float.parseFloat(chromiumMax)<=8.75 &&
-								 Float.parseFloat(molybdenumMin)>=1.25 && Float.parseFloat(molybdenumMax)<=1.75 && Float.parseFloat(tungstenMax)<=1.75 &&
-								 Float.parseFloat(vanadiumMin)>=0.2 && Float.parseFloat(vanadiumMax)<=0.55));
+								(Float.parseFloat(ironMin)> 0f && Float.parseFloat(carbonMin)>=0.48f && Float.parseFloat(carbonMax) <= 0.55f &&
+								 Float.parseFloat(manganeseMin)>=0.2f && Float.parseFloat(manganeseMax) <=0.5f && Float.parseFloat(siliconMin)>=0.75f &&
+								 Float.parseFloat(siliconMax)<=1.05f && Float.parseFloat(chromiumMin)>=7.25f && Float.parseFloat(chromiumMax)<=8.75f &&
+								 Float.parseFloat(molybdenumMin)>=1.25f && Float.parseFloat(molybdenumMax)<=1.75f && Float.parseFloat(tungstenMax)<=1.75f &&
+								 Float.parseFloat(vanadiumMin)>=0.2f && Float.parseFloat(vanadiumMax)<=0.55f));
 								
 			
 						break;
@@ -1558,9 +1563,9 @@ public class BisFormLib{
 						String aluminumMax = getProdValue(jObj, "ChemicalComposition", "Aluminum", "Maximum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "siliconMin", siliconMin, "siliconMax", 
 								siliconMax, "aluminumMax", aluminumMax);
-						ovralResult = ovralResult & checkAndReport("Condition 12", conditionDetails, resultValues, (Float.parseFloat(carbonMax)<=0.08 
-								&& Float.parseFloat(siliconMin)>=0.6 && Float.parseFloat(siliconMax) <=6 
-								&& Float.parseFloat(aluminumMax) <=1)); 
+						ovralResult = ovralResult & checkAndReport("Condition 12", conditionDetails, resultValues, (Float.parseFloat(carbonMax)<=0.08f 
+								&& Float.parseFloat(siliconMin)>=0.6f && Float.parseFloat(siliconMax) <=6f 
+								&& Float.parseFloat(aluminumMax) <=1f)); 
 						break;
 					}
 					case "condition 13":
@@ -1577,8 +1582,8 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "manganeseMin", manganeseMin,
 								"manganeseMax", manganeseMax,"siliconMin", siliconMin, "siliconMax", siliconMax);
 						ovralResult = ovralResult & checkAndReport("Condition 13", conditionDetails, resultValues, 
-								(Float.parseFloat(carbonMax)<=0.7 	&& Float.parseFloat(manganeseMin)>=0.5 && Float.parseFloat(manganeseMax) <=1.9 
-								&& Float.parseFloat(siliconMin)>=0.6 && Float.parseFloat(siliconMax)<=2.3)); 
+								(Float.parseFloat(carbonMax)<=0.7f 	&& Float.parseFloat(manganeseMin)>=0.5f && Float.parseFloat(manganeseMax) <=1.9f 
+								&& Float.parseFloat(siliconMin)>=0.6f && Float.parseFloat(siliconMax)<=2.3f)); 
 						break;
 					}
 					case "condition 14":
@@ -1592,8 +1597,8 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax, "thicknessMin", thicknessMin,
 								"yieldStrengthMin", yieldStrengthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 14", conditionDetails, resultValues, 
-						(		(Float.parseFloat(thicknessMax) < 3 && Float.parseFloat(yieldStrengthMin) == 275) 
-								||( Float.parseFloat(thicknessMin)>=3 && Float.parseFloat(yieldStrengthMin) == 355)));
+						(		(Float.parseFloat(thicknessMax) < 3f && Float.parseFloat(yieldStrengthMin) == 275f) 
+								||( Float.parseFloat(thicknessMin)>=3f && Float.parseFloat(yieldStrengthMin) == 355f)));
 						
 						break;
 					}
@@ -1607,8 +1612,8 @@ public class BisFormLib{
 						String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax, "widthMax", widthMax, 
 								"chromiumMax", chromiumMax);
-						ovralResult = ovralResult & checkAndReport("Condition 15", conditionDetails, resultValues, (Float.parseFloat(thicknessMax)<=0.25 
-								&& Float.parseFloat(widthMax)<=23 && Float.parseFloat(chromiumMax)<=14.7));
+						ovralResult = ovralResult & checkAndReport("Condition 15", conditionDetails, resultValues, (Float.parseFloat(thicknessMax)<=0.25f 
+								&& Float.parseFloat(widthMax)<=23f && Float.parseFloat(chromiumMax)<=14.7f));
 						break;
 					}
 					case "condition 16":
@@ -1620,8 +1625,8 @@ public class BisFormLib{
 						String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", widthMin, "widthMax", widthMax, "thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport("Condition 16", conditionDetails, resultValues, (Float.parseFloat(widthMin)>150
-								&& Float.parseFloat(widthMax)<=1250 && Float.parseFloat(thicknessMin)>=4)); 
+						ovralResult = ovralResult & checkAndReport("Condition 16", conditionDetails, resultValues, (Float.parseFloat(widthMin)>150f
+								&& Float.parseFloat(widthMax)<=1250f && Float.parseFloat(thicknessMin)>=4f)); 
 						break;
 					}
 					case "condition 17":
@@ -1635,8 +1640,8 @@ public class BisFormLib{
 						String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "chromiumMin", chromiumMin, "chromiumMax", chromiumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 17", conditionDetails, resultValues, 
-								(Float.parseFloat(carbonMax)<0.3 && Float.parseFloat(chromiumMin)>=4 
-								&& Float.parseFloat(chromiumMax)<10.5)); 
+								(Float.parseFloat(carbonMax)<0.3f && Float.parseFloat(chromiumMin)>=4f
+								&& Float.parseFloat(chromiumMax)<10.5f)); 
 						break;
 					}
 					case "condition 18":
@@ -1661,11 +1666,11 @@ public class BisFormLib{
 								"phosphorusMax", phosphorusMax, "nitrogenMax", nitrogenMax, "copperMax", copperMax, "nickelMax", nickelMax,
 								"chromiumMax", chromiumMax, "outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 18", conditionDetails, resultValues, 
-									(Float.parseFloat(carbonMin) >=0.68 && Float.parseFloat(aluminumMin) < 0.01 &&
-									(Float.parseFloat(sulfurMax) + Float.parseFloat(phosphorusMax) <= 0.040) &&
-									Float.parseFloat(nitrogenMax) < 0.008 && 
-									(Float.parseFloat(copperMax) + Float.parseFloat(nickelMax) + Float.parseFloat(chromiumMax)  <= 0.55)&&
-									Float.parseFloat(outsideDiameterMin) >= 5  && Float.parseFloat(outsideDiameterMax) <= 6)); 		
+									(Float.parseFloat(carbonMin) >=0.68f && Float.parseFloat(aluminumMin) < 0.01f &&
+									(Float.parseFloat(sulfurMax) + Float.parseFloat(phosphorusMax) <= 0.040f) &&
+									Float.parseFloat(nitrogenMax) < 0.008f && 
+									(Float.parseFloat(copperMax) + Float.parseFloat(nickelMax) + Float.parseFloat(chromiumMax)  <= 0.55f)&&
+									Float.parseFloat(outsideDiameterMin) >= 5f  && Float.parseFloat(outsideDiameterMax) <= 6f)); 		
 								
 						break;
 					}
@@ -1681,8 +1686,8 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "sulfurMax", sulfurMax,  
 								"phosphorusMax", phosphorusMax, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 19", conditionDetails, resultValues, 
-								(Float.parseFloat(carbonMax)<0.2 && Float.parseFloat(sulfurMax)<0.04 
-								&& Float.parseFloat(phosphorusMax)<0.04 && Float.parseFloat(outsideDiameterMax)<10)); 
+								(Float.parseFloat(carbonMax)<0.2f && Float.parseFloat(sulfurMax)<0.04f
+								&& Float.parseFloat(phosphorusMax)<0.04f && Float.parseFloat(outsideDiameterMax)<10f)); 
 						break;
 					}
 					case "condition 20":
@@ -1700,7 +1705,7 @@ public class BisFormLib{
 						conditionDetails = "Cold heading quality steel ...then ASTM F2282 must be listed or the cell may be blank.";
 						String productStandards_Designation = getProdValue(jObj, "ProductStandards", "Designation");
 						resultValues = getFormatedResultValues("productStandards_Designation", productStandards_Designation);
-						ovralResult = ovralResult & checkAndReport("Condition 20", conditionDetails, resultValues, 
+						ovralResult = ovralResult & checkAndReport("Condition 21", conditionDetails, resultValues, 
 								("ASTM-F2282".equalsIgnoreCase(productStandards_Designation) || "ASTM F2282".equalsIgnoreCase(productStandards_Designation))
 								|| "".equalsIgnoreCase(productStandards_Designation));
 						break;
@@ -1708,10 +1713,11 @@ public class BisFormLib{
 					case "condition 22":
 					{
 						conditionDetails = "High nickel alloy steel ...then the minimum percent nickel must be "
-								+ "equal to or greater than 24.";
+								+ "equal to or greater than 22.";
 						String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin);
-						ovralResult = ovralResult & checkAndReport("Condition 22", conditionDetails, resultValues, (Float.parseFloat(nickelMin)>=24)); 
+						ovralResult = ovralResult & checkAndReport("Condition 22", conditionDetails, resultValues, 
+						(Float.parseFloat(nickelMin)>=24f)); 
 						break;
 					}
 					case "condition 23":
@@ -1752,16 +1758,16 @@ public class BisFormLib{
 						"vanadiumMax", vanadiumMax, "zirconiumMax", zirconiumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 23", conditionDetails, resultValues, 
 						(
-						Float.parseFloat(aluminumMax)<0.3 && Float.parseFloat(antimonyMax)<0.1 &&
-						Float.parseFloat(bismuthMax)<0.1 && Float.parseFloat(boronMax)<0.0008 &&
-						Float.parseFloat(chromiumMax)<0.3 && Float.parseFloat(cobaltMax)<0.3 &&	
-						Float.parseFloat(copperMax)<0.4 && Float.parseFloat(leadMax)<0.4 &&
-						Float.parseFloat(manganeseMax)<1.65 && Float.parseFloat(molybdenumMax)<0.08 &&
-						Float.parseFloat(nickelMax)<0.3 && Float.parseFloat(niobiumMax)<0.06 &&
-						Float.parseFloat(seleniumMax)<0.1 && Float.parseFloat(siliconMax)<0.6 &&
-						Float.parseFloat(telluriumMax)<0.1 && Float.parseFloat(titaniumMax)<0.05 &&
-						Float.parseFloat(tungstenMax)<0.3 && Float.parseFloat(vanadiumMax)<0.1 &&
-						Float.parseFloat(zirconiumMax)<0.05));
+						Float.parseFloat(aluminumMax)<0.3f && Float.parseFloat(antimonyMax)<0.1f &&
+						Float.parseFloat(bismuthMax)<0.1f && Float.parseFloat(boronMax)<0.0008f &&
+						Float.parseFloat(chromiumMax)<0.3f && Float.parseFloat(cobaltMax)<0.3f &&	
+						Float.parseFloat(copperMax)<0.4f && Float.parseFloat(leadMax)<0.4f &&
+						Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f &&
+						Float.parseFloat(nickelMax)<0.3f && Float.parseFloat(niobiumMax)<0.06f &&
+						Float.parseFloat(seleniumMax)<0.1f && Float.parseFloat(siliconMax)<0.6f &&
+						Float.parseFloat(telluriumMax)<0.1f && Float.parseFloat(titaniumMax)<0.05f &&
+						Float.parseFloat(tungstenMax)<0.3f && Float.parseFloat(vanadiumMax)<0.1f &&
+						Float.parseFloat(zirconiumMax)<0.05f));
 						break;
 					}
 					case "condition 24":
@@ -1805,15 +1811,15 @@ public class BisFormLib{
 						"vanadiumMin", vanadiumMin, "zirconiumMin", zirconiumMin);
 						ovralResult = ovralResult & checkAndReport("Condition 24", conditionDetails, resultValues, 
 						(
-						Float.parseFloat(aluminumMin)>=0.3 || Float.parseFloat(antimonyMin)>=0.1 ||
-						Float.parseFloat(bismuthMin)>=0.1 || Float.parseFloat(boronMin)>=0.0008 ||
-						Float.parseFloat(chromiumMin)>=0.3 || Float.parseFloat(cobaltMin)>=0.3 ||	
-						Float.parseFloat(copperMin)>=0.4 || Float.parseFloat(leadMin)>=0.4 ||
-						Float.parseFloat(manganeseMin)>=1.65 || Float.parseFloat(molybdenumMin)>=0.08 ||
-						Float.parseFloat(nickelMin)>=0.3 || Float.parseFloat(niobiumMin)>=0.06 ||
-						Float.parseFloat(seleniumMin)>=0.1 || Float.parseFloat(siliconMin)>=0.6 ||
-						Float.parseFloat(telluriumMin)>=0.1 || Float.parseFloat(titaniumMin)>=0.05 ||
-						Float.parseFloat(tungstenMin)>=0.3 || Float.parseFloat(vanadiumMin)>=0.1 ||
+						Float.parseFloat(aluminumMin)>=0.3f || Float.parseFloat(antimonyMin)>=0.1f ||
+						Float.parseFloat(bismuthMin)>=0.1f || Float.parseFloat(boronMin)>=0.0008f ||
+						Float.parseFloat(chromiumMin)>=0.3f || Float.parseFloat(cobaltMin)>=0.3f ||	
+						Float.parseFloat(copperMin)>=0.4f || Float.parseFloat(leadMin)>=0.4f ||
+						Float.parseFloat(manganeseMin)>=1.65f || Float.parseFloat(molybdenumMin)>=0.08f ||
+						Float.parseFloat(nickelMin)>=0.3f || Float.parseFloat(niobiumMin)>=0.06f ||
+						Float.parseFloat(seleniumMin)>=0.1f || Float.parseFloat(siliconMin)>=0.6f ||
+						Float.parseFloat(telluriumMin)>=0.1f || Float.parseFloat(titaniumMin)>=0.05f ||
+						Float.parseFloat(tungstenMin)>=0.3f || Float.parseFloat(vanadiumMin)>=0.1f ||
 						Float.parseFloat(zirconiumMin)>=0.05));
 						break;
 					}
@@ -1824,8 +1830,10 @@ public class BisFormLib{
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 						String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "chromiumMin", chromiumMin);
-						ovralResult = ovralResult & checkAndReport("Condition 25", conditionDetails, resultValues, (Float.parseFloat(carbonMax)<=1.2
-								&& Float.parseFloat(chromiumMin)>=10.5)); 
+						System.out.println(Float.parseFloat(carbonMax) <= 1.2f );
+						System.out.println( Float.parseFloat(chromiumMin) >= 10.5f);
+						ovralResult = ovralResult & checkAndReport("Condition 25", conditionDetails, resultValues,
+								(Float.parseFloat(carbonMax)<=1.2f && Float.parseFloat(chromiumMin)>=10.5f)); 
 						break;
 					}
 					case "condition 26":
@@ -1835,8 +1843,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 26", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMax)<=114.3 
-								&& Float.parseFloat(outsideDiameterMin)<=114.3)); 
+						ovralResult = ovralResult & checkAndReport("Condition 26", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMax)<=114.3f && Float.parseFloat(outsideDiameterMin)<=114.3f)); 
 						break;
 					}
 					case "condition 27":
@@ -1847,9 +1855,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 27", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin)>=114.3 
-								&& Float.parseFloat(outsideDiameterMin)<406.4 && Float.parseFloat(outsideDiameterMax)>=114.3
-								&& Float.parseFloat(outsideDiameterMax)<406.4)); 
+						ovralResult = ovralResult & checkAndReport("Condition 27", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin)>=114.3 && Float.parseFloat(outsideDiameterMin)<406.4f 
+						&& Float.parseFloat(outsideDiameterMax)>=114.3f	&& Float.parseFloat(outsideDiameterMax)<406.4f)); 
 						break;
 					}
 					case "condition 28":
@@ -1859,8 +1867,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 28", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMax)>406.4 
-								&& Float.parseFloat(outsideDiameterMin)>406.4)); 
+						ovralResult = ovralResult & checkAndReport("Condition 28", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMax)>406.4f && Float.parseFloat(outsideDiameterMin)>406.4f)); 
 						break;
 					}
 					case "condition 29":
@@ -1871,9 +1879,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 29", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin)>=114.3 &&
-								Float.parseFloat(outsideDiameterMin)<215.9&& Float.parseFloat(outsideDiameterMax)>=114.3 
-								&& Float.parseFloat(outsideDiameterMax)<215.9)); 
+						ovralResult = ovralResult & checkAndReport("Condition 29", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin)>=114.3f &&	Float.parseFloat(outsideDiameterMin)<215.9f
+						&& Float.parseFloat(outsideDiameterMax)>=114.3f 	&& Float.parseFloat(outsideDiameterMax)<215.9f)); 
 						break;
 					}
 					case "condition 30":
@@ -1881,7 +1889,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be less than 12.7 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 30", conditionDetails, resultValues, (Float.parseFloat(thicknessMax)<12.7 ));
+						ovralResult = ovralResult & checkAndReport("Condition 30", conditionDetails, resultValues,
+						(Float.parseFloat(thicknessMax)<12.7f ));
 						break;
 					}
 					case "condition 31":
@@ -1889,16 +1898,17 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum thickness must be greater than or equal to 12.7 mm.";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport("Condition 31", conditionDetails, resultValues, (Float.parseFloat(thicknessMin)>=12.7)); 
+						ovralResult = ovralResult & checkAndReport("Condition 31", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMin)>=12.7f)); 
 						break;
 					}
 					case "condition 32":
 					{
-						conditionDetails = "....then the Maximum outside diameter must be equal to or less than 168.3 mm.";
-						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
-						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
+						conditionDetails = "...then the MINIMUM outside diameter must be equal to or less than 168.3 mm.";
+						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
+						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 32", conditionDetails, resultValues,
-								(Float.parseFloat(outsideDiameterMax) <= 168.3));
+								(Float.parseFloat(outsideDiameterMin) <= 168.3f));
 						break;
 					}
 					case "condition 33":
@@ -1906,7 +1916,8 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum thickness must be greater than 9.5 mm.";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport("Condition 33", conditionDetails, resultValues, (Float.parseFloat(thicknessMin)>9.5 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 33", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMin)>9.5f )); 
 						break;
 					}
 					case "condition 34":
@@ -1914,7 +1925,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be equal to or less than 9.5 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 34", conditionDetails, resultValues, (Float.parseFloat(thicknessMax)<=9.5)); 
+						ovralResult = ovralResult & checkAndReport("Condition 34", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax)<=9.5f)); 
 						break;
 					}
 					//conditionDetails 52 = "...then the Minimum outside diameter must be greater than 609.6 mm.";
@@ -1924,7 +1936,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 35", conditionDetails, resultValues,
-								(Float.parseFloat(outsideDiameterMin) > 168.3));
+								(Float.parseFloat(outsideDiameterMin) > 168.3f));
 						break;
 					}
 					case "condition 36":
@@ -1933,7 +1945,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 36", conditionDetails, resultValues,
-								(Float.parseFloat(outsideDiameterMin) < 215.9));
+								(Float.parseFloat(outsideDiameterMin) < 215.9f));
 						break;
 					}
 					case "condition 37":
@@ -1944,9 +1956,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 37", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin)>=215.9
-								&& Float.parseFloat(outsideDiameterMin)<=406.4 && Float.parseFloat(outsideDiameterMax)>=215.9
-								&& Float.parseFloat(outsideDiameterMax)<=406.4));
+						ovralResult = ovralResult & checkAndReport("Condition 37", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin)>=215.9f && Float.parseFloat(outsideDiameterMin)<=406.4f 
+						&& Float.parseFloat(outsideDiameterMax)>=215.9f && Float.parseFloat(outsideDiameterMax)<=406.4f));
 						break;
 					}
 					case "condition 38":
@@ -1957,9 +1969,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 38", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin)>=215.9 
-								&& Float.parseFloat(outsideDiameterMin)<=285.8 && Float.parseFloat(outsideDiameterMax)>=285.8 
-								&& Float.parseFloat(outsideDiameterMax)<=406.4));
+						ovralResult = ovralResult & checkAndReport("Condition 38", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin)>=215.9f && Float.parseFloat(outsideDiameterMin)<=285.8f 
+						&& Float.parseFloat(outsideDiameterMax)>=285.8f && Float.parseFloat(outsideDiameterMax)<=406.4f));
 						break;
 					}
 					case "condition 39":
@@ -1970,9 +1982,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 39", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) > 285.8 
-								&& Float.parseFloat(outsideDiameterMin)<=406.4 && Float.parseFloat(outsideDiameterMax)> 285.8
-								&& Float.parseFloat(outsideDiameterMax)<=406.4 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 39", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) > 285.8f && Float.parseFloat(outsideDiameterMin)<=406.4f 
+						&& Float.parseFloat(outsideDiameterMax)> 285.8f	&& Float.parseFloat(outsideDiameterMax)<=406.4f )); 
 						break;
 					}
 					case "condition 40":
@@ -1980,7 +1992,8 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum outside diameter must be greater than 406.4 mm.";
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
-						ovralResult = ovralResult & checkAndReport("Condition 40", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) > 406.4)); 
+						ovralResult = ovralResult & checkAndReport("Condition 40", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) > 406.4f)); 
 						break;
 					}
 					case "condition 41":
@@ -1989,8 +2002,8 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 41", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) < 38.1 
-								&& Float.parseFloat(outsideDiameterMax) < 38.1));
+						ovralResult = ovralResult & checkAndReport("Condition 41", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) < 38.1f && Float.parseFloat(outsideDiameterMax) < 38.1f));
 						break;
 					}
 					case "condition 42":
@@ -2000,9 +2013,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 42", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) >= 38.1 
-								&& Float.parseFloat(outsideDiameterMin) < 190.5	&& Float.parseFloat(outsideDiameterMax)> 38.1
-								&& Float.parseFloat(outsideDiameterMax) < 190.5 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 42", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) >= 38.1f && Float.parseFloat(outsideDiameterMin) < 190.5f	
+						&& Float.parseFloat(outsideDiameterMax)> 38.1f && Float.parseFloat(outsideDiameterMax) < 190.5f )); 
 						break;
 					}
 					case "condition 43":
@@ -2011,8 +2024,8 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 43", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) > 285.8 
-								&& Float.parseFloat(outsideDiameterMax) > 285.8));
+						ovralResult = ovralResult & checkAndReport("Condition 43", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) > 285.8f && Float.parseFloat(outsideDiameterMax) > 285.8f));
 						break;
 					}
 					case "condition 44":
@@ -2020,7 +2033,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be less than 6.4 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 44", conditionDetails, resultValues, (Float.parseFloat(thicknessMax)< 6.4 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 44", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax)< 6.4f )); 
 						break;
 					}
 					case "condition 45":
@@ -2030,8 +2044,8 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 45", conditionDetails, resultValues, (Float.parseFloat(thicknessMin)>= 6.4 
-								&& Float.parseFloat(thicknessMax) <=12.7)); 
+						ovralResult = ovralResult & checkAndReport("Condition 45", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMin)>= 6.4f && Float.parseFloat(thicknessMax) <=12.7f)); 
 						break;
 					}
 					case "condition 46":
@@ -2041,9 +2055,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 46", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) > 114.3 
-								&& Float.parseFloat(outsideDiameterMin) < 190.5 && Float.parseFloat(outsideDiameterMax) > 114.3 
-								&& Float.parseFloat(outsideDiameterMax) < 190.5));
+						ovralResult = ovralResult & checkAndReport("Condition 46", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) > 114.3f 	&& Float.parseFloat(outsideDiameterMin) < 190.5f 
+						&& Float.parseFloat(outsideDiameterMax) > 114.3f && Float.parseFloat(outsideDiameterMax) < 190.5f));
 						break;
 					}
 					case "condition 47":
@@ -2053,8 +2067,8 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 47", conditionDetails, resultValues, (Float.parseFloat(thicknessMin)>= 12.7 
-								&& Float.parseFloat(thicknessMax) < 19)); 
+						ovralResult = ovralResult & checkAndReport("Condition 47", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMin)>= 12.7f && Float.parseFloat(thicknessMax) < 19f)); 
 						break;
 					}
 					case "condition 48":
@@ -2062,7 +2076,8 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum thickness must be equal to or greater than 19 mm.";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport("Condition 48", conditionDetails, resultValues, (Float.parseFloat(thicknessMin)>= 19 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 48", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMin)>= 19f )); 
 						break;
 					}
 					case "condition 49":
@@ -2072,9 +2087,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 49", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) >=38.1 
-								&& Float.parseFloat(outsideDiameterMin) < 114.3 &&	Float.parseFloat(outsideDiameterMax) > 38.1
-								&& Float.parseFloat(outsideDiameterMax) < 114.3)); 
+						ovralResult = ovralResult & checkAndReport("Condition 49", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) >=38.1f && Float.parseFloat(outsideDiameterMin) < 114.3f 
+						&&	Float.parseFloat(outsideDiameterMax) > 38.1f	&& Float.parseFloat(outsideDiameterMax) < 114.3f)); 
 						break;
 					}
 					case "condition 50":
@@ -2086,9 +2101,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 50", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) >=190.5 
-								&& Float.parseFloat(outsideDiameterMin) <= 285.8 &&	Float.parseFloat(outsideDiameterMax) >= 190.5 
-								&& Float.parseFloat(outsideDiameterMax) < 285.8));
+						ovralResult = ovralResult & checkAndReport("Condition 50", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) >=190.5f && Float.parseFloat(outsideDiameterMin) <= 285.8f 
+						&&	Float.parseFloat(outsideDiameterMax) >= 190.5f && Float.parseFloat(outsideDiameterMax) < 285.8f));
 						break;
 					}
 					case "condition 51":
@@ -2132,14 +2147,16 @@ public class BisFormLib{
 								"tungstenMax", tungstenMax, "vanadiumMax", vanadiumMax, "zirconiumMax", zirconiumMax, "carbonMin", carbonMin);
 						ovralResult = ovralResult & checkAndReport("Condition 51", conditionDetails, resultValues, 
 						(
-						(Float.parseFloat(aluminumMax) >= 2)||
-						(Float.parseFloat(aluminumMax)<0.3 && Float.parseFloat(antimonyMax)<0.1 && Float.parseFloat(bismuthMax)<0.1 &&
-						 Float.parseFloat(boronMax)<0.0008 && Float.parseFloat(carbonMax)< 2 && Float.parseFloat(chromiumMax)<0.3 &&
-						 Float.parseFloat(cobaltMax)<0.3 &&	Float.parseFloat(copperMax)<0.4 && Float.parseFloat(leadMax)<0.4 &&
-						 Float.parseFloat(manganeseMax)<1.65 && Float.parseFloat(molybdenumMax)<0.08 && Float.parseFloat(nickelMax)<0.3 &&
-						 Float.parseFloat(niobiumMax)<0.06 && Float.parseFloat(seleniumMax)<0.1 && Float.parseFloat(siliconMax)<0.6 &&
-						 Float.parseFloat(telluriumMax)<0.1 && Float.parseFloat(titaniumMax)<0.05 && Float.parseFloat(tungstenMax)<0.3 &&
-						 Float.parseFloat(vanadiumMax)<0.1 && Float.parseFloat(zirconiumMax)<0.05))	);
+						(Float.parseFloat(aluminumMax) >= 2f)||
+						(Float.parseFloat(aluminumMax)<0.3f && Float.parseFloat(antimonyMax)<0.1f && Float.parseFloat(bismuthMax)<0.1f &&
+						 Float.parseFloat(boronMax)<0.0008f && Float.parseFloat(carbonMax)< 2f && Float.parseFloat(chromiumMax)<0.3f &&
+						 Float.parseFloat(cobaltMax)<0.3f && Float.parseFloat(copperMax)<0.4f && Float.parseFloat(leadMax)<0.4f &&
+						 Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f && Float.parseFloat(nickelMax)<0.3f &&
+						 Float.parseFloat(niobiumMax)<0.06f && Float.parseFloat(seleniumMax)<0.1f && Float.parseFloat(siliconMax)<0.6f &&
+						 Float.parseFloat(telluriumMax)<0.1f && Float.parseFloat(titaniumMax)<0.05f && Float.parseFloat(tungstenMax)<0.3f &&
+						 Float.parseFloat(vanadiumMax)<0.1f && Float.parseFloat(zirconiumMax)<0.05f)
+						)	
+						);
 						break;
 					}
 					case "condition 52":
@@ -2148,7 +2165,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 52", conditionDetails, resultValues,
-								(Float.parseFloat(outsideDiameterMin) > 609.6));
+								(Float.parseFloat(outsideDiameterMin) > 609.6f));
 						break;
 					}
 					case "condition 53":
@@ -2158,9 +2175,9 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
-						ovralResult = ovralResult & checkAndReport("Condition 53", conditionDetails, resultValues, (Float.parseFloat(outsideDiameterMin) > 406.4
-								&& Float.parseFloat(outsideDiameterMin) <= 609.6 &&	Float.parseFloat(outsideDiameterMax) >= 406.4
-								&& Float.parseFloat(outsideDiameterMax) < 609.6)); 
+						ovralResult = ovralResult & checkAndReport("Condition 53", conditionDetails, resultValues, 
+						(Float.parseFloat(outsideDiameterMin) > 406.4f && Float.parseFloat(outsideDiameterMin) <= 609.6f 
+						&&	Float.parseFloat(outsideDiameterMax) >= 406.4f	&& Float.parseFloat(outsideDiameterMax) < 609.6f)); 
 						break;
 					}
 					case "condition 54":
@@ -2168,7 +2185,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be less than 1.65 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 54", conditionDetails, resultValues, (Float.parseFloat(thicknessMax) < 1.65 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 54", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax) < 1.65f )); 
 						break;
 					}
 					case "condition 55":
@@ -2176,15 +2194,17 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be equal to or less than 2.54 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 55", conditionDetails, resultValues, (Float.parseFloat(thicknessMax) <= 2.54 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 55", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax) <= 2.54f )); 
 						break;
 					}
-					case "condition 56":
+					case "condition 56": //NOT IN USE ANYMORE
 					{
 						conditionDetails = "...then the maximum thickness must be less than 6.4 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 56", conditionDetails, resultValues, (Float.parseFloat(thicknessMax) < 6.4 )); 
+						ovralResult = ovralResult & checkAndReport("Condition 56", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax) < 6.4f )); 
 						break;
 					}
 					case "condition 57":
@@ -2192,7 +2212,8 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum percent nickel must be greater than 0.5.";
 						String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin);
-						ovralResult = ovralResult & checkAndReport("Condition 57", conditionDetails, resultValues, (Float.parseFloat(nickelMin)> 0.5)); 
+						ovralResult = ovralResult & checkAndReport("Condition 57", conditionDetails, resultValues, 
+						(Float.parseFloat(nickelMin)> 0.5f)); 
 						break;
 					}
 					case "condition 58":
@@ -2200,7 +2221,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum percent nickel must be equal to or less than 0.5.";
 						String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMax", nickelMax);
-						ovralResult = ovralResult & checkAndReport("Condition 58", conditionDetails, resultValues, (Float.parseFloat(nickelMax)<= 0.5)); 
+						ovralResult = ovralResult & checkAndReport("Condition 58", conditionDetails, resultValues, 
+						(Float.parseFloat(nickelMax)<= 0.5f)); 
 						break;
 					}
 					case "condition 59":
@@ -2210,8 +2232,8 @@ public class BisFormLib{
 						String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
 						String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						resultValues = getFormatedResultValues("molybdenumMin", molybdenumMin, "molybdenumMax", molybdenumMax);
-						ovralResult = ovralResult & checkAndReport("Condition 59", conditionDetails, resultValues, (Float.parseFloat(molybdenumMin)> 1.5 
-								&& Float.parseFloat(molybdenumMax) < 5)); 
+						ovralResult = ovralResult & checkAndReport("Condition 59", conditionDetails, resultValues, 
+						(Float.parseFloat(molybdenumMin)> 1.5f && Float.parseFloat(molybdenumMax) < 5f)); 
 						break;
 					}
 					case "condition 60":
@@ -2221,8 +2243,8 @@ public class BisFormLib{
 						String molybdenumMin = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
 						String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						resultValues = getFormatedResultValues("molybdenumMin", molybdenumMin, "molybdenumMax", molybdenumMax);
-						ovralResult = ovralResult & checkAndReport("Condition 60", conditionDetails, resultValues, (Float.parseFloat(molybdenumMin) <= 1.5 
-								&& Float.parseFloat(molybdenumMax) >= 5)); 
+						ovralResult = ovralResult & checkAndReport("Condition 60", conditionDetails, resultValues, 
+						(Float.parseFloat(molybdenumMin) <= 1.5f && Float.parseFloat(molybdenumMax) >= 5f)); 
 					break;
 					}
 					case "condition 61":
@@ -2232,8 +2254,8 @@ public class BisFormLib{
 						String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 						String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin, "nickelMax", nickelMax);
-						ovralResult = ovralResult & checkAndReport("Condition 61", conditionDetails, resultValues, (Float.parseFloat(nickelMin)> 0.5 
-								&& Float.parseFloat(nickelMax) < 24)); 
+						ovralResult = ovralResult & checkAndReport("Condition 61", conditionDetails, resultValues, 
+						(Float.parseFloat(nickelMin)> 0.5f && Float.parseFloat(nickelMax) < 24f)); 
 						break;
 					}
 					case "condition 62":
@@ -2243,8 +2265,8 @@ public class BisFormLib{
 						String nickelMin = getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 						String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin, "nickelMax", nickelMax);
-						ovralResult = ovralResult & checkAndReport("Condition 62", conditionDetails, resultValues, (Float.parseFloat(nickelMin) <= 0.5 
-								|| Float.parseFloat(nickelMax) >= 24)); 
+						ovralResult = ovralResult & checkAndReport("Condition 62", conditionDetails, resultValues, 
+						(Float.parseFloat(nickelMin) <= 0.5f || Float.parseFloat(nickelMax) >= 24f)); 
 						break;
 					}
 					case "condition 63":
@@ -2252,7 +2274,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum percent chromium must be less than 15.";
 						String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
 						resultValues = getFormatedResultValues("chromiumMax", "chromiumMax");
-						ovralResult = ovralResult & checkAndReport("Condition 63", conditionDetails, resultValues, (Float.parseFloat(chromiumMax)<15)); 
+						ovralResult = ovralResult & checkAndReport("Condition 63", conditionDetails, resultValues, 
+						(Float.parseFloat(chromiumMax)<15f)); 
 						break;
 					}
 					case "condition 64":
@@ -2261,7 +2284,7 @@ public class BisFormLib{
 						String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
 						resultValues = getFormatedResultValues("chromiumMax", chromiumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 64", conditionDetails, resultValues, 
-								(Float.parseFloat(chromiumMax) >= 15)); 
+								(Float.parseFloat(chromiumMax) >= 15f)); 
 						break;
 					}
 					case "condition 65":
@@ -2269,7 +2292,8 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum thickness must be equal to or greater than 1.65 mm.";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport("Condition 65", conditionDetails, resultValues, (Float.parseFloat(thicknessMin) >= 1.65 ));
+						ovralResult = ovralResult & checkAndReport("Condition 65", conditionDetails, resultValues,
+						(Float.parseFloat(thicknessMin) >= 1.65f ));
 						break;
 					}
 					case "condition 66":
@@ -2277,7 +2301,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be less than 4 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 66", conditionDetails, resultValues, (Float.parseFloat(thicknessMax) < 4));
+						ovralResult = ovralResult & checkAndReport("Condition 66", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax) < 4f));
 						break;
 					}
 					case "condition 67":
@@ -2285,7 +2310,8 @@ public class BisFormLib{
 						conditionDetails = "...then the minimum thickness must be equal to or greater than 4 mm.";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport( "condition 67", conditionDetails, resultValues, (Float.parseFloat(thicknessMin) >= 4 )); 
+						ovralResult = ovralResult & checkAndReport( "condition 67", conditionDetails, resultValues,
+						(Float.parseFloat(thicknessMin) >= 4f )); 
 						break;
 					}
 					case "condition 68":
@@ -2293,7 +2319,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum carbon must be less than 0.25 percent.";
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax);
-						ovralResult = ovralResult & checkAndReport("Condition 68", conditionDetails, resultValues, (Float.parseFloat(carbonMax) < 0.25)); 
+						ovralResult = ovralResult & checkAndReport("Condition 68", conditionDetails, resultValues,
+						(Float.parseFloat(carbonMax) < 0.25f)); 
 						break;
 					}
 					case "condition 69":
@@ -2302,7 +2329,7 @@ public class BisFormLib{
 						String carbonMin = getProdValue(jObj, "ChemicalComposition", "Carbon", "Minimum");
 						resultValues = getFormatedResultValues("carbonMin", carbonMin);
 						ovralResult = ovralResult & checkAndReport("Condition 69", conditionDetails, resultValues, 
-								(Float.parseFloat(carbonMin) >= 0.25)); 
+								(Float.parseFloat(carbonMin) >= 0.25f)); 
 						break;
 					}
 					case "condition 70":
@@ -2317,10 +2344,10 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("widthMin", widthMin, "widthMax", widthMax, 
 								"thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 70", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin) < 2* Float.parseFloat(thicknessMin) && 
-								 Float.parseFloat(widthMin) < 2* Float.parseFloat(thicknessMax) &&
-								 Float.parseFloat(widthMax) < 2* Float.parseFloat(thicknessMin) && 
-								 Float.parseFloat(widthMax) < 2* Float.parseFloat(thicknessMax)
+								(Float.parseFloat(widthMin) < 2f* Float.parseFloat(thicknessMin) && 
+								 Float.parseFloat(widthMin) < 2f* Float.parseFloat(thicknessMax) &&
+								 Float.parseFloat(widthMax) < 2f* Float.parseFloat(thicknessMin) && 
+								 Float.parseFloat(widthMax) < 2f* Float.parseFloat(thicknessMax)
 								));
 						break;
 					}
@@ -2336,10 +2363,10 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("widthMin", widthMin, "widthMax", widthMax, 
 								"thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 71", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin) < 4* Float.parseFloat(thicknessMin) && 
-								 Float.parseFloat(widthMin) < 4* Float.parseFloat(thicknessMax) &&
-								 Float.parseFloat(widthMax) < 4* Float.parseFloat(thicknessMin) && 
-								 Float.parseFloat(widthMax) < 4* Float.parseFloat(thicknessMax)
+								(Float.parseFloat(widthMin) < 4f* Float.parseFloat(thicknessMin) && 
+								 Float.parseFloat(widthMin) < 4f* Float.parseFloat(thicknessMax) &&
+								 Float.parseFloat(widthMax) < 4f* Float.parseFloat(thicknessMin) && 
+								 Float.parseFloat(widthMax) < 4f* Float.parseFloat(thicknessMax)
 								));
 						break;
 					}
@@ -2356,19 +2383,20 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("widthMin", widthMin, "widthMax", widthMax, 
 								"thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 72", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin) >= 4* Float.parseFloat(thicknessMin) && 
-								 Float.parseFloat(widthMin) >= 4* Float.parseFloat(thicknessMax) &&
-								 Float.parseFloat(widthMax) >= 4* Float.parseFloat(thicknessMin) && 
-								 Float.parseFloat(widthMax) >= 4* Float.parseFloat(thicknessMax)
+								(Float.parseFloat(widthMin) >= 4f* Float.parseFloat(thicknessMin) && 
+								 Float.parseFloat(widthMin) >= 4f* Float.parseFloat(thicknessMax) &&
+								 Float.parseFloat(widthMax) >= 4f* Float.parseFloat(thicknessMin) && 
+								 Float.parseFloat(widthMax) >= 4f* Float.parseFloat(thicknessMax)
 								));
 						break;
 					}
-					case "condition 73":
+					case "condition 73": //NOT IN USE ANYMORE
 					{
 						conditionDetails = "...then the minimum thickness must be equal to or greater than 4.75 mm.";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
-						ovralResult = ovralResult & checkAndReport("Condition 73", conditionDetails, resultValues, (Float.parseFloat(thicknessMin) >= 4.75));
+						ovralResult = ovralResult & checkAndReport("Condition 73", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMin) >= 4.75f));
 						break;
 					}
 					case "condition 74":
@@ -2376,7 +2404,8 @@ public class BisFormLib{
 						conditionDetails = "...then the maximum thickness must be less than 4.75 mm.";
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
-						ovralResult = ovralResult & checkAndReport("Condition 74", conditionDetails, resultValues, (Float.parseFloat(thicknessMax) < 4.75));
+						ovralResult = ovralResult & checkAndReport("Condition 74", conditionDetails, resultValues, 
+						(Float.parseFloat(thicknessMax) < 4.75f));
 						break;
 					}
 					case "condition 75":
@@ -2387,7 +2416,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 75", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) >= 3 && Float.parseFloat(thicknessMax)<4.75));
+								(Float.parseFloat(thicknessMin) >= 3f && Float.parseFloat(thicknessMax)<4.75f));
 						break;
 					}
 					case "condition 76":
@@ -2396,7 +2425,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 76", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax)<3));
+								(Float.parseFloat(thicknessMax)<3f));
 						break;
 					}
 					case "condition 77":
@@ -2405,7 +2434,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 77", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin)>10));
+								(Float.parseFloat(thicknessMin)>10f));
 						break;
 					}
 					case "condition 78":
@@ -2416,7 +2445,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 78", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) >= 4.75 && Float.parseFloat(thicknessMax)<10));
+								(Float.parseFloat(thicknessMin) >= 4.75f && Float.parseFloat(thicknessMax)<10f));
 						break;
 					}
 					case "condition 79":
@@ -2427,7 +2456,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 79", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 1 && Float.parseFloat(thicknessMax)<3));
+								(Float.parseFloat(thicknessMin) > 1f && Float.parseFloat(thicknessMax)<3f));
 						break;
 					}
 					case "condition 80":
@@ -2438,7 +2467,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 80", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) >= 0.5 && Float.parseFloat(thicknessMax)<1));
+								(Float.parseFloat(thicknessMin) >= 0.5f && Float.parseFloat(thicknessMax)<1f));
 						break;
 					}
 					case "condition 81":
@@ -2447,7 +2476,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 81", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax)<0.361));
+								(Float.parseFloat(thicknessMax)<0.361f));
 						break;
 					}
 					case "condition 82":
@@ -2456,7 +2485,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 82", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax)>=3));
+								(Float.parseFloat(thicknessMax)>=3f));
 						break;
 					}
 					case "condition 83":
@@ -2465,7 +2494,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 83", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax)<0.5));
+								(Float.parseFloat(thicknessMax)<0.5f));
 						break;
 					}
 					case "condition 84":
@@ -2474,7 +2503,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 84", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin)>=0.5));
+								(Float.parseFloat(thicknessMin)>=0.5f));
 						break;
 					}
 					case "condition 85":
@@ -2483,7 +2512,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 85", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin)>=0.4));
+								(Float.parseFloat(thicknessMin)>=0.4f));
 						break;
 					}
 					case "condition 86":
@@ -2492,7 +2521,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 86", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin)>=4.75));
+								(Float.parseFloat(thicknessMin)>=4.75f));
 						break;
 					}
 					case "condition 87":
@@ -2501,7 +2530,7 @@ public class BisFormLib{
 						String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 						resultValues = getFormatedResultValues("widthMax", widthMax);
 						ovralResult = ovralResult & checkAndReport("Condition 87", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMax)<300));
+								(Float.parseFloat(widthMax)<300f));
 						break;
 					}
 					case "condition 88":
@@ -2510,7 +2539,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 88", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 1.25));
+								(Float.parseFloat(thicknessMin) > 1.25f));
 						break;
 					}
 					case "condition 89":
@@ -2521,7 +2550,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 89", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 0.25 && Float.parseFloat(thicknessMax)<=1.25));
+								(Float.parseFloat(thicknessMin) > 0.25f && Float.parseFloat(thicknessMax)<=1.25f));
 						break;
 					}
 					case "condition 90":
@@ -2530,7 +2559,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 90", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax)<=0.25));
+								(Float.parseFloat(thicknessMax)<=0.25f));
 					break;
 					}
 					case "condition 91":
@@ -2539,7 +2568,7 @@ public class BisFormLib{
 						String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 						resultValues = getFormatedResultValues("widthMax", widthMax);
 						ovralResult = ovralResult & checkAndReport("Condition 91", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMax)<51));
+								(Float.parseFloat(widthMax)<51f));
 					break;
 					}
 					case "condition 92":
@@ -2548,7 +2577,7 @@ public class BisFormLib{
 						String leadMin = getProdValue(jObj, "ChemicalComposition", "Lead", "Minimum");
 						resultValues = getFormatedResultValues("leadMin", leadMin);
 						ovralResult = ovralResult & checkAndReport("Condition 92", conditionDetails, resultValues, 
-								(Float.parseFloat(leadMin)>=0.1));
+								(Float.parseFloat(leadMin)>=0.1f));
 						break; 
 					}
 					case "condition 93":
@@ -2557,7 +2586,7 @@ public class BisFormLib{
 						String carbonMin = getProdValue(jObj, "ChemicalComposition", "Carbon", "Minimum");
 						resultValues = getFormatedResultValues("carbonMin", carbonMin);
 						ovralResult = ovralResult & checkAndReport("Condition 93", conditionDetails, resultValues, 
-								(Float.parseFloat(carbonMin)>=0.6));
+								(Float.parseFloat(carbonMin)>=0.6f));
 			
 						break;
 					}
@@ -2569,7 +2598,7 @@ public class BisFormLib{
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 						resultValues = getFormatedResultValues("carbonMin", carbonMin, "carbonMax", carbonMax);
 						ovralResult = ovralResult & checkAndReport("Condition 94", conditionDetails, resultValues,
-								( Float.parseFloat(carbonMin)>=0.25 && Float.parseFloat(carbonMax)<0.6));
+								( Float.parseFloat(carbonMin)>=0.25f && Float.parseFloat(carbonMax)<0.6f));
 					
 						break;
 					}
@@ -2579,7 +2608,7 @@ public class BisFormLib{
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax);
 						ovralResult = ovralResult & checkAndReport("Condition 95", conditionDetails, resultValues,
-								(Float.parseFloat(carbonMax)<0.6));
+								(Float.parseFloat(carbonMax)<0.6f));
 						break;
 					}
 					case "condition 96":
@@ -2588,7 +2617,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 96", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 76)); 
+								(Float.parseFloat(outsideDiameterMax) < 76f)); 
 						break;
 					}
 					case "condition 97":
@@ -2600,8 +2629,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 97", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 76 && Float.parseFloat(outsideDiameterMin) < 228
-								&&Float.parseFloat(outsideDiameterMax) >= 76 && Float.parseFloat(outsideDiameterMax) < 228)); 
+								(Float.parseFloat(outsideDiameterMin) >= 76f && Float.parseFloat(outsideDiameterMin) < 228f
+								&&Float.parseFloat(outsideDiameterMax) >= 76f && Float.parseFloat(outsideDiameterMax) < 228f)); 
 						break;
 					}
 					case "condition 98":
@@ -2610,7 +2639,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 98", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) > 228)); 
+								(Float.parseFloat(outsideDiameterMin) > 228f)); 
 						break;
 					}
 					case "condition 99":
@@ -2619,7 +2648,7 @@ public class BisFormLib{
 						String heightMax = getProdValue(jObj, "ProductDimensions", "Height", "Maximum");
 						resultValues = getFormatedResultValues("heightMax", heightMax);
 						ovralResult = ovralResult & checkAndReport("Condition 99", conditionDetails, resultValues, 
-								(Float.parseFloat(heightMax) < 80));
+								(Float.parseFloat(heightMax) < 80f));
 					break;
 					}
 					case "condition 100":
@@ -2628,7 +2657,7 @@ public class BisFormLib{
 						String heightMin = getProdValue(jObj, "ProductDimensions", "Height", "Minimum");
 						resultValues = getFormatedResultValues("heightMin", heightMin);
 						ovralResult = ovralResult & checkAndReport("Condition 100", conditionDetails, resultValues, 
-								(Float.parseFloat(heightMin) >= 80));
+								(Float.parseFloat(heightMin) >= 80f));
 						break;
 					}
 					case "condition 101":
@@ -2637,7 +2666,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 101", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 1.5)); 
+								(Float.parseFloat(outsideDiameterMax) < 1.5f)); 
 						break;
 					}
 					case "condition 102":
@@ -2646,7 +2675,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 102", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 1.5)); 
+								(Float.parseFloat(outsideDiameterMin) >= 1.5f)); 
 						
 						break;
 					}
@@ -2656,7 +2685,7 @@ public class BisFormLib{
 						String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 						resultValues = getFormatedResultValues("widthMax", widthMax);
 						ovralResult = ovralResult & checkAndReport("Condition 103", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMax)<=1575));
+								(Float.parseFloat(widthMax)<=1575f));
 						break;
 					}
 					case "condition 104":{
@@ -2664,7 +2693,7 @@ public class BisFormLib{
 						String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", widthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 104", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)>1575));
+								(Float.parseFloat(widthMin)>1575f));
 			
 						break;
 					}
@@ -2673,7 +2702,7 @@ public class BisFormLib{
 						String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", widthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 105", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)>=1370));
+								(Float.parseFloat(widthMin)>=1370f));
 						break;
 					}
 					case "condition 106":{
@@ -2681,7 +2710,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 106", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 6.8));
+								(Float.parseFloat(thicknessMin) > 6.8f));
 						break;
 					}
 					case "condition 107":{
@@ -2690,7 +2719,7 @@ public class BisFormLib{
 						//String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin);
 						ovralResult = ovralResult & checkAndReport("Condition 107", conditionDetails, resultValues, 
-								(Float.parseFloat(nickelMin) > 0.5 )); 
+								(Float.parseFloat(nickelMin) > 0.5f )); 
 						break;
 					}
 					case "condition 108":{
@@ -2700,7 +2729,7 @@ public class BisFormLib{
 						String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						resultValues = getFormatedResultValues("molybdenumMin", molybdenumMin, "molybdenumMax", molybdenumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 108", conditionDetails, resultValues, 
-								(Float.parseFloat(molybdenumMin) > 1.5 && Float.parseFloat(molybdenumMax) < 5)); 
+								(Float.parseFloat(molybdenumMin) > 1.5f && Float.parseFloat(molybdenumMax) < 5f)); 
 						break;
 					}
 					case "condition 109":{
@@ -2710,7 +2739,7 @@ public class BisFormLib{
 						String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						resultValues = getFormatedResultValues("molybdenumMin", molybdenumMin, "molybdenumMax", molybdenumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 109", conditionDetails, resultValues, 
-								(Float.parseFloat(molybdenumMin) <= 1.5	|| Float.parseFloat(molybdenumMax) >= 5));
+								(Float.parseFloat(molybdenumMin) <= 1.5f || Float.parseFloat(molybdenumMax) >= 5f));
 						break;
 					}
 					case "condition 110":{
@@ -2720,7 +2749,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 110", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax)< 4.75 && Float.parseFloat(thicknessMin) >= 3 ));
+								(Float.parseFloat(thicknessMax) < 4.75f && Float.parseFloat(thicknessMin) >= 3f ));
 						break;
 					}
 					case "condition 111":{
@@ -2730,7 +2759,7 @@ public class BisFormLib{
 						String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin, "nickelMax", nickelMax);
 						ovralResult = ovralResult & checkAndReport("Condition 111", conditionDetails, resultValues, 
-								(Float.parseFloat(nickelMin) > 0.5  && Float.parseFloat(nickelMax) < 24)); 
+								(Float.parseFloat(nickelMin) > 0.5f  && Float.parseFloat(nickelMax) < 24f)); 
 						break;
 					}
 					case "condition 112":{
@@ -2740,7 +2769,7 @@ public class BisFormLib{
 						String widthMax = getProdValue(jObj, "ProductDimensions", "Width", "Maximum");
 						resultValues = getFormatedResultValues("widthMin", widthMin, "widthMax", widthMax);
 						ovralResult = ovralResult & checkAndReport("Condition 112", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)> 1575 && Float.parseFloat(widthMax) <= 1880));
+								(Float.parseFloat(widthMin)> 1575f && Float.parseFloat(widthMax) <= 1880f));
 						break;
 					}
 					case "condition 113":{
@@ -2748,7 +2777,7 @@ public class BisFormLib{
 						String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", widthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 113", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)> 1880));
+								(Float.parseFloat(widthMin)> 1880f));
 						break;
 					}
 					case "condition 114":{
@@ -2756,7 +2785,7 @@ public class BisFormLib{
 						String chromiumMax = getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
 						resultValues = getFormatedResultValues("chromiumMax", chromiumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 114", conditionDetails, resultValues, 
-								(Float.parseFloat(chromiumMax) < 15)); 
+								(Float.parseFloat(chromiumMax) < 15f)); 
 						break;
 					}
 					case "condition 115":{
@@ -2764,7 +2793,7 @@ public class BisFormLib{
 						String widthMin = getProdValue(jObj, "ProductDimensions", "Width", "Minimum");
 						resultValues = getFormatedResultValues("widthMin", widthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 115", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin)>= 300));
+								(Float.parseFloat(widthMin)>= 300f));
 						break;
 					}
 					case "condition 116":{
@@ -2772,7 +2801,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 116", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 14)); 
+								(Float.parseFloat(outsideDiameterMax) < 14f)); 
 						break;
 					}
 					case "condition 117":{
@@ -2781,7 +2810,7 @@ public class BisFormLib{
 						String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMax", nickelMax);
 						ovralResult = ovralResult & checkAndReport("Condition 117", conditionDetails, resultValues, 
-								(Float.parseFloat(nickelMax) < 8 ));
+								(Float.parseFloat(nickelMax) < 8f ));
 						break;
 					}
 					case "condition 118":{
@@ -2791,7 +2820,7 @@ public class BisFormLib{
 						String nickelMax = getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						resultValues = getFormatedResultValues("nickelMin", nickelMin, "nickelMax", nickelMax);
 						ovralResult = ovralResult & checkAndReport("Condition 118", conditionDetails, resultValues, 
-								(Float.parseFloat(nickelMin) >= 8 && Float.parseFloat(nickelMax) < 24 ));
+								(Float.parseFloat(nickelMin) >= 8f && Float.parseFloat(nickelMax) < 24f ));
 						break;
 					}
 					case "condition 119":{
@@ -2802,8 +2831,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 119", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 14 && Float.parseFloat(outsideDiameterMin) < 19
-								&& Float.parseFloat(outsideDiameterMax) >= 14 && Float.parseFloat(outsideDiameterMax) < 19));
+								(Float.parseFloat(outsideDiameterMin) >= 14f && Float.parseFloat(outsideDiameterMin) < 19f
+								&& Float.parseFloat(outsideDiameterMax) >= 14f && Float.parseFloat(outsideDiameterMax) < 19f));
 						break;
 					}
 					case "condition 120":{
@@ -2811,7 +2840,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 120", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) >= 19));
+								(Float.parseFloat(outsideDiameterMax) >= 19f));
 						break;
 					}
 					case "condition 121":{
@@ -2819,7 +2848,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 121", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 0.25));
+								(Float.parseFloat(outsideDiameterMax) < 0.25f));
 						break;
 					}
 					case "condition 122":{
@@ -2829,8 +2858,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 122", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 0.25 && Float.parseFloat(outsideDiameterMin) < 0.76
-								&& Float.parseFloat(outsideDiameterMax) >= 0.25 && Float.parseFloat(outsideDiameterMax) < 0.76));
+								(Float.parseFloat(outsideDiameterMin) >= 0.25f && Float.parseFloat(outsideDiameterMin) < 0.76f
+								&& Float.parseFloat(outsideDiameterMax) >= 0.25f && Float.parseFloat(outsideDiameterMax) < 0.76f));
 						break;
 					}
 					case "condition 123":{
@@ -2840,8 +2869,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 123", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 0.76 && Float.parseFloat(outsideDiameterMin) < 1.52
-								&& Float.parseFloat(outsideDiameterMax) >= 0.76 && Float.parseFloat(outsideDiameterMax) < 1.52));
+								(Float.parseFloat(outsideDiameterMin) >= 0.76f && Float.parseFloat(outsideDiameterMin) < 1.52f
+								&& Float.parseFloat(outsideDiameterMax) >= 0.76f && Float.parseFloat(outsideDiameterMax) < 1.52f));
 						break;
 					}
 					case "condition 124":{
@@ -2851,8 +2880,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 124", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 1.52 && Float.parseFloat(outsideDiameterMin) < 5.1
-								&& Float.parseFloat(outsideDiameterMax) >= 1.52 && Float.parseFloat(outsideDiameterMax) < 5.1));
+								(Float.parseFloat(outsideDiameterMin) >= 1.52f && Float.parseFloat(outsideDiameterMin) < 5.1f
+								&& Float.parseFloat(outsideDiameterMax) >= 1.52f && Float.parseFloat(outsideDiameterMax) < 5.1f));
 						break;
 					}
 					case "condition 125":{
@@ -2860,7 +2889,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 125", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 5.1));
+								(Float.parseFloat(outsideDiameterMin) >= 5.1f));
 						break;
 					}
 					case "condition 126":{
@@ -2868,7 +2897,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 126", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax) < 0.25));
+								(Float.parseFloat(thicknessMax) < 0.25f));
 						break;
 					}
 					case "condition 127":{
@@ -2878,8 +2907,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 127", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 76 && Float.parseFloat(outsideDiameterMin) < 152
-								&& Float.parseFloat(outsideDiameterMax) >= 76 && Float.parseFloat(outsideDiameterMax) < 152));
+								(Float.parseFloat(outsideDiameterMin) >= 76f && Float.parseFloat(outsideDiameterMin) < 152f
+								&& Float.parseFloat(outsideDiameterMax) >= 76f && Float.parseFloat(outsideDiameterMax) < 152f));
 						break;
 					}
 					case "condition 128":{
@@ -2889,8 +2918,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 128", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 152 && Float.parseFloat(outsideDiameterMin) < 228
-								&& Float.parseFloat(outsideDiameterMax) >= 152 && Float.parseFloat(outsideDiameterMax) < 228));
+								(Float.parseFloat(outsideDiameterMin) >= 152f && Float.parseFloat(outsideDiameterMin) < 228f
+								&& Float.parseFloat(outsideDiameterMax) >= 152f && Float.parseFloat(outsideDiameterMax) < 228f));
 						break;
 					}
 					case "condition 129":{
@@ -2900,8 +2929,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("widthMin", widthMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 129", conditionDetails, resultValues, 
-								(Float.parseFloat(widthMin) > 150 && 
-								 Float.parseFloat(widthMin) >= 2* Float.parseFloat(thicknessMax)
+								(Float.parseFloat(widthMin) > 150f && Float.parseFloat(widthMin) >= 2f * Float.parseFloat(thicknessMax)
 								));
 						break;
 					}
@@ -2909,7 +2937,7 @@ public class BisFormLib{
 						conditionDetails = "Hot-rolled ...then the cold rolled cell must say 'No' or be blank.";
 						String coldRolled = getProdValue(jObj, "ProductClassification", "Cold Rolled", "");
 						resultValues = getFormatedResultValues("coldRolled", coldRolled);
-						ovralResult = ovralResult & checkAndReport("Condition 129", conditionDetails, resultValues, 
+						ovralResult = ovralResult & checkAndReport("Condition 130", conditionDetails, resultValues, 
 								(coldRolled.equalsIgnoreCase("false") || coldRolled.equalsIgnoreCase("No") 
 										|| coldRolled.equalsIgnoreCase("")));
 						//
@@ -2926,8 +2954,8 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax, "carbonMax", carbonMax,
 								"nickelMin", nickelMin, "molybdenumMin", molybdenumMin);
 						ovralResult = ovralResult & checkAndReport("Condition 131", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) <= 1.6 && Float.parseFloat(carbonMax) < 0.20
-								&& Float.parseFloat(nickelMin)> 0.3 && Float.parseFloat(molybdenumMin)>0.08));
+								(Float.parseFloat(outsideDiameterMax) <= 1.6f && Float.parseFloat(carbonMax) < 0.20f
+								&& Float.parseFloat(nickelMin)> 0.3f && Float.parseFloat(molybdenumMin)>0.08f));
 						break;
 					}
 					case "condition 132":{
@@ -2941,8 +2969,8 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax, "carbonMax", carbonMax,
 								"manganeseMin", manganeseMin, "siliconMin", siliconMin);
 						ovralResult = ovralResult & checkAndReport("Condition 132", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) <= 1.6 && Float.parseFloat(carbonMax) < 0.20 
-								&& Float.parseFloat(manganeseMin)> 0.9 && Float.parseFloat(siliconMin)>0.6));
+								(Float.parseFloat(outsideDiameterMax) <= 1.6f && Float.parseFloat(carbonMax) < 0.20f 
+								&& Float.parseFloat(manganeseMin)> 0.9f && Float.parseFloat(siliconMin)>0.6f));
 						break;
 					}
 					case "condition 133":{
@@ -2950,7 +2978,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 133", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 1.0));
+								(Float.parseFloat(outsideDiameterMax) < 1.0f));
 						break;
 					}
 					case "condition 134":{
@@ -2960,8 +2988,8 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 134", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 1 && Float.parseFloat(outsideDiameterMin) < 1.5
-								&& Float.parseFloat(outsideDiameterMax) >= 1 && Float.parseFloat(outsideDiameterMax) < 1.5));
+								(Float.parseFloat(outsideDiameterMin) >= 1f && Float.parseFloat(outsideDiameterMin) < 1.5f
+								&& Float.parseFloat(outsideDiameterMax) >= 1f && Float.parseFloat(outsideDiameterMax) < 1.5f));
 						break;
 					}
 					case "condition 135":{
@@ -2971,7 +2999,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 135", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) >= 0.361 && Float.parseFloat(thicknessMax)< 0.5));
+								(Float.parseFloat(thicknessMin) >= 0.361f && Float.parseFloat(thicknessMax)< 0.5f));
 						break;
 					}
 					case "condition 136":{
@@ -2979,7 +3007,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 136", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) < 0.361 ));
+								(Float.parseFloat(thicknessMin) < 0.361f ));
 						break;
 					}
 					case "condition 137":{
@@ -2987,7 +3015,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 137", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 19));
+								(Float.parseFloat(outsideDiameterMax) < 19f));
 						break;
 					}
 					case "condition 138":{
@@ -2995,7 +3023,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 138", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) >= 19));
+								(Float.parseFloat(outsideDiameterMax) >= 19f));
 						break;
 					}
 					case "condition 139":{
@@ -3004,8 +3032,11 @@ public class BisFormLib{
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 						String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "chromiumMin", chromiumMin);
+						System.out.println(Float.parseFloat(carbonMax) <= 1.2f );
+						System.out.println( Float.parseFloat(chromiumMin) >= 10.5f);
 						ovralResult = ovralResult & checkAndReport("Condition 139", conditionDetails, resultValues, 
-								(Float.parseFloat(carbonMax) <= 1.2 && Float.parseFloat(chromiumMin) >= 10.5));
+								(Float.parseFloat(carbonMax) <= 1.2f && Float.parseFloat(chromiumMin) >= 10.5f));
+						
 						break;
 					}
 					case "condition 140":{
@@ -3032,7 +3063,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 1", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 0.15 ));
+								(Float.parseFloat(thicknessMin) > 0.15f ));
 						break;
 					}
 					case "condition 2":
@@ -3042,7 +3073,7 @@ public class BisFormLib{
 								+ " greater than 99 percent and the maximum percentage of iron plus silicon must be equal to or "
 								+ "less than 1 percent "
 								+ "2b ...and the maximum percentage of antimony, bismuth, boron, carbon, chromium,"
-								+ " cobalt, copper, lead, magnesium, manganese, nickel, niobium, nitrogen, phosphorous, selenium,"
+								+ " cobalt, copper, lead, magnesium, manganese, nickel, niobium, nitrogen, phosphorus, selenium,"
 								+ " sulfur, tin, titanium, tungsten, vanadium, or zinc must be equal to or less than 0.1 percent "
 								+ "2c ...or the minimum percentage of copper must be greater than 0.1 percent and the maximum "
 								+ "percentage of copper must be less than or equal to 0.2 percent and the maximum chromium must "
@@ -3064,7 +3095,7 @@ public class BisFormLib{
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
 						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
-						String phosphorousMax =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Maximum");
+						String phosphorusMax =  getProdValue(jObj, "ChemicalComposition", "phosphorus", "Maximum");
 						String seleniumMax =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Maximum");
 						String sulfurMax =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
 						String TinMax =  getProdValue(jObj, "ChemicalComposition", "Tin", "Maximum");
@@ -3077,25 +3108,25 @@ public class BisFormLib{
 								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax, "carbonMax", carbonMax, 
 								"chromiumMax", chromiumMax, "cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, 
 								"magnesiumMax", magnesiumMax, "manganeseMax", manganeseMax, "nickelMax", nickelMax, "niobiumMax", niobiumMax,
-								"nitrogenMax", nitrogenMax, "phosphorousMax", phosphorousMax, "seleniumMax", seleniumMax, "sulfurMax", sulfurMax,
+								"nitrogenMax", nitrogenMax, "phosphorusMax", phosphorusMax, "seleniumMax", seleniumMax, "sulfurMax", sulfurMax,
 								"TinMax", TinMax, "titaniumMax", titaniumMax, "tungstenMax", tungstenMax, "vanadiumMax", vanadiumMax,
 								"zincMax", zincMax, "copperMin", copperMin);
 						// (2a and 2b, or 2a and 2c)";
-						boolean a2 = Float.parseFloat(aluminumMin) >= 99 && 
-								Float.parseFloat(aluminumMin)+Float.parseFloat(aluminumMin) <= 1;
-						boolean b2 = Float.parseFloat(antimonyMax) <= 0.1 || Float.parseFloat(bismuthMax) <= 0.1 ||
-								Float.parseFloat(boronMax) <= 0.1 || Float.parseFloat(carbonMax) <= 0.1 || 
-								Float.parseFloat(chromiumMax) <= 0.1 || Float.parseFloat(cobaltMax) <= 0.1 || 
-								Float.parseFloat(copperMax) <= 0.1 || Float.parseFloat(leadMax) <= 0.1 || 
-								Float.parseFloat(magnesiumMax) <= 0.1 || Float.parseFloat(manganeseMax) <= 0.1 || 
-								Float.parseFloat(nickelMax) <= 0.1 || Float.parseFloat(niobiumMax) <= 0.1 || 
-								Float.parseFloat(nitrogenMax) <= 0.1 || Float.parseFloat(phosphorousMax) <= 0.1 || 
-								Float.parseFloat(seleniumMax) <= 0.1 || Float.parseFloat(sulfurMax) <= 0.1 || 
-								Float.parseFloat(TinMax) <= 0.1 || Float.parseFloat(titaniumMax) <= 0.1 || 
-								Float.parseFloat(tungstenMax) <= 0.1 || Float.parseFloat(vanadiumMax) <= 0.1 || 
-								Float.parseFloat(zincMax) <= 0.1;
-						boolean c2 = Float.parseFloat(copperMin) > 0.1 && Float.parseFloat(copperMax) <= 0.2 && 
-								Float.parseFloat(chromiumMax) <= 0.05 && Float.parseFloat(manganeseMax) <= 0.05; 
+						boolean a2 = Float.parseFloat(aluminumMin) >= 99f && 
+								Float.parseFloat(ironMax)+Float.parseFloat(siliconMax) <= 1;
+						boolean b2 = Float.parseFloat(antimonyMax) <= 0.1f || Float.parseFloat(bismuthMax) <= 0.1f ||
+								Float.parseFloat(boronMax) <= 0.1f || Float.parseFloat(carbonMax) <= 0.1f || 
+								Float.parseFloat(chromiumMax) <= 0.1f || Float.parseFloat(cobaltMax) <= 0.1f || 
+								Float.parseFloat(copperMax) <= 0.1f || Float.parseFloat(leadMax) <= 0.1f || 
+								Float.parseFloat(magnesiumMax) <= 0.1f || Float.parseFloat(manganeseMax) <= 0.1f || 
+								Float.parseFloat(nickelMax) <= 0.1f || Float.parseFloat(niobiumMax) <= 0.1f || 
+								Float.parseFloat(nitrogenMax) <= 0.1f || Float.parseFloat(phosphorusMax) <= 0.1f || 
+								Float.parseFloat(seleniumMax) <= 0.1f || Float.parseFloat(sulfurMax) <= 0.1f || 
+								Float.parseFloat(TinMax) <= 0.1f || Float.parseFloat(titaniumMax) <= 0.1f || 
+								Float.parseFloat(tungstenMax) <= 0.1f || Float.parseFloat(vanadiumMax) <= 0.1f || 
+								Float.parseFloat(zincMax) <= 0.1f;
+						boolean c2 = Float.parseFloat(copperMin) > 0.1f && Float.parseFloat(copperMax) <= 0.2f && 
+								Float.parseFloat(chromiumMax) <= 0.05f && Float.parseFloat(manganeseMax) <= 0.05f; 
 						ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, resultValues, 
 								((a2&&b2)||(a2&&c2)));
 						break;
@@ -3105,17 +3136,17 @@ public class BisFormLib{
 						conditionDetails ="Aluminum alloys "
 								+ "3a ...then the minimum percent of aluminum must be greater than the minimum percent of antimony, "
 								+ "bismuth, boron, carbon, chromium, cobalt, copper, iron, lead, magnesium, manganese, nickel, niobium,"
-								+ " nitrogen, phosphorous, selenium, silicon, sulfur, tin, titanium, tungsten, vanadium, zinc, and other "
+								+ " nitrogen, phosphorus, selenium, silicon, sulfur, tin, titanium, tungsten, vanadium, zinc, and other "
 								+ "OR The sum of the maximum percent of iron, silicon, antimony, bismuth, boron, carbon, chromium, "
-								+ "cobalt, copper, lead, magnesium, manganese, nickel, niobium, nitrogen, phosphorous, selenium, "
+								+ "cobalt, copper, lead, magnesium, manganese, nickel, niobium, nitrogen, phosphorus, selenium, "
 								+ "sulfur, tin, titanium, tungsten, vanadium, zinc, and other must be less than 50 percent. "
 								+ "[Note: this allows CBP to consider those requests where all aluminum content is left blank by the submitter.] "
 								+ "AND 3b ...the minimum percentage of iron plus silicon must be greater than 1 percent. "
 								+ "OR 3c ...the minimum percentage of antimony, bismuth, boron, carbon, chromium, cobalt, copper, lead, "
-								+ "magnesium, manganese, nickel, niobium, nitrogen, phosphorous, selenium, sulfur, tin, titanium, tungsten,"
+								+ "magnesium, manganese, nickel, niobium, nitrogen, phosphorus, selenium, sulfur, tin, titanium, tungsten,"
 								+ " vanadium, zinc, or other must be greater than 0.1 percent. "
 								+ "OR 3d ...the sum of the minimum percentage of antimony, bismuth, boron, carbon, chromium, cobalt, copper, "
-								+ "iron, lead, magnesium, manganese, nickel, niobium, nitrogen, phosphorous, selenium, silicon, sulfur, tin, "
+								+ "iron, lead, magnesium, manganese, nickel, niobium, nitrogen, phosphorus, selenium, silicon, sulfur, tin, "
 								+ "titanium, tungsten, vanadium, zinc, and other is greater than 1 percent."
 								+ " (3a and 3b, or 3a and 3c, or 3a and 3d)";
 						float aluminumMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Aluminum", "Minimum"));
@@ -3133,7 +3164,7 @@ public class BisFormLib{
 						String nickelMin =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 						String niobiumMin =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Minimum");
 						String nitrogenMin =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Minimum");
-						String phosphorousMin =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Minimum");
+						String phosphorusMin =  getProdValue(jObj, "ChemicalComposition", "phosphorus", "Minimum");
 						String seleniumMin =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Minimum");
 						String siliconMin =  getProdValue(jObj, "ChemicalComposition", "silicon", "Minimum");
 						String sulfurMin =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Minimum");
@@ -3142,7 +3173,7 @@ public class BisFormLib{
 						String tungstenMin =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Minimum");
 						String vanadiumMin =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Minimum");
 						String zincMin =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Minimum");
-						String otherMin =  getProdValue(jObj, "ChemicalComposition", "Other", "Minimum");
+						//String otherMin =  getProdValue(jObj, "ChemicalComposition", "Other", "Minimum");
 						
 						String ironMax =  getProdValue(jObj, "ChemicalComposition", "Iron", "Maximum");
 						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
@@ -3159,7 +3190,7 @@ public class BisFormLib{
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
 						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
-						String phosphorousMax =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Maximum");
+						String phosphorusMax =  getProdValue(jObj, "ChemicalComposition", "phosphorus", "Maximum");
 						String seleniumMax =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Maximum");
 						String sulfurMax =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
 						String TinMax =  getProdValue(jObj, "ChemicalComposition", "Tin", "Maximum");
@@ -3167,7 +3198,7 @@ public class BisFormLib{
 						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
 						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
 						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");	
-						String otherMax =  getProdValue(jObj, "ChemicalComposition", "Other", "Maximum");	
+						//String otherMax =  getProdValue(jObj, "ChemicalComposition", "Other", "Maximum");	
 						boolean a3 = 
 						(aluminumMin > Float.parseFloat(antimonyMin) && aluminumMin > Float.parseFloat(bismuthMin) &&
 						aluminumMin > Float.parseFloat(boronMin) && aluminumMin > Float.parseFloat(carbonMin) &&
@@ -3176,60 +3207,60 @@ public class BisFormLib{
 						aluminumMin > Float.parseFloat(leadMin) && aluminumMin > Float.parseFloat(magnesiumMin) &&
 						aluminumMin > Float.parseFloat(manganeseMin) && aluminumMin > Float.parseFloat(nickelMin) &&
 						aluminumMin > Float.parseFloat(niobiumMin) && aluminumMin > Float.parseFloat(nitrogenMin) &&
-						aluminumMin > Float.parseFloat(phosphorousMin) && aluminumMin > Float.parseFloat(seleniumMin) &&
+						aluminumMin > Float.parseFloat(phosphorusMin) && aluminumMin > Float.parseFloat(seleniumMin) &&
 						aluminumMin > Float.parseFloat(siliconMin) && aluminumMin > Float.parseFloat(sulfurMin) &&
 						aluminumMin > Float.parseFloat(TinMin) && aluminumMin > Float.parseFloat(titaniumMin) &&
 						aluminumMin > Float.parseFloat(tungstenMin) && aluminumMin > Float.parseFloat(vanadiumMin) &&
-						aluminumMin > Float.parseFloat(zincMin) && aluminumMin > Float.parseFloat(otherMin))
+						aluminumMin > Float.parseFloat(zincMin) )//&& aluminumMin > Float.parseFloat(otherMin)
 						||
-						(Float.parseFloat(ironMax) < 50 && Float.parseFloat(siliconMax) < 50 &&
-						Float.parseFloat(antimonyMax) < 50 && Float.parseFloat(bismuthMax) < 50 &&
-						Float.parseFloat(boronMax) < 50 && Float.parseFloat(carbonMax) < 50 && 
-						Float.parseFloat(chromiumMax) < 50 && Float.parseFloat(cobaltMax) < 50 && 
-						Float.parseFloat(copperMax) < 50 && Float.parseFloat(leadMax) < 50 && 
-						Float.parseFloat(magnesiumMax) < 50 && Float.parseFloat(manganeseMax) < 50 && 
-						Float.parseFloat(nickelMax) < 50 && Float.parseFloat(niobiumMax) < 50 && 
-						Float.parseFloat(nitrogenMax) < 50 && Float.parseFloat(phosphorousMax) < 50 && 
-						Float.parseFloat(seleniumMax) < 50 && Float.parseFloat(sulfurMax) < 50 && 
-						Float.parseFloat(TinMax) < 50 && Float.parseFloat(titaniumMax) < 50 && 
-						Float.parseFloat(tungstenMax) < 50 && Float.parseFloat(vanadiumMax) < 50 && 
-						Float.parseFloat(zincMax) < 50 && Float.parseFloat(otherMax) < 50 );
+						(Float.parseFloat(ironMax) < 50f && Float.parseFloat(siliconMax) < 50f &&
+						Float.parseFloat(antimonyMax) < 50f && Float.parseFloat(bismuthMax) < 50f &&
+						Float.parseFloat(boronMax) < 50f && Float.parseFloat(carbonMax) < 50f && 
+						Float.parseFloat(chromiumMax) < 50f && Float.parseFloat(cobaltMax) < 50f && 
+						Float.parseFloat(copperMax) < 50f && Float.parseFloat(leadMax) < 50f && 
+						Float.parseFloat(magnesiumMax) < 50f && Float.parseFloat(manganeseMax) < 50f && 
+						Float.parseFloat(nickelMax) < 50f && Float.parseFloat(niobiumMax) < 50f && 
+						Float.parseFloat(nitrogenMax) < 50f && Float.parseFloat(phosphorusMax) < 50f && 
+						Float.parseFloat(seleniumMax) < 50f && Float.parseFloat(sulfurMax) < 50f && 
+						Float.parseFloat(TinMax) < 50f && Float.parseFloat(titaniumMax) < 50f && 
+						Float.parseFloat(tungstenMax) < 50f && Float.parseFloat(vanadiumMax) < 50f && 
+						Float.parseFloat(zincMax) < 50f  );//&& Float.parseFloat(otherMax) < 50f
 						// "AND 3b ...the minimum percentage of iron plus silicon must be greater than 1 percent. "
-						boolean b3 = Float.parseFloat(ironMin) + Float.parseFloat(siliconMin) >1; 
+						boolean b3 = Float.parseFloat(ironMin) + Float.parseFloat(siliconMin) >1f; 
 						boolean c3 = 
-								(0.1 < Float.parseFloat(antimonyMin) && 0.1 < Float.parseFloat(bismuthMin) &&
-								0.1 < Float.parseFloat(boronMin) && 0.1 < Float.parseFloat(carbonMin) &&
-								0.1 < Float.parseFloat(chromiumMin) && 0.1 < Float.parseFloat(cobaltMin) &&
-								0.1 < Float.parseFloat(copperMin) && 
-								0.1 < Float.parseFloat(leadMin) && 0.1 < Float.parseFloat(magnesiumMin) &&
-								0.1 < Float.parseFloat(manganeseMin) && 0.1 < Float.parseFloat(nickelMin) &&
-								0.1 < Float.parseFloat(niobiumMin) && 0.1 < Float.parseFloat(nitrogenMin) &&
-								0.1 < Float.parseFloat(phosphorousMin) && 0.1 < Float.parseFloat(seleniumMin) &&
-								0.1 < Float.parseFloat(sulfurMin) &&
-								0.1 < Float.parseFloat(TinMin) && 0.1 < Float.parseFloat(titaniumMin) &&
-								0.1 < Float.parseFloat(tungstenMin) && 0.1 < Float.parseFloat(vanadiumMin) &&
-								0.1 < Float.parseFloat(zincMin) && 0.1 < Float.parseFloat(otherMin));
+								(0.1f < Float.parseFloat(antimonyMin) && 0.1f < Float.parseFloat(bismuthMin) &&
+								0.1f < Float.parseFloat(boronMin) && 0.1f < Float.parseFloat(carbonMin) &&
+								0.1f < Float.parseFloat(chromiumMin) && 0.1f < Float.parseFloat(cobaltMin) &&
+								0.1f < Float.parseFloat(copperMin) && 
+								0.1f < Float.parseFloat(leadMin) && 0.1f < Float.parseFloat(magnesiumMin) &&
+								0.1f < Float.parseFloat(manganeseMin) && 0.1f < Float.parseFloat(nickelMin) &&
+								0.1f < Float.parseFloat(niobiumMin) && 0.1f < Float.parseFloat(nitrogenMin) &&
+								0.1f < Float.parseFloat(phosphorusMin) && 0.1f < Float.parseFloat(seleniumMin) &&
+								0.1f < Float.parseFloat(sulfurMin) &&
+								0.1f < Float.parseFloat(TinMin) && 0.1f < Float.parseFloat(titaniumMin) &&
+								0.1f < Float.parseFloat(tungstenMin) && 0.1f < Float.parseFloat(vanadiumMin) &&
+								0.1f < Float.parseFloat(zincMin) );//&& 0.1f < Float.parseFloat(otherMin)
 						boolean d3 = (Float.parseFloat(antimonyMin) + Float.parseFloat(bismuthMin) + Float.parseFloat(boronMin) + Float.parseFloat(carbonMin) +
 								Float.parseFloat(chromiumMin) + Float.parseFloat(cobaltMin) + Float.parseFloat(copperMin) + Float.parseFloat(ironMin) +
 								Float.parseFloat(leadMin) + Float.parseFloat(magnesiumMin) + Float.parseFloat(manganeseMin) + Float.parseFloat(nickelMin) +
-								Float.parseFloat(niobiumMin) + Float.parseFloat(nitrogenMin) + Float.parseFloat(phosphorousMin) + Float.parseFloat(seleniumMin) +
+								Float.parseFloat(niobiumMin) + Float.parseFloat(nitrogenMin) + Float.parseFloat(phosphorusMin) + Float.parseFloat(seleniumMin) +
 								Float.parseFloat(sulfurMin) + Float.parseFloat(TinMin) + Float.parseFloat(titaniumMin) +
-								Float.parseFloat(tungstenMin) + Float.parseFloat(vanadiumMin) +	Float.parseFloat(zincMin) + Float.parseFloat(otherMin) > 1);
+								Float.parseFloat(tungstenMin) + Float.parseFloat(vanadiumMin) +	Float.parseFloat(zincMin)  > 1);//+ Float.parseFloat(otherMin)
 						
 						resultValues = getFormatedResultValues("aluminumMin", aluminumMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
 								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax, "carbonMax", carbonMax, 
 								"chromiumMax", chromiumMax, "cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, 
 								"magnesiumMax", magnesiumMax, "manganeseMax", manganeseMax, "nickelMax", nickelMax, "niobiumMax", niobiumMax,
-								"nitrogenMax", nitrogenMax, "phosphorousMax", phosphorousMax, "seleniumMax", seleniumMax, "sulfurMax", sulfurMax,
+								"nitrogenMax", nitrogenMax, "phosphorusMax", phosphorusMax, "seleniumMax", seleniumMax, "sulfurMax", sulfurMax,
 								"TinMax", TinMax, "titaniumMax", titaniumMax, "tungstenMax", tungstenMax, "vanadiumMax", vanadiumMax,
 								"zincMax", zincMax, "copperMin", copperMin, "ironMin", ironMin, "siliconMin", siliconMin,
 								"antimonyMin", antimonyMin, "bismuthMin", bismuthMin, "boronMin", boronMin, "carbonMin", carbonMin, 
 								"chromiumMin", chromiumMin, "cobaltMin", cobaltMin, "copperMin", copperMin, "leadMin", leadMin, 
 								"magnesiumMin", magnesiumMin, "manganeseMin", manganeseMin, "nickelMin", nickelMin, "niobiumMin", niobiumMin,
-								"nitrogenMin", nitrogenMin, "phosphorousMin", phosphorousMin, "seleniumMin", seleniumMin, "sulfurMin", sulfurMin,
+								"nitrogenMin", nitrogenMin, "phosphorusMin", phosphorusMin, "seleniumMin", seleniumMin, "sulfurMin", sulfurMin,
 								"TinMin", TinMin, "titaniumMin", titaniumMin, "tungstenMin", tungstenMin, "vanadiumMin", vanadiumMin,
 								"zincMin", zincMin);
-						ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, resultValues, 
+						ovralResult = ovralResult & checkAndReport("Condition 3", conditionDetails, resultValues, 
 								((a3&&b3)||(a3&&c3)||(a3&&d3)));
 						break;
 					}
@@ -3240,7 +3271,7 @@ public class BisFormLib{
 						String vanadiumMin = getProdValue(jObj, "ChemicalComposition", "Vanadium", "Minimum");
 						resultValues = getFormatedResultValues("vanadiumMin", vanadiumMin);
 						ovralResult = ovralResult & checkAndReport("Condition 4", conditionDetails, resultValues, 
-								(Float.parseFloat(vanadiumMin) >= 20 ));
+								(Float.parseFloat(vanadiumMin) >= 20f ));
 						break;
 					}
 					case "condition 5":
@@ -3252,14 +3283,14 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 5", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 0.175 && Float.parseFloat(thicknessMax)<=0.432));
+								(Float.parseFloat(thicknessMin) > 0.175f && Float.parseFloat(thicknessMax)<=0.432f));
 						break;
 					}
 					case "condition 6":
 					{
 						conditionDetails ="Body stock ...then the minimum percent manganese must be greater than the maximum percentage "
 								+ "of antimony, bismuth, boron, chromium, cobalt, copper, iron, lead, magnesium, nickel, niobium, nitrogen, "
-								+ "phosphorous, selenium, silicon, sulfur, tin, titanium, tungsten, vanadium, or zinc and the minimum tensile "
+								+ "phosphorus, selenium, silicon, sulfur, tin, titanium, tungsten, vanadium, or zinc and the minimum tensile "
 								+ "strength must be greater than or equal to 262 MPa.";
 						float manganeseMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum"));
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
@@ -3274,7 +3305,7 @@ public class BisFormLib{
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
 						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
-						String phosphorousMax =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Maximum");
+						String phosphorusMax =  getProdValue(jObj, "ChemicalComposition", "phosphorus", "Maximum");
 						String seleniumMax =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Maximum");
 						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
 						String sulfurMax =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
@@ -3283,30 +3314,30 @@ public class BisFormLib{
 						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
 						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
 						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
-						String yieldStrengthMin = getProdValue(jObj, "ProductStrength", "YieldStrength", "Minimum");
+						String tensileStrengthMin = getProdValue(jObj, "ProductStrength", "TensileStrength", "Minimum");
 						resultValues = getFormatedResultValues("manganeseMin", manganeseMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
 								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax,	"chromiumMax", chromiumMax, 
 								"cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, 
-								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorousMax", phosphorousMax, 
+								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorusMax", phosphorusMax, 
 								"seleniumMax", seleniumMax, "sulfurMax", sulfurMax,	"TinMax", TinMax, "titaniumMax", titaniumMax, "tungstenMax",
-								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "yieldStrengthMin", yieldStrengthMin);
+								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "tensileStrengthMin", tensileStrengthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 6", conditionDetails, resultValues, 
 								(
 								(manganeseMin>Float.parseFloat(antimonyMax) || manganeseMin>Float.parseFloat(bismuthMax) ||manganeseMin>Float.parseFloat(boronMax) ||
 								manganeseMin>Float.parseFloat(chromiumMax) ||manganeseMin>Float.parseFloat(cobaltMax) ||manganeseMin>Float.parseFloat(copperMax) ||
 								manganeseMin>Float.parseFloat(ironMax) ||manganeseMin>Float.parseFloat(leadMax) ||manganeseMin>Float.parseFloat(magnesiumMax) ||
 								manganeseMin>Float.parseFloat(nickelMax) ||manganeseMin>Float.parseFloat(niobiumMax) ||manganeseMin>Float.parseFloat(nitrogenMax) ||
-								manganeseMin>Float.parseFloat(phosphorousMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
+								manganeseMin>Float.parseFloat(phosphorusMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
 								manganeseMin>Float.parseFloat(sulfurMax) ||manganeseMin>Float.parseFloat(TinMax) ||manganeseMin>Float.parseFloat(titaniumMax) ||
 								manganeseMin>Float.parseFloat(tungstenMax) ||manganeseMin>Float.parseFloat(vanadiumMax) ||manganeseMin>Float.parseFloat(zincMax) ) &&
-								(Float.parseFloat(yieldStrengthMin)>262))
+								(Float.parseFloat(tensileStrengthMin)>262f))
 								);
 						break;
 					}
 					case "condition 7":
 					{
 						conditionDetails ="Lid stock ...then the minimum percent magnesium must be greater than the maximum percentage of antimony, "
-								+ "bismuth, boron, chromium, cobalt, copper, iron, lead, manganese, nickel, niobium, nitrogen, phosphorous, selenium, "
+								+ "bismuth, boron, chromium, cobalt, copper, iron, lead, manganese, nickel, niobium, nitrogen, phosphorus, selenium, "
 								+ "silicon, sulfur, tin, titanium, tungsten, vanadium, or zinc and the minimum tensile strength must be 345 MPa.";
 						float manganeseMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum"));
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
@@ -3321,7 +3352,7 @@ public class BisFormLib{
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
 						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
-						String phosphorousMax =  getProdValue(jObj, "ChemicalComposition", "Phosphorous", "Maximum");
+						String phosphorusMax =  getProdValue(jObj, "ChemicalComposition", "phosphorus", "Maximum");
 						String seleniumMax =  getProdValue(jObj, "ChemicalComposition", "Selenium", "Maximum");
 						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
 						String sulfurMax =  getProdValue(jObj, "ChemicalComposition", "Sulfur", "Maximum");
@@ -3330,23 +3361,23 @@ public class BisFormLib{
 						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
 						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
 						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
-						String yieldStrengthMin = getProdValue(jObj, "ProductStrength", "YieldStrength", "Minimum");
+						String tensileStrengthMin = getProdValue(jObj, "ProductStrength", "TensileStrength", "Minimum");
 						resultValues = getFormatedResultValues("manganeseMin", manganeseMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
 								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax,	"chromiumMax", chromiumMax, 
 								"cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, 
-								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorousMax", phosphorousMax, 
+								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorusMax", phosphorusMax, 
 								"seleniumMax", seleniumMax, "sulfurMax", sulfurMax,	"TinMax", TinMax, "titaniumMax", titaniumMax, "tungstenMax",
-								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "yieldStrengthMin", yieldStrengthMin);
-						ovralResult = ovralResult & checkAndReport("Condition 6", conditionDetails, resultValues, 
+								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "tensileStrengthMin", tensileStrengthMin);
+						ovralResult = ovralResult & checkAndReport("Condition 7", conditionDetails, resultValues, 
 								(
 								(manganeseMin>Float.parseFloat(antimonyMax) || manganeseMin>Float.parseFloat(bismuthMax) ||manganeseMin>Float.parseFloat(boronMax) ||
 								manganeseMin>Float.parseFloat(chromiumMax) ||manganeseMin>Float.parseFloat(cobaltMax) ||manganeseMin>Float.parseFloat(copperMax) ||
 								manganeseMin>Float.parseFloat(ironMax) ||manganeseMin>Float.parseFloat(leadMax) ||manganeseMin>Float.parseFloat(magnesiumMax) ||
 								manganeseMin>Float.parseFloat(nickelMax) ||manganeseMin>Float.parseFloat(niobiumMax) ||manganeseMin>Float.parseFloat(nitrogenMax) ||
-								manganeseMin>Float.parseFloat(phosphorousMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
+								manganeseMin>Float.parseFloat(phosphorusMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
 								manganeseMin>Float.parseFloat(sulfurMax) ||manganeseMin>Float.parseFloat(TinMax) ||manganeseMin>Float.parseFloat(titaniumMax) ||
 								manganeseMin>Float.parseFloat(tungstenMax) ||manganeseMin>Float.parseFloat(vanadiumMax) ||manganeseMin>Float.parseFloat(zincMax) ) &&
-								(Float.parseFloat(yieldStrengthMin) == 345))
+								(Float.parseFloat(tensileStrengthMin) == 345f))
 								);
 						break;
 					}
@@ -3356,7 +3387,7 @@ public class BisFormLib{
 						String siliconMin = getProdValue(jObj, "ChemicalComposition", "Silicon", "Minimum");
 						resultValues = getFormatedResultValues("siliconMin", siliconMin);
 						ovralResult = ovralResult & checkAndReport("Condition 8", conditionDetails, resultValues, 
-								(Float.parseFloat(siliconMin)>=25));
+								(Float.parseFloat(siliconMin)>=25f));
 						break;
 					}
 					case "condition 9":
@@ -3365,7 +3396,7 @@ public class BisFormLib{
 						String leadMin = getProdValue(jObj, "ChemicalComposition", "Lead", "Minimum");
 						resultValues = getFormatedResultValues("leadMin", leadMin);
 						ovralResult = ovralResult & checkAndReport("Condition 9", conditionDetails, resultValues, 
-								(Float.parseFloat(leadMin)>=0.03));
+								(Float.parseFloat(leadMin)>=0.03f));
 						break;
 					}
 					case "condition 10":
@@ -3374,7 +3405,7 @@ public class BisFormLib{
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax);
 						ovralResult = ovralResult & checkAndReport("Condition 10", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMax) < 10));
+								(Float.parseFloat(outsideDiameterMax) < 10f));
 						break;
 					}
 					case "condition 11":
@@ -3384,7 +3415,7 @@ public class BisFormLib{
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin);
 						ovralResult = ovralResult & checkAndReport("Condition 11", conditionDetails, resultValues, 
-								(Float.parseFloat(outsideDiameterMin) >= 10));
+								(Float.parseFloat(outsideDiameterMin) >= 10f));
 						break;
 					}
 					case "condition 12":
@@ -3399,7 +3430,7 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("widthMax", widthMax+"", "heightMax", heightMax+"",
 								"sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
 						ovralResult = ovralResult & checkAndReport("Condition 12", conditionDetails, resultValues, 
-								(sqrt < 10));
+								(sqrt < 10f));
 						break;
 					}
 					case "condition 13":
@@ -3414,7 +3445,7 @@ public class BisFormLib{
 						resultValues = getFormatedResultValues("widthMax", widthMax+"", "heightMax", heightMax+"",
 								"sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
 						ovralResult = ovralResult & checkAndReport("Condition 13", conditionDetails, resultValues, 
-								(sqrt >= 10));
+								(sqrt >= 10f));
 						break;
 					}
 					case "condition 14":
@@ -3432,9 +3463,9 @@ public class BisFormLib{
 						float sqrt = (float) Math.sqrt(squaredWidthMax+squaredHeightMax);
 						resultValues = getFormatedResultValues("widthMax", widthMax+"",  "heightMax", heightMax+"", 
 								"sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
-						ovralResult = ovralResult & checkAndReport("Condition 11", conditionDetails, resultValues, 
-								( (sqrt > 7 || Float.parseFloat(outsideDiameterMin) > 7) && 
-								  (sqrt > 7 || Float.parseFloat(outsideDiameterMax) <=9.5)
+						ovralResult = ovralResult & checkAndReport("Condition 14", conditionDetails, resultValues, 
+								( (sqrt > 7f || Float.parseFloat(outsideDiameterMin) > 7f) && 
+								  (sqrt > 7f || Float.parseFloat(outsideDiameterMax) <=9.5f)
 								));
 						break;
 					}
@@ -3451,8 +3482,8 @@ public class BisFormLib{
 						float sqrt = (float) Math.sqrt(squaredWidthMax+squaredHeightMax);
 						resultValues = getFormatedResultValues("squaredWidthMax", squaredWidthMax+"", "squaredHeightMax", 
 								squaredHeightMax+"", "sqroot of (SquaredWidthMax + SquaredHeightMax)", sqrt+"");
-						ovralResult = ovralResult & checkAndReport("Condition 11", conditionDetails, resultValues, 
-								( sqrt > 7 || Float.parseFloat(outsideDiameterMax) > 9.5));
+						ovralResult = ovralResult & checkAndReport("Condition 15", conditionDetails, resultValues, 
+								( sqrt > 7 || Float.parseFloat(outsideDiameterMax) > 9.5f));
 						break;
 					}
 					case "condition 16":
@@ -3461,7 +3492,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 16", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 0.2 ));
+								(Float.parseFloat(thicknessMin) > 0.2f ));
 						break;
 					}
 					case "condition 17":
@@ -3470,7 +3501,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 17", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 6.3 ));
+								(Float.parseFloat(thicknessMin) > 6.3f ));
 						break;
 					}
 					case "condition 18":
@@ -3479,7 +3510,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 18", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax) <= 6.3 ));
+								(Float.parseFloat(thicknessMax) <= 6.3f ));
 						break;
 					}
 					case "condition 19":
@@ -3488,7 +3519,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 19", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax) <= 0.2 ));
+								(Float.parseFloat(thicknessMax) <= 0.2f ));
 						break;
 					}
 					case "condition 20":
@@ -3500,7 +3531,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 20", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax) <= 0.15 ));
+								(Float.parseFloat(thicknessMax) <= 0.15f ));
 						break;
 					}
 					case "condition 21":
@@ -3509,7 +3540,7 @@ public class BisFormLib{
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
 						ovralResult = ovralResult & checkAndReport("Condition 21", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax) <= 0.01 ));
+								(Float.parseFloat(thicknessMax) <= 0.01f ));
 						break;
 					}
 					case "condition 22":
@@ -3521,7 +3552,7 @@ public class BisFormLib{
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin);
 						ovralResult = ovralResult & checkAndReport("Condition 22", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) > 0.01 ));
+								(Float.parseFloat(thicknessMin) > 0.01f ));
 						break;
 					}
 					default:
@@ -3545,23 +3576,97 @@ public class BisFormLib{
 	public static boolean checkAndReport(String conditionName,
 										 String condDetails,
 										 String resValues,
-										 boolean condition)
+										 boolean expectedSts)
 	{
-		String resultStr = condDetails+System.lineSeparator()+"--------------------------"+
-				System.lineSeparator()+resValues;
+		String expectedStsStr = expectedSts? "Pass":"Fail";
+		String actualStsStr;	
 		boolean checked = true;
-		if (condition)
+		
+		//{"Pass":"6,4,130,3,7,10,74","Failed":""}
+		//{"Pass":[{"ConditionID":"25"},{"ConditionID":"139"},{"ConditionID":"35"}],"Failed":[]}
+		//
+		//{"Pass":[{"ConditionID":"1"},{"ConditionID":"4"},{"ConditionID":"79"}],"Failed":[{"ConditionID":"14","Reason":"the maximum thickness must be less than 3 mm and the minimum yield point must be 275 MPa or the minimum thickness is equal to or greater than 3mm and the minimum yield point is 355 MPa."}]}
+		//{"Pass":[{"ConditionID":"1"},{"ConditionID":"130"},{"ConditionID":"16"},{"ConditionID":"77"}],"Failed":[{"ConditionID":"4","Reason":"The minimum width must be 600 mm or more"}]}
+		//{"Pass":[{"ConditionID":"1"},{"ConditionID":"130"}],"Failed":[{"ConditionID":"4","Reason":"The minimum width must be 600 mm or more"},{"ConditionID":"86","Reason":"The minimum thickness must be equal to or greater than 4.75 mm."},{"ConditionID":"129","Reason":"The minimum width must be greater than 150mm, and the minimum width must be greater than or equal to 2* the maximum thickness."}]}
+		
+		//{"Pass":"71","Failed":"51:The maximum percentage must be less than 0.3 percent of aluminum, and less than 0.1 percent of antimony, and less than 0.1 percent of bismuth, and less than 0.0008 percent of boron, and less than 2 percent of carbon, and less than 0.3 percent of chromium, and less than 0.3 percent of cobalt, and less than 0.4 percent of copper, and less than 0.4 percent of lead, and less than 1.65 percent of manganese, and less than 0.08 percent of molybdenum, and less than 0.3 percent of nickel, and less than 0.06 percent of niobium, and less than 0.1 percent selenium, and 0.6 percent of silicon, and less than 0.1 percent tellurium, and less than 0.05 percent of titanium, and less than 0.3 percent of tungsten (wolfram), and less than 0.1 percent of vanadium, and less than 0.05 percent of zirconium.
+		//OR
+		//…the minimum percent carbon must be equal to or greater than 2 percent (and a blank value will not be acceptable)
+		//,69:The minimum carbon must be equal to or greater than 0.25 percent."}
+		
+		//{"Pass":[{"ConditionID":"1"},{"ConditionID":"130"}],"Failed":[{"ConditionID":"4","Reason":"The minimum width must be 600 mm or more"},{"ConditionID":"86","Reason":"The minimum thickness must be equal to or greater than 4.75 mm."},{"ConditionID":"129","Reason":"The minimum width must be greater than 150mm, and the minimum width must be greater than or equal to 2* the maximum thickness."}]}
+		
+	/*	JSONParser parser = new JSONParser(); 
+		try {
+			JSONObject json = (JSONObject) parser.parse(displayedResult);
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace(); ConditionID":"14"  51:  51: failed  ConditionID":"14"   pass  ConditionID":"1" "68
+		}*///{"Pass":"6,4,130,3,7,10,74","Failed":""}
+		String conditionNumber = conditionName.split(" ")[1];
+		//String conditionId = "\"ConditionID\":\""+conditionNumber+"\"";
+		String passedConditions = displayedResult.substring(0, displayedResult.indexOf("Failed")-1);
+		String failedConditions = displayedResult.substring(displayedResult.indexOf("Failed")-1,displayedResult.length()); 
+		
+		String conditionIdF1 = "\"ConditionID\":\""+conditionNumber+"\"";
+		String conditionIdP1 = "\"ConditionID\":\""+conditionNumber+"\"";
+		List<String>  conditionIdP2 = new ArrayList<String>();
+		//conditionIdP2.add("");
+		if(!passedConditions.contains("Condition"))
 		{
-			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+resultStr+"'>"
-					+ conditionName+" details ...(!)</abbr>", 
-					"<abbr title='"+resValues+"'>Products values ...(!)</abbr>", "VP", "pass", "");
+			int b = passedConditions.indexOf(":\"");
+			int e = passedConditions.indexOf("\",");
+			String s1 = passedConditions.substring(b+2, e);
+			if(s1.contains(","))
+			{
+				conditionIdP2 = Arrays.asList(s1.split(","));
+			}
+			else 
+				conditionIdP2.add(s1);
+		}
+		String conditionIdF2 = conditionNumber+":";
+	/*	
+		String conditionIdF2 = conditionNumber+":";
+		String conditionIdP3 = "\""+conditionNumber+"\"";
+		List<String> conditionP4 =  Arrays.asList(passedConditions.split(","));*/ 
+		String displayedResults = passedConditions+System.lineSeparator()+failedConditions;
+		/*String conditionsValuesDetails = condDetails+System.lineSeparator()+"--------------------------"+
+				System.lineSeparator()+resValues;*/
+		if(passedConditions.contains(conditionIdP1)|| conditionIdP2.contains(conditionNumber))
+		{
+			actualStsStr = "Pass";
+		}
+		else if (failedConditions.contains(conditionIdF1)|| failedConditions.contains(conditionIdF2))
+		{
+			actualStsStr = "Fail";
+		}
+		else
+		{
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", 
+					"<abbr title='"+condDetails+"'>" + expectedStsStr +": "+conditionName+" details ...(!)</abbr>",
+					"<abbr title='"+displayedResults+"'>"+conditionName+" wasn't tested ...(!)</abbr>", 
+					"<abbr title='"+resValues+"'>Product's values ...(!)</abbr>",
+					"fail", "");
+			return false;
+		}
+		if (expectedStsStr.equals(actualStsStr))
+		{
+			checked = true;
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", 
+					"<abbr title='"+condDetails+"'>" + expectedStsStr +": "+conditionName+" details ...(!)</abbr>",
+					"<abbr title='"+displayedResults+"'>"+actualStsStr+": Displayed results ...(!)</abbr>", 
+					"<abbr title='"+resValues+"'>Product's values ...(!)</abbr>", 
+					"pass", "");
+			//"<abbr title='"+pass+System.lineSeparator()+fail+"'>The actual displayed value ...(!)</abbr>"
 		}
 		else
 		{
 			checked = false;
-			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", "<abbr title='"+resultStr+"'>"
-					+ conditionName+" details ...(!)</abbr>",
-					"<abbr title='"+resValues+"'>Products values ...(!)</abbr>", "VP", "fail", "");
+			HtmlReport.addHtmlStep("Validate {"+conditionName+"}", 
+					"<abbr title='"+condDetails+"'>" + expectedStsStr +": "+conditionName+" details ...(!)</abbr>",
+					"<abbr title='"+displayedResults+"'>"+actualStsStr+": Displayed results ...(!)</abbr>", 
+					"<abbr title='"+resValues+"'>Product's values ...(!)</abbr>", 
+					"fail", "");
 		}
 		return checked;
 	}
