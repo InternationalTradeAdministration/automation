@@ -1301,8 +1301,8 @@ public class BisFormLib{
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
 						String chromiumMin = getProdValue(jObj, "ChemicalComposition", "Chromium", "Minimum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "chromiumMin", chromiumMin);
-						ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, resultValues, (Float.parseFloat(carbonMax)<=1.2 
-								&& Float.parseFloat(chromiumMin)>=10.5f));
+						ovralResult = ovralResult & checkAndReport("Condition 2", conditionDetails, resultValues, 
+								(Float.parseFloat(carbonMax)<=1.2f && Float.parseFloat(chromiumMin)>=10.5f));
 						break;
 					}
 					case "condition 3":
@@ -1456,10 +1456,10 @@ public class BisFormLib{
 						
 						break;
 					}
-					case "condition 8":
+					case "condition 8": 
 					{
-						conditionDetails = "High speed steel ...then the sum of the minimum percent molybdenum plus tungsten plus vanadium must"
-								+ " be equal to or greater than 7 percent, "
+						conditionDetails = "High speed steel ...then the"
+								+ " sum of the minimum percent molybdenum plus tungsten plus vanadium must be equal to or greater than 7 percent, "
 								+ "or the sum of the minimum percent molybdenum plus tungsten must be equal to or greater than 7 percent, "
 								+ "or the sum of the minimum percent molybdenum plus vanadium must be equal to or greater than 7 percent, "
 								+ "or the sum of the minimum percent tungsten plus vanadium must be equal to or greater than 7 percent, "
@@ -1473,12 +1473,19 @@ public class BisFormLib{
 						String chromiumMax =  getProdValue(jObj, "ChemicalComposition", "Chromium", "Maximum");
 						resultValues = getFormatedResultValues("molybdenumMin", molybdenumMin, "tungstenMin", tungstenMin, "vanadiumMin", vanadiumMin,
 								"carbonMin", carbonMin, "chromiumMin", chromiumMin, "chromiumMax", chromiumMax);
+						
+						//((( (molybdenum_min + tungsten_min ) >= 7 ) || ((molybdenum_min + vanadium_min) >= 7) || ((tungsten_min + vanadium_min) >= 7))
 						ovralResult = ovralResult & checkAndReport("Condition 8", conditionDetails, resultValues, 
-							((Float.parseFloat(molybdenumMin)+Float.parseFloat(tungstenMin)+Float.parseFloat(vanadiumMin)>=7)||	
+							(
+								(
+								(Float.parseFloat(molybdenumMin)+Float.parseFloat(tungstenMin)+Float.parseFloat(vanadiumMin)>=7)||	
 								(Float.parseFloat(molybdenumMin)+Float.parseFloat(tungstenMin)>=7f)||	
 								(Float.parseFloat(molybdenumMin)+Float.parseFloat(vanadiumMin)>=7f)||	
-								(Float.parseFloat(tungstenMin)+Float.parseFloat(vanadiumMin)>=7f && Float.parseFloat(carbonMin)>=0.6f
-								&& Float.parseFloat(chromiumMin)>=3f && Float.parseFloat(chromiumMax)<=6f))); 
+								(Float.parseFloat(tungstenMin)+ Float.parseFloat(vanadiumMin)>=7f)
+								) && 
+								(Float.parseFloat(carbonMin)>=0.6f && Float.parseFloat(chromiumMin)>=3f && Float.parseFloat(chromiumMax)<=6f)
+							)
+							); 
 						break;
 					}
 					case "condition 9":
@@ -2244,7 +2251,7 @@ public class BisFormLib{
 						String molybdenumMax = getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						resultValues = getFormatedResultValues("molybdenumMin", molybdenumMin, "molybdenumMax", molybdenumMax);
 						ovralResult = ovralResult & checkAndReport("Condition 60", conditionDetails, resultValues, 
-						(Float.parseFloat(molybdenumMin) <= 1.5f && Float.parseFloat(molybdenumMax) >= 5f)); 
+						(Float.parseFloat(molybdenumMin) <= 1.5f || Float.parseFloat(molybdenumMax) >= 5f)); 
 					break;
 					}
 					case "condition 61":
@@ -3330,7 +3337,7 @@ public class BisFormLib{
 								manganeseMin>Float.parseFloat(phosphorusMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
 								manganeseMin>Float.parseFloat(sulfurMax) ||manganeseMin>Float.parseFloat(TinMax) ||manganeseMin>Float.parseFloat(titaniumMax) ||
 								manganeseMin>Float.parseFloat(tungstenMax) ||manganeseMin>Float.parseFloat(vanadiumMax) ||manganeseMin>Float.parseFloat(zincMax) ) &&
-								(Float.parseFloat(tensileStrengthMin)>262f))
+								(Float.parseFloat(tensileStrengthMin)>=262f))
 								);
 						break;
 					}
@@ -3339,7 +3346,8 @@ public class BisFormLib{
 						conditionDetails ="Lid stock ...then the minimum percent magnesium must be greater than the maximum percentage of antimony, "
 								+ "bismuth, boron, chromium, cobalt, copper, iron, lead, manganese, nickel, niobium, nitrogen, phosphorus, selenium, "
 								+ "silicon, sulfur, tin, titanium, tungsten, vanadium, or zinc and the minimum tensile strength must be 345 MPa.";
-						float manganeseMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum"));
+						float magnesiumMin =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "magnesium", "Minimum"));
+						
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
 						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
 						String boronMax =  getProdValue(jObj, "ChemicalComposition", "Boron", "Maximum");
@@ -3362,7 +3370,7 @@ public class BisFormLib{
 						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
 						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
 						String tensileStrengthMin = getProdValue(jObj, "ProductStrength", "TensileStrength", "Minimum");
-						resultValues = getFormatedResultValues("manganeseMin", manganeseMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
+						resultValues = getFormatedResultValues("magnesiumMin", magnesiumMin+"", "ironMax", ironMax, "siliconMax", siliconMax,
 								"antimonyMax", antimonyMax, "bismuthMax", bismuthMax, "boronMax", boronMax,	"chromiumMax", chromiumMax, 
 								"cobaltMax", cobaltMax, "copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, 
 								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "nitrogenMax", nitrogenMax, "phosphorusMax", phosphorusMax, 
@@ -3370,13 +3378,13 @@ public class BisFormLib{
 								tungstenMax, "vanadiumMax", vanadiumMax, "zincMax", zincMax, "tensileStrengthMin", tensileStrengthMin);
 						ovralResult = ovralResult & checkAndReport("Condition 7", conditionDetails, resultValues, 
 								(
-								(manganeseMin>Float.parseFloat(antimonyMax) || manganeseMin>Float.parseFloat(bismuthMax) ||manganeseMin>Float.parseFloat(boronMax) ||
-								manganeseMin>Float.parseFloat(chromiumMax) ||manganeseMin>Float.parseFloat(cobaltMax) ||manganeseMin>Float.parseFloat(copperMax) ||
-								manganeseMin>Float.parseFloat(ironMax) ||manganeseMin>Float.parseFloat(leadMax) ||manganeseMin>Float.parseFloat(magnesiumMax) ||
-								manganeseMin>Float.parseFloat(nickelMax) ||manganeseMin>Float.parseFloat(niobiumMax) ||manganeseMin>Float.parseFloat(nitrogenMax) ||
-								manganeseMin>Float.parseFloat(phosphorusMax) ||manganeseMin>Float.parseFloat(seleniumMax) ||manganeseMin>Float.parseFloat(siliconMax) ||
-								manganeseMin>Float.parseFloat(sulfurMax) ||manganeseMin>Float.parseFloat(TinMax) ||manganeseMin>Float.parseFloat(titaniumMax) ||
-								manganeseMin>Float.parseFloat(tungstenMax) ||manganeseMin>Float.parseFloat(vanadiumMax) ||manganeseMin>Float.parseFloat(zincMax) ) &&
+								(magnesiumMin>Float.parseFloat(antimonyMax) || magnesiumMin>Float.parseFloat(bismuthMax) ||magnesiumMin>Float.parseFloat(boronMax) ||
+										magnesiumMin>Float.parseFloat(chromiumMax) ||magnesiumMin>Float.parseFloat(cobaltMax) ||magnesiumMin>Float.parseFloat(copperMax) ||
+										magnesiumMin>Float.parseFloat(ironMax) ||magnesiumMin>Float.parseFloat(leadMax) ||magnesiumMin>Float.parseFloat(magnesiumMax) ||
+										magnesiumMin>Float.parseFloat(nickelMax) ||magnesiumMin>Float.parseFloat(niobiumMax) ||magnesiumMin>Float.parseFloat(nitrogenMax) ||
+										magnesiumMin>Float.parseFloat(phosphorusMax) ||magnesiumMin>Float.parseFloat(seleniumMax) ||magnesiumMin>Float.parseFloat(siliconMax) ||
+										magnesiumMin>Float.parseFloat(sulfurMax) ||magnesiumMin>Float.parseFloat(TinMax) ||magnesiumMin>Float.parseFloat(titaniumMax) ||
+										magnesiumMin>Float.parseFloat(tungstenMax) ||magnesiumMin>Float.parseFloat(vanadiumMax) ||magnesiumMin>Float.parseFloat(zincMax) ) &&
 								(Float.parseFloat(tensileStrengthMin) == 345f))
 								);
 						break;

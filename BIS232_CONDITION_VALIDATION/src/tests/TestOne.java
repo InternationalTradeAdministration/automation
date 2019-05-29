@@ -120,7 +120,7 @@ public class TestOne {
 		dataPoolStep3  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 3", "Active=TRUE");
 		dataPoolStep4  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 4", "Active=TRUE");
 		dataPoolStep5  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 5", "Active=TRUE");*/
-		String testNgPath = InitTools.getRootFolder()+"\\testng.xml";
+		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
 		//build
 		suites.add(testNgPath);//path to xml..
 		testng.setTestSuites(suites);
@@ -228,11 +228,10 @@ public class TestOne {
 			 		+ " and actualResult shouldn't be empty", 
 					"Not as expected", "VP", "fail", "");
 		 }
-		 
-		 if (id.equals("416"))
+	/*	 if (id.equals("714"))
 		 {
 			 System.out.println(id);
-		 }
+		 }*/
 		 String scenarioName = id+"_"+htsusCode;
 		 String filePath = jsonFolder+"/"+scenarioName+".json";
 		 FileOutputStream out = new FileOutputStream(filePath);
@@ -249,8 +248,6 @@ public class TestOne {
 			jsonObject = (JSONObject) object;
 			htsUsCode= (String) jsonObject.get("HTSUSCode");
 			productType= (String) jsonObject.get("Product");
-			
-          // JSONObject  xxx = (JSONObject) jsonObject.get("ChemicalComposition");
 		 }
 		 catch(FileNotFoundException e) {e.printStackTrace();}
 		 catch(IOException e){e.printStackTrace();}
@@ -260,10 +257,16 @@ public class TestOne {
 		 
 		 if (!steelConditions.containsKey(htsUsCode) && !aluminumConditions.containsKey(htsUsCode) )
 		 {
-			 testCaseStatus=false;
-			 failTestCase(scenarioName,htsUsCode+" Should be found in the condition sheet" , 
+			 String htsUsCode10digits = htsUsCode;
+			 htsUsCode = htsUsCode.substring(0, 4);
+			 if (!steelConditions.containsKey(htsUsCode) && !aluminumConditions.containsKey(htsUsCode) )
+			 { 
+				 testCaseStatus=false;
+				 failTestCase(scenarioName,htsUsCode+ "OR "+htsUsCode10digits+" Should be found in the condition sheet" , 
 					"No row found in the condition sheet for the code: "+htsUsCode, "VP", "fail", "");
+			 }
 		 }
+		 
 		 if (productType.equalsIgnoreCase("Steel"))
 		 {
 			 conditionList = steelConditions.get(htsUsCode);
