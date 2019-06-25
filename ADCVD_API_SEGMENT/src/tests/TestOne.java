@@ -55,7 +55,7 @@ public class TestOne {
 	public static DateFormat dateFormat;
 	public static String todayStr, caseId, caseName, petitionId, petitionName,
 	investigationId, investigationName, orderId, orderName,adminReviewId,
-	adminReviewName, litigationId, litigationName, remandId, remandName;
+	adminReviewName;
 	public static void main(String[] args) throws Exception 
 	{
 		initiateRecordType();
@@ -73,9 +73,11 @@ public class TestOne {
 		dataPoolPetition  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Petition", "Active=TRUE");
 		dataPoolInvestigation  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Invetigation", "Active=TRUE");
 		dataPoolOrder  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Order", "Active=TRUE");
-		dataPoolSegment = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Segments", "Active=TRUE"); 
+		dataPoolSegment = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Segments", "Active=TRUE");
+		dataPoolLitigation = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Litigations", "Active=TRUE");
 		ADCVDLib.tollingDates = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Tolling Dates", "Active=TRUE");
-		dataPool = mergeDataPools(dataPoolCase, dataPoolPetition, dataPoolInvestigation, dataPoolOrder, dataPoolSegment);
+		dataPool = mergeDataPools(dataPoolCase, dataPoolPetition, dataPoolInvestigation, dataPoolOrder, dataPoolSegment,
+				dataPoolLitigation);
 		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
 		//build
 		buildTestNgFromDataPool(dataPool, testNgPath);
@@ -165,7 +167,7 @@ public class TestOne {
 		String password = mapConfInfos.get("PASSWORD");
 		String accessToken = APITools.getAccesToken(url, grantService, grantType, grantId,
 				clientSecret , userName, password);
-		if(accessToken!=null)
+		if(accessToken!=null && !accessToken.equals("Nothing"))
 		{
 			LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 			row.put("Name", row.get("Name")+ADCVDLib.getCaseName());
@@ -369,8 +371,8 @@ public class TestOne {
 	        record.put("Actual_Initiation_Signature__c", "");
 			record.put("Actual_Initiation_Issues_to_DAS__c", "");
 			record.put("Actual_Initiation_Concurrence_to_DAS__c", "");
-	       	code = APITools.updateRecordObject("petition__c", petitionId, record); //Next_Office_Deadline__c
-	        
+	       	 code = APITools.updateRecordObject("petition__c", petitionId, record); //Next_Office_Deadline__c
+	        /*
 	        //*********************************III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS**************
 	       	//*************************************************************************************************************
 	    	//A)-//In progress
@@ -380,29 +382,497 @@ public class TestOne {
 	        HtmlReport.addHtmlStepTitle("Validate Status - In Progress","Title");
 	        jObj = APITools.getRecordFromObject(sqlString);
 	        testCaseStatus = testCaseStatus & 
-		    ADCVDLib.validateObjectStatus("Positive", "In Progress", jObj.getString("Status__c"), condition); 
-	        //B)- Litigation
-	        condition = "IF Litigation_YesNo__c is Yes AND Litigation_Resolved__c is "
-	        		+ "No AND Petition__c.Petition_Outcome__c is not blank THEN status is true";
+		    ADCVDLib.validateObjectStatus("Positive", "In Progress", jObj.getString("Status__c"), condition);
+	        //1
+	        condition = "'Actual Initiation Signature' is blank and Petition Outcome is not 'In Progress'";
+	        
+	        record.clear();
+	        record.put("Actual_Initiation_Signature__c", "");
+			record.put("Petition_Outcome__c", "Deficient Petition/Did Not Initiate");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        HtmlReport.addHtmlStepTitle("Validate Status - In Progress","Title");
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "In Progress", jObj.getString("Status__c"), condition);
+	        
+	        //2
+	        condition = "'Actual Initiation Signature' is blank and Petition Outcome is 'Initiated from Petition'";
+	        record.clear();
+	        record.put("Actual_Initiation_Signature__c", "");
+			record.put("Petition_Outcome__c", "Deficient Petition/Did Not Initiate");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        HtmlReport.addHtmlStepTitle("Validate Status - In Progress","Title");
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "In Progress", jObj.getString("Status__c"), condition);
+
+	        condition = "Petition Outcome should be 'Self Initiated' when 'Actual Initiation Signature' is blank";
+	        condition = "'Actual Initiation Signature' is blank and Petition Outcome is not 'Self Initiated'";
+	        condition = "Petition Outcome should be 'Self Initiated' if the 'Actual Initiation Signature' is not blank";
+	        condition = "'Actual Initiation Signature' is blank and Petition Outcome is 'Self Initiated'";
+	        
+	        
+	        
+	        
+	        //B)Litigation
 	        HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
+	        //1
+	        condition = "In the petition pick 'YES' for litigation and pick 'NO' for Litigation Resolved (Both are picklist option)";
 	        record.clear();
-	       	record.put("Actual_Initiation_Signature__c", todayStr);
-	       	record.put("Litigation_YesNo__c", "Yes");
-	       	record.put("Litigation_Resolved__c", "No");
-	       	record.put("Petition_Outcome__c", "Self-Initiated");
-	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);
-			jObj = APITools.getRecordFromObject(sqlString);
-			testCaseStatus = testCaseStatus & 
-			ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition); 
-			//C)- Closed
-			condition = "IF Litigation_YesNo__c is Yes AND Litigation_Resolved__c is Yes";
-			HtmlReport.addHtmlStepTitle("Validate Status - Closed","Title");
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
+	        
+	        //2
+	        condition = "In the petition pick 'NO' for litigation and pick 'YES' for Litigation Resolved (Both are picklist option)";
 	        record.clear();
-	       	record.put("Litigation_Resolved__c", "Yes");
-	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);
-			jObj = APITools.getRecordFromObject(sqlString);
-			testCaseStatus = testCaseStatus & 
-			ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition); 
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	        //3
+	        condition = "In the petition pick 'NO' for litigation and pick 'NO' for Litigation Resolved (Both are picklist option)";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	        //4
+	        condition = "In the petition pick 'YES' for litigation and pick 'YES' for Litigation Resolved (Both are picklist option)";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	        //5
+	        condition = "In the petition pick 'YES' for litigation and pick 'NO' for Litigation Resolved (Both are picklist option) "
+	        		+ "and the segment ststus is 'Active'";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");//
+			record.put("Litigation_Status__c", "Active");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
+	        
+	        //6
+	        condition = "In the petition pick 'YES' for litigation and pick 'NO' for Litigation Resolved (Both are picklist option) "
+	        		+ "and the segment ststus is 'Not Active'";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+			record.put("Litigation_Status__c", "Inactive");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	        //7
+	        condition = "In the petition pick 'NO' for litigation and pick 'YES' for Litigation Resolved (Both are picklist option) "
+	        		+ "and the segment ststus is 'Active'";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+			record.put("Litigation_Status__c", "Active");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	        //8
+	        condition = "In the petition pick 'NO' for litigation and pick 'NO' for Litigation Resolved (Both are picklist option) "
+	        		+ "and the segment ststus is 'Active'";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "No");
+			record.put("Litigation_Status__c", "Active");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+	        //9
+	        condition = "In the petition pick 'YES' for litigation and pick 'YES' for Litigation Resolved (Both are picklist option)"
+	        		+ " and the segment ststus is 'Active'";
+	        record.clear();
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+			record.put("Litigation_Status__c", "Active");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+
+	        
+	        
+	        //C) Closed
+	        HtmlReport.addHtmlStepTitle("Validate Status - Closed","Title");
+	        //1
+			condition = "System should allow user to close the petiiton  if the Petition Outcome is'Petition"
+					+ " Withdrawn/Did Not Initiate' and  in the petition pick 'YES' for llitigation and  pick  "
+					+ "'YES' for  litigation resolved";
+			record.clear();
+			record.put("Petition_Outcome__c", "Deficient Petition/Did Not Initiate");
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	        
+			//2
+			condition = "If the Petition Outcome is'Petition Withdrawn/Did Not Initiate' and in the petition is"
+					+ " 'YES' for litigation and is 'NO' for litigation resolved then user should not be able to "
+					+ "close the petition";
+			record.clear();
+			//record.put("Petition_Outcome__c", "Deficient Petition/Did Not Initiate");
+			//record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Nagative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//3
+			condition = "Petition Outcome is not 'Petititon Withdraw/Did Not Initiate' and in the petition is "
+					+ "YES for litigation and YES for Litigation resolved then the use should not be able to "
+					+ "close the petition";
+			record.clear();
+			record.put("Petition_Outcome__c", "Self-Initiated");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Nagative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//4
+			condition = "Petition Outcome is 'Petition Withdrawn/Did Not Initiate'  and the litigation is 'YES' "
+					+ "and litigation resolved is 'NO' then user should not be able to close the petition";
+			record.clear();
+			record.put("Petition_Outcome__c", "Petition Withdrawn/Did Not Initiate");
+			record.put("Actual_Initiation_Signature__c", "");
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Nagative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//5
+			condition = "System should not allow user to close the petiiton  if the Petition Outcome is'Petition "
+					+ "Withdrawn/Did Not Initiate' and  in the petition pick 'NO' for llitigation and  pick  'YES' "
+					+ "for  litigation resolved";
+			record.clear();
+			record.put("Petition_Outcome__c", "Petition Withdrawn/Did Not Initiate");
+			record.put("Actual_Initiation_Signature__c", "");
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Nagative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//6
+			condition = "If Petition Outcome is 'Petition Withdrawn/Did Not Initiate' and litigation is 'No' "
+					+ "then allow user to close the petition ";
+			record.clear();
+			record.put("Petition_Outcome__c", "Petition Withdrawn/Did Not Initiate");
+			record.put("Actual_Initiation_Signature__c", "");
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Nagative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//7
+			condition = "If Petition Outcome is  not 'Petition Withdrawn/Did Not Initiate' and litigation is 'No'"
+					+ " then allow user to close the petition"; 
+			record.clear();
+			record.put("Petition_Outcome__c", "Self-Initiated");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	        
+			
+			//8
+			condition = "If Petition Outcome is  not 'Petition Withdrawn/Did Not Initiate' and litigation is 'YES' "
+					+ "then allow user to close the petition ";
+			record.clear();
+			record.put("Petition_Outcome__c", "Self-Initiated");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	        
+			
+			//9
+			condition = "If Petition Outcome is 'Petition Withdrawn/Did Not Initiate' and litigation is 'YES' then "
+					+ "allow user to close the petition ";
+			record.clear();
+			record.put("Petition_Outcome__c", "Petition Withdrawn/Did Not Initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	        
+			//10
+	        condition = "Petition Outcome is 'Deficient Petition/Did not initiate' and the litigation is 'YES' "
+	        		+ "and the Litigation Resolved is 'YES'  then the status is true";
+	        record.clear();
+			record.put("Petition_Outcome__c", "Petition Withdrawn/Did Not Initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	        
+	        //11
+	        condition = "Petition Outcome is not 'Deficient Petition/Did not initiate' and the litigation is 'YES' "
+	        		+ "and the Litigation Resolved is 'YES'  then the status is not true";
+	        record.clear();
+			record.put("Petition_Outcome__c", "Self-Initiated");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	        
+	        //12
+			condition = "Petition Outcome is 'Deficient Petition/Did not initiate' and the litigation is 'NO' and"
+					+ " the Litigation Resolved is 'YES'  then the status is not true ";
+			record.put("Petition_Outcome__c", "Deficient Petition/Did not initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//13
+			condition = "Petition Outcome is 'Deficient Petition/Did not initiate' and the litigation is 'NO' and the "
+					+ "Litigation Resolved is 'NO'  then the status is not true ";
+			record.clear();
+			record.put("Petition_Outcome__c", "Deficient Petition/Did not initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//14
+			condition = "Petition Outcome is 'Deficient Petition/Did not initiate' and the litigation is 'YES' and the"
+					+ " Litigation Resolved is 'NO'  then the status is not true ";
+			record.clear();
+			record.put("Petition_Outcome__c", "Deficient Petition/Did not initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	        
+			
+			//15
+			condition = "If Petition Outcome is 'Deficient Petition/Did not initiate' and the litigation is 'NO'  then "
+					+ "the status is true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Deficient Petition/Did not initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	        
+			
+			//16
+			condition = "If Petition Outcome is not 'Deficient Petition/Did not initiate' and the litigation is 'NO'  "
+					+ "then the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Self-Initiated");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//17
+			condition = "If Petition Outcome is 'Deficient Petition/Did not initiate' and the litigation is 'YES'  "
+					+ "hen the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Deficient Petition/Did not initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//18
+			condition = "Petition Outcome is 'Initiated from Petition or Self Initiated' and the litigation is 'YES' "
+					+ "and the Litigation Resolved is 'YES'  then the status is true"; 
+			record.clear();
+			record.put("Petition_Outcome__c", "Initiated from Petition");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+			//19
+			condition = "Petition Outcome is not 'Initiated from Petition or Self Initiated' and the litigation is 'YES'"
+					+ " and the Litigation Resolved is 'YES'  then the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Petition Withdrawn/Did Not Initiate");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//20
+			condition = "Petition Outcome is 'Initiated from Petition or Self Initiated' and the litigation is 'NO' and "
+					+ "the Litigation Resolved is 'YES'  then the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Initiated from Petition");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "Yes");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			//21
+			condition = "Petition Outcome is 'Initiated from Petition or Self Initiated' and the litigation is 'NO' "
+					+ "and the Litigation Resolved is 'NO'  then the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Initiated from Petition");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//22
+			condition = "Petition Outcome is 'Initiated from Petition or Self Initiated' and the litigation is 'YES' "
+					+ "and the Litigation Resolved is 'NO'  then the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Initiated from Petition");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//23
+			condition = "If Petition Outcome is 'Initiated from Petition or Self Initiated' and the litigation is "
+					+ "'NO'  then the status is true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Initiated from Petition");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "No");
+			record.put("Litigation_Resolved__c", "");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+			//24
+			condition = "If Petition Outcome is not 'Initiated from Petition or Self Initiated' and the litigation"
+					+ " is 'NO'  then the status is not true";
+			
+			//25
+			condition = "If Petition Outcome is 'Initiated from Petition or Self Initiated' and the litigation is "
+					+ "'YES'  then the status is not true";
+			record.clear();
+			record.put("Petition_Outcome__c", "Initiated from Petition");
+			record.put("Actual_Initiation_Signature__c", todayStr);
+			record.put("Litigation_YesNo__c", "Yes");
+			record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("petition__c", petitionId, record);
+	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+			
+
+	        
+	        */
+	        
+	         
 			
 			record.clear();
 	        record.put("Actual_Initiation_Signature__c", "");
@@ -420,7 +890,7 @@ public class TestOne {
 						"Not as expected", "Step", "fail", "");
 		}
 		
-	}
+	}//petition
 	
 	/**
 	 * This method is for ADCVD Investigation creation and validation
@@ -489,6 +959,7 @@ public class TestOne {
 		       				"Tolling Day", dates.get("Date_For_Tolling"));
 	       		}
 	       	}
+	    /*
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -744,37 +1215,44 @@ public class TestOne {
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Prelim_Extension_Request_File__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 			//3
-			/*clause = "IF Actual_Preliminary_Signature__c is blank AND Signature_of_Prelim_Postponement_FR__c  is blank"
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Signature_of_Prelim_Postponement_FR__c  is blank"
 					+ " AND Calculated_Postponement_of_PrelimDeterFR__c  has not passed THEN Calculated_Postponement_of_PrelimDeterFR__c";
 			todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.MONTH, -18);		    
+		    todayCal.add(Calendar.DATE, -184);		    
 	    	record.clear();
-    		record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+    		record.put("Petition_Filed__c", dateFormat.format(todayCal.getTime()));
 	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);	 
-	       	jObj = APITools.getRecordFromObject(sqlString));
+	       	jObj = APITools.getRecordFromObject(sqlString);
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Postponement_of_PrelimDeterFR__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);*/
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 			//4
 			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c has"
 					+ " not passed THEN Prelim_Team_Meeting_Deadline__c";
 			todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.MONTH, -6);	// make Calculated_Prelim_Extension_Request_File__c passed	    
+		    todayCal.add(Calendar.DATE, -195);		    
 	    	record.clear();
     		record.put("Petition_Filed__c", dateFormat.format(todayCal.getTime()));
-	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);	 	       	
+	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);
+	       	record.clear();
+	       	record.put("segment__c", petitionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Preliminary");
+			String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
 	       	jObj = APITools.getRecordFromObject(sqlString);
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        code = APITools.deleteRecordObject("Federal_Register__c", frIdP);
 	        //5
 	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c is blank THEN "
 	        		+ "Prelim_Issues_Due_to_DAS__c";
 	        todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.MONTH, -7);		    
+		    todayCal.add(Calendar.DATE, -195);		    
 	    	record.clear();
     		record.put("Petition_Filed__c", dateFormat.format(todayCal.getTime()));
-    		code = APITools.updateRecordObject("Petition__c", petitionId, record);
+	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);
     		jObj = APITools.getRecordFromObject(sqlString);
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
@@ -997,7 +1475,7 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
 	        //expectedValue = ADCVDLib.noNullVal(jObj.getString("Actual_Amended_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, "");
-	        
+	     */
 	        //*********************************III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS**************
 	       	//*************************************************************************************************************
 	    	//A)-//In progress
@@ -1031,17 +1509,6 @@ public class TestOne {
 			testCaseStatus = testCaseStatus & 
 			ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition); 
 	       	*/
-	       	
-	       	
-	       	
-	       	
-	       	
-	       	
-	       	
-	       	
-	       	
-	       	
-	       	
 	       	
        }
 		else 
@@ -1155,7 +1622,7 @@ public class TestOne {
 	       	}
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
-	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        /*HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
 	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
 	        String actualValue, expectedValue; 
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
@@ -1494,8 +1961,8 @@ public class TestOne {
 			record.put("Actual_Final_Signature__c", "");
 			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
-	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-	        
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);*/
+	        /*
 	        //*********************************III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS**************
 	       	//*************************************************************************************************************
        	//A)-//Prelim
@@ -2051,7 +2518,7 @@ public class TestOne {
 	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
 	       	jObj = APITools.getRecordFromObject(sqlString);
 	       	testCaseStatus = testCaseStatus & 
-	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);*/
        }
 	   else 
 	   {
@@ -2074,7 +2541,7 @@ public class TestOne {
 		printLog(GuiTools.getTestCaseName());
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
-		record.put("Request_Filed__c", row.get("Request_Filed__c"));
+		//record.put("Request_Filed__c", row.get("Request_Filed__c"));
 		record.put("Application_Accepted__c", row.get("Application_Accepted__c"));
 		record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
 		String antiCircumventionId = APITools.createObjectRecord("Segment__c", record);
@@ -2089,45 +2556,7 @@ public class TestOne {
 	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> antiCircumventionDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "anti-circumvention", "");
-	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
-	        		+ "HOLIDAY AND TOLLING DAY","Title");
-	        for(LinkedHashMap<String, String> dates:antiCircumventionDates)
-	       	{
-	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
-	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Weekend").equals(""))
-	       		{
-		       		record.clear();
-		    		record.put("Application_Accepted__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
-			       	String code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj, dates.get("Field_Name"), 
-		       				"Weekend", dates.get("Date_For_Weekend"));
-	       		}
-	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Holiday").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Application_Accepted__c", dates.get("Date_For_Holiday"));
-			       	String code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj, dates.get("Field_Name"),
-		       				"Holiday", dates.get("Date_For_Holiday"));
-	       		}
-	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Tolling").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Application_Accepted__c", dates.get("Date_For_Tolling"));
-			       	String code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj, dates.get("Field_Name"), 
-		       				"Tolling Day", dates.get("Date_For_Tolling"));
-	       		}
-	       	}
+	       
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -2169,6 +2598,7 @@ public class TestOne {
 	        record.clear();	 
 	        record.put("Actual_Initiation_Signature__c", "");	        
 			record.put("Actual_Preliminary_Signature__c", "");
+			
 	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
 	       	//Next Due to DAS Deadline
 	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
@@ -2307,19 +2737,16 @@ public class TestOne {
 	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
 			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));	        	
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 			//5
 			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
 					+ "THEN Prelim_Issues_Due_to_DAS__c";
 			todayCal.setTime(todayDate);
 			todayCal.add(Calendar.MONTH, -5);
 			record.clear();
-			//record.put("Application_Accepted__c", dateFormat.format(todayCal.getTime()));
 			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
 	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
-	       	/*record.clear();
-			record.put("Actual_Initiation_Signature__c", todayStr);
-	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	*/
 	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
@@ -2454,7 +2881,836 @@ public class TestOne {
 			record.put("Actual_Final_Signature__c", "");
 			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Initiation_Issues_to_DAS__c", "");
+			record.put("Actual_Initiation_Concurrence_to_DAS__c", "");
+			record.put("Actual_Initiation_Signature__c", "");
+			
 	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:antiCircumventionDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Application_Accepted__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj, dates.get("Field_Name").trim(), 
+		       				"Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Application_Accepted__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj, dates.get("Field_Name").trim(),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Application_Accepted__c", dates.get("Date_For_Tolling"));
+		    		//
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+		    			record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", antiCircumventionId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentAntiCircumventionReview(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+			       	record.clear();
+			       	record.put("Final_Extension_of_days__c", "");
+			       	 code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       		}
+	       	}
+	        
+	        
+	       /*	
+	        //*********************************III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS**************
+	       	//*************************************************************************************************************
+       	//A)-//Initiation
+	        HtmlReport.addHtmlStepTitle("III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("Validate Status - Initiation","Title");
+	        String condition = "Initial Status";
+	        sqlString = "select+Status__c+from+segment__c+where+id='"+antiCircumventionId+"'";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        testCaseStatus = testCaseStatus & 
+		    ADCVDLib.validateObjectStatus("Positive", "Initiation", jObj.getString("Status__c"), condition); 
+	     //B) Prelim 
+	        HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
+	    	//1
+			condition = "The Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry"
+					+ " is not blank AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is blank AND Segment_Outcome "
+					+ " is not 'Full Rescission' THEN status is true";
+	        record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "Yes");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition); 
+		
+			
+			//2
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry"
+					+ " is not blank AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is blank AND"
+					+ " Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "Yes");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition); 
+			//3
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry "
+					+ "is blank AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is blank AND Segment_Outcome "
+					+ "is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "");
+	       	//record.put("Preliminary_Determination__c", "Yes");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+			//4
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry"
+					+ " is not blank AND Preliminary_Determination is 'NO' AND Actual_Preliminary_Signature is blank AND Segment_Outcome "
+					+ "is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "No");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+			//5
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry"
+					+ " is not blank AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is NOT blank AND "
+					+ "Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", ""); record.put("Calculated_Preliminary_Signature__c", todayStr);
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "Yes");	
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+			
+			//6
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry "
+					+ "is not blank AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is blank AND Segment_Outcome"
+					+ " is 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			String frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "Yes");	
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+			
+			//7
+			condition = "The Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature "
+					+ "is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition); 
+			//8
+			condition = "If the Type_of_Circumvention_Inquiry is NOT 'Later-Developed Merchandise' AND Actual_Preliminary_Signature "
+					+ "is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "");
+	       	record.put("Preliminary_Determination__c", "");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition); 
+			//9
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature "
+					+ "is NOT blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	    	record.put("Actual_Preliminary_Signature__c", todayStr);
+	    	record.put("Calculated_Preliminary_Signature__c", todayStr);
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "");	       	
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
+			//10
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature"
+					+ " is blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	record.put("Preliminary_Determination__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+			//code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			
+			//C) Final 
+	        HtmlReport.addHtmlStepTitle("Validate Status - Final","Title");
+	        //1
+			condition = "The Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry"
+					+ " is not blank AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome"
+					+ " is not 'Full Rescission' THEN status is true";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "Yes");	   
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition); 
+			//2
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank "
+					+ "AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is not "
+					+ "'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       //	record.put("Preliminary_Determination__c", "Yes");	   
+	       //	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+			
+			//3
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is blank "
+					+ "AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is not "
+					+ "'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "");
+	        //	record.put("Preliminary_Determination__c", "Yes");	   
+	        //	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+			
+			//4
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank "
+					+ "AND Preliminary_Determination is 'NO' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is not "
+					+ "'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	        record.put("Preliminary_Determination__c", "No");	   
+	        //	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+			
+			//5
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank"
+					+ " AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is blank AND Segment_Outcome is not "
+					+ "'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	        record.put("Preliminary_Determination__c", "Yes");	   
+	        record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+			//6
+			condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank "
+					+ "AND Preliminary_Determination is 'Yes' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is "
+					+ "'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	//record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition); 
+			//7
+			condition = "The Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature is not  blank "
+					+ "AND Published_Date (Type: Preliminary) is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Preliminary");
+			String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "");	   
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition); 
+			//8
+			condition = "If the Type_of_Circumvention_Inquiry is NOT 'Later-Developed Merchandise' AND Actual_Preliminary_Signature is not  "
+					+ "blank AND Published_Date (Type: Preliminary) is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Minor Alterations of Merchandise");
+	       	record.put("Preliminary_Determination__c", "");	   
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+			//9
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature is blank AND"
+					+ " Published_Date (Type: Preliminary) is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition); 
+			//10
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature is not blank "
+					+ "AND Published_Date (Type: Preliminary) is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdP);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "");	   
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//11
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature is not  blank "
+					+ "AND Published_Date (Type: Preliminary) is not blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Preliminary");
+			frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "Yes");	   
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//12
+			condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature is not blank "
+					+ "AND Published_Date (Type: Final) is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdP);
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			String frIdF = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "Yes");	   
+	       	record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//13
+			condition = "The Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank"
+					+ " AND Preliminary_Determination is 'No' AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			code = APITools.deleteRecordObject("Federal_Register__c", frIdF);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "No");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
+			//14
+			condition = "If the Type_of_Circumvention_Inquiry IS 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank "
+					+ "AND Preliminary_Determination is 'No' AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+	       	record.put("Preliminary_Determination__c", "No");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//15
+			condition = "If the Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is blank "
+					+ "AND Preliminary_Determination is 'No' AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "");
+	       	record.put("Preliminary_Determination__c", "No");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//16
+			condition = "If the Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank"
+					+ " AND Preliminary_Determination is 'YES' AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "Yes");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//17
+			condition = "If the Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND Type_of_Circumvention_Inquiry is not blank "
+					+ "AND Preliminary_Determination is 'No' AND Segment_Outcome is 'Full Rescission' THEN status is true";
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");	       	
+	       	record.put("Type_of_Circumvention_Inquiry__c", "Merchandise Completed or Assembled in United States");
+	       	record.put("Preliminary_Determination__c", "No");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+			//4)HOLD
+			HtmlReport.addHtmlStepTitle("Validate Status - Hold","Title");
+			//1
+			condition = "The Litigation is Null AND Segment_Outcome is 'Full Rescission' "
+					+ "THEN Publication_date (Type:Rescission) +30 or 45 days AND status is true";
+			todayCal.setTime(todayDate);
+	       	todayCal.add(Calendar.DATE, 46);
+	     	record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", dateFormat.format(todayCal.getTime())); //>45
+			code = APITools.updateRecordObject("Federal_Register__c", frIdR, record);
+			record.clear();
+			record.put("Preliminary_Determination__c", "");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	record.put("Type_of_Circumvention_Inquiry__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
+			//2
+			condition = "If the Litigation is NOT Null AND Segment_Outcome is 'Full Rescission' THEN "
+					+ "Publication_date (Type:Rescission) +30 or 45 days AND status is true";
+			record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "No");	   
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//Litigation_YesNo__c Litigation_Resolved__c Litigation_Status__c
+			//3
+			condition = "If the Litigation is Null AND Segment_Outcome is NOT 'Full Rescission' THEN Publication_date "
+					+ "(Type:Rescission) +30 or 45 days AND status is true";
+			//code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();
+	       	record.put("Litigation_YesNo__c", "");	       	
+	       	record.put("Litigation_Resolved__c", "");	   
+	       	record.put("Actual_Preliminary_Signature__c", "");
+	       	record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//4
+			condition = "If the Litigation is Null AND Segment_Outcome is 'Full Rescission' THEN Publication_date (Type:Initiation) +30"
+					+ " or 45 days AND status is true";
+			record.clear();
+	       	record.put("segment__c", antiCircumventionId);
+			record.put("Published_Date__c", todayStr);
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Rescission");
+			frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Full Rescission");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//5
+			condition = "If the Litigation is NOT Null AND Segment_Outcome is NOT 'Full Rescission' THEN Publication_date (Type:Final) +30 "
+					+ "or 45 days AND status is true";
+			//code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "No");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//6
+			condition = "The Litigation is Null AND Actual_Final_Signature is not null THEN Actual_Final_Signature +30"
+					+ " or 45 days AND status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Withdrawn");
+	    	record.put("Litigation_YesNo__c", "");	       	
+	       	record.put("Litigation_Resolved__c", "");
+	       	record.put("Actual_Final_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
+			//7
+			condition = "If the Litigation is NOT Null AND Actual_Final_Signature is not null THEN Actual_Final_Signature +30 "
+					+ "or 45 days AND status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Withdrawn");
+	    	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "No");
+	       	record.put("Actual_Final_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//8
+			condition = "If the Litigation is Null AND Actual_Final_Signature is null THEN Actual_Final_Signature +30 "
+					+ "or 45 days AND status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "");	       	
+	       	record.put("Litigation_Resolved__c", "");
+	       	record.put("Actual_Final_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//9
+			condition = "If the Litigation is NOT Null AND Actual_Final_Signature is null THEN Actual_Final_Signature +30 "
+					+ "or 45 days AND status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "No");
+	       	record.put("Actual_Final_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+			//5)LITIGATION
+			HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
+			//1
+			condition = "The Litigation is Yes AND Litigation_Resolved is No AND (Litigation_Status is blank OR Litigation_Status "
+					+ "is “Not Active”) THEN status is true";
+			record.clear();
+	       	record.put("Segment_Outcome__c", "Withdrawn");
+	    	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "No");
+	       	record.put("Actual_Final_Signature__c", "");
+	       	record.put("Litigation_Status__c", "Inactive");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
+			//2
+			condition = "If the Litigation is NO AND Litigation_Resolved is No AND (Litigation_Status is blank OR Litigation_Status "
+					+ "is “Not Active”) THEN status is true";
+			record.clear();
+	       //	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "No");	       	
+	       	record.put("Litigation_Resolved__c", "No");
+	       //	record.put("Actual_Final_Signature__c", "");
+	       	record.put("Litigation_Status__c", "Inactive");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+			//3
+			condition = "If the Litigation is Yes AND Litigation_Resolved is YES AND (Litigation_Status is blank OR Litigation_Status"
+					+ " is “Not Active”) THEN status is true";
+			record.clear();
+		       //	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "Yes");
+	       //	record.put("Actual_Final_Signature__c", "");
+	       	record.put("Litigation_Status__c", "Inactive");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+			//4
+			condition = "If the Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status is “Active”) THEN status is true"; 
+			record.clear();
+		       //	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "Yes");	       	
+	       	record.put("Litigation_Resolved__c", "No");
+	       //	record.put("Actual_Final_Signature__c", "");
+	       	record.put("Litigation_Status__c", "Active");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+			//5
+			condition = "If the Litigation is NO AND Litigation_Resolved is YES AND Litigation_Status is “Active”) THEN status is true";
+			record.clear();
+		       //	record.put("Segment_Outcome__c", "");
+	    	record.put("Litigation_YesNo__c", "No");	       	
+	       	record.put("Litigation_Resolved__c", "Yes");
+	       //	record.put("Actual_Final_Signature__c", "");
+	       	record.put("Litigation_Status__c", "Active");
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);	       	
+			jObj = APITools.getRecordFromObject(sqlString);
+			testCaseStatus = testCaseStatus & 
+			ADCVDLib.validateObjectStatus("Negative", "Litigation", jObj.getString("Status__c"), condition);
+			//record.put("Litigation_Status__c", "Active");//Litigation_Status is 'Active'
+			
+			//F) - Customs
+	        HtmlReport.addHtmlStepTitle("Validate Status - Customs","Title");
+	       	//1
+	       	condition = "The Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is No";
+	     	record.clear();
+	     	record.put("Litigation_Status__c", "");
+	    	record.put("Litigation_YesNo__c", "Yes");//Litigation  is 'Yes'
+	    	record.put("Litigation_Resolved__c", "Yes");
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Customs", jObj.getString("Status__c"), condition);
+	       	//2
+	       	condition = "If the Litigation is No AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	    	record.put("Litigation_YesNo__c", "No");//Litigation  is 'No'
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//3
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	    	record.put("Litigation_YesNo__c", "Yes");//Litigation  is 'Yes'
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//4
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is YES";
+	    	record.clear();
+	    	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is YES
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//5
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent "
+	       			+ "is YES THEN status is true";
+	       	record.clear();
+	    	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is No
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	record.put("Litigation_YesNo__c", "No");//Litigation
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//6
+	       	condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is No";
+	    	record.clear();
+	    	record.put("Have_Custom_Instruction_been_sent__c", "No");
+	       	record.put("Litigation_Resolved__c", "");//Litigation_Resolved is EMPTY16999963393437
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Customs", jObj.getString("Status__c"), condition);
+	       	//7
+	       	condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is No";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is YES 
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//8
+	       	condition = "If the Litigation is No AND Have_Custom_Instruction_been_sent is YES";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is YES
+	       	record.put("Litigation_Resolved__c", "");//Litigation_Resolved EMPTY
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+	       	//9
+	       	condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is YES";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Customs", jObj.getString("Status__c"), condition);
+       	//G) - Close
+	        HtmlReport.addHtmlStepTitle("Validate Status - Close","Title");
+	       	//1
+	       	condition = "The Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is Yes";
+	    	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	       	//2
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is Yes";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//3
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is Yes";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//4
+	       	condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "Yes");//Litigation_Resolved is Yes
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//5
+	       	condition = "If the Litigation is NO AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is No
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//6
+	       	condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is Yes";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "Empty");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+	       	//7
+	       	condition = "The Litigation is YES AND Have_Custom_Instruction_been_sent is Yes";
+	    	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "Yes");//Have_Custom_Instruction_been_sent is Yes
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//8
+	       	condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "No");//Litigation is No
+	       	record.put("Litigation_Resolved__c", "Empty");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
+	       	//9
+	       	condition = "The Litigation is YES AND Have_Custom_Instruction_been_sent is NO";
+	       	record.clear();
+	       	record.put("Litigation_YesNo__c", "Yes");//Litigation is Yes
+	       	record.put("Litigation_Resolved__c", "No");//Litigation_Resolved is Empty
+	       	record.put("Have_Custom_Instruction_been_sent__c", "No");//Have_Custom_Instruction_been_sent is No
+	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	       	testCaseStatus = testCaseStatus & 
+	    		    ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);*/
+
        }
 	   else 
 	   {
@@ -2476,32 +3732,404 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		record.put("ADCVD_Order__c", orderId);
-		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
+		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));//
+		record.put("Preliminary_Determination__c", "Yes");
 		record.put("Request_Filed__c", row.get("Request_Filed__c"));
 		record.put("Preliminary_Determination__c", row.get("Preliminary_Determination__c"));
 		String changedCircumstanceId = APITools.createObjectRecord("Segment__c", record);
 		if(changedCircumstanceId != null)
-       {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
-	       	String changedCircumstanceName = jObj.getString("Name");
-	       	updateHtmlReport("Create Changed Circumstances Review", "User is able to create a new segment", 
+		{
+			String sqlString = "select+Name+from+segment__c+where+id='"+changedCircumstanceId+"'";
+			//HtmlReport.addHtmlStepTitle("Validate all dates for a happy path","Title");
+			JSONObject jObj = APITools.getRecordFromObject(sqlString);
+			String changedCircumstanceName = jObj.getString("Name");
+	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+changedCircumstanceName+"</span>", "Step", "pass", "" );
-	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentChangedCircumstancesReview(jObj);
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "anti-circumvention", "");
+	        
+	        
+	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue;
+	       
+	        sqlString = "select+Name,Next_Major_Deadline__c,Actual_Initiation_Signature__c,"
+	        		+ "Calculated_Preliminary_Signature__c,"
+	        		+ "Calculated_Final_Signature__c,Calculated_Initiation_Signature__c+"
+	        		+ "from+segment__c+where+id='"+changedCircumstanceId+"'";
+	        //Next_Major_Deadline__c
+	        //1
+	        String clause = "IF Actual_Initiation_Signature__c is blank AND Published_Date__c "
+	        		+ "(Type:Rescission) THEN Calculated_Initiation_Signature__c";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Published_Date__c "
+	        		+ "(Type:Rescission) THEN Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	String code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+	        clause  = "IF Actual_Preliminary_Signature__c is blank AND Published_Date__c "
+	        		+ "(Type:Rescission) THEN Calculated_Final_Signature__c "; 
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        record.clear();	 
+	        record.put("Actual_Initiation_Signature__c", "");	        
+			record.put("Actual_Preliminary_Signature__c", "");
+			
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	//Next Due to DAS Deadline
+	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
+	        //1
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Issues_to_DAS__c is "
+					+ "blank THEN Initiation_Issues_Due_to_DAS__c";
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Concurrence_to_DAS__c "
+					+ "is blank THEN Initiation_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Initiation_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Initiation_Signature__c is blank THEN Calculated_Initiation_Signature__c";
+			record.clear();
+    		record.put("Actual_Initiation_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  "
+	        		+ "is blank THEN Prelim_Issues_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //5
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c "
+	        		+ "is blank THEN Prelim_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+    		clause = "IF Actual_Preliminary_Signature__c is blank AND Segment_Outcome__c is blank THEN "
+    				+ "Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+    		record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//7
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//9
+			clause = "IF Actual_Final_Signature__c is blank AND Segment_Outcome__c is "
+					+ "blank THEN Calculated_Final_Signature__c";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    //initiate
+	        record.clear();	        
+	        record.put("Actual_Initiation_Signature__c", "");
+	        record.put("Actual_Initiation_Issues_to_DAS__c", "");
+	        record.put("Actual_Initiation_Concurrence_to_DAS__c", "");	        
+	        record.put("Actual_Prelim_Issues_to_DAS__c", "");
+	        record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Preliminary_Signature__c", "");	        
+	        record.put("Actual_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+			//1
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Issues_to_DAS__c is "
+					+ "blank THEN Initiation_Issues_Due_to_DAS__c";			
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Concurrence_to_DAS__c "
+					+ "is blank THEN Initiation_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Application_Accepted__c", todayStr);
+    		record.put("Actual_Initiation_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Initiation_Signature__c is blank THEN Calculated_Initiation_Signature__c";
+			record.clear();
+    		record.put("Actual_Initiation_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);	       	
+	        //4
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
+					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
+					+ "THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -7);
+			record.clear();
+			//record.put("Application_Accepted__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
 	       	
-	       	//update
-	       	/*record.clear();
-	       	record.put("Segment_Outcome__c", "Deficient");
-	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-	       	if(code.equals("204"))
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
+					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Preliminary_Signature__c is blank THEN "
+					+ "Calculated_Preliminary_Signature__c";
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
+					+ "THEN Final_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //9
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -11);
+			record.clear();
+			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//10
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//11
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//12
+			clause = "IF published_date_c (type: Final) is blank AND Actual_Final_Signaturec is not blank THEN "
+					+ "Calculated_Final_FR_signature_c";
+			record.clear();
+			record.put("Actual_Final_Signature__c", todayStr); 
+			record.put("Segment_Outcome__c", "Completed");	
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_FR_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+			todayCal.add(Calendar.DATE, 10);
+			record.clear();
+		    record.put("Segment_Outcome__c", "");
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	       // code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	        record.clear();	        
+			record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Initiation_Issues_to_DAS__c", "");
+			record.put("Actual_Initiation_Concurrence_to_DAS__c", "");
+			record.put("Actual_Initiation_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       	
+	       	
+	       	HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:changedCircumstanceDates)
 	       	{
-	       		updateHtmlReport("update admin review", "User is able to update admin review", 
-	       				record.toString(), "Step", "pass", "");
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentChangedCircumstancesReview(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentChangedCircumstancesReview(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Tolling"));
+		    		//
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+		    			record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentChangedCircumstancesReview(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+			       	record.clear();
+			       	record.put("Final_Extension_of_days__c", "");
+			       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
+	       		}
 	       	}
-	       	else
-	       	{
-	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
-	       				"Not as expected",	"Step", "fail", "");
-	       	}*/
+	        
+	        
        }
 	   else 
 	   {
@@ -2527,33 +4155,410 @@ public class TestOne {
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
-		record.put("Calculated_Initiation_Signature__c", row.get("Calculated_Initiation_Signature__c"));
+		record.put("Calculated_Initiation_Signature__c", todayStr);
 		String expiditedReviewId = APITools.createObjectRecord("Segment__c", record);
 		if(expiditedReviewId != null)
        {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
-	       	String expiditedReviewName = jObj.getString("Name");
-	       	updateHtmlReport("Create Admin Review", "User is able to create a new segment", 
-					"Segment id: <span class = 'boldy'>"+" "+expiditedReviewName+"</span>", "Step", "pass", "" );
-	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentExpeditedReview(jObj);
-	       	
-	       	//update
-	       	/*record.clear();
-	       	record.put("Segment_Outcome__c", "Deficient");
-	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-	       	if(code.equals("204"))
+			String sqlString = "select+Name+from+segment__c+where+id='"+expiditedReviewId+"'";
+			//HtmlReport.addHtmlStepTitle("Validate all dates for a happy path","Title");
+			JSONObject jObj = APITools.getRecordFromObject(sqlString);
+			String changedCircumstanceName = jObj.getString("Name");
+	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
+					"Segment id: <span class = 'boldy'>"+" "+changedCircumstanceName+"</span>", "Step", "pass", "" );
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Expedited_Review", "");
+	        
+	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue; 
+	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
+	        		+ "Calculated_Final_Signature__c,Calculated_Amended_Final_Signature__c+"
+	        		+ "from+segment__c+where+id='"+expiditedReviewId+"'";
+	        //Next_Major_Deadline__c
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        String clause = "IF Actual_Preliminary_Signature__c is blank AND Published_Date__c "
+	        		+ " (Type:Rescission) is blank THEN Calculated_Preliminary_Signature__c";
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	String code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+	        clause  = "IF Actual_Amended_Final_Signature__c is blank AND Published_Date__c  (Type:Rescission)"
+	        		+ " is blank AND Will_you_Amend_the_Final__c = 'Yes' THEN Calculated_Amended_Final_Signature__c"; 
+	        record.clear();
+    		record.put("Actual_Final_Signature__c", todayStr);
+    		record.put("Will_you_Amend_the_Final__c", "Yes");
+    		record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);		       	
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //initiate
+	        record.clear();
+	        record.put("Actual_Preliminary_Signature__c", "");
+	        record.put("Actual_Final_Signature__c", "");
+	        record.put("Will_you_Amend_the_Final__c", "");
+    		record.put("Segment_Outcome__c", "");
+	        code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline","Title");
+	        //Next Due to DAS Deadline
+	        //1
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  "
+	        		+ "is blank THEN Prelim_Issues_Due_to_DAS__c";
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c "
+	        		+ "is blank THEN Prelim_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+    		clause = "IF Actual_Preliminary_Signature__c is blank AND Segment_Outcome__c is blank THEN "
+    				+ "Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+    		record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//4
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+			clause = "IF Actual_Final_Signature__c is blank AND Segment_Outcome__c is "
+					+ "blank THEN Calculated_Final_Signature__c";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Will_you_Amend_the_Final__c is  Yes AND Actual_Amended_Final_Signature__c is blank"
+					+ " AND Actual_Amend_Final_Issues_to_DAS__c is blank THEN Amend_Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Signature__c", todayStr);	
+			record.put("Will_you_Amend_the_Final__c", "Yes");
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank "
+					+ "AND Actual_Amend_Final_Concurrence_to_DAS__c is blank THEN Amend_Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//9
+			clause = "IF Will_you_Amend_the_Final__c is  Yes AND Actual_Amended_Final_Signature__c is blank "
+					+ "THEN Calculated_Amended_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    //initiate
+	        record.clear();	        
+			//record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+	  //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+	        //1
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
+					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
+					+ "THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -7);
+			record.clear();
+			record.put("Calculated_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
+					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//4
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Next_Office_Deadline__c  is blank THEN "
+					+ "Calculated_Preliminary_Signature__c";
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
+					+ "THEN Final_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -3);
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			//record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+	      
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//9
+			clause = "IF published_date_c (type: Final) is blank AND Actual_Final_Signaturec is not blank THEN "
+					+ "Calculated_Final_FR_signature_c";
+			record.clear();
+			record.put("Actual_Final_Signature__c", todayStr); 
+			record.put("Segment_Outcome__c", "Completed");	
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_FR_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//10
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
+					+ "Actual_Amend_Final_Issues_to_DAS__c is blank THEN Amend_Final_Issues_Due_to_DAS__c";
+			record.clear();
+	       	record.put("segment__c", expiditedReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			String frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			record.clear();
+			record.put("Will_you_Amend_the_Final__c", "Yes"); 
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//11
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
+					+ "Actual_Amend_Final_Concurrence_to_DAS__c is blank THEN Amend_Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//12
+			clause = "IF Will_you_Amend_the_Final__c is  Yes AND Actual_Amended_Final_Signature__c is blank THEN "
+					+ "Calculated_Amended_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	      //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        record.put("Segment_Outcome__c", "");
+			todayCal.setTime(todayDate);
+			record.clear();
+		    todayCal.add(Calendar.DATE, 10);
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			//record.put("Final_Date_of_Anniversary_Month__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	        record.clear();	        
+			record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+	        
+	        
+	       	HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:changedCircumstanceDates)
 	       	{
-	       		updateHtmlReport("update admin review", "User is able to update admin review", 
-	       				record.toString(), "Step", "pass", "");
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	 code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentExpiditedReview(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	 code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentExpiditedReview(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Tolling"));
+		    		//
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+		    			record.put("Final_Extension_of_days__c", "1");
+			       	 code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentExpiditedReview(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+			       	record.clear();
+			       	record.put("Final_Extension_of_days__c", "");
+			       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+	       		}
 	       	}
-	       	else
-	       	{
-	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
-	       				"Not as expected",	"Step", "fail", "");
-	       	}*/
+	        
        }
 	   else 
 	   {
@@ -2585,26 +4590,494 @@ public class TestOne {
 		String newShipperReviewId = APITools.createObjectRecord("Segment__c", record);
 		if(newShipperReviewId != null)
        {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
-	       	String newShipperReviewName = jObj.getString("Name");
-	       	updateHtmlReport("Create New Shipper Review", "User is able to create a new segment", 
+			String sqlString = "select+Name+from+segment__c+where+id='"+newShipperReviewId+"'";
+			//HtmlReport.addHtmlStepTitle("Validate all dates for a happy path","Title");
+			JSONObject jObj = APITools.getRecordFromObject(sqlString);
+			String newShipperReviewName = jObj.getString("Name");
+	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+newShipperReviewName+"</span>", "Step", "pass", "" );
-	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewShipperReview(jObj);
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Shipper_Review", "");
+	       
+	        
+	        
+	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue; 
+	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Initiation_Signature__c,Calculated_Preliminary_Signature__c,"
+	        		+ "Calculated_Final_Signature__c,Calculated_Amended_Final_Signature__c+"
+	        		+ "from+segment__c+where+id='"+newShipperReviewId+"'";
+	                
+	        //Next_Major_Deadline__c
+	        //1
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        String clause = "IF Actual_Initiation_Signature__c is blank THEN Calculated_Initiation_Signature__c";
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Published_Date__c "
+	        		+ " (Type:Rescission) is blank THEN Calculated_Preliminary_Signature__c ";
+	        record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	String code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+	        clause  = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c"; 
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause  = "IF Actual_Amended_Final_Signature__c is blank AND Published_Date__c  "
+	        		+ "(Type:Rescission) is blank AND Will_you_Amend_the_Final__c = 'Yes' THEN "
+	        		+ "Calculated_Amended_Final_Signature__c"; 
+	        record.clear();
+    		record.put("Actual_Final_Signature__c", todayStr);
+    		record.put("Will_you_Amend_the_Final__c", "Yes");
+    		record.put("Segment_Outcome__c", "Completed");
+    		//record.put("Calculated_Amended_Final_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);  
+	        
+	        //initiate
+	        record.clear();
+	        record.put("Will_you_Amend_the_Final__c", "");
+	        record.put("Actual_Initiation_Signature__c", "");
+	        record.put("Actual_Preliminary_Signature__c", "");
+	        record.put("Actual_Final_Signature__c", "");
+	        record.put("Segment_Outcome__c", "");
+	        record.put("Calculated_Amended_Final_Signature__c", "");
+	        code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	        
+	      //Next Due to DAS Deadline
+	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
+	        //1
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Issues_to_DAS__c is "
+					+ "blank THEN Initiation_Issues_Due_to_DAS__c";
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Concurrence_to_DAS__c "
+					+ "is blank THEN Initiation_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Initiation_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Initiation_Signature__c is blank THEN Calculated_Initiation_Signature__c";
+			record.clear();
+    		record.put("Actual_Initiation_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  "
+	        		+ "is blank THEN Prelim_Issues_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //5
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c "
+	        		+ "is blank THEN Prelim_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+    		clause = "IF Actual_Preliminary_Signature__c is blank AND Segment_Outcome__c is blank THEN "
+    				+ "Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+    		record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//7
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//9
+			clause = "IF Actual_Final_Signature__c is blank AND Segment_Outcome__c is "
+					+ "blank THEN Calculated_Final_Signature__c";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	      //10
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
+					+ "Actual_Amend_Final_Issues_to_DAS__c is blank THEN Amend_Final_Issues_Due_to_DAS__c";
+			/*record.clear();
+	       	record.put("segment__c", newShipperReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			String frIdR = APITools.createObjectRecord("Federal_Register__c", record);*/
+			record.clear();
+			record.put("Will_you_Amend_the_Final__c", "Yes"); 
+			record.put("Actual_Final_Signature__c", todayStr); 
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//11
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
+					+ "Actual_Amend_Final_Concurrence_to_DAS__c is blank THEN Amend_Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//12
+			clause = "IF Will_you_Amend_the_Final__c is  Yes AND Actual_Amended_Final_Signature__c is blank THEN "
+					+ "Calculated_Amended_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    //initiate
+	        record.clear();	        
+	        record.put("Actual_Initiation_Signature__c", "");
+	        record.put("Actual_Initiation_Issues_to_DAS__c", "");
+	        record.put("Actual_Initiation_Concurrence_to_DAS__c", "");	        
+	        record.put("Actual_Prelim_Issues_to_DAS__c", "");
+	        record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Preliminary_Signature__c", "");	        
+	        record.put("Actual_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Final_Signature__c", "");
+	        record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	        record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+			//1
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Issues_to_DAS__c is "
+					+ "blank THEN Initiation_Issues_Due_to_DAS__c";			
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Initiation_Signature__c is blank AND Actual_Initiation_Concurrence_to_DAS__c "
+					+ "is blank THEN Initiation_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Application_Accepted__c", todayStr);
+    		record.put("Actual_Initiation_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Initiation_Signature__c is blank THEN Calculated_Initiation_Signature__c";
+			record.clear();
+    		record.put("Actual_Initiation_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);	       	
+	        //4
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
+					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));	
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
+					+ "THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -7);
+			record.clear();
+			//record.put("Application_Accepted__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
+					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Preliminary_Signature__c is blank THEN "
+					+ "Calculated_Preliminary_Signature__c";
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
+					+ "THEN Final_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //9
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -3);
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//10
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//11
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//12
+			clause = "IF published_date_c (type: Final) is blank AND Actual_Final_Signaturec is not blank THEN "
+					+ "Calculated_Final_FR_signature_c";
+			record.clear();
+			record.put("Actual_Final_Signature__c", todayStr); 
+			record.put("Segment_Outcome__c", "Completed");	
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_FR_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	      //13
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
+					+ "Actual_Amend_Final_Issues_to_DAS__c is blank THEN Amend_Final_Issues_Due_to_DAS__c";
+			
+			record.clear();
+	       	record.put("segment__c", newShipperReviewId);
+			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Cite_Number__c", "None");
+			record.put("Type__c", "Final");
+			String frIdR = APITools.createObjectRecord("Federal_Register__c", record);
+			
+			record.clear();
+			record.put("Will_you_Amend_the_Final__c", "Yes"); 
+			record.put("Actual_Final_Signature__c", "");
+			//record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//14
+			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
+					+ "Actual_Amend_Final_Concurrence_to_DAS__c is blank THEN Amend_Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//15
+			clause = "IF Will_you_Amend_the_Final__c is  Yes AND Actual_Amended_Final_Signature__c is blank THEN "
+					+ "Calculated_Amended_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	      //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        record.put("Segment_Outcome__c", "");
+			todayCal.setTime(todayDate);
+			record.clear();
+		    todayCal.add(Calendar.DATE, 10);
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			//record.put("Final_Date_of_Anniversary_Month__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	        record.clear();	        
+			record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
 	       	
-	       	//update
-	       	/*record.clear();
-	       	record.put("Segment_Outcome__c", "Deficient");
-	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-	       	if(code.equals("204"))
+	       	
+	       	
+	       	HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:changedCircumstanceDates)
 	       	{
-	       		updateHtmlReport("update admin review", "User is able to update admin review", 
-	       				record.toString(), "Step", "pass", "");
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	 code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentShipperReview(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	 code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentShipperReview(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Tolling"));
+		    		//
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+		    			record.put("Final_Extension_of_days__c", "1");
+			       	 code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentShipperReview(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+			       	record.clear();
+			       	record.put("Final_Extension_of_days__c", "");
+			       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+	       		}
 	       	}
-	       	else
-	       	{
-	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
-	       				"Not as expected",	"Step", "fail", "");
-	       	}*/
        }
 	   else 
 	   {
@@ -2613,8 +5086,7 @@ public class TestOne {
 	   }
 		
 		
-		//testCaseStatus = ADCVDLib.createNewSegment(row);
-		//testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewShipperReview();
+		
 	}
 	
 	/**
@@ -2636,29 +5108,412 @@ public class TestOne {
 		record.put("Actual_Date_of_Decision_on_HoP__c", row.get("Actual_Date_of_Decision_on_HoP__c"));
 		record.put("Decision_on_How_to_Proceed__c", row.get("Decision_on_How_to_Proceed__c"));
 		record.put("Type_of_Scope_Ruling__c", row.get("Type_of_Scope_Ruling__c"));
-		String ScopeInquiryId = APITools.createObjectRecord("Segment__c", record);
-		if(ScopeInquiryId != null)
+		String scopeInquiryId = APITools.createObjectRecord("Segment__c", record);
+		if(scopeInquiryId != null)
        {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", ScopeInquiryId));
-	       	String ScopeInquiryName = jObj.getString("Name");
-	       	updateHtmlReport("Create Scope Inquiry", "User is able to create a new segment", 
+			String sqlString = "select+Name+from+segment__c+where+id='"+scopeInquiryId+"'";
+			//HtmlReport.addHtmlStepTitle("Validate all dates for a happy path","Title");
+			JSONObject jObj = APITools.getRecordFromObject(sqlString);
+			String ScopeInquiryName = jObj.getString("Name");
+	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+ScopeInquiryName+"</span>", "Step", "pass", "" );
-	       	testCaseStatus = testCaseStatus & ADCVDLib.validateNewSegmentNewScoprInquiry(jObj);
-	       	
-	       	//update
-	       	/*record.clear();
-	       	record.put("Segment_Outcome__c", "Deficient");
-	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-	       	if(code.equals("204"))
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> scopeInquiryDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Scope_Inquiry", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:scopeInquiryDates)
 	       	{
-	       		updateHtmlReport("update admin review", "User is able to update admin review", 
-	       				record.toString(), "Step", "pass", "");
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Tolling"));
+			       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+	       		}
 	       	}
-	       	else
-	       	{
-	       		failTestSuite("update admin review ["+adminReviewName+"]", "user is able to update the record",
-	       				"Not as expected",	"Step", "fail", "");
-	       	}*/
+	        
+	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue; 
+	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
+	        		+ "Calculated_Final_Signature__c,Deadline_for_Decision_on_How_to_Proceed__c+"
+	        		+ "from+segment__c+where+id='"+scopeInquiryId+"'";
+	        //Next_Major_Deadline__c
+	        //1
+	        String clause = "IF Actual_Decision_On_How_to_Proceed__c is blank THEN Decision_on_How_to_Proceed__c";
+	        record.clear();
+    		record.put("Actual_Date_of_Decision_on_HoP__c", "");
+	       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        //2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Type_of_scope_ruling__c  = Formal"
+	        		+ " AND Published_Date__c (Type:Rescission) THEN Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Date_of_Decision_on_HoP__c", jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+
+	        //3
+	        clause = "IF Actual_Final_Signature__c is blank AND Published_Date__c  (Type:Formal) "
+	        		+ "AND Published_Date__c (Type:Rescission) THEN Calculated_Final_Signature__c";
+
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", jObj.getString("Calculated_Preliminary_Signature__c"));
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+//initiate
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", "");
+    		code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		HtmlReport.addHtmlStepTitle("1) - Next Due to DAS Deadline","Title");
+	        
+	        //Next Due to DAS Deadline
+    		
+    		 //1
+	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank OR Actual_Decision_on_HOP_Issues_to_DAS__c is "
+	        		+ "blank THEN Decision_on_HOP_Issues_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Date_of_Decision_on_HoP__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		
+    		//2
+	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank AND Actual_Decision_on_HOP_Concurrence_toDAS__c "
+	        		+ "is blank THEN Decision_on_HOP_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Decision_on_HOP_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        //3
+	        clause = "IF Actual_Date_of_Decision_on_HoP__c  is blank THEN Deadline_for_Decision_on_How_to_Proceed__c";
+	        record.clear();
+    		record.put("Actual_Decision_on_HOP_Concurrence_toDAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		
+	        //4
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  "
+	        		+ "is blank THEN Prelim_Issues_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Date_of_Decision_on_HoP__c", jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //5
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c "
+	        		+ "is blank THEN Prelim_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+    		clause = "IF Actual_Preliminary_Signature__c is blank AND Segment_Outcome__c is blank THEN "
+    				+ "Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+    		record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//7
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//9
+			clause = "IF Actual_Final_Signature__c is blank AND Segment_Outcome__c is "
+					+ "blank THEN Calculated_Final_Signature__c";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			
+    //initiate
+	        record.clear();	        
+			//record.put("Will_you_Amend_the_Final__c", "");
+			//record.put("Segment_Outcome__c", "");
+			
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");			
+			record.put("Actual_Decision_on_HOP_Concurrence_toDAS__c", "");
+			record.put("Actual_Decision_on_HOP_Issues_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	  //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+	      //1
+	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank OR Actual_Decision_on_HOP_Issues_to_DAS__c is "
+	        		+ "blank THEN Decision_on_HOP_Issues_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Date_of_Decision_on_HoP__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		
+    		//2
+	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank AND Actual_Decision_on_HOP_Concurrence_toDAS__c "
+	        		+ "is blank THEN Decision_on_HOP_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Decision_on_HOP_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        //3
+	        clause = "IF Actual_Date_of_Decision_on_HoP__c  is blank THEN Deadline_for_Decision_on_How_to_Proceed__c";
+	        record.clear();
+    		record.put("Actual_Decision_on_HOP_Concurrence_toDAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
+					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Date_of_Decision_on_HoP__c", jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
+					+ "THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -2);
+			record.clear();
+			record.put("Actual_Date_of_Decision_on_HoP__c", dateFormat.format(todayCal.getTime()));	
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
+					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Next_Office_Deadline__c  is blank THEN "
+					+ "Calculated_Preliminary_Signature__c";
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
+					+ "THEN Final_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //9
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -4);
+			record.clear();
+			record.put("Actual_Date_of_Decision_on_HoP__c", dateFormat.format(todayCal.getTime()));
+			//record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//10
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//11
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			
+	        
+	      //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        record.put("Segment_Outcome__c", "");
+			todayCal.setTime(todayDate);
+			record.clear();
+		    todayCal.add(Calendar.DATE, 10);
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			//record.put("Final_Date_of_Anniversary_Month__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
+	        record.clear();	        
+			record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	       	
        }
 	   else 
 	   {
@@ -2697,32 +5552,362 @@ public class TestOne {
 	       	//create FR init Federal_Register__c Federal_Register__c Published_Date__c Cite_Number__c
 	       	record.clear();
 	       	record.put("segment__c", sunsetReviewId);
-			record.put("Published_Date__c", row.get("Published_Date__c"));
+			record.put("Published_Date__c", todayStr);
 			record.put("Cite_Number__c", "None");
 			record.put("Type__c", "Initiation");
-			String frid = APITools.createObjectRecord("Federal_Register__c", record);
+			String fridI = APITools.createObjectRecord("Federal_Register__c", record);
 			//90Days
-			HtmlReport.addHtmlStepTitle("Validate sunset 90 Day","Title");
-			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
-			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "90 Day", 
-					row.get("Published_Date__c"));
+			//HtmlReport.addHtmlStepTitle("Validate sunset 90 Day","Title");
+			//jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			//testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "90 Day", 
+				//	row.get("Published_Date__c"));
 			//120 Day
 			record.clear();
 			record.put("Domestic_Party_File_Substan_Response__c", "Yes");
 			String code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
-			HtmlReport.addHtmlStepTitle("Validate sunset 120 Day","Title");
-			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
-			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "120 Day", 
-					row.get("Published_Date__c"));
+			//HtmlReport.addHtmlStepTitle("Validate sunset 120 Day","Title");
+			//jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			//testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "120 Day", 
+				//	row.get("Published_Date__c"));
 			//240 Day
 			record.clear();
 			record.put("Review_to_address_zeroing_in_Segments__c", "Yes");
 			record.put("Respondent_File_Substantive_Response__c", "Yes");
 			code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
-			HtmlReport.addHtmlStepTitle("Validate sunset 140 Day","Title");
+			//HtmlReport.addHtmlStepTitle("Validate sunset 140 Day","Title");
+			//jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			//testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "240 Day", 
+					//row.get("Published_Date__c"));
+			
+			
+			
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> sunsetReviewDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Sunset_Review", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        
+	        
+	        
+			
+			for(LinkedHashMap<String, String> dates:sunsetReviewDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+	       			
+	       			record.clear();
+	    			record.put("Published_Date__c", dates.get("Date_For_Weekend").trim());
+	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"), "240 Day");
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+	       			
+	       			record.clear();
+	    			record.put("Published_Date__c", dates.get("Date_For_Holiday").trim());
+	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"), "240 Day");
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+	       			record.clear();
+	    			record.put("Published_Date__c", dates.get("Date_For_Tolling").trim());
+	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"), "240 Day");
+	       		}
+	       	}
+			//*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue; 
+	        String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
+	        		+ "Calculated_Final_Signature__c+"
+	        		+ "from+segment__c+where+id='"+sunsetReviewId+"'";
+	        //Next_Major_Deadline__c
+	        //1
+	        String clause = "If 240:  IF Actual_Preliminary_Signature__c is blank THEN Calculated_Preliminary_Signature__c";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", jObj.getString("Calculated_Preliminary_Signature__c"));
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //initiate
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", "");
+    		code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+    		 //Next Due to DAS Deadline
+	        //1
+    		clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c "
+    				+ "AND Sunset_Review_Type__c is 240 THEN Prelim_Issues_Due_to_DAS__c";
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank  "
+    				+ "AND Sunset_Review_Type__c is 240 THEN Prelim_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+	        clause = "IF Actual_Preliminary_Signature__c is blank  AND Segment_Outcome__c is blank "
+	        		+ "AND Sunset_Review_Type__c is "
+    				+ "240  THEN Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+    		record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//4
+	        clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+	        		+ "THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+	        clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c is "
+	        		+ "blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+	        clause = "IF Actual_Final_Signature__c is blank AND Segment_Outcome__c is blank "
+	        		+ "THEN Calculated_Final_Signature__c";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			
+	        record.clear();	        
+			//record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+	  //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+	        //1
+	       	clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c is not "
+	       			+ "past AND Sunset_Review_Type__c is 240 THEN Prelim_Team_Meeting_Deadline__c";
+	       	
 			jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
-			testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "240 Day", 
-					row.get("Published_Date__c"));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c AND Sunset_Review_Type__c "
+	       			+ "is 240 THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -3);
+			record.clear();
+			record.put("Published_Date__c", dateFormat.format(todayCal.getTime()));
+			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank  AND "
+	       			+ "Sunset_Review_Type__c is 240 THEN Prelim_Concurrence_Due_to_DAS__c";
+	       	
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//4
+	        clause = "IF Actual_Preliminary_Signature__c is blank  AND Sunset_Review_Type__c is 240 "
+	       			+ "THEN Calculated_Preliminary_Signature__c";
+	       
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+	    	clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c "
+	       			+ "has not passed THEN Final_Team_Meeting_Deadline__c";
+	       	
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+	        clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+	       			+ "THEN Final_Issues_Due_to_DAS__c";
+	       	
+	        todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -10);
+			record.clear();
+			record.put("Published_Date__c", dateFormat.format(todayCal.getTime()));
+			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+	      
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+	        clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c "
+	       			+ "is blank THEN Final_Concurrence_Due_to_DAS__c";
+	       	
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+	        clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+	       	
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//9
+	        clause = "IF published_date_c (type: Final) is blank AND Actual_Final_Signaturec is "
+	       			+ "not blank THEN Calculated_Final_FR_signature_c";
+			record.clear();
+			record.put("Actual_Final_Signature__c", todayStr); 
+			record.put("Segment_Outcome__c", "Completed");	
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_FR_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			
+	        record.clear();	        
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Calculated_Initiation_Signature__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+	        
+	      //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        record.put("Segment_Outcome__c", "");
+			todayCal.setTime(todayDate);
+			record.clear();
+		    todayCal.add(Calendar.DATE, 10);
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        record.clear();
+			record.put("Published_Date__c", todayStr);
+			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			//record.put("Final_Date_of_Anniversary_Month__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Segment_Outcome__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+			record.put("Segment_Outcome__c", "Completed");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        record.clear();	        
+			record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Segment_Outcome__c", "");
+			record.put("Actual_Prelim_Issues_to_DAS__c", "");
+			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+			record.put("Actual_Preliminary_Signature__c", "");
+			record.put("Actual_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Final_Concurrence_to_DAS__c", "");
+			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
+			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);
+    		
+    		
+
+
+
        }
 	   else 
 	   {
@@ -2746,16 +5931,285 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		record.put("Petition__c", petitionId);
-		record.put("RecordTypeId", recordType.get("Remand"));
-		record.put("Expected_Final_Signature_Before_Ext__c", row.get("Expected_Final_Signature_Before_Ext__c"));
-		litigationId = APITools.createObjectRecord("Litigation__c", record);
+		record.put("RecordTypeId", recordType.get("International Litigation"));
+		record.put("Request_Filed__c", todayStr);
+		String litigationId = APITools.createObjectRecord("Litigation__c", record);
 		if(litigationId != null)
        {
 			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
-	       	litigationName = jObj.getString("Name");
+	       	String litigationName = jObj.getString("Name");
 	       	updateHtmlReport("Create International Litigation", "User is able to create a new litigation", 
 					"Litigation id: <span class = 'boldy'>"+" "+litigationName+"</span>", "Step", "pass", "" );
-	       	testCaseStatus = testCaseStatus & ADCVDLib.validateLitigationFields(jObj, "International Litigation");
+	       	
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> litigationDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Litigation", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:litigationDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"), "International Litigation");
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"), "International Litigation");
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Tolling"));
+			       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"), "International Litigation");
+	       		}
+	       	}
+	        
+	        
+	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue; 
+	        String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
+	        		+ "Calculated_Final_Signature__c+"
+	        		+ "from+Litigation__c+where+id='"+litigationId+"'";
+	        //Next_Major_Deadline__c
+	        //1
+	        String clause = "IF Actual_Preliminary_Signature__c is blank THEN Calculated_Preliminary_Signature__c";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+	        record.clear();
+    		record.put("Actual_Preliminary_Signature__c", jObj.getString("Calculated_Preliminary_Signature__c"));
+	       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);	
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        //initiate
+	        record.clear();	        
+	        record.put("Actual_Preliminary_Signature__c", "");
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+
+	      //Next Due to DAS Deadline
+	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
+	        
+	        //1
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c is "
+	        		+ "blank THEN Prelim_Issues_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Initiation_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank "
+	        		+ "THEN Prelim_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+    		clause = "IF Actual_Preliminary_Signature__c is blank THEN Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//4
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c is "
+					+ "blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c ";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    //initiate
+	        record.clear();	        
+	        record.put("Actual_Prelim_Issues_to_DAS__c", "");
+	        record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Preliminary_Signature__c", "");	        
+	        record.put("Actual_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+	       //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+			//1
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
+					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
+					+ "THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -1);
+			record.clear();
+			record.put("Request_Filed__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
+					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//4
+			clause = "IF Actual_Preliminary_Signature__c is blank THEN "
+					+ "Calculated_Preliminary_Signature__c";
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
+					+ "THEN Final_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -6);
+			record.clear();
+			record.put("Request_Filed__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+			todayCal.add(Calendar.DATE, 10);
+			record.clear();
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
        }
 	   else 
 	   {
@@ -2777,16 +6231,367 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		record.put("Petition__c", petitionId);
-		record.put("RecordTypeId", recordType.get("International Litigation"));
-		record.put("Request_Filed__c", row.get("Request_Filed__c"));
-		litigationId = APITools.createObjectRecord("Litigation__c", record);
-		if(litigationId != null)
+		record.put("RecordTypeId", recordType.get("Remand"));
+		record.put("Expected_Final_Signature_Before_Ext__c", todayStr);
+		String remandId = APITools.createObjectRecord("Litigation__c", record);
+		if(remandId != null)
        {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
-	       	litigationName = jObj.getString("Name");
+			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	       	String remandName = jObj.getString("Name");
 	       	updateHtmlReport("Create Remand", "User is able to create a new Remand", 
-					"Remand id: <span class = 'boldy'>"+" "+litigationName+"</span>", "Step", "pass", "" );
-	       	testCaseStatus =testCaseStatus & ADCVDLib.validateLitigationFields(jObj, "Remand");
+					"Remand id: <span class = 'boldy'>"+" "+remandName+"</span>", "Step", "pass", "" );
+	    	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> remandDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Remand", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:remandDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"), "Remand");
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"), "Remand");
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Tolling"));
+			       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"), "Remand");
+	       		}
+	       	}
+	        
+	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
+	       	//*************************************************************************************************************
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        String actualValue, expectedValue; 
+	        String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Draft_Remand_release_to_party__c,"
+	        		+ "Calculated_Final_Signature__c+"
+	        		+ "from+Litigation__c+where+id='"+remandId+"'";
+	        //Next_Major_Deadline__c
+	        //1
+	        String clause = "IF Actual_Draft_Remand_released_to_party__c  is blank "
+	        		+ "THEN Calculated_Draft_Remand_release_to_party__c";
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Draft_Remand_release_to_party__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Final_Signature__c  is blank THEN Calculated_Final_Signature__c ";
+	        record.clear();
+    		record.put("Actual_Draft_Remand_released_to_party__c", todayStr);
+	       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);	
+	        jObj = APITools.getRecordFromObject(sqlString);
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        //initiate
+	        record.clear();	        
+	        record.put("Actual_Draft_Remand_released_to_party__c", "");
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+
+	      //Next Due to DAS Deadline
+	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
+	        
+	        //1
+	        clause = "IF Actual_Draft_Remand_released_to_party__c is blank AND Actual_Draft_Remand_Issues_to_DAS__c "
+	        		+ " is blank THEN Draft_Remand_Issues_Due_to_DAS__c";
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Draft_Remand_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Draft_Remand_released_to_party__c is blank AND Actual_Draft_Remand_Concurrence_to_DAS__c "
+	        		+ " is blank THEN Draft_Remand_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Draft_Remand_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Draft_Remand_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+    		clause = "IF Actual_Draft_Remand_released_to_party__c is blank THEN "
+    				+ "Calculated_Draft_Remand_release_to_party__c";
+	        record.clear();
+    		record.put("Actual_Draft_Remand_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Draft_Remand_release_to_party__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    		//4
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c"
+					+ " is blank THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Draft_Remand_released_to_party__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//6
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c ";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+    //initiate
+	        record.clear();	        
+	        record.put("Actual_Draft_Remand_Issues_to_DAS__c", "");
+	        record.put("Actual_Draft_Remand_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Draft_Remand_released_to_party__c", "");	        
+	        record.put("Actual_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+	       //Next Office Deadline
+	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
+	       	
+	       	
+	       	
+	       	
+	       	
+	        //1
+	        clause = "IF Actual_Draft_Remand_released_to_party__c is blank AND Actual_Draft_Remand_Issues_to_DAS__c "
+	        		+ " is blank THEN Draft_Remand_Issues_Due_to_DAS__c";
+	        jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Draft_Remand_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF Actual_Draft_Remand_released_to_party__c is blank AND Actual_Draft_Remand_Concurrence_to_DAS__c "
+	        		+ " is blank THEN Draft_Remand_Concurrence_Due_to_DAS__c";
+	        record.clear();
+    		record.put("Actual_Draft_Remand_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Draft_Remand_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3
+    		clause = "IF Actual_Draft_Remand_released_to_party__c is blank THEN "
+    				+ "Calculated_Draft_Remand_release_to_party__c";
+	        record.clear();
+    		record.put("Actual_Draft_Remand_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Draft_Remand_release_to_party__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        
+	       
+	        
+	        
+    		//4
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c"
+					+ " is blank THEN Final_Issues_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Draft_Remand_released_to_party__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //5
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -6);
+			record.clear();
+			record.put("Expected_Final_Signature_Before_Ext__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+			//6
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c ";
+			record.clear();			
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	       	
+	       	
+	       	/*
+	       	
+			//1
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
+					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
+			jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//2
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
+					+ "THEN Prelim_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -1);
+			record.clear();
+			record.put("Expected_Final_Signature_Before_Ext__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//3
+			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
+					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
+			record.clear();
+    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//4
+			clause = "IF Actual_Preliminary_Signature__c is blank THEN "
+					+ "Calculated_Preliminary_Signature__c";
+			record.clear();
+    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//5
+			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
+					+ "THEN Final_Team_Meeting_Deadline__c";
+			record.clear();
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //6
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
+					+ "THEN Final_Issues_Due_to_DAS__c";
+			todayCal.setTime(todayDate);
+			todayCal.add(Calendar.MONTH, -6);
+			record.clear();
+			record.put("Expected_Final_Signature_Before_Ext__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//7
+			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
+					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
+			record.clear();
+			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+			//8
+			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
+			record.clear();
+			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);*/
+	        
+	        //Next Announcement Date
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        //1
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+			todayCal.add(Calendar.DATE, 10);
+			record.clear();
+		    record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //2
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Preliminary_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //3	        
+	        clause = "IF final_Announcement_Date is not passed and segment_outcome is blank";
+	        todayCal.setTime(todayDate);
+	        todayCal.add(Calendar.DATE, -15);
+			record.clear();
+			record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
+			record.put("Actual_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        //4
+	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is Completed";
+			record.clear();
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
+	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
+	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        
+	        
        }
 	   else 
 	   {
@@ -2814,7 +6619,8 @@ public class TestOne {
 	*/
 	static ArrayList<LinkedHashMap<String, String>> mergeDataPools(ArrayList<LinkedHashMap<String, String>> dataPool1, 
 			ArrayList<LinkedHashMap<String, String>> dataPool2, ArrayList<LinkedHashMap<String, String>> dataPool3, 
-			ArrayList<LinkedHashMap<String, String>> dataPool4, ArrayList<LinkedHashMap<String, String>> dataPool5)
+			ArrayList<LinkedHashMap<String, String>> dataPool4, ArrayList<LinkedHashMap<String, String>> dataPool5,
+			ArrayList<LinkedHashMap<String, String>> dataPool6)
 	{
 		ArrayList<LinkedHashMap<String, String>> dataPoolMerged = new ArrayList<LinkedHashMap<String, String>>();
 		for(LinkedHashMap<String, String> map: dataPool1)
@@ -2836,6 +6642,10 @@ public class TestOne {
 		for(LinkedHashMap<String, String> map: dataPool5)
 		{
 		dataPoolMerged.add(map);
+		}
+		for(LinkedHashMap<String, String> map: dataPool6)
+		{
+			dataPoolMerged.add(map);
 		}
 		return dataPoolMerged;
 	}

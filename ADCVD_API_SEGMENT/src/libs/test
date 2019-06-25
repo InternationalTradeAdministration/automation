@@ -1,7 +1,14 @@
-Preliminary Announcement Date
-Actual Preliminary Signature=x. Amended Preliminary Announcement Date
-Actual Amended Prelim Determination Sig = x. Final Announcement Date
-
-Actual Final Signature=x. Amended Final Announcement Date
-
-Actual Amended Final Signature =x. ""
+//Notice of Intent to Participate,	noticeOfIntentToParticipate, 
+//Notify Cluster Coordinator No Interest, notifyClusterCoordinatorNoInterest, 
+//Substantive responses Due For All Parties, substantiveResponsesDueForAllParties, 
+//Inform Cluster Coordinator if No Response, informClusterCoordinatorIfNoRespons, 
+//Calculated Final Signature, calculatedFinalSignature, 
+//Final Issues Due to DAS, finalIssuesDueToDas, 
+//Final Concurrencec Due to DAS, finalConcurrenceDueToDas, 
+//Final Team Meeting Deadline, finalTeamMeetingDeadline, 
+//Adequacy Determination & Letter to ITC, adequacyDeterminationLetter, 
+//Calculated Preliminary Signature, calculatedPreliminarySignature, 
+//Prelim Issues Due to DAS, prelimIssuesDueToDas, 
+//Prelim Concurrence Due to DAS, prelimConcurrenceDueToDas, 
+//Prelim Team Meeting Deadline, prelimTeamMeetingDeadline, 
+//Rebuttal Comments Due, rebuttalCommentsDue, 

@@ -155,7 +155,7 @@ public class ADCVDLib{
 		{
 			highlightElement(guiMap.get("newCreateError"), "red");
 			holdSeconds(2);
-			updateHtmlReport("Create ADCVD Case", "User is able to create a case", "Not as expected", "Step", "fail", 
+			updateHtmlReport("Create ADCVD Case", "User is able to create a new case", "Not as expected", "Step", "fail", 
 					"Create a new case");
 			setBrowserTimeOut(currentTimeOut);
 			clickElementJs(guiMap.get("CancelCaseButton"));
@@ -507,7 +507,7 @@ public class ADCVDLib{
 		updateHtmlReport("Open and fill up investigation form", "New investigation form opens", "As expected", 
 				"Step", "pass", "New Investigation Form");
 		clickElementJs(guiMap.get("saveCaseButton"));
-		holdSeconds(2);
+		holdSeconds(6);
 		int currentTimeOut = setBrowserTimeOut(4);
 		if(checkElementExists(guiMap.get("newCreateError")))
 		{
@@ -1147,9 +1147,10 @@ public class ADCVDLib{
 		}
 		clickElementJs(guiMap.get("buttonSaveSegment"));
 		holdSeconds(2);
-		int currentTimeOut = setBrowserTimeOut(2);
+		int currentTimeOut = setBrowserTimeOut(4);
 		if(checkElementExists(guiMap.get("newCreateError")))
 		{
+			setBrowserTimeOut(currentTimeOut);
 			highlightElement(guiMap.get("newCreateError"), "red");
 			holdSeconds(2);
 			updateHtmlReport("Create Segment", "User is able to create segment", "Not as expected", 
@@ -1157,6 +1158,7 @@ public class ADCVDLib{
 			return false;
 		}else
 		{
+			if(checkElementExists(guiMap.get("SegmentsViewAll")))
 			clickElementJs(guiMap.get("SegmentsViewAll"));
 			holdSeconds(2);
 			setBrowserTimeOut(currentTimeOut);
@@ -3247,29 +3249,29 @@ public class ADCVDLib{
 		if(litigationType.equalsIgnoreCase("International Litigation"))
 		{
 			//Calculated Preliminary Signature
-			calculatedPreliminarySignature = calculateDate(45 + prelimExtensionDays, "Calculated Preliminary Signature", 
+			calculatedPreliminarySignature = calculateLitigationDate(45 + prelimExtensionDays, "Calculated Preliminary Signature", 
 					"calendar",requestFiled);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),
 					"Calculated Preliminary Signature"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Calculated Preliminary Signature", 
 					calculatedPreliminarySignature, actualValue); 
 			//Prelim Issues Due to DAS
-			prelimIssuesDueToDas = calculateDate(-10, "Prelim Issues Due to DAS", "business", calculatedPreliminarySignature);
+			prelimIssuesDueToDas = calculateLitigationDate(-10, "Prelim Issues Due to DAS", "calendar", calculatedPreliminarySignature);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Prelim Issues Due to DAS"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Prelim Issues Due to DAS", 
 					prelimIssuesDueToDas, actualValue); 
 			//Prelim Concurrence Due to DAS
-			prelimConcurrenceDueToDas = calculateDate(-5, "Prelim Concurrence Due to DAS", "business", calculatedPreliminarySignature);
+			prelimConcurrenceDueToDas = calculateLitigationDate(-5, "Prelim Concurrence Due to DAS", "calendar", calculatedPreliminarySignature);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Prelim Concurrence Due to DAS"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Prelim Concurrence Due to DAS", 
 					prelimConcurrenceDueToDas, actualValue);
 			//Prelim Team Meeting Deadline
-			prelimTeamMeetingDeadline = calculateDate(-21, "Prelim Team Meeting Deadline", "calendar", calculatedPreliminarySignature);
+			prelimTeamMeetingDeadline = calculateLitigationDate(-21, "Prelim Team Meeting Deadline", "calendar", calculatedPreliminarySignature);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Prelim Team Meeting Deadline"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Prelim Team Meeting Deadline", 
 					prelimTeamMeetingDeadline, actualValue);
 			//Calculated Final Signature
-			calculatedFinalSignature = calculateDate(180 + finalExtensionDays, "Calculated Final Signature", "Calendar", 
+			calculatedFinalSignature = calculateLitigationDate(180 + finalExtensionDays, "Calculated Final Signature", "Calendar", 
 						requestFiled.equals("")?expectedFinalSignatureBeforeExt:requestFiled);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Calculated Final Signature"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Calculated Final Signature",
@@ -3277,8 +3279,9 @@ public class ADCVDLib{
 		}
 		else//Remand
 		{
+			//Expected Final Signature Before Ext
 			//Calculated Draft Remand release to party
-			calculatedDraftRemandreleaseToparty = calculateDate(-30 + prelimExtensionDays, "Calculated Draft Remand release to party",
+			calculatedDraftRemandreleaseToparty = calculateLitigationDate(-30 + prelimExtensionDays, "Calculated Draft Remand release to party",
 					"Calendar", 
 					expectedFinalSignatureBeforeExt);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"), "Calculated Draft Remand release to party"),
@@ -3286,17 +3289,17 @@ public class ADCVDLib{
 			allMatches = allMatches & compareAndReport("genericSegmentField", "Calculated Draft Remand release to party",
 					calculatedDraftRemandreleaseToparty, actualValue);
 			//Draft Remand Issues Due to DAS
-			draftRemandIssuesDueToDas = calculateDate(-10, "Draft Remand Issues Due to DAS", "business", calculatedDraftRemandreleaseToparty);
+			draftRemandIssuesDueToDas = calculateLitigationDate(-10, "Draft Remand Issues Due to DAS", "calendar", calculatedDraftRemandreleaseToparty);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Draft Remand Issues Due to DAS"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Draft Remand Issues Due to DAS", 
 					draftRemandIssuesDueToDas, actualValue); 
 			//Draft Remand Concurrence Due to DAS
-			draftRemandConcurrenceDueToDas = calculateDate(-5, "Draft Remand Concurrence Due to DAS", "business",calculatedDraftRemandreleaseToparty);
+			draftRemandConcurrenceDueToDas = calculateLitigationDate(-5, "Draft Remand Concurrence Due to DAS", "calendar",calculatedDraftRemandreleaseToparty);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Draft Remand Concurrence Due to DAS"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Draft Remand Concurrence Due to DAS", 
 					draftRemandConcurrenceDueToDas, actualValue);
 			//Calculated Final Signature
-				calculatedFinalSignature = calculateDate(finalExtensionDays, "Calculated Final Signature", "Calendar", 
+				calculatedFinalSignature = calculateLitigationDate(finalExtensionDays, "Calculated Final Signature", "Calendar", 
 						requestFiled.equals("")?expectedFinalSignatureBeforeExt:requestFiled);
 			actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Calculated Final Signature"), "text");
 			allMatches = allMatches & compareAndReport("genericLitigationField", "Calculated Final Signature",
@@ -3305,13 +3308,13 @@ public class ADCVDLib{
 		
 		//Final Issues Due to DAS
 		String FinalIssuesDueToDas = "";
-		FinalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS",  "business", calculatedFinalSignature);
+		FinalIssuesDueToDas = calculateLitigationDate(-10, "Final Issues Due to DAS",  "calendar", calculatedFinalSignature);
 		actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Final Issues Due to DAS"), "text");
 		allMatches = allMatches & compareAndReport("genericLitigationField", "Final Issues Due to DAS", 
 				FinalIssuesDueToDas, actualValue);
 		//Final Concurrence Due to DAS
 		String FinalConcurrenceDueToDas = "";
-		FinalConcurrenceDueToDas = calculateDate(-5, "Final Concurrence Due to DAS",  "business", calculatedFinalSignature);
+		FinalConcurrenceDueToDas = calculateLitigationDate(-5, "Final Concurrence Due to DAS",  "calendar", calculatedFinalSignature);
 		actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Final Concurrence Due to DAS"), "text");
 		allMatches = allMatches & compareAndReport("genericLitigationField", "Final Concurrence Due to DAS", 
 				FinalConcurrenceDueToDas, actualValue);
@@ -3319,7 +3322,7 @@ public class ADCVDLib{
 		{
 		//Final Team Meeting Deadline
 		
-		finalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
+		finalTeamMeetingDeadline = calculateLitigationDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
 		actualValue = getElementAttribute(replaceGui(guiMap.get("genericLitigationField"),"Final Team Meeting Deadline"), "text");
 		allMatches = allMatches & compareAndReport("genericLitigationField", "Final Team Meeting Deadline",
 				finalTeamMeetingDeadline, actualValue);
@@ -3373,7 +3376,7 @@ public class ADCVDLib{
 					nextDueToDasDeadline, actualValue);
 			//Next Office Deadline
 			String nextOfficeDeadline="";
-			if ("".equals(actualPreliminarySignature) && datePassed(prelimTeamMeetingDeadline))
+			if ("".equals(actualPreliminarySignature) && !datePassed(prelimTeamMeetingDeadline))
 			{
 				nextOfficeDeadline = prelimTeamMeetingDeadline;
 			}
@@ -3387,7 +3390,7 @@ public class ADCVDLib{
 			{
 				nextOfficeDeadline = calculatedPreliminarySignature;
 			}
-			else if ("".equals(actualFinalSignature) && datePassed(finalTeamMeetingDeadline))
+			else if ("".equals(actualFinalSignature) && !datePassed(finalTeamMeetingDeadline))
 			{
 				nextOfficeDeadline = finalTeamMeetingDeadline;
 			}
@@ -3693,6 +3696,7 @@ public class ADCVDLib{
 	{
 		boolean matches = true;
 		clickElementJs(guiMap.get("linkFRNoticeForSegment"));
+		holdSeconds(2);
 		clickElementJs(guiMap.get("newFRButton"));
 		clickElementJs(guiMap.get("frType"));
 		clickElementJs(replaceGui(guiMap.get("frTypeItem"),frType));
@@ -3949,7 +3953,117 @@ public class ADCVDLib{
 		
 		return newDate;
 	}
-	
+	/**
+	 * This method calculates date based on other dates for Litigation
+	 * @param params: given dates
+	 * @return calculated date
+	*/
+	static String calculateLitigationDate(int val, String ...params) throws ParseException
+	{
+		int iterator, numberBusinessDays ;
+		String newDate = null;
+		iterator = (val<0)? -1:1;
+		numberBusinessDays = iterator * val;
+		switch(params[0])
+		{
+			case "Calculated Initiation Signature": 
+			case "Initiation Issues Due to DAS": 
+			case "Initiation Announcement Date":
+			case "Initiation Concurrence Due to DAS":
+			case "Calculated ITC Prelim Determination":
+			case "Calculated Prelim Extension Request File":
+			case "Calculated Order FR Signature":
+			case "Prelim Issues Due to DAS":
+			case "Prelim Team Meeting Deadline":
+			case "Calculated Preliminary Signature":
+			case "Calculated Postponement of PrelimDeterFR":
+			case "Prelim Concurrence Due to DAS":
+			case "Calculated Final Signature":
+			case "Final Team Meeting Deadline":
+			case "Final Issues Due to DAS":
+			case "Final Concurrence Due to DAS":
+			case "Final Announcement Date":
+			case "Est ITC Notification to DOC of Final Det":
+			case "Estimated Order FR Published":
+			case "Amended Final Announcement Date":
+			case "Preliminary Announcement Date":
+			case "Notify ITC of No Domestic Interest":
+			case "Update ACE (Customs Module)":
+			case "Inadequate Domestic Response note to ITC":
+			case "Substantive responses Due For All Parties":
+			case "Notify Cluster Coordinator No Interest":
+			case "Notice of Intent to Participate":
+			case "Substantive Response Due For All Parties":
+			case "Inform Cluster Coordinator if No Respons":
+			case "Issue Liquidation/Revocation Instruction":
+			case "Calculated Draft Remand release to party":
+			case "Draft Remand Issues Due to DAS":
+			case "Draft Remand Concurrence Due to DAS":	
+			case "Adequacy Determination & Letter to ITC":
+			case "Memorandum on Adequacy Determination":
+			case "Rebuttal Comments Due":
+			case "Comments on Adequacy Determination Filed":
+			{
+				if(params[2].equals(""))
+				{
+					newDate = "";
+					break;
+				}
+				Date date = format.parse(params[2]);
+				calendar.setTime(date);
+				if(params[1].equals("business"))
+				{
+					while((numberBusinessDays!=0) || (! isBusinessDay(calendar)))
+					{
+						if(isBusinessDay(calendar))
+						{
+							numberBusinessDays--;
+						}
+						calendar.add(Calendar.DAY_OF_MONTH, iterator);
+					}
+				}
+				else
+				{
+					calendar.add(Calendar.DAY_OF_MONTH, val);
+					/*while(! isBusinessDay(calendar))
+					{
+						calendar.add(Calendar.DAY_OF_MONTH, iterator);
+					}*/
+				}
+				newDate = format.format(calendar.getTime());
+				break;
+			}
+			
+			case "Next Major Deadline":
+			{
+				if (params[2].equals("") && (params[3].equals("") || params[1].equals("Self-Initiated")))
+					newDate = params[4];
+				break;
+			}
+			case "Next Due to DAS Deadline": case "Next Office Deadline":
+			{			
+				if (params[2].equals("") || params[3].equals(""))
+				{
+					newDate =params[6];
+				}
+				else if (params[2].equals("") || params[4].equals(""))
+				{
+					newDate =params[7];
+				}
+				else if (params[2].equals("") || params[5].equals(""))
+				{
+					newDate =params[8];
+				}
+				else
+				{
+					newDate = "";
+				}
+				break;
+			}
+		}
+		
+		return newDate;
+	}
 	/**
 	 * This method verify if a date is business day or not
 	 * @param cal: calendar date
@@ -4264,15 +4378,6 @@ public class ADCVDLib{
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		String selected = getElementAttribute(replaceGui(guiMap.get("InvestigationStatusLink"), "Prelim"), "aria-selected");
 		if (selected.equalsIgnoreCase("true"))
 		{
@@ -4541,7 +4646,8 @@ public class ADCVDLib{
 		else
 		{
 			//scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
-			clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Type of Circumvention Inquiry"));
+			holdSeconds(2);
+			clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Preliminary Determination"));holdSeconds(2);
 			clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Type of Circumvention Inquiry"));
 			clickElementJs(replaceGui(guiMap.get("selectSegmentItem2"),"Later-Developed Merchandise"));
 			updateHtmlReport("Set 'Edit Type of Circumvention Inquiry' to Later-Developed Merchandise",
@@ -4670,9 +4776,10 @@ public class ADCVDLib{
 		String segType = row.get("Segment_Type");
 		Date todayDate = new Date();
 		String today = new SimpleDateFormat("M/d/yyyy").format(todayDate);
+		holdSeconds(2);
 		validateStatus("SegmentStatusLink", "Prelim", segType);
 		System.out.println("dd");
-		
+		holdSeconds(2);
 		//Final
 		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Decision on How to Proceed"));
 		clickElementJs(replaceGui(guiMap.get("editNONDateOnSegment"),"Decision on How to Proceed"));
@@ -4786,6 +4893,7 @@ public class ADCVDLib{
 		//editNONDateOnSegment
 		//selectSegmenetItem2
 		//Prelim
+		holdSeconds(3);
 		String LitigType = row.get("Litigation_Type");
 		Date todayDate = new Date();
 		String today = new SimpleDateFormat("M/d/yyyy").format(todayDate);

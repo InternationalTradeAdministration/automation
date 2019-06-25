@@ -262,7 +262,8 @@ public class TestOne {
 			 if (!steelConditions.containsKey(htsUsCode) && !aluminumConditions.containsKey(htsUsCode) )
 			 { 
 				 testCaseStatus=false;
-				 failTestCase(scenarioName,htsUsCode+ "OR "+htsUsCode10digits+" Should be found in the condition sheet" , 
+				 failTestCase(scenarioName,htsUsCode+ "OR "+htsUsCode10digits+" Should be found in the "
+				 		+ "condition sheet" , 
 					"No row found in the condition sheet for the code: "+htsUsCode, "VP", "fail", "");
 			 }
 		 }
