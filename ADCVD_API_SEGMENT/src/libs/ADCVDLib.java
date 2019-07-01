@@ -3972,9 +3972,8 @@ public class ADCVDLib{
 	{
 		boolean allMatches = true;
 		String actualValue  = "" ;
-		readNumberFromDb(noNullVal(rObj.getString("Prelim_Extension__c")));
 		noNullVal(rObj.getString("Final_Date_of_Anniversary_Month__c"));
-		String actualPreliminarySignature = noNullVal(rObj.getString("Actual_Preliminary_Signature__c"));
+		//String actualPreliminarySignature = noNullVal(rObj.getString("Actual_Preliminary_Signature__c"));
 		int finalExtensionDays = readNumberFromDb(noNullVal(rObj.getString("Final_Extension_of_days__c")));
 		String actualFinalSignature = noNullVal(rObj.getString("Actual_Final_Signature__c"));
 		noNullVal(rObj.getString("Actual_Amended_Final_Signature__c"));
@@ -4178,9 +4177,9 @@ public class ADCVDLib{
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentShipperReview(JSONObject rObj,
-			String dateName,
-			String dateType,
-			String date) throws Exception
+															String dateName,
+															String dateType,
+															String date) throws Exception
 	{
 		boolean allMatches = true;
 		String actualValue  = "" ;
@@ -7800,6 +7799,14 @@ public class ADCVDLib{
 		}	
 		switch (dateName)
 		{
+			//Calculated Final Signature 
+			case "Calculated_Final_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+						calculatedFinalSignature, actualValue);
+				break;
+			}
 			//Notice of Intent to Participate,	, 
 			case "Notice_of_Intent_to_Participate__c":
 			{
@@ -8740,7 +8747,7 @@ public class ADCVDLib{
 		c.setTime(date);
 		if(!params[1].equals("business"))
 		{
-			c.add(Calendar.DATE, val); // Adding 5 days
+			c.add(Calendar.DATE, val);
 			landsOn = format.format(c.getTime());
 		}else
 		{
@@ -8859,7 +8866,8 @@ public class ADCVDLib{
 						i--;
 					}
 				}
-				//System.out.println(calendar.getTime());
+				System.out.println(calendar.getTime());
+				//landsOn = format.format(c.getTime());
 				while(!isBusinessDay(calendar)) 
 				{
 					//System.out.println(calendar.getTime());

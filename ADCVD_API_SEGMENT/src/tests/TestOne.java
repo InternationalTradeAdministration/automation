@@ -1577,52 +1577,9 @@ public class TestOne {
 	       	adminReviewName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+adminReviewName+"</span>", "Step", "pass", "" );
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
-	        ArrayList<LinkedHashMap<String, String>> adminReviewDates  = 
-	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "admin review", "");
-	         //*********************************I. VALIDATE DATES WHEN THEY FALL ON WEEKEND************************
-	       	//*****************************************************************************************************
-	        HtmlReport.addHtmlStepTitle("I. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
-	        		+ "HOLIDAY AND TOLLING DAY","Title");
-	        for(LinkedHashMap<String, String> dates:adminReviewDates)
-	       	{
-	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
-	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Weekend").equals(""))
-	       		{
-		       		record.clear();
-		    		record.put("Final_Date_of_Anniversary_Month__c", dates.get("Date_For_Weekend"));
-			       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"), "Weekend", dates.get("Date_For_Weekend"));
-	       		}
-	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Holiday").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Final_Date_of_Anniversary_Month__c", dates.get("Date_For_Holiday"));
-			       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"),
-		       				"Holiday", dates.get("Date_For_Holiday"));
-	       		}
-	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Tolling").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Final_Date_of_Anniversary_Month__c", dates.get("Date_For_Tolling"));
-			       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"), 
-		       				"Tolling Day", dates.get("Date_For_Tolling"));
-	       		}
-	       	}
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
-	        /*HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
+	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
 	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
 	        String actualValue, expectedValue; 
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
@@ -1961,7 +1918,53 @@ public class TestOne {
 			record.put("Actual_Final_Signature__c", "");
 			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
-	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);*/
+	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+	       	//*********************************I. VALIDATE DATES WHEN THEY FALL ON WEEKEND************************
+	       	//*****************************************************************************************************
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        HtmlReport.addHtmlStepTitle("I. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title"); 
+	        ArrayList<LinkedHashMap<String, String>> adminReviewDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "admin review", "");
+	        for(LinkedHashMap<String, String> dates:adminReviewDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Final_Date_of_Anniversary_Month__c", dates.get("Date_For_Weekend"));
+			       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"), "Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Final_Date_of_Anniversary_Month__c", dates.get("Date_For_Holiday"));
+			       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Final_Date_of_Anniversary_Month__c", dates.get("Date_For_Tolling"));
+			       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", adminReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentAdministrativeReview(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+	       		}
+	       	}
+	       	
+	       	
+	       	
 	        /*
 	        //*********************************III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS**************
 	       	//*************************************************************************************************************
@@ -2598,7 +2601,6 @@ public class TestOne {
 	        record.clear();	 
 	        record.put("Actual_Initiation_Signature__c", "");	        
 			record.put("Actual_Preliminary_Signature__c", "");
-			
 	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
 	       	//Next Due to DAS Deadline
 	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
@@ -2884,9 +2886,7 @@ public class TestOne {
 			record.put("Actual_Initiation_Issues_to_DAS__c", "");
 			record.put("Actual_Initiation_Concurrence_to_DAS__c", "");
 			record.put("Actual_Initiation_Signature__c", "");
-			
 	       	code = APITools.updateRecordObject("Segment__c", antiCircumventionId, record);
-	       	
 	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
 	        		+ "HOLIDAY AND TOLLING DAY","Title");
 	        for(LinkedHashMap<String, String> dates:antiCircumventionDates)
@@ -3747,9 +3747,7 @@ public class TestOne {
 					"Segment id: <span class = 'boldy'>"+" "+changedCircumstanceName+"</span>", "Step", "pass", "" );
 	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
-	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "anti-circumvention", "");
-	        
-	        
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "changed-circumstance", "");
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -4081,7 +4079,7 @@ public class TestOne {
 			record.put("Actual_Initiation_Signature__c", "");
 	       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
 	       	
-	       	
+	       	//String code="";
 	       	HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
 	        		+ "HOLIDAY AND TOLLING DAY","Title");
 	        for(LinkedHashMap<String, String> dates:changedCircumstanceDates)
@@ -4117,7 +4115,7 @@ public class TestOne {
 		    		record.put("Request_Filed__c", dates.get("Date_For_Tolling"));
 		    		//
 		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
-		    			record.put("Final_Extension_of_days__c", "1");
+		    			record.put("Final_Extension_of_days__c", "4");
 			       	code = APITools.updateRecordObject("Segment__c", changedCircumstanceId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", changedCircumstanceId));
 			       	testCaseStatus = testCaseStatus & 
@@ -4130,6 +4128,8 @@ public class TestOne {
 	       	}
 	        
 	        
+	        
+	       
        }
 	   else 
 	   {
@@ -4170,7 +4170,6 @@ public class TestOne {
 	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Expedited_Review", "");
-	        
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -4510,8 +4509,6 @@ public class TestOne {
 			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
 	       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
-	        
-	        
 	       	HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
 	        		+ "HOLIDAY AND TOLLING DAY","Title");
 	        for(LinkedHashMap<String, String> dates:changedCircumstanceDates)
@@ -4521,8 +4518,10 @@ public class TestOne {
 	       				&& !dates.get("Date_For_Weekend").equals(""))
 	       		{
 		       		record.clear();
-		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
-			       	 code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Weekend"));
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+			    	record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
 			       	testCaseStatus = testCaseStatus & 
 		       		ADCVDLib.validateNewSegmentExpiditedReview(jObj, dates.get("Field_Name"), 
@@ -4533,8 +4532,9 @@ public class TestOne {
 	       		{
 			       	record.clear();
 		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Holiday"));
-		    		//Final_Extension_of_days__c
-			       	 code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+			    	record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
 			       	testCaseStatus = testCaseStatus & 
 		       		ADCVDLib.validateNewSegmentExpiditedReview(jObj, dates.get("Field_Name"),
@@ -4545,18 +4545,22 @@ public class TestOne {
 	       		{
 			       	record.clear();
 		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Tolling"));
-		    		//
 		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
-		    			record.put("Final_Extension_of_days__c", "1");
-			       	 code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
+		    		record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", expiditedReviewId));
 			       	testCaseStatus = testCaseStatus & 
 		       		ADCVDLib.validateNewSegmentExpiditedReview(jObj, dates.get("Field_Name"), 
 		       				"Tolling Day", dates.get("Date_For_Tolling"));
-			       	record.clear();
+			       	
+	       		}
+	       		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+	       		{
+	       			record.clear();
 			       	record.put("Final_Extension_of_days__c", "");
 			       	code = APITools.updateRecordObject("Segment__c", expiditedReviewId, record);
 	       		}
+	       		
 	       	}
 	        
        }
@@ -4583,7 +4587,6 @@ public class TestOne {
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
 		record.put("Calculated_Initiation_Signature__c", row.get("Calculated_Initiation_Signature__c"));
@@ -4599,9 +4602,6 @@ public class TestOne {
 	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Shipper_Review", "");
-	       
-	        
-	        
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -4610,7 +4610,6 @@ public class TestOne {
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Initiation_Signature__c,Calculated_Preliminary_Signature__c,"
 	        		+ "Calculated_Final_Signature__c,Calculated_Amended_Final_Signature__c+"
 	        		+ "from+segment__c+where+id='"+newShipperReviewId+"'";
-	                
 	        //Next_Major_Deadline__c
 	        //1
 	        jObj = APITools.getRecordFromObject(sqlString);
@@ -4651,7 +4650,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Amended_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);  
-	        
 	        //initiate
 	        record.clear();
 	        record.put("Will_you_Amend_the_Final__c", "");
@@ -4751,7 +4749,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        
 	      //10
 			clause = "IF Will_you_Amend_the_Final__c is Yes AND Actual_Amended_Final_Signature__c is blank AND "
 					+ "Actual_Amend_Final_Issues_to_DAS__c is blank THEN Amend_Final_Issues_Due_to_DAS__c";
@@ -5026,12 +5023,14 @@ public class TestOne {
 			record.put("Actual_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Final_Concurrence_to_DAS__c", "");
 			record.put("Actual_Final_Signature__c", "");
+			record.put("Actual_Initiation_Issues_to_DAS__c", "");
+			record.put("Actual_Initiation_Concurrence_to_DAS__c", "");
+			record.put("Actual_Initiation_Signature__c", "");
 			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
 	       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
 	       	
-	       	
-	       	
+	       	////////////////////////
 	       	HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
 	        		+ "HOLIDAY AND TOLLING DAY","Title");
 	        for(LinkedHashMap<String, String> dates:changedCircumstanceDates)
@@ -5041,8 +5040,10 @@ public class TestOne {
 	       				&& !dates.get("Date_For_Weekend").equals(""))
 	       		{
 		       		record.clear();
-		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
-			       	 code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Weekend"));
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+			    	record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
 			       	testCaseStatus = testCaseStatus & 
 		       		ADCVDLib.validateNewSegmentShipperReview(jObj, dates.get("Field_Name"), 
@@ -5053,8 +5054,9 @@ public class TestOne {
 	       		{
 			       	record.clear();
 		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Holiday"));
-		    		//Final_Extension_of_days__c
-			       	 code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+			    	record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
 			       	testCaseStatus = testCaseStatus & 
 		       		ADCVDLib.validateNewSegmentShipperReview(jObj, dates.get("Field_Name"),
@@ -5065,15 +5067,17 @@ public class TestOne {
 	       		{
 			       	record.clear();
 		    		record.put("Calculated_Initiation_Signature__c", dates.get("Date_For_Tolling"));
-		    		//
 		    		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
-		    			record.put("Final_Extension_of_days__c", "1");
-			       	 code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
+		    		record.put("Final_Extension_of_days__c", "1");
+			       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
 			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", newShipperReviewId));
 			       	testCaseStatus = testCaseStatus & 
 		       		ADCVDLib.validateNewSegmentShipperReview(jObj, dates.get("Field_Name"), 
 		       				"Tolling Day", dates.get("Date_For_Tolling"));
-			       	record.clear();
+	       		}
+	       		if(dates.get("Field_Name").equals("Final_Announcement_Date__c"))
+	       		{
+	       			record.clear();
 			       	record.put("Final_Extension_of_days__c", "");
 			       	code = APITools.updateRecordObject("Segment__c", newShipperReviewId, record);
 	       		}
@@ -5118,49 +5122,6 @@ public class TestOne {
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+ScopeInquiryName+"</span>", "Step", "pass", "" );
 	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
-	        ArrayList<LinkedHashMap<String, String>> scopeInquiryDates  = 
-	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Scope_Inquiry", "");
-	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
-	        		+ "HOLIDAY AND TOLLING DAY","Title");
-	        for(LinkedHashMap<String, String> dates:scopeInquiryDates)
-	       	{
-	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
-	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Weekend").equals(""))
-	       		{
-		       		record.clear();
-		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
-			       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"), 
-		       				"Weekend", dates.get("Date_For_Weekend"));
-	       		}
-	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Holiday").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Holiday"));
-		    		//Final_Extension_of_days__c
-			       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"),
-		       				"Holiday", dates.get("Date_For_Holiday"));
-	       		}
-	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Tolling").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Tolling"));
-			       	String code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"), 
-		       				"Tolling Day", dates.get("Date_For_Tolling"));
-	       		}
-	       	}
-	        
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -5179,7 +5140,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        
 	        //2
 	        clause = "IF Actual_Preliminary_Signature__c is blank AND Type_of_scope_ruling__c  = Formal"
 	        		+ " AND Published_Date__c (Type:Rescission) THEN Calculated_Preliminary_Signature__c";
@@ -5190,7 +5150,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-
 	        //3
 	        clause = "IF Actual_Final_Signature__c is blank AND Published_Date__c  (Type:Formal) "
 	        		+ "AND Published_Date__c (Type:Rescission) THEN Calculated_Final_Signature__c";
@@ -5206,27 +5165,8 @@ public class TestOne {
 	        record.clear();
     		record.put("Actual_Preliminary_Signature__c", "");
     		code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
-
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
     		HtmlReport.addHtmlStepTitle("1) - Next Due to DAS Deadline","Title");
-	        
 	        //Next Due to DAS Deadline
-    		
     		 //1
 	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank OR Actual_Decision_on_HOP_Issues_to_DAS__c is "
 	        		+ "blank THEN Decision_on_HOP_Issues_Due_to_DAS__c";
@@ -5237,7 +5177,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Issues_Due_to_DAS__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-    		
     		//2
 	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank AND Actual_Decision_on_HOP_Concurrence_toDAS__c "
 	        		+ "is blank THEN Decision_on_HOP_Concurrence_Due_to_DAS__c";
@@ -5248,7 +5187,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Concurrence_Due_to_DAS__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        
 	        //3
 	        clause = "IF Actual_Date_of_Decision_on_HoP__c  is blank THEN Deadline_for_Decision_on_How_to_Proceed__c";
 	        record.clear();
@@ -5258,7 +5196,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-    		
 	        //4
 	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  "
 	        		+ "is blank THEN Prelim_Issues_Due_to_DAS__c";
@@ -5320,12 +5257,10 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Due_to_DAS_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			
     //initiate
 	        record.clear();	        
 			//record.put("Will_you_Amend_the_Final__c", "");
 			//record.put("Segment_Outcome__c", "");
-			
 			record.put("Actual_Prelim_Issues_to_DAS__c", "");
 			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
 			record.put("Actual_Final_Issues_to_DAS__c", "");
@@ -5347,7 +5282,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Decision_on_HOP_Issues_Due_to_DAS__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-    		
     		//2
 	        clause = "IF Actual_Date_of_Decision_on_HoP__c is blank AND Actual_Decision_on_HOP_Concurrence_toDAS__c "
 	        		+ "is blank THEN Decision_on_HOP_Concurrence_Due_to_DAS__c";
@@ -5452,8 +5386,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			
-	        
 	      //Next Announcement Date
 	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
 	        //1
@@ -5513,6 +5445,48 @@ public class TestOne {
 			record.put("Actual_Amend_Final_Issues_to_DAS__c", "");
 			record.put("Actual_Amend_Final_Concurrence_to_DAS__c", "");
 	       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+	        ArrayList<LinkedHashMap<String, String>> scopeInquiryDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Scope_Inquiry", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:scopeInquiryDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"));
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"));
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Actual_Date_of_Decision_on_HoP__c", dates.get("Date_For_Tolling"));
+			       	code = APITools.updateRecordObject("Segment__c", scopeInquiryId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", scopeInquiryId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateNewSegmentScopeInquiry(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"));
+	       		}
+	       	}
 	       	
        }
 	   else 
@@ -5578,57 +5552,11 @@ public class TestOne {
 			//jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
 			//testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "240 Day", 
 					//row.get("Published_Date__c"));
-			
-			
-			
 	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> sunsetReviewDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Sunset_Review", "");
 	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
 	        		+ "HOLIDAY AND TOLLING DAY","Title");
-	        
-	        
-	        
-			
-			for(LinkedHashMap<String, String> dates:sunsetReviewDates)
-	       	{
-	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
-	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Weekend").equals(""))
-	       		{
-	       			
-	       			record.clear();
-	    			record.put("Published_Date__c", dates.get("Date_For_Weekend").trim());
-	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"), 
-		       				"Weekend", dates.get("Date_For_Weekend"), "240 Day");
-	       		}
-	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Holiday").equals(""))
-	       		{
-	       			
-	       			record.clear();
-	    			record.put("Published_Date__c", dates.get("Date_For_Holiday").trim());
-	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"),
-		       				"Holiday", dates.get("Date_For_Holiday"), "240 Day");
-	       		}
-	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Tolling").equals(""))
-	       		{
-	       			record.clear();
-	    			record.put("Published_Date__c", dates.get("Date_For_Tolling").trim());
-	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"), 
-		       				"Tolling Day", dates.get("Date_For_Tolling"), "240 Day");
-	       		}
-	       	}
 			//*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -5906,6 +5834,45 @@ public class TestOne {
     		
     		
 
+			for(LinkedHashMap<String, String> dates:sunsetReviewDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+	       			
+	       			record.clear();
+	    			record.put("Published_Date__c", dates.get("Date_For_Weekend").trim());
+	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"), "240 Day");
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+	       			
+	       			record.clear();
+	    			record.put("Published_Date__c", dates.get("Date_For_Holiday").trim());
+	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"), "240 Day");
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+	       			record.clear();
+	    			record.put("Published_Date__c", dates.get("Date_For_Tolling").trim());
+	    			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateSunSetReviewDatesByTypeJSONObject(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"), "240 Day");
+	       		}
+	       	}
 
 
        }
@@ -5934,66 +5901,21 @@ public class TestOne {
 		record.put("RecordTypeId", recordType.get("International Litigation"));
 		record.put("Request_Filed__c", todayStr);
 		String litigationId = APITools.createObjectRecord("Litigation__c", record);
+		String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
+        		+ "Calculated_Final_Signature__c+"
+        		+ "from+Litigation__c+where+id='"+litigationId+"'";
 		if(litigationId != null)
        {
-			JSONObject jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			JSONObject jObj = APITools.getRecordFromObject(sqlString);
 	       	String litigationName = jObj.getString("Name");
 	       	updateHtmlReport("Create International Litigation", "User is able to create a new litigation", 
 					"Litigation id: <span class = 'boldy'>"+" "+litigationName+"</span>", "Step", "pass", "" );
-	       	
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
-	        ArrayList<LinkedHashMap<String, String>> litigationDates  = 
-	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Litigation", "");
-	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
-	        		+ "HOLIDAY AND TOLLING DAY","Title");
-	        for(LinkedHashMap<String, String> dates:litigationDates)
-	       	{
-	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
-	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Weekend").equals(""))
-	       		{
-		       		record.clear();
-		    		record.put("Request_Filed__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
-			       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
-		       				"Weekend", dates.get("Date_For_Weekend"), "International Litigation");
-	       		}
-	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Holiday").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Request_Filed__c", dates.get("Date_For_Holiday"));
-		    		//Final_Extension_of_days__c
-			       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"),
-		       				"Holiday", dates.get("Date_For_Holiday"), "International Litigation");
-	       		}
-	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Tolling").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Request_Filed__c", dates.get("Date_For_Tolling"));
-			       	String code = APITools.updateRecordObject("Litigation__c", litigationId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
-		       				"Tolling Day", dates.get("Date_For_Tolling"), "International Litigation");
-	       		}
-	       	}
-	        
-	        
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
 	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
 	        String actualValue, expectedValue; 
-	        String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
-	        		+ "Calculated_Final_Signature__c+"
-	        		+ "from+Litigation__c+where+id='"+litigationId+"'";
+	        
 	        //Next_Major_Deadline__c
 	        //1
 	        String clause = "IF Actual_Preliminary_Signature__c is blank THEN Calculated_Preliminary_Signature__c";
@@ -6169,9 +6091,9 @@ public class TestOne {
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 	        
 	        //Next Announcement Date
-	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date - NO Requirement Given for this Date check with Paul","Title");
 	        //1
-	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	        /*clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
 	        todayCal.setTime(todayDate);
 			todayCal.add(Calendar.DATE, 10);
 			record.clear();
@@ -6209,7 +6131,68 @@ public class TestOne {
 	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);*/
+	        
+	        
+	        
+	        //initiate
+	        record.clear();	
+	        record.put("Actual_Initiation_Signature__c", "");
+	        record.put("Actual_Prelim_Issues_to_DAS__c", "");
+	        record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Preliminary_Signature__c", "");	        
+	        record.put("Actual_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Final_Signature__c", "");
+	        
+	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+	       	
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	        ArrayList<LinkedHashMap<String, String>> litigationDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Litigation", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:litigationDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"), "International Litigation");
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"), "International Litigation");
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Request_Filed__c", dates.get("Date_For_Tolling"));
+			       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", litigationId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"), "International Litigation");
+	       		}
+	       	}
+	       	
+	       	
+	       	
        }
 	   else 
 	   {
@@ -6241,49 +6224,6 @@ public class TestOne {
 	       	updateHtmlReport("Create Remand", "User is able to create a new Remand", 
 					"Remand id: <span class = 'boldy'>"+" "+remandName+"</span>", "Step", "pass", "" );
 	    	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
-	        ArrayList<LinkedHashMap<String, String>> remandDates  = 
-	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Remand", "");
-	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
-	        		+ "HOLIDAY AND TOLLING DAY","Title");
-	        for(LinkedHashMap<String, String> dates:remandDates)
-	       	{
-	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
-	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Weekend").equals(""))
-	       		{
-		       		record.clear();
-		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
-			       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
-		       				"Weekend", dates.get("Date_For_Weekend"), "Remand");
-	       		}
-	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Holiday").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Holiday"));
-		    		//Final_Extension_of_days__c
-			       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"),
-		       				"Holiday", dates.get("Date_For_Holiday"), "Remand");
-	       		}
-	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
-	       				&& !dates.get("Date_For_Tolling").equals(""))
-	       		{
-			       	record.clear();
-		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Tolling"));
-			       	String code = APITools.updateRecordObject("Litigation__c", remandId, record);
-			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-			       	testCaseStatus = testCaseStatus & 
-		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
-		       				"Tolling Day", dates.get("Date_For_Tolling"), "Remand");
-	       		}
-	       	}
-	        
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
@@ -6309,7 +6249,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        
 	        //initiate
 	        record.clear();	        
 	        record.put("Actual_Draft_Remand_released_to_party__c", "");
@@ -6317,7 +6256,6 @@ public class TestOne {
 
 	      //Next Due to DAS Deadline
 	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline", "Title");        
-	        
 	        //1
 	        clause = "IF Actual_Draft_Remand_released_to_party__c is blank AND Actual_Draft_Remand_Issues_to_DAS__c "
 	        		+ " is blank THEN Draft_Remand_Issues_Due_to_DAS__c";
@@ -6384,11 +6322,6 @@ public class TestOne {
 	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
 	       //Next Office Deadline
 	       	HtmlReport.addHtmlStepTitle("3) - Next Office Deadline","Title");
-	       	
-	       	
-	       	
-	       	
-	       	
 	        //1
 	        clause = "IF Actual_Draft_Remand_released_to_party__c is blank AND Actual_Draft_Remand_Issues_to_DAS__c "
 	        		+ " is blank THEN Draft_Remand_Issues_Due_to_DAS__c";
@@ -6416,11 +6349,6 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Draft_Remand_release_to_party__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        
-	        
-	       
-	        
-	        
     		//4
 			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c"
 					+ " is blank THEN Final_Issues_Due_to_DAS__c";
@@ -6464,94 +6392,10 @@ public class TestOne {
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 	       	
-	       	
-	       	/*
-	       	
-			//1
-			clause = "IF Actual_Preliminary_Signature__c is blank AND Prelim_Team_Meeting_Deadline__c "
-					+ "is not past THEN Prelim_Team_Meeting_Deadline__c";
-			jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Team_Meeting_Deadline__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			//2
-			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c  is blank "
-					+ "THEN Prelim_Issues_Due_to_DAS__c";
-			todayCal.setTime(todayDate);
-			todayCal.add(Calendar.MONTH, -1);
-			record.clear();
-			record.put("Expected_Final_Signature_Before_Ext__c", dateFormat.format(todayCal.getTime()));
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Issues_Due_to_DAS__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			//3
-			clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank"
-					+ " THEN Prelim_Concurrence_Due_to_DAS__c";
-			record.clear();
-    		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			//4
-			clause = "IF Actual_Preliminary_Signature__c is blank THEN "
-					+ "Calculated_Preliminary_Signature__c";
-			record.clear();
-    		record.put("Actual_Prelim_Concurrence_to_DAS__c", todayStr);
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			//5
-			clause = "IF Actual_Final_Signature__c is blank AND Final_Team_Meeting_Deadline__c has not passed "
-					+ "THEN Final_Team_Meeting_Deadline__c";
-			record.clear();
-    		record.put("Actual_Preliminary_Signature__c", todayStr);
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Team_Meeting_Deadline__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        //6
-			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Issues_to_DAS__c is blank "
-					+ "THEN Final_Issues_Due_to_DAS__c";
-			todayCal.setTime(todayDate);
-			todayCal.add(Calendar.MONTH, -6);
-			record.clear();
-			record.put("Expected_Final_Signature_Before_Ext__c", dateFormat.format(todayCal.getTime()));
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Issues_Due_to_DAS__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			//7
-			clause = "IF Actual_Final_Signature__c is blank AND Actual_Final_Concurrence_to_DAS__c"
-					+ " is blank THEN Final_Concurrence_Due_to_DAS__c";
-			record.clear();
-			record.put("Actual_Final_Issues_to_DAS__c", todayStr);	
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Concurrence_Due_to_DAS__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-			//8
-			clause = "IF Actual_Final_Signature__c is blank THEN Calculated_Final_Signature__c";
-			record.clear();
-			record.put("Actual_Final_Concurrence_to_DAS__c", todayStr);	
-	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);	       	
-	       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
-	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Office_Deadline__c"));
-	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);*/
-	        
 	        //Next Announcement Date
-	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date","Title");
+	        HtmlReport.addHtmlStepTitle("4) - Next Announcement Date Requirement not given Yet, Check with Paul","Title");
 	        //1
-	        clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
+	       /* clause = "IF preliminary_Announcement_Date is not passed and segment_outcome is blank";
 	        todayCal.setTime(todayDate);
 			todayCal.add(Calendar.DATE, 10);
 			record.clear();
@@ -6590,7 +6434,58 @@ public class TestOne {
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Announcement_Date__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Final_Announcement_Date__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
-	        
+	        ;*/
+	        //initiate
+	        record.clear();	        
+	        record.put("Actual_Draft_Remand_Issues_to_DAS__c", "");
+	        record.put("Actual_Draft_Remand_Concurrence_to_DAS__c", "");
+	        record.put("Actual_Draft_Remand_released_to_party__c", "");	        
+	        record.put("Actual_Final_Issues_to_DAS__c", "");
+	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
+	       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+	       	
+	        ArrayList<LinkedHashMap<String, String>> remandDates  = 
+	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Remand", "");
+	        HtmlReport.addHtmlStepTitle("VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
+	        		+ "HOLIDAY AND TOLLING DAY","Title");
+	        for(LinkedHashMap<String, String> dates:remandDates)
+	       	{
+	       		HtmlReport.addHtmlStepTitle("Validate ["+dates.get("Field_Name")+"]","Title");
+	       		if(!dates.get("Date_For_Weekend").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Weekend").equals(""))
+	       		{
+		       		record.clear();
+		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Weekend"));//Application_Accepted__c
+			       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Weekend", dates.get("Date_For_Weekend"), "Remand");
+	       		}
+	       		if(!dates.get("Date_For_Holiday").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Holiday").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Holiday"));
+		    		//Final_Extension_of_days__c
+			       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"),
+		       				"Holiday", dates.get("Date_For_Holiday"), "Remand");
+	       		}
+	       		if(!dates.get("Date_For_Tolling").equalsIgnoreCase("x")
+	       				&& !dates.get("Date_For_Tolling").equals(""))
+	       		{
+			       	record.clear();
+		    		record.put("Expected_Final_Signature_Before_Ext__c", dates.get("Date_For_Tolling"));
+			       	code = APITools.updateRecordObject("Litigation__c", remandId, record);
+			       	jObj = APITools.getRecordFromObject(row.get("Query").replace("litigationId", remandId));
+			       	testCaseStatus = testCaseStatus & 
+		       		ADCVDLib.validateLitigationFields(jObj, dates.get("Field_Name"), 
+		       				"Tolling Day", dates.get("Date_For_Tolling"), "Remand");
+	       		}
+	       	}
 	        
        }
 	   else 
