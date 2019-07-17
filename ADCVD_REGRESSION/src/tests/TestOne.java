@@ -4,7 +4,6 @@ import static GuiLibs.GuiTools.holdSeconds;
 import static GuiLibs.GuiTools.testCaseStatus;
 import static ReportLibs.ReportTools.printLog;
 import static XmlLibs.XmlTools.buildTestNgFromDataPool;
-
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-
 import org.testng.TestNG;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -20,13 +18,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
-
 import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import OfficeLibs.XlsxTools;
 import ReportLibs.HtmlReport;
 import libs.ADCVDLib;
-
 
 public class TestOne {
 	public static GuiTools guiTools;
@@ -156,7 +152,6 @@ public class TestOne {
 		//if(! testCaseStatus) guiTools.tearDown =true;
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
 		//if(! testCaseStatus) guiTools.tearDown =true;
-		
 		row.put("ADCVD_Case", "C-");
 		row.put("ADCVD_Case_Type", "CVD");
 		HtmlReport.addHtmlStepTitle("Create New CVD Investigation","Title");
@@ -201,8 +196,6 @@ public class TestOne {
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewLitigation(row);
 		testCaseStatus =testCaseStatus & ADCVDLib.validateLitigationFields(row);
 	}
-	
-	
 	/**
 	 * This method is for ADCVD case creation and validation
 	*/
@@ -634,8 +627,7 @@ public class TestOne {
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewLitigation(row);
 		ADCVDLib.validateLitigationStatus(row);
 	}
-	
-	
+		
 	/**
 	 * This method is validating International Litigation statuses
 	*/
@@ -662,9 +654,6 @@ public class TestOne {
 		testCaseStatus =testCaseStatus & ADCVDLib.createNewLitigation(row);
 		ADCVDLib.validateLitigationStatus(row);
 	}
-	
-	
-	
 	/**
 	 * This method if for getting the current test case information
 	*/
