@@ -8696,7 +8696,7 @@ public class ADCVDLib{
 	 * @param date: date to check
 	 * @return pass if passed, false if not
 	*/
-	static boolean datePassed(String date) throws ParseException
+	public static boolean datePassed(String date) throws ParseException
 	{
 		if (date == null || date.equals("")) return true;
 		Date todayDate = new Date();

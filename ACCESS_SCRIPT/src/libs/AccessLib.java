@@ -101,9 +101,6 @@ public class AccessLib{
 		}
 		return loginStatus;
 	}
-	
-	
-	
 	/**
 	 * This method creates new E-File document
 	 * @param row: map of test case's data
@@ -120,15 +117,48 @@ public class AccessLib{
 		selectElementByValue(guiMap.get("SecurityClassification"), row.get("Security_Classification"));
 		selectElementByValue(guiMap.get("DocumentType"), row.get("Document_Type"));
 		enterText(guiMap.get("FiledOnBehalfOf"), row.get("Filed_On_Behalf_Of"));
-		String fileName = InitTools.getInputDataFolder()+"\\input_files\\"+row.get("Files");
-		enterText(guiMap.get("fileUploadText"), "Text File1");
-		enterTextFile(guiMap.get("fileUploadButton"), fileName);
-		//uploadFile(fileName);
+		String fileName="";
+		int nbrUpload=0;
+		//File_2	File_Title_3
+		addFiles(row, 0, 0);
+		
+		try{
+			nbrUpload = Integer.parseInt(row.get("Number_of_uploads"));
+			for(int j = 1; j<=nbrUpload; j++)
+			{
+				clickElementJs(guiMap.get("addMoreFiles"));
+				addFiles(row, j, nbrUpload);
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			failTestCase("Number_of_uploads = "+row.get("Number_of_uploads"), "Number_of_uploads should have a number",
+					"Not as expected", "Step", "fail", "");
+		}
+		return create;
+	}
+	
+	/**
+	 * This method creates new ADCVD case
+	 * @param row: map of test case's data
+	 * @return true case created correctly, false if not
+	 * @exception Exception
+	*/
+	public static void addFiles(LinkedHashMap<String, String> row, int iteration, int total) throws Exception
+	{
+	
+		for(int i=1; i<=5; i++)
+		{
+			if(!row.get("File_"+i).equals("") && !row.get("File_"+i).equals("N/A"))
+			{
+				String fileName = InitTools.getInputDataFolder()+"/input_files/"+row.get("File_"+i);
+				enterText(guiMap.get("fileUploadText"+i), "Iteration: "+iteration+" _ File "+i);
+				enterTextFile(guiMap.get("fileUploadButton"+i), fileName);
+			}
+		}
 		clickElementJs(guiMap.get("submitButton"));
 		holdSeconds(2);
-
 		Robot robot = new Robot();
-
 		robot.keyPress(KeyEvent.VK_ENTER);
 		robot.keyRelease(KeyEvent.VK_ENTER);
 		holdSeconds(10);
@@ -137,40 +167,25 @@ public class AccessLib{
 			failTestSuite("submitting File", 
 					"User is able to submit E-File Document", 
 				"Not as expected", "Step", "fail", "submitting File");
-				create = false;
 		}else
 		{
-			highlightElement(guiMap.get("barCode"), "green");
-			holdSeconds(2);
-			String barCode = getElementAttribute(guiMap.get("barCode"), "text");
-			updateHtmlReport("submitting File", 
-					"User is able to submit E-File Document", 
-				"Bar Code: "+barCode, "Step", "pass", "submitting File");
+			if (iteration==0)
+			{
+				highlightElement(guiMap.get("barCode"), "green");
+				holdSeconds(2);
+				String barCode = getElementAttribute(guiMap.get("barCode"), "text");
+				updateHtmlReport("submitting File", 
+						"User is able to submit E-File Document", 
+					"Bar Code: "+barCode, "Step", "pass", "Submitting File");
+			}
+			else
+			{
+				updateHtmlReport("Adding Files... " +iteration+ " out of "+total, 
+						"User is able to add more files", 
+					"As Expected", "Step", "pass", "Adding Files "+iteration);
+			}
 		}
-		return create;
 	}
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
