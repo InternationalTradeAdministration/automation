@@ -335,7 +335,7 @@ public class TestOne {
 	    String code = APITools.updateRecordObject("Segment__c", shipperReviewId, record);
 	    if(code.equals("204"))
 	    {
-		   updateHtmlReport("Align NSR to AD", "user is able to align NSR segment to AD segement[ <span class = 'boldy'>"+
+		   updateHtmlReport("Align NSR to AR", "user is able to align NSR segment to AR segement[ <span class = 'boldy'>"+
 				   ""+nsrName+"--->"+arName+"]</span>", "As expected",
 					"VP", "pass", "");
 		   jObj = APITools.getRecordFromObject(query.replace("segmentId", shipperReviewId));
@@ -344,7 +344,7 @@ public class TestOne {
 	    }
 	    else
 	    {
-		   updateHtmlReport("Align NSR to AD", "user is able to align NSR segment to AD segement", "Not as expected",
+		   updateHtmlReport("Align NSR to AR", "user is able to align NSR segment to AR segement", "Not as expected",
 					"VP", "fail", "");
 	    }
 	}
@@ -377,24 +377,13 @@ public class TestOne {
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
-		System.out.println("start Test");
-		String url = mapConfInfos.get("url");
-		String user = mapConfInfos.get("user_name");
-		String password = mapConfInfos.get("password");		
-		if (! loginOn)
-		{
-			guiTools.openBrowser(browserType);
-			loginOn = ADCVDLib.loginToAdCvd(url, user, password);
-		}
-		holdSeconds(2);
 		row.put("ADCVD_Case", "A-");
 		row.put("ADCVD_Case_Type", "AD ME");
 		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
-		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		//if(! testCaseStatus) guiTools.tearDown =true;
-		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		testCaseStatus = testCaseStatus & ADCVDLib.validateInvestigationStatus(row);
+		String adCaseId = createNewCase(row, "A-");		
+		String adPetitionId = createNewPetition(row, adCaseId, "");
+		String adInvestigationIdName = createNewInvestigation(row, adPetitionId);
+		testCaseStatus = testCaseStatus & ADCVDLib.validateInvestigationStatus(adInvestigationIdName.split("###")[0]);
 	}
 
 	/**

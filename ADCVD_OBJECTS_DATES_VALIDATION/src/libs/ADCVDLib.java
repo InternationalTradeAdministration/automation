@@ -8581,7 +8581,7 @@ public class ADCVDLib{
 		else//Remand
 		{
 			//Calculated Draft Remand release to party
-			calculatedDraftRemandreleaseToparty = calculateLitigationDate(-30 + prelimExtensionDays, 
+			calculatedDraftRemandreleaseToparty = calculateLitigationDate(-28 + prelimExtensionDays, 
 					"Calculated Draft Remand release to party",	"Calendar", 
 					expectedFinalSignatureBeforeExt);
 			//Draft Remand Issues Due to DAS
@@ -8602,8 +8602,8 @@ public class ADCVDLib{
 		finalConcurrenceDueToDas = calculateLitigationDate(-5, "Final Concurrence Due to DAS",  "business", calculatedFinalSignature);
 		if(litigationType.equalsIgnoreCase("International Litigation"))
 		{
-		//Final Team Meeting Deadline
-		finalTeamMeetingDeadline = calculateLitigationDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
+			//Final Team Meeting Deadline
+			finalTeamMeetingDeadline = calculateLitigationDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
 		}
 		switch (dateName)
 		{

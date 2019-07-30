@@ -57,7 +57,7 @@ public class APITools {
 										 String userName,
 										 String password) throws Exception
 	{
-		//password = "Hamdidouche_12ngatfNOmEZT67VDLihLpYQ4t";
+		//password = "Hamdidouche_12XjESo2Yqpk8cZrcl5C8L1bpU";
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpPost httpPost = null;
 		int statusCode;

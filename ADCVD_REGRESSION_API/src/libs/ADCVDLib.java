@@ -4508,175 +4508,137 @@ public class ADCVDLib{
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
-	public static boolean validateInvestigationStatus(LinkedHashMap<String, String> row) throws Exception
+	public static boolean validateInvestigationStatus(String investigationId) throws Exception
 	{
-		//InvestigationStatusContainer
-		//InvestigationStatusLink
-		//prelim
-		boolean worked = true;
+		boolean match = true;
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date todayDate = new Date();
-		String today = new SimpleDateFormat("M/d/yyyy").format(todayDate);
-		validateStatus("petitionStatusLink", "Prelim", "Investigation");
+		String todayStr = dateFormat.format(todayDate);
+		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
+		String sqlString = "select+Status__c+from+Investigation__c+where+id='"+investigationId+"'";
 		
-	/*	//Amend Prelim
-	 * 
-	 * createSegmentFrNotice(row, "Preliminary") ;
-		validateStatus("petitionStatusLink", "Amend Prelim", "Investigation");
+		//Prelim
 		
-		*/
+		String condition = "Investigation Outcome is not 'ITC Negative Prelim'or 'Petition Withdrawn "
+				+ "After initiation' or 'Suspension Agreement' "
+				+ "and if Published Date (Type: Preliminary) is blank then the status is true";		
+		JSONObject jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Prelim", jObj.getString("Status__c"), condition);
+		
+		//Amend Prelim
+		HtmlReport.addHtmlStepTitle("Validate Status - Amend Prelim", "Title"); 
+		condition = "FR Published Date (Type:  Preliminary) is not blank AND Will_You_Amend_the_Prelim_Determination is "
+				+ "yes AND Actual_Amended_Prelim_Determination_Sig is blank AND Investigation Outcome is not"
+				+ " ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') "
+				+ "THEN status is true";
+		record.clear();
+      	record.put("Investigation__c", investigationId);
+		record.put("Published_Date__c", todayStr);
+		record.put("Cite_Number__c", "None");
+		record.put("Type__c", "Preliminary");
+		String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+		record.clear();
+       	record.put("Amend_the_Preliminary_Determination__c", "Yes");
+		//record.put("Calculated_Preliminary_Signature__c", todayStr);
+		String code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Amend Prelim", jObj.getString("Status__c"), condition);
+		
 		
 		//Final
-		createSegmentFrNotice(row, "Preliminary") ;
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Preliminary Signature"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Preliminary Signature"));
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Preliminary Signature"),today);
-						//	row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Actual Preliminary Signature", "User able to enter Actual Preliminary Signature", "As expected", 
-				"Step", "pass", "");
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editTextOnSegment"),"Final Extension (# of days)"), "");
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));
-		holdSeconds(3);
-		validateStatus("petitionStatusLink", "Final", "Investigation");
+		condition = "IF the Published Date (Type:  final) is blank AND Actual_Preliminary_Signature is not blank AND Published_Date_c "
+				+ "(Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig is not blank AND Investigation Outcome "
+				+ " is not ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') THEN Status is true";
+		record.clear();
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+       	record.put("Actual_Amended_Prelim_Determination_Sig__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		
+		match = match & 
+		ADCVDLib.validateObjectStatus("Final", jObj.getString("Status__c"), condition);
 		
 		
 		//Pending Order
-		createSegmentFrNotice(row, "Final") ;
-		scrollToElement(replaceGui(guiMap.get("genericSegmentField"),"Actual Final Signature"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("segmenetFieldEditIcon"), "Edit Actual Final Signature"));
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editDateOnSegment"), "Actual Final Signature"),today);
-						//	row.get("Actual_Preliminary_Signature"));
-		updateHtmlReport("Enter Actual Preliminary Signature", "User able to enter Actual Final Signature", "As expected", 
-				"Step", "pass", "");
-		holdSeconds(1);
-		enterText(replaceGui(guiMap.get("editTextOnSegment"),"Final Extension (# of days)"), "");
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedSegment"));
-		holdSeconds(3);
-		validateStatus("petitionStatusLink", "Pending Order", "Investigation");
+		condition = "IF Published_Date__c (Type:  Preliminary) is not blank AND Published_Date__c (Type:  Final) is not blank "
+				+ "AND Actual_Preliminary_Signature__c is not blank AND Actual_Final_Signature__c is not blank "
+				+ "AND Investigation_Outcome__c is null THEN status is true";
+		record.clear();
+      	record.put("Investigation__c", investigationId);
+		record.put("Published_Date__c", todayStr);
+		record.put("Cite_Number__c", "None");
+		record.put("Type__c", "Final");
+		String frIdF = APITools.createObjectRecord("Federal_Register__c", record);
+		record.clear();
+		record.put("Actual_Final_Signature__c", todayStr);
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Pending Order", jObj.getString("Status__c"), condition);
 		
 		
+		//Suspended
+		condition = "The Investigation Outcome is 'Suspension Agreement' THEN Status is true";
+		record.clear();
+		record.put("Investigation_Outcome__c", "Suspension Agreement");
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Suspended", jObj.getString("Status__c"), condition);
 		
 		
 		//Hold
-		validateStatus("petitionStatusLink", "In Progress", "Hold");
-		
+		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is “ITC Negative Prelim” THEN Published Date "
+				+ "(Type:  ITC Prelim) + 30 or 45 days AND status true";
+		condition = "The Investigation Outcome is 'Suspension Agreement' THEN Status is true";
+		record.clear();
+		record.put("Investigation_Outcome__c", "DOC Negative Final");
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Hold", jObj.getString("Status__c"), condition);
 		
 		
 		//Litigation
-		validateStatus("petitionStatusLink", "In Progress", "Litigation");
-		
+		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is No AND Litigation_Status is 'blank' OR Litigation_Status "
+				+ "is “Not Active” THEN status is true  ";
+		record.clear();
+		record.put("Litigation_YesNo__c", "Yes");
+		record.put("Litigation_Resolved__c", "No");
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Litigation", jObj.getString("Status__c"), condition);
 		
 		
 		
 		//Customs
-		validateStatus("petitionStatusLink", "In Progress", "Customs");
+		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent "
+				+ "is No THEN status is true";
+		record.clear();
+		record.put("Litigation_YesNo__c", "Yes");
+		record.put("Litigation_Resolved__c", "Yes");
+		record.put("Have_Custom_Instruction_been_sent__c", "No");
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
 		
-		
-		
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Customs", jObj.getString("Status__c"), condition);
 		
 		
 		//Closed
-		validateStatus("petitionStatusLink", "In Progress", "Closed");
-		
-		
-		
-		
-		
-		
-		String selected = getElementAttribute(replaceGui(guiMap.get("InvestigationStatusLink"), "Prelim"), "aria-selected");
-		if (selected.equalsIgnoreCase("true"))
-		{
-			highlightElement(replaceGui(guiMap.get("InvestigationStatusContainer"), "Prelim"), "green");
-			updateHtmlReport("Check status", "Status In Prelim", "As expected", "VP", "pass", "Investigation status in Prelim");
-			unHighlightElement(replaceGui(guiMap.get("InvestigationStatusContainer"), "Prelim"));
-		}
-		else
-		{
-			highlightElement(replaceGui(guiMap.get("InvestigationStatusContainer"), "Prelim"), "green");
-			failTestSuite("Check status", "Status In Prelim", "As expected", "VP", "pass", "Investigation status in Prelim");
-		}
-		//Amen Prelim
-		scrollToElement(replaceGui(guiMap.get("genericPetitionDate"),"Actual Initiation Signature"));
-		clickElementJs(guiMap.get("editPetitionOutCome"));
-		enterText(replaceGui(guiMap.get("inputPetitionDate"),"Actual Initiation Signature"),
-				row.get("Actual_Initiation_Signature"));
-		clickElementJs(guiMap.get("selectPetitionOutcome"));
-		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem"),"Self-Initiated"));
-		updateHtmlReport("Update Petition Outcome", "User able to update Petition Outcome", "As expected", 
-				"Step", "pass", "Update Petition Outcome");
-		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation"));
-		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
-		holdSeconds(1);
-		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation Resolved"));
-		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"No"));
-		holdSeconds(1);
-		updateHtmlReport("Update litigation", "User able to update litigaation", "As expected", 
-				"Step", "pass", "Update litigation");
-		
-		
-		holdSeconds(1);
-		clickElementJs(guiMap.get("saveEditedPetition"));
-		holdSeconds(4);
-		scrollToTheTopOfPage();
-		selected = getElementAttribute(replaceGui(guiMap.get("petitionStatusLink"), "Litigation"), "aria-selected");
-		if (selected.equalsIgnoreCase("true"))
-		{
-			highlightElement(replaceGui(guiMap.get("petitionStatusContainer"), "Litigation"), "green");
-			holdSeconds(1);
-			updateHtmlReport("Check status", "Status In litigation", "As expected", "VP", "pass", "petition status in litigation");
-			unHighlightElement(replaceGui(guiMap.get("petitionStatusContainer"), "Litigation"));
-		}
-		else
-		{
-			highlightElement(replaceGui(guiMap.get("petitionStatusContainer"), "Litigation"), "green");
-			failTestSuite("Check status", "Status In litigation", "As expected", "VP", "pass", "petition status in litigation");
-		}
-				
-		//closed
-		scrollToElement(replaceGui(guiMap.get("genericPetitionDate"),"Actual Initiation Signature"));
-		clickElementJs(guiMap.get("editPetitionOutCome"));
-		enterText(replaceGui(guiMap.get("inputPetitionDate"),"Actual Initiation Signature"),
-				"");
-		clickElementJs(guiMap.get("selectPetitionOutcome"));
-		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem"),"Deficient Petition/Did Not Initiate"));
-		updateHtmlReport("Update Petition Outcome", "User able to update Petition Outcome", "As expected", 
-				"Step", "pass", "Update Petition Outcome");
-		//clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation"));
-		//clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
-		
-		clickElementJs(replaceGui(guiMap.get("selectLitigValues"),"Litigation Resolved"));
-		clickElementJs(replaceGui(guiMap.get("selectPetitionOutcomeItem2"),"Yes"));
-		holdSeconds(1);
-		updateHtmlReport("Update litigation", "User able to update litigation", "As expected", 
-				"Step", "pass", "Update litigation");
-		
-		
-		holdSeconds(2);
-		clickElementJs(guiMap.get("saveEditedPetition"));
-		holdSeconds(4);
-		
-		scrollToTheTopOfPage();
-		
-		selected = getElementAttribute(replaceGui(guiMap.get("petitionStatusLink"), "Closed"), "aria-selected");
-		if (selected.equalsIgnoreCase("true"))
-		{
-			highlightElement(replaceGui(guiMap.get("petitionStatusContainer"), "Closed"), "green");
-			holdSeconds(1);
-			updateHtmlReport("Check status", "Status In Closed", "As expected", "VP", "pass", "petition status is Closed");
-			unHighlightElement(replaceGui(guiMap.get("petitionStatusContainer"), "Closed"));
-		}
-		else
-		{
-			highlightElement(replaceGui(guiMap.get("petitionStatusContainer"), "Litigation"), "green");
-			failTestSuite("Check status", "Status is Closed", "As expected", "VP", "pass", "petition status is Closed");
-		}
-		return worked;
+		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent "
+				+ "is Yes THEN status is true";
+		record.clear();
+		record.put("Have_Custom_Instruction_been_sent__c", "Yes");
+		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+		ADCVDLib.validateObjectStatus("Closed", jObj.getString("Status__c"), condition);
+		return match;
 	}
 	
 	
@@ -4980,11 +4942,11 @@ public class ADCVDLib{
 		String sqlString = "select+Status__c+from+segment__c+where+id='"+sgementId+"'";
 		JSONObject jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
-		ADCVDLib.validateObjectStatus("How To Proceed", jObj.getString("Status__c"), condition);
+		ADCVDLib.validateObjectStatus("Prelim", jObj.getString("Status__c"), condition);
 		 //Final
-		condition = "IF 240day sunset review AND Segment.Actual_Preliminary_Signature__c is not blank AND Published Date "
-				+ "Type:Preliminary is not blank AND (Segment.Actual_Final_Signature__c "
-				+ "is blank OR Published Date Type:Final is blank OR Segment.Segment_Outcome__c is blank )";
+		condition = "IF 240day sunset review AND Segment.Actual_Preliminary_Signature__c is not blank "
+				+ "AND Published Date Type:Preliminary is not blank AND (Segment.Actual_Final_Signature__c"
+				+ " is blank OR Published Date Type:Final is blank OR Segment.Segment_Outcome__c is blank ) THEN Status is TRUE ";
 		 record.clear();
          record.put("segment__c", sgementId);
 		 record.put("Published_Date__c", todayStr);
@@ -4993,6 +4955,7 @@ public class ADCVDLib{
 		 String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
 		 record.clear();
 		 record.put("Actual_Preliminary_Signature__c", todayStr);
+		 record.put("Calculated_Preliminary_Signature__c", todayStr);
 		 String code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
@@ -5016,9 +4979,10 @@ public class ADCVDLib{
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Amend Final", jObj.getString("Status__c"), condition);*/
 		//Hold----------------------------------confirm with Paul
-		 condition = "Litigation_Hold_Expiration_Date__c is not null, segment outcome equal to complete";
+		 condition = "Litigation_Hold_Expiration_Date__c is not null, segment outcome equal to complete and "
+		 		+ "Litigation_Hold_Expiration_Date__c is not blank";
 		 record.clear();
-		 record.put("Actual_Final_Signature__c", todayStr);
+		 record.put("Litigation_Hold_Expiration_Date__c", todayStr);
 		 record.put("Segment_Outcome__c", "Completed");
 		 code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
@@ -5180,7 +5144,7 @@ public class ADCVDLib{
 		else//Remand
 		{
 			//Calculated Draft Remand release to party
-			calculatedDraftRemandreleaseToparty = calculateLitigationDate(-30 + prelimExtensionDays, 
+			calculatedDraftRemandreleaseToparty = calculateLitigationDate(-28 + prelimExtensionDays, 
 					"Calculated Draft Remand release to party",	"Calendar", 
 					expectedFinalSignatureBeforeExt);
 			actualValue = noNullVal(rObj.getString("Calculated_Draft_Remand_release_to_party__c"));

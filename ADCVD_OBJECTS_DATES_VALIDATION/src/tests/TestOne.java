@@ -221,7 +221,7 @@ public class TestOne {
 		   	updateHtmlReport("Create Petition", "User is able to create a new Petition", 
 					"Petition <span class = 'boldy'>"+" "+petitionName+"</span>", "Step", "pass", "" );
 		   	
-			 String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+			 String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> petitionDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "petition", "");
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
@@ -272,7 +272,7 @@ public class TestOne {
 	        		+ "from+petition__c+where+id='"+petitionId+"'";
 	        //Next_Major_Deadline__c
 	        //1
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        jObj = APITools.getRecordFromObject(sqlString);
 	        String clause = "IF Actual_Initiation_Signature__c is blank OR Petition_Outcome__c is "
 	        		+ "blank THEN  Calculated_Initiation_Signature__c ";
@@ -919,7 +919,7 @@ public class TestOne {
 	        String sqlString = row.get("Query").replace("investigationId", investigationId);
 	        //Next_Major_Deadline__c
 	        //1
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String clause = "IF Actual_Preliminary_Signature__c is blank AND Investigation_Outcome__c is blank THEN  "
 	        		+ "Calculated_Preliminary_Signature__c";
 	        jObj = APITools.getRecordFromObject(sqlString);	        
@@ -1395,7 +1395,7 @@ public class TestOne {
 	        //2
 	        clause = "if Amended_Preliminary_Announcement_Date__c is not passed Then Amended_Preliminary_Announcement_Date__c";
 			todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.DATE, -3); // make Preliminary_Announcement_Date__c passed  		    
+		    todayCal.add(Calendar.DATE, -5); // make Preliminary_Announcement_Date__c passed  		    
 	    	record.clear();
     		record.put("Actual_Preliminary_Signature__c", dateFormat.format(todayCal.getTime()));
     		code = APITools.updateRecordObject("Investigation__c", investigationId, record);		
@@ -1406,7 +1406,7 @@ public class TestOne {
 	        //3
 	        clause = "if Final_Announcement_Date__c is not passed Then Final_Announcement_Date__c";
 			todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.DATE, -3); // make Amended_Preliminary_Announcement_Date__c passed  		    
+		    todayCal.add(Calendar.DATE, -5); // make Amended_Preliminary_Announcement_Date__c passed  		    
 	    	record.clear();
     		record.put("Actual_Amended_Prelim_Determination_Sig__c", dateFormat.format(todayCal.getTime()));
     		code = APITools.updateRecordObject("Investigation__c", investigationId, record);		
@@ -1417,7 +1417,7 @@ public class TestOne {
 	        //4
 	        clause = "if Final_Announcement_Date__c is not passed Then Final_Announcement_Date__c";
 			todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.DATE, -3); // make Final_Announcement_Date__c passed  		    
+		    todayCal.add(Calendar.DATE, -5); // make Final_Announcement_Date__c passed  		    
 	    	record.clear();
     		record.put("Actual_Final_Signature__c", dateFormat.format(todayCal.getTime()));
     		code = APITools.updateRecordObject("Investigation__c", investigationId, record);		
@@ -1430,7 +1430,7 @@ public class TestOne {
 	        		+ "Final_Announcement_Date__c, Amended_Final_Announcement_Date__c) are passed then "
 	        		+ "clear Next_Announcement_Date";
 			todayCal.setTime(todayDate);
-		    todayCal.add(Calendar.DATE, -3); // make Amended_Final_Announcement_Date__c passed  		    
+		    todayCal.add(Calendar.DATE, -5); // make Amended_Final_Announcement_Date__c passed  		    
 	    	record.clear();
     		record.put("Actual_Amended_Final_Signature__c", dateFormat.format(todayCal.getTime()));
     		code = APITools.updateRecordObject("Investigation__c", investigationId, record);		
@@ -1455,7 +1455,7 @@ public class TestOne {
 	     
 	       	//*********************************II. VALIDATE DATES WHEN THEY FALL ON WEEKEND************************
 		      //*****************************************************************************************************
-				String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+				String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 		        ArrayList<LinkedHashMap<String, String>> petitionDates  = 
 		        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "investigation", "");
 		        HtmlReport.addHtmlStepTitle("II. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
@@ -1596,36 +1596,41 @@ public class TestOne {
 	        //*********************************I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
 	        		+ "Calculated_Final_Signature__c,Calculated_Amended_Final_Signature__c+"
 	        		+ "from+segment__c+where+id='"+adminReviewId+"'";
 	        //Next_Major_Deadline__c
 	        //1
-	        jObj = APITools.getRecordFromObject(sqlString);
-	        String clause = "IF Published_Date__c (Type: Preliminary) is blank AND Published_Date__c "
-	        		+ "(Type:Rescission) is blank THEN Calculated_Preliminary_Signature__c";
+	        String clause = "IF Actual_Preliminary_Signature__c is blank, Segment_Outcome__c is blank"
+	        		+ "THEN Calculated_Preliminary_Signature__c";
+	        record.clear();
+    		//record.put("Actual_Preliminary_Signature__c", todayStr);
+    		//record.put("Actual_Final_Signature__c", todayStr);
+	       //	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);	       	
+	       	jObj = APITools.getRecordFromObject(sqlString);
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Preliminary_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 	        //2
-	        clause = "IF Calculated_Final_Signature__c is blank AND Published_Date__c "
-	        		+ "(Type:Rescission) is blank THEN Calculated_Final_Signature__c";
+	        clause = "IF Actual_Final_Signature__c is blank THEN Segment_Outcome__c is blank THEN"
+	        		+ "Calculated_Final_Signature__c";
 	        record.clear();
-    		record.put("Final_Date_of_Anniversary_Month__c", "");
+    		record.put("Actual_Preliminary_Signature__c", todayStr);
+    		//record.put("Actual_Final_Signature__c", todayStr);
 	       	String code = APITools.updateRecordObject("Segment__c", adminReviewId, record);	       	
 	       	jObj = APITools.getRecordFromObject(sqlString);
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Final_Signature__c"));
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 	        //3
-	        clause  = "IF Actual_Amended_Final_Signature__c is blank AND Published_Date__c "
-	        		+ "(Type:Rescission) is blank AND Will_you_amended_the_final__c = Yes THEN "
-	        		+ "Calculated_Amended_Final_Signature__c"; 
+	        clause  = "IF Actual_Amended_Final_Signature__c is blank AND Will_you_amended_the_final__c = Yes"
+	        		+ "Segment_Outcome__c is not blank THEN Calculated_Amended_Final_Signature__c"; 
 	        record.clear();
-    		record.put("Final_Date_of_Anniversary_Month__c", todayStr);
+    		record.put("Actual_Final_Signature__c", todayStr);
     		record.put("Will_you_Amend_the_Final__c", "Yes");
+    		record.put("Segment_Outcome__c", "Completed");
 	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);	       	
 	       	jObj = APITools.getRecordFromObject(sqlString);
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
@@ -1634,6 +1639,9 @@ public class TestOne {
 	        //initiate
 	        record.clear();
 	        record.put("Will_you_Amend_the_Final__c", "");
+	        record.put("Actual_Preliminary_Signature__c", "");
+	        record.put("Actual_Final_Signature__c", "");
+	        record.put("Segment_Outcome__c", "");
 	        code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
 	        HtmlReport.addHtmlStepTitle("2) - Next Due to DAS Deadline","Title");
 	        //Next Due to DAS Deadline
@@ -1922,7 +1930,7 @@ public class TestOne {
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 	        code = APITools.deleteRecordObject("Federal_Register__c", frIdR);
 	        record.clear();	        
-			record.put("Will_you_Amend_the_Final__c", "");
+			record.put("Will_you_Amend_the_Final__c", "Yes");
 			record.put("Segment_Outcome__c", "");
 			record.put("Actual_Prelim_Issues_to_DAS__c", "");
 			record.put("Actual_Prelim_Concurrence_to_DAS__c", "");
@@ -1935,7 +1943,7 @@ public class TestOne {
 	       	code = APITools.updateRecordObject("Segment__c", adminReviewId, record);
 	       	//*********************************II. VALIDATE DATES WHEN THEY FALL ON WEEKEND************************
 	       	//*****************************************************************************************************
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
 	        		+ "HOLIDAY AND TOLLING DAY","Title"); 
 	        ArrayList<LinkedHashMap<String, String>> adminReviewDates  = 
@@ -2568,14 +2576,14 @@ public class TestOne {
 			String antiCircumventionName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+antiCircumventionName+"</span>", "Step", "pass", "" );
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> antiCircumventionDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "anti-circumvention", "");
 	       
 	        //*********************************I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue;
 	        sqlString = "select+Name,Next_Major_Deadline__c,Actual_Initiation_Signature__c,"
 	        		+ "Calculated_Preliminary_Signature__c,"
@@ -3749,13 +3757,13 @@ public class TestOne {
 			String changedCircumstanceName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+changedCircumstanceName+"</span>", "Step", "pass", "" );
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "changed-circumstance", "");
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue;
 	       
 	        sqlString = "select+Name,Next_Major_Deadline__c,Actual_Initiation_Signature__c,"
@@ -4159,13 +4167,13 @@ public class TestOne {
 			String changedCircumstanceName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+changedCircumstanceName+"</span>", "Step", "pass", "" );
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Expedited_Review", "");
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
 	        		+ "Calculated_Final_Signature__c,Calculated_Amended_Final_Signature__c+"
@@ -4572,7 +4580,12 @@ public class TestOne {
 		printLog(GuiTools.getTestCaseName());
 		record.put("ADCVD_Order__c", orderId);
 		record.put("RecordTypeId", recordType.get(row.get("Segment_Type")));
-		record.put("Calculated_Initiation_Signature__c", row.get("Calculated_Initiation_Signature__c"));
+		todayCal.setTime(todayDate);
+		if (!ADCVDLib.isBusinessDay(todayCal))
+		{
+			todayCal.add(Calendar.DATE, 2);
+		}
+		record.put("Calculated_Initiation_Signature__c", dateFormat.format(todayCal.getTime()));
 		String newShipperReviewId = APITools.createObjectRecord("Segment__c", record);
 		if(newShipperReviewId != null)
        {
@@ -4581,26 +4594,26 @@ public class TestOne {
 			String newShipperReviewName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+newShipperReviewName+"</span>", "Step", "pass", "" );
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> changedCircumstanceDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Shipper_Review", "");
 	        //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Initiation_Signature__c,Calculated_Preliminary_Signature__c,"
 	        		+ "Calculated_Final_Signature__c,Calculated_Amended_Final_Signature__c+"
 	        		+ "from+segment__c+where+id='"+newShipperReviewId+"'";
 	        //Next_Major_Deadline__c
 	        //1
-	        jObj = APITools.getRecordFromObject(sqlString);
+	       /* jObj = APITools.getRecordFromObject(sqlString);
 	        String clause = "IF Actual_Initiation_Signature__c is blank THEN Calculated_Initiation_Signature__c";
 	        actualValue = ADCVDLib.noNullVal(jObj.getString("Next_Major_Deadline__c"));
 	        expectedValue = ADCVDLib.noNullVal(jObj.getString("Calculated_Initiation_Signature__c"));
-	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
+	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);*/
 	        //2
-	        clause = "IF Actual_Preliminary_Signature__c is blank AND Published_Date__c "
+	        String clause = "IF Actual_Preliminary_Signature__c is blank AND Published_Date__c "
 	        		+ " (Type:Rescission) is blank THEN Calculated_Preliminary_Signature__c ";
 	        record.clear();
     		record.put("Actual_Initiation_Signature__c", todayStr);
@@ -5089,11 +5102,11 @@ public class TestOne {
 			String ScopeInquiryName = jObj.getString("Name");
 	       	updateHtmlReport("Create segment", "User is able to create a new segment", 
 					"Segment id: <span class = 'boldy'>"+" "+ScopeInquiryName+"</span>", "Step", "pass", "" );
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
 	        		+ "Calculated_Final_Signature__c,Deadline_for_Decision_on_How_to_Proceed__c+"
@@ -5530,7 +5543,7 @@ public class TestOne {
 			//jObj = APITools.getRecordFromObject(row.get("Query").replace("segmentId", sunsetReviewId));
 			//testCaseStatus = testCaseStatus & ADCVDLib.validateSunSetReviewDatesByType(jObj, "240 Day", 
 					//row.get("Published_Date__c"));
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> sunsetReviewDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Sunset_Review", "");
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
@@ -5538,7 +5551,7 @@ public class TestOne {
 			//*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Preliminary_Signature__c,"
 	        		+ "Calculated_Final_Signature__c+"
@@ -5647,7 +5660,7 @@ public class TestOne {
 	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Issues_to_DAS__c AND Sunset_Review_Type__c "
 	       			+ "is 240 THEN Prelim_Issues_Due_to_DAS__c";
 			todayCal.setTime(todayDate);
-			todayCal.add(Calendar.MONTH, -3);
+			todayCal.add(Calendar.MONTH, -4); //make Prelim_Team_Meeting_Deadline__c passed
 			record.clear();
 			record.put("Published_Date__c", dateFormat.format(todayCal.getTime()));
 			code = APITools.updateRecordObject("Federal_Register__c", fridI, record);
@@ -5657,7 +5670,8 @@ public class TestOne {
 	        testCaseStatus = testCaseStatus & ADCVDLib.validateNextDeadlineDate(clause, actualValue, expectedValue);
 			//3
 	        clause = "IF Actual_Preliminary_Signature__c is blank AND Actual_Prelim_Concurrence_to_DAS__c is blank  AND "
-	       			+ "Sunset_Review_Type__c is 240 THEN Prelim_Concurrence_Due_to_DAS__c";
+	       			+ "Sunset_Review_Type__c is 240 T"
+	       			+ "HEN Prelim_Concurrence_Due_to_DAS__c";
 			record.clear();
     		record.put("Actual_Prelim_Issues_to_DAS__c", todayStr);
 	       	code = APITools.updateRecordObject("Segment__c", sunsetReviewId, record);	       	
@@ -5873,7 +5887,7 @@ public class TestOne {
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("I. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        //Next_Major_Deadline__c
 	        //1
@@ -6097,7 +6111,7 @@ public class TestOne {
 	        record.put("Actual_Final_Concurrence_to_DAS__c", "");
 	        record.put("Actual_Final_Signature__c", "");
 	       	code = APITools.updateRecordObject("Litigation__c", litigationId, record);
-	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	       	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	        ArrayList<LinkedHashMap<String, String>> litigationDates  = 
 	        		XlsxTools.readXlsxSheetAndFilter(datesSheet, "Litigation", "");
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE CALCULATED DATES WHEN THEY FALL ON WEEKEND, "
@@ -6169,11 +6183,11 @@ public class TestOne {
 	       	String remandName = jObj.getString("Name");
 	       	updateHtmlReport("Create Remand", "User is able to create a new Remand", 
 					"Remand id: <span class = 'boldy'>"+" "+remandName+"</span>", "Step", "pass", "" );
-	    	String datesSheet = InitTools.getInputDataFolder()+"/datapool/validate_admin_review_dates.xlsx";
+	    	String datesSheet = InitTools.getInputDataFolder()+"/datapool/weekend_holiday_tolling_dates.xlsx";
 	      //*********************************II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS************************
 	       	//*************************************************************************************************************
 	        HtmlReport.addHtmlStepTitle("II. VALIDATE NEXT DEADLINE DATES WITH ALL SCENARIOS","Title");
-	        HtmlReport.addHtmlStepTitle("1) - Next Majore Deadline","Title");
+	        HtmlReport.addHtmlStepTitle("1) - Next Major Deadline","Title");
 	        String actualValue, expectedValue; 
 	        String sqlString = "select+Name,Next_Major_Deadline__c,Calculated_Draft_Remand_release_to_party__c,"
 	        		+ "Calculated_Final_Signature__c+"
