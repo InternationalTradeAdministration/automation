@@ -207,14 +207,11 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		System.out.println("start Test");
-		row.put("ADCVD_Case", "A-");
-		row.put("ADCVD_Case_Type", "AD ME");
-		//HtmlReport.addHtmlStepTitle("Create New AD Investigation","Title");
-		testCaseStatus =testCaseStatus & ADCVDLib.createNewCase(row);
-		//if(! testCaseStatus) guiTools.tearDown =true;
-		testCaseStatus = testCaseStatus & ADCVDLib.createNewPetition(row);
-		testCaseStatus =testCaseStatus & ADCVDLib.createNewInvestigation(row);
-		//testCaseStatus = testCaseStatus & ADCVDLib.validateInvestigationStatus(row);
+		String adCaseId = createNewCase(row, "A-");		
+		String adPetitionId = createNewPetition(row, adCaseId, "");
+		String adInvestigationIdName = createNewInvestigation(row, adPetitionId);
+		testCaseStatus = testCaseStatus & 
+				ADCVDLib.validateInvestigationStatus(adInvestigationIdName.split("###")[0]);
 	}
 
 	/**
@@ -236,7 +233,8 @@ public class TestOne {
 		//LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//record.put("ADCVD_Order__c", orderId);
 		String adminReviewId = createNewSegment(orderId, "Administrative Review", "");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatus_A(adminReviewId, "Administrative Review");
+		testCaseStatus = testCaseStatus & 
+				ADCVDLib.validateSegmentStatus_A(adminReviewId, "Administrative Review");
 	}
 	
 	/**
@@ -384,7 +382,8 @@ public class TestOne {
 		String adCaseId = createNewCase(row, "A-");
 		String adPetitionId = createNewPetition(row, adCaseId, "");
 		String remandId = createNewLitigation(adPetitionId, "Remand");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateLitigationStatus(remandId, "remand");
+		testCaseStatus = testCaseStatus & 
+				ADCVDLib.validateLitigationStatus(remandId, "remand");
 	}
 		
 	/**
@@ -400,7 +399,8 @@ public class TestOne {
 		String adCaseId = createNewCase(row, "A-");
 		String adPetitionId = createNewPetition(row, adCaseId, "");
 		String litigationId = createNewLitigation(adPetitionId, "International Litigation");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateLitigationStatus(litigationId, "Interntional Litigation");
+		testCaseStatus = testCaseStatus &
+				ADCVDLib.validateLitigationStatus(litigationId, "Interntional Litigation");
 	}
 	/**
 	 * This method if for getting the current test case information

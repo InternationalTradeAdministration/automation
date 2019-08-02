@@ -4428,23 +4428,6 @@ public class ADCVDLib{
 			return false;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * This method validate petition's statuses
 	 * @param row, row of elements
@@ -4478,7 +4461,7 @@ public class ADCVDLib{
       String code = APITools.updateRecordObject("petition__c", petitionId, record);
       sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
       jObj = APITools.getRecordFromObject(sqlString);
-      testCaseStatus = testCaseStatus & 
+      match = match & 
 	  ADCVDLib.validateObjectStatus("Litigation", jObj.getString("Status__c"), condition);
       //C) Closed
       HtmlReport.addHtmlStepTitle("Validate Status - Closed","Title");
@@ -4494,7 +4477,7 @@ public class ADCVDLib{
       code = APITools.updateRecordObject("petition__c", petitionId, record);
       sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
       jObj = APITools.getRecordFromObject(sqlString);
-      testCaseStatus = testCaseStatus & 
+      match = match & 
 	  ADCVDLib.validateObjectStatus("Closed", jObj.getString("Status__c"), condition);
       return match;
 	}
@@ -4516,9 +4499,7 @@ public class ADCVDLib{
 		String todayStr = dateFormat.format(todayDate);
 		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		String sqlString = "select+Status__c+from+Investigation__c+where+id='"+investigationId+"'";
-		
 		//Prelim
-		
 		String condition = "Investigation Outcome is not 'ITC Negative Prelim'or 'Petition Withdrawn "
 				+ "After initiation' or 'Suspension Agreement' "
 				+ "and if Published Date (Type: Preliminary) is blank then the status is true";		
