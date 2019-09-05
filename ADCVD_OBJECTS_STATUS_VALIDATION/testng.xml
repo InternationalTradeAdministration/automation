@@ -2,7 +2,7 @@
   <test allow-return-values="false" group-by-instances="false" junit="false" name="Test" preserve-order="true" skipfailedinvocationcounts="false" thread-count="5">
     <classes>
       <class name="tests.TestOne">
-    <methods><include name="Order_Status_Validation"/><include name="Petition_Status_Validation"/><include name="Investigation_Status_Validation"/><include name="Admin_Review_Status_Validation"/><include name="Expedited_Review_Status_Validation"/><include name="New_Shipper_Review_Status_Validation"/><include name="Changed_Circumstance_Review_Status_Validation"/><include name="Anticircumvention_Status_Validation"/><include name="Scope_Status_Validation"/><include name="Sunset_Status_Validation"/><include name="Remand_Status_Validation"/><include name="International_Litigation_Status_Validation"/></methods></class>
+    <methods><include name="Petition_Status_Validation"/></methods></class>
     </classes>
   </test> 
 </suite>

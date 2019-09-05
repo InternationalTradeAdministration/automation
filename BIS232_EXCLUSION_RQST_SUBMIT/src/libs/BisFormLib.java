@@ -184,13 +184,27 @@ public class BisFormLib{
 		clickElementJs(replaceGui(guiMap.get("tabName"), "Step 3"));
 		holdSeconds(2);
 		enterText(guiMap.get("ProductDescription"), row.get("Product Description"));
+		
+		
+		////
+		scrollToElement(guiMap.get("OrganizationSelect"));
+		if(!row.get("Organization").equals(""))
+		{
+			selectElementByText(guiMap.get("OrganizationSelect"), row.get("Organization").trim());
+			enterText(guiMap.get("DesignationInput"), row.get("Designation").trim());
+		}
+		
+		////
+		
 		scrollToElement(replaceGui(guiMap.get("ElementMinValue"), "Aluminum"));
 		for (HashMap.Entry<String, String> entry : row.entrySet()) 
 		{
 			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
 			elementName = entry.getKey().trim();
 			if(!elementName.equalsIgnoreCase("Scenarios") && !elementName.equalsIgnoreCase("Active")
-					&& !elementName.equalsIgnoreCase("Product Description"))
+					&& !elementName.equalsIgnoreCase("Product Description") 
+					&& !elementName.equalsIgnoreCase("Organization") 
+					&& !elementName.equalsIgnoreCase("Designation") )
 			{
 				minVal = entry.getValue().substring(0,entry.getValue().indexOf("|"));
 				maxVal = entry.getValue().substring(entry.getValue().indexOf("|")+1,entry.getValue().length());
@@ -1151,8 +1165,6 @@ public class BisFormLib{
 			setBrowserTimeOut(currentWait);
 			return false;
 		}
-		
-		
 	}
 	
 	/**
