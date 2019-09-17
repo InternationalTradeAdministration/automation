@@ -1496,41 +1496,6 @@ public class TestOne {
 			       				"Tolling Day", dates.get("Date_For_Tolling"));
 		       		}
 		       	}
-		        
-	        //*********************************III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS**************
-	       	//*************************************************************************************************************
-	    	//A)-//In progress
-	       /* HtmlReport.addHtmlStepTitle("III. VALIDATE ALL STATUSES FOR POSITIVE AND NEGATIVE SCENARIOS","Title");
-	        String condition = "Initial Status";
-	        sqlString = "select+Status__c+from+petition__c+where+id='"+petitionId+"'";
-	        HtmlReport.addHtmlStepTitle("Validate Status - In Progress","Title");
-	        jObj = APITools.getRecordFromObject(sqlString);
-	        testCaseStatus = testCaseStatus & 
-		    ADCVDLib.validateObjectStatus("Positive", "In Progress", jObj.getString("Status__c"), condition); 
-	        //B)- Litigation
-	        condition = "IF Litigation_YesNo__c is Yes AND Litigation_Resolved__c is "
-	        		+ "No AND Petition__c.Petition_Outcome__c is not blank THEN status is true";
-	        HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
-	        record.clear();
-	       	record.put("Actual_Initiation_Signature__c", todayStr);
-	       	record.put("Litigation_YesNo__c", "Yes");
-	       	record.put("Litigation_Resolved__c", "No");
-	       	record.put("Petition_Outcome__c", "Self-Initiated");
-	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);
-			jObj = APITools.getRecordFromObject(sqlString);
-			testCaseStatus = testCaseStatus & 
-			ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition); 
-			//C)- Closed
-			condition = "IF Litigation_YesNo__c is Yes AND Litigation_Resolved__c is Yes";
-			HtmlReport.addHtmlStepTitle("Validate Status - Closed","Title");
-	        record.clear();
-	       	record.put("Litigation_Resolved__c", "Yes");
-	       	code = APITools.updateRecordObject("Petition__c", petitionId, record);
-			jObj = APITools.getRecordFromObject(sqlString);
-			testCaseStatus = testCaseStatus & 
-			ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition); 
-	       	*/
-	       	
        }
 		else 
 		{

@@ -457,7 +457,6 @@ public class TestOne {
     	recordType.put("Sunset Review","012t0000000TSk3AAG");
     	recordType.put("Remand","012t0000000TSjsAAG");
     	recordType.put("International Litigation","012t0000000TSjrAAG");
-    	
     }
 	 
 	 
