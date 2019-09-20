@@ -4371,7 +4371,7 @@ public class ADCVDLib{
 										   String expectedValue, 
 										   String actualValue) throws Exception 
 	{
-		if(expectedValue.contains("")) expectedValue = expectedValue.split("#")[1];
+		if(expectedValue.contains("#")) expectedValue = expectedValue.split("#")[1];
 		if(expectedValue.equals("")) expectedValue = "Empty";
 		if(actualValue.equals("")) actualValue = "Empty";
 		printLog(elementName + " -- " + expectedValue + " Versus " + actualValue);
@@ -4520,6 +4520,7 @@ public class ADCVDLib{
 		record.put("Type__c", "Preliminary");
 		String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
 		record.clear();
+		record.put("Actual_Preliminary_Signature__c", todayStr);
        	record.put("Amend_the_Preliminary_Determination__c", "Yes");
 		//record.put("Calculated_Preliminary_Signature__c", todayStr);
 		String code = APITools.updateRecordObject("Investigation__c", investigationId, record);
@@ -4533,9 +4534,8 @@ public class ADCVDLib{
 				+ "(Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig is not blank AND Investigation Outcome "
 				+ " is not ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') THEN Status is true";
 		record.clear();
-		record.put("Actual_Preliminary_Signature__c", todayStr);
-       	record.put("Actual_Amended_Prelim_Determination_Sig__c", todayStr);
-		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		record.put("Actual_Amended_Prelim_Determination_Sig__c", todayStr);
+		record.put("Actual_Final_Signature__c", todayStr);
 		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
 		jObj = APITools.getRecordFromObject(sqlString);
 		

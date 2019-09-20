@@ -18,6 +18,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Mouloud Hamdidouche/Downloads/JShare (1)/JShare/lib/jshare-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

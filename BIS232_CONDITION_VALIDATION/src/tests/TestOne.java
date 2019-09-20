@@ -1,48 +1,21 @@
 package tests;
-import static GuiLibs.GuiTools.guiMap;
-import static GuiLibs.GuiTools.holdSeconds;
+import static GuiLibs.GuiTools.failTestCase;
+import static GuiLibs.GuiTools.failTestSuite;
+import static GuiLibs.GuiTools.testCaseStatus;
 import static ReportLibs.ReportTools.printLog;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import javax.naming.ServiceUnavailableException;
-import javax.net.ssl.HttpsURLConnection;
-
 import org.json.simple.JSONObject;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.NTCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+//import org.json.simple.parser.JSONParser;
 import org.testng.TestNG;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -51,23 +24,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
-
-import com.google.gson.Gson;
-import com.independentsoft.share.Service;
-import com.independentsoft.share.ServiceException;
-import com.microsoft.aad.adal4j.AuthenticationContext;
-import com.microsoft.aad.adal4j.AuthenticationResult;
-import com.microsoft.aad.adal4j.ClientCredential;
-
-import static GuiLibs.GuiTools.failTestSuite;
-import static GuiLibs.GuiTools.failTestCase;
-import static GuiLibs.GuiTools.testCaseStatus;
-
 import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import OfficeLibs.XlsxTools;
 import ReportLibs.HtmlReport;
-import bsh.ParseException;
 import libs.BisFormLib;
 public class TestOne {
 
@@ -93,6 +53,7 @@ public class TestOne {
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
 		bisFormLib = new BisFormLib();
+		//JSONParser parser = new JSONParser();
 		TestNG testng = new TestNG();
 		mapConfInfos = guiTools.getConfigInfos();
 		List<String> suites = Lists.newArrayList();
@@ -190,7 +151,14 @@ public class TestOne {
 	@DataProvider(name = "fetchingData")
 	public static Object[][] fetchData() 
 	{
-		
+		/*System.out.println("");
+		try{
+		JSONParser parser = new JSONParser();
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		*/
 		Object obj [][]= new  Object[scenarios.size()][4];
 		/*int i=0;
 		for (HashMap.Entry<String, String> entry : jFile.entrySet()) 
@@ -241,7 +209,7 @@ public class TestOne {
 	 	 JSONObject jsonObject = null;
 	 	 FileReader file = new  FileReader(filePath);
 		 // parsing file "JSONExample.json" 
-		 JSONParser parser = new JSONParser();
+	 	JSONParser parser = new JSONParser();
 		 try
 		 {
 			Object object = parser.parse(file);
@@ -249,12 +217,13 @@ public class TestOne {
 			htsUsCode= (String) jsonObject.get("HTSUSCode");
 			productType= (String) jsonObject.get("Product");
 		 }
-		 catch(FileNotFoundException e) {e.printStackTrace();}
-		 catch(IOException e){e.printStackTrace();}
-		 catch(Exception e) {e.printStackTrace();}
+		 catch(FileNotFoundException e) 
+		 {
+			 e.printStackTrace();
+		}
+		 catch(Exception e){e.printStackTrace();}
 		 GuiTools.setTestCaseName(scenarioName+" - "+productType);
 		 GuiTools.setTestCaseDescription(scenarioName+" - "+productType);
-		 
 		 if (!steelConditions.containsKey(htsUsCode) && !aluminumConditions.containsKey(htsUsCode) )
 		 {
 			 String htsUsCode10digits = htsUsCode;
@@ -267,7 +236,6 @@ public class TestOne {
 					"No row found in the condition sheet for the code: "+htsUsCode, "VP", "fail", "");
 			 }
 		 }
-		 
 		 if (productType.equalsIgnoreCase("Steel"))
 		 {
 			 conditionList = steelConditions.get(htsUsCode);
@@ -279,6 +247,13 @@ public class TestOne {
 		 {
 			 failTestSuite("Validate "+ scenarioName, "Product should be Steel or Aluminum", 
 					 "Json file should have producat name as Steel or Aluminum", "Step", "fail", "");
+		 }
+		 if(conditionList==null)
+		 {
+			 testCaseStatus=false;
+			 failTestCase(scenarioName,htsUsCode+" Should be found in the "
+			 		+ "condition sheet" , 
+				"No row found in the condition sheet for the code: "+htsUsCode, "VP", "fail", "");
 		 }
 		 testCaseStatus =  testCaseStatus & 
 					BisFormLib.ValidateConditions(jsonObject, productType, conditionList, actualResult);

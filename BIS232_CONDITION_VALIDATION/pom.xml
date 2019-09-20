@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>BIS232_Conditions_Validation</groupId>
-  <artifactId>BIS232_Conditions_Validation</artifactId>
+  <groupId>BIS232_Conditions_Validation2</groupId>
+  <artifactId>BIS232_Conditions_Validation2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>BIS232_Conditions_Validation</name>
-  <description>BIS232_Conditions_Validation - office 365</description>
+  <description>BIS232_Conditions_Validation - office2 365</description>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -52,9 +52,6 @@
 </dependency>
 
 
-
-
-    
 	    
 	</dependencies>
 </project>
