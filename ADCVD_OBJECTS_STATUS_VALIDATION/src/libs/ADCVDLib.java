@@ -4993,9 +4993,9 @@ public class ADCVDLib{
 		//Final
 		//1
 		HtmlReport.addHtmlStepTitle("Validate Status - Final", "Title");
-		condition = "IF the Published Date (Type: final) is blank AND Actual_Preliminary_Signature is not blank AND Published_Date_c "
-				+ "(Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c is not blank AND Investigation Outcome "
-				+ " is not ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') THEN Status is true";
+		condition = "IF the Published Date (Type: final) is blank ANDActual_Preliminary_Signature is not blank AND Published_Date_c "
+				+ "(Type: Preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c is not blank AND Investigation Outcome "
+				+ "is not ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') THEN Status is true";
 		code = APITools.deleteRecordObject("Federal_Register__c", frIdF);
 		record.clear();
 		record.put("Actual_Final_Signature__c", todayStr);
@@ -5008,9 +5008,9 @@ public class ADCVDLib{
 		ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
 		
 		//2
-		condition = "IF the Published Date (Type: final) is not blank AND Actual_Preliminary_Signature is not "
-				+ "blank AND Published_Date_c (Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c"
-				+ " is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn "
+		condition = "IF the Published Date (Type: final) is not blank ANDActual_Preliminary_Signature is not "
+				+ "blank AND Published_Date_c (Type: Preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c"
+				+ " is not blank AND Investigation Outcomeis not ('ITC Negative Prelim' or 'Petition Withdrawn "
 				+ "After Initiation' or 'Suspension Agreement') THEN Status is true";
 		record.clear();
       	record.put("Investigation__c", investigationId);
@@ -5026,9 +5026,9 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//3
-		condition = "IF the Published Date (Type: final) is blank AND Actual_Preliminary_Signature is blank AND"
-				+ "Published_Date_c (Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c "
-				+ "is not blank AND Investigation Outcome  is not ('ITC Negative Prelim' or 'Petition Withdrawn After"
+		condition = "IF the Published Date (Type: final) is blank ANDActual_Preliminary_Signature is blank AND"
+				+ "Published_Date_c (Type: Preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c "
+				+ "is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn After"
 				+ " Initiation' or 'Suspension Agreement') THEN Status is true";
 		code = APITools.deleteRecordObject("Federal_Register__c", frIdF);
 		record.clear();
@@ -5038,9 +5038,9 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//4
-		condition = "IF the Published Date (Type: final) is blank AND Actual_Preliminary_Signature is not "
-				+ "blank AND Published_Date_c (Type: Preliminary) is blank AND Actual_Amended_Prelim_Determination_Sig__c"
-				+ " is not blank AND Investigation Outcome  is not ('ITC Negative Prelim' or 'Petition Withdrawn "
+		condition = "IF the Published Date (Type: final) is blank ANDActual_Preliminary_Signature is not "
+				+ "blank AND Published_Date_c (Type: Preliminary) is blankAND Actual_Amended_Prelim_Determination_Sig__c"
+				+ " is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn "
 				+ "After Initiation' or 'Suspension Agreement') THEN Status is true";
 		code = APITools.deleteRecordObject("Federal_Register__c", frIdP);
 		record.clear();
@@ -5050,9 +5050,9 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//5
-		condition = "IF the Published Date (Type: final) is blank AND Actual_Preliminary_Signature "
-				+ "is not blank AND Published_Date_c (Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c"
-				+ " is blank AND Investigation Outcome  is not ('ITC Negative Prelim' or 'Petition Withdrawn After"
+		condition = "IF the Published Date (Type: final) is blank ANDActual_Preliminary_Signature "
+				+ "is not blank AND Published_Date_c (Type: Preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c"
+				+ " is blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn After"
 				+ " Initiation' or 'Suspension Agreement') THEN Status is true";
 		record.clear();
       	record.put("Investigation__c", investigationId);
@@ -5068,9 +5068,9 @@ public class ADCVDLib{
 		ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		
 		//6
-		condition = "IF the Published Date (Type: final) is blank AND Actual_Preliminary_Signature "
-				+ "is not blank AND Published_Date_c (Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c"
-				+ " is not blank AND Investigation Outcome  is ('ITC Negative Prelim' or 'Petition Withdrawn After "
+		condition = "IF the Published Date (Type: final) is blank ANDActual_Preliminary_Signature "
+				+ "is not blank AND Published_Date_c (Type: Preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c"
+				+ " is not blank AND Investigation Outcome is ('ITC Negative Prelim' or 'Petition Withdrawn After "
 				+ "Initiation' or 'Suspension Agreement') THEN Status is true";
 		record.clear();
 		record.put("Actual_Amended_Prelim_Determination_Sig__c", todayStr);
@@ -5080,9 +5080,9 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//7
-		condition = "IF the Published Date (Type: ITC Final) is blank AND Actual_Preliminary_Signature "
-				+ "is not blank AND Published_Date_c (Type: Preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c"
-				+ " is not blank AND Investigation Outcome  is not ('ITC Negative Prelim' or 'Petition Withdrawn "
+		condition = "IF the Published Date (Type: ITC Final) is blank ANDActual_Preliminary_Signature "
+				+ "is not blank AND Published_Date_c (Type: Preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c"
+				+ " is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn "
 				+ "After Initiation' or 'Suspension Agreement') THEN Status is true";
 		record.clear();
 		record.put("Actual_Amended_Prelim_Determination_Sig__c", todayStr);
@@ -5095,9 +5095,9 @@ public class ADCVDLib{
 		
 		
 		//8
-		/*condition = "IF the Published Date (Type: final) is blank AND Actual_Preliminary_Signature "
-				+ "is not blank AND Published_Date_c (Type: preliminary) is not blank AND Actual_Amended_Prelim_Determination_Sig__c "
-				+ "is not blank AND Investigation Outcome  is not ('ITC Negative Prelim' or 'Petition Withdrawn "
+		/*condition = "IF the Published Date (Type: final) is blank ANDActual_Preliminary_Signature "
+				+ "is not blank AND Published_Date_c (Type: preliminary) is not blankAND Actual_Amended_Prelim_Determination_Sig__c "
+				+ "is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn "
 				+ "After Initiation' or 'Suspension Agreement') THEN Status is true";
 		record.clear();
 		record.put("Actual_Amended_Prelim_Determination_Sig__c", todayStr);
@@ -5108,8 +5108,8 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);*/
 		//9
-		condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature "
-				+ "is not blank AND Published Date (Type: Preliminary) is not blank AND Investigation "
+		condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature "
+				+ "is not blank AND Published Date (Type: Preliminary) is not blankAND Investigation "
 				+ "Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement')"
 				+ " AND Will_You_Amend_the_Prelim_Determination is No AND Actual_Amended_Prelim_Determination_Sig__c "
 				+ "is blank THEN status is true";
@@ -5123,8 +5123,8 @@ public class ADCVDLib{
 				ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
 		
 		//10
-		condition = "IF  Publication Date (Type: final) is not blank AND Actual_Preliminary_Signature "
-				+ "is not blank AND Published Date (Type: Preliminary) is not blank AND Investigation Outcome "
+		condition = "IF Publication Date (Type: final) is notblank ANDActual_Preliminary_Signature "
+				+ "is not blank AND Published Date (Type: Preliminary) is not blankAND Investigation Outcome "
 				+ "is not ('ITC Negative Prelim' or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') "
 				+ "AND Will_You_Amend_the_Prelim_Determination is No AND Actual_Amended_Prelim_Determination_Sig__c "
 				+ "is blank THEN status is true";
@@ -5143,8 +5143,8 @@ public class ADCVDLib{
 		match = match & 
 				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//11
-		condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature is blank AND Published Date"
-				+ " (Type: Preliminary) is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition "
+		condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature is blank AND Published Date"
+				+ " (Type: Preliminary) is not blankAND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition "
 				+ "Withdrawn After Initiation' or 'Suspension Agreement') AND	Will_You_Amend_the_Prelim_Determination is No"
 				+ " AND Actual_Amended_Prelim_Determination_Sig__c is blank	THEN status is true";
 		code = APITools.deleteRecordObject("Federal_Register__c", frIdF);
@@ -5157,8 +5157,8 @@ public class ADCVDLib{
 		match = match & 
 				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//12
-		condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature is not blank AND Published "
-				+ "Date (Type: Preliminary) is blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn "
+		condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature is not blank AND Published "
+				+ "Date (Type: Preliminary) is blankAND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition Withdrawn "
 				+ "After Initiation' or 'Suspension Agreement') AND Will_You_Amend_the_Prelim_Determination is No AND "
 				+ "Actual_Amended_Prelim_Determination_Sig__c is blank THEN status is true";
 		code = APITools.deleteRecordObject("Federal_Register__c", frIdP);
@@ -5172,8 +5172,8 @@ public class ADCVDLib{
 				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		
 		//13
-		condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature is not blank AND Published "
-				+ "Date (Type: Preliminary) is not blank AND Investigation Outcome is ('ITC Negative Prelim' or 'Petition"
+		condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature is not blank AND Published "
+				+ "Date (Type: Preliminary) is not blankAND Investigation Outcome is ('ITC Negative Prelim' or 'Petition"
 				+ " Withdrawn After Initiation' or 'Suspension Agreement') AND Will_You_Amend_the_Prelim_Determination is No "
 				+ "AND Actual_Amended_Prelim_Determination_Sig__c is blank THEN status is true";
 		record.clear();
@@ -5191,8 +5191,8 @@ public class ADCVDLib{
 		match = match & 
 				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//14
-		condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature is not blank AND Published "
-				+ "Date (Type: Preliminary) is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition "
+		condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature is not blank AND Published "
+				+ "Date (Type: Preliminary) is not blankAND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition "
 				+ "Withdrawn After Initiation' or 'Suspension Agreement') AND Will_You_Amend_the_Prelim_Determination is YES "
 				+ "AND Actual_Amended_Prelim_Determination_Sig__c is blank THEN status is true";
 		record.clear();
@@ -5205,8 +5205,8 @@ public class ADCVDLib{
 		match = match & 
 				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//15
-		condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature is not blank AND Published "
-				+ "Date (Type: Preliminary) is not blank AND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition "
+		condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature is not blank AND Published "
+				+ "Date (Type: Preliminary) is not blankAND Investigation Outcome is not ('ITC Negative Prelim' or 'Petition "
 				+ "Withdrawn After Initiation' or 'Suspension Agreement') AND Will_You_Amend_the_Prelim_Determination is No AND "
 				+ "Actual_Amended_Prelim_Determination_Sig__c is not  blank	THEN status is true";
 		record.clear();
@@ -5219,8 +5219,8 @@ public class ADCVDLib{
 		match = match & 
 				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//16
-		condition = "IF  Publication Date (Type: Initiation) is  blank AND Actual_Preliminary_Signature is not blank AND "
-				+ "Published Date (Type: Preliminary) is not blank AND Investigation Outcome is not ('ITC Negative Prelim'"
+		condition = "IF Publication Date (Type: Initiation) is blank ANDActual_Preliminary_Signature is not blank AND "
+				+ "Published Date (Type: Preliminary) is not blankAND Investigation Outcome is not ('ITC Negative Prelim'"
 				+ " or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') AND Will_You_Amend_the_Prelim_Determination "
 				+ "is No AND Actual_Amended_Prelim_Determination_Sig__c is blank THEN status is true";
 		record.clear();
@@ -5234,8 +5234,8 @@ public class ADCVDLib{
 				ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
 		
 		//17
-		/*condition = "IF  Publication Date (Type: final) is  blank AND Actual_Preliminary_Signature is not blank AND"
-				+ " Published Date (Type: preliminary) is not blank AND Investigation Outcome is not ('ITC Negative Prelim' "
+		/*condition = "IF Publication Date (Type: final) is blank ANDActual_Preliminary_Signature is not blank AND"
+				+ " Published Date (Type: preliminary) is not blankAND Investigation Outcome is not ('ITC Negative Prelim' "
 				+ "or 'Petition Withdrawn After Initiation' or 'Suspension Agreement') AND Will_You_Amend_the_Prelim_Determination "
 				+ "is No AND Actual_Amended_Prelim_Determination_Sig__c is blank THEN status is true";
 		record.clear();
@@ -5256,7 +5256,7 @@ public class ADCVDLib{
 		HtmlReport.addHtmlStepTitle("Validate Status - Pending Order", "Title");
 		condition = "IF Published_Date__c (Type: Preliminary) is not blank AND Published_Date__c (Type: Final) is not blank "
 				+ "AND Actual_Preliminary_Signature__c is not blank AND Actual_Final_Signature__c is not blank "
-				+ "AND Investigation_Outcome__c is null THEN status is true";
+				+ "ANDInvestigation_Outcome__c is null THEN status is true";
 		record.clear();
       	record.put("Investigation__c", investigationId);
 		record.put("Published_Date__c", todayStr);
@@ -5301,7 +5301,7 @@ public class ADCVDLib{
 		ADCVDLib.validateObjectStatus("Negative", "Pending Order", jObj.getString("Status__c"), condition);
 		
 		//4
-		condition = "The FR Published Date (Type: Preliminary) is not blank AND Published Date (Type: ITC Final)"
+		condition = "The FR Published Date (Type: Preliminary) is not blank AND Published Date (Type: ITCFinal)"
 				+ " is not blank AND Investigation Outcome is null THEN status is true";
 		record.clear();
       	record.put("Investigation__c", investigationId);
@@ -5387,7 +5387,7 @@ public class ADCVDLib{
 		
 		//Hold
 		HtmlReport.addHtmlStepTitle("Validate Status - Hold", "Title");
-		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is “ITC Prelim” THEN Published Date "
+		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is ITC Prelim THEN Published Date "
 				+ "(Type: ITC Prelim) + 30 or 45 days AND status true";
 		//condition = "The Investigation Outcome is 'Suspension Agreement' THEN Status is true";
 		todayCal.setTime(todayDate);
@@ -5423,8 +5423,8 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
 		//2
-		condition = "IF The Litigation Picklist is not Null AND the Investigation Outcome is “ITC Negative Prelim” THEN"
-				+ " Published Date (Type:  ITC Prelim) + 30 or 45 days AND status true";
+		condition = "IF The Litigation Picklist is not Null AND the Investigation Outcome is ITC Negative Prelim THEN"
+				+ " Published Date (Type: ITC Prelim) + 30 or 45 days AND status true";
 		record.clear();
 		record.put("Litigation_YesNo__c", "Yes");
 		record.put("Litigation_Resolved__c", "No");
@@ -5433,8 +5433,8 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		//3
-		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is not “ITC Negative Prelim” THEN "
-				+ "Published Date (Type:  ITC Prelim) + 30 or 45 days AND status true";
+		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is not ITC Negative Prelim THEN "
+				+ "Published Date (Type: ITC Prelim) + 30 or 45 days AND status true";
 		record.clear();
 		record.put("Litigation_YesNo__c", "");
 		record.put("Litigation_Resolved__c", "");
@@ -5443,8 +5443,8 @@ public class ADCVDLib{
 		match = match & 
 		ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		//4
-		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is “ITC Negative Prelim” "
-				+ "THEN Published Date (Type:  Final) + 30 or 45 days AND status true";
+		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is ITC Negative Prelim "
+				+ "THEN Published Date (Type: Final) + 30 or 45 days AND status true";
 		code = APITools.deleteRecordObject("Federal_Register__c", frIdITC);
 		todayCal.setTime(todayDate);
 		todayCal.add(Calendar.DATE, 47);
@@ -5464,50 +5464,50 @@ public class ADCVDLib{
 		ADCVDLib.validateObjectStatus("Nagative", "Hold", jObj.getString("Status__c"), condition);
 		/*
 		//5
-		condition = "IF The Litigation Picklist is not Null AND the Investigation Outcome is not “ITC Negative Prelim”"
-				+ " THEN Published Date (Type:  ITC Prelim) + 30 or 45 days AND status true";
+		condition = "IF The Litigation Picklist is not Null AND the Investigation Outcome is not ITC Negative Prelim"
+				+ " THEN Published Date (Type: ITC Prelim) + 30 or 45 days AND status true";
 		//6
-		condition = "IF the Litigation picklist is Null AND Investigation Outcome is “ITC Negative Final” "
-				+ "THEN Published Date (Type:  ITC Final) +30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is Null AND Investigation Outcome is ITC Negative Final "
+				+ "THEN Published Date (Type: ITC Final) +30 or 45 days AND status is true";
 		//7
-		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is “ITC Negative Final” "
-				+ "THEN Published Date (Type:  ITC Final) +30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is ITC Negative Final "
+				+ "THEN Published Date (Type: ITC Final) +30 or 45 days AND status is true";
 		//8
-		condition = "IF the Litigation picklist is Null AND Investigation Outcome is not “ITC Negative Final” "
-				+ "THEN Published Date (Type:  ITC Final) +30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is Null AND Investigation Outcome is not ITC Negative Final "
+				+ "THEN Published Date (Type: ITC Final) +30 or 45 days AND status is true";
 		//9
-		condition = "IF the Litigation picklist is Null AND Investigation Outcome is “ITC Negative Final” "
-				+ "THEN Published Date (Type:  Initiation) +30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is Null AND Investigation Outcome is ITC Negative Final "
+				+ "THEN Published Date (Type: Initiation) +30 or 45 days AND status is true";
 		//10
-		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is not “ITC Negative Final” "
-				+ "THEN Published Date (Type:  ITC Final) +30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is not ITC Negative Final "
+				+ "THEN Published Date (Type: ITC Final) +30 or 45 days AND status is true";
 		//11
 		condition = "IF The Litigation picklist is Null AND Petition_Withdrawn is not null AND Investigation "
-				+ "Outcome is “Petition Withdrawn” THEN Petition_Withdrawn + 30 or 45 days AND status is true";
+				+ "Outcome is Petition Withdrawn THEN Petition_Withdrawn + 30 or 45 days AND status is true";
 		//12
 		condition = "IF The Litigation picklist is not  Null AND Petition_Withdrawn is not null AND Investigation"
-				+ " Outcome is “Petition Withdrawn” THEN Petition_Withdrawn + 30 or 45 days AND status is true";
+				+ " Outcome is Petition Withdrawn THEN Petition_Withdrawn + 30 or 45 days AND status is true";
 		//13
 		condition = "IF The Litigation picklist is Null AND Petition_Withdrawn is null AND Investigation "
-				+ "Outcome is “Petition Withdrawn” THEN Petition_Withdrawn + 30 or 45 days AND status is true";
+				+ "Outcome is Petition Withdrawn THEN Petition_Withdrawn + 30 or 45 days AND status is true";
 		//14
 		condition = "IF The Litigation picklist is Null AND Petition_Withdrawn is not null AND Investigation "
-				+ "Outcome is not “Petition Withdrawn” THEN Petition_Withdrawn + 30 or 45 days AND status is true";
+				+ "Outcome is not Petition Withdrawn THEN Petition_Withdrawn + 30 or 45 days AND status is true";
 		//15
 		condition = "IF The Litigation picklist is not Null AND Petition_Withdrawn is null AND Investigation "
-				+ "Outcome is not “Petition Withdrawn” THEN Petition_Withdrawn + 30 or 45 days AND status is true";
+				+ "Outcome is not Petition Withdrawn THEN Petition_Withdrawn + 30 or 45 days AND status is true";
 		//16
-		condition = "IF the Litigation picklist is Null AND Investigation Outcome is “DOC Negative Final” THEN  "
+		condition = "IF the Litigation picklist is Null AND Investigation Outcome is DOC Negative Final THEN "
 				+ "Actual_Final_Signature + 30 or 45 days AND status is true";
 		//17
-		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is “DOC Negative Final”"
-				+ " THEN  Actual_Final_Signature + 30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is DOC Negative Final"
+				+ " THEN Actual_Final_Signature + 30 or 45 days AND status is true";
 		//18
-		condition = "IF the Litigation picklist is Null AND Investigation Outcome is not “DOC Negative Final” "
-				+ "THEN  Actual_Final_Signature + 30 or 45 days AND status is true";
+		condition = "IF the Litigation picklist is Null AND Investigation Outcome is not DOC Negative Final "
+				+ "THEN Actual_Final_Signature + 30 or 45 days AND status is true";
 		//19
-		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is not “DOC Negative Final”"
-				+ " THEN  Actual_Final_Signature + 30 or 45 days AND status is true";*/
+		condition = "IF the Litigation picklist is not Null AND Investigation Outcome is not DOC Negative Final"
+				+ " THEN Actual_Final_Signature + 30 or 45 days AND status is true";*/
 
 		
 		
@@ -5519,7 +5519,7 @@ public class ADCVDLib{
 		//1
 		HtmlReport.addHtmlStepTitle("Validate Status - Litigation", "Title");
 		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is No AND Litigation_Status is 'blank' OR Litigation_Status "
-				+ "is “Not Active” THEN status is true  ";
+				+ "is Not Active THEN status is true ";
 		//code = APITools.deleteRecordObject("Federal_Register__c", frIdF);
 		record.clear();
       	record.put("Investigation__c", investigationId);
@@ -5545,7 +5545,7 @@ public class ADCVDLib{
 		
 		//2
 		condition = "IF the Litigation picklist is NO AND Litigation_Resolved is No AND Litigation_Status is 'blank' OR "
-				+ "Litigation_Status is “Not Active” THEN status is true";
+				+ "Litigation_Status is Not Active THEN status is true";
 		record.clear();
 		record.put("Litigation_YesNo__c", "No");
 		record.put("Litigation_Resolved__c", "No");
@@ -5556,7 +5556,7 @@ public class ADCVDLib{
 		
 		//3
 		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is YES AND Litigation_Status is 'blank' OR "
-				+ "Litigation_Status is “Not Active” THEN status is true";
+				+ "Litigation_Status is Not Active THEN status is true";
 		record.clear();
 		record.put("Litigation_YesNo__c", "Yes");
 		record.put("Litigation_Resolved__c", "Yes");
@@ -5567,7 +5567,7 @@ public class ADCVDLib{
 		
 		//4
 		condition = "IF the Litigation picklist is NO AND Litigation_Resolved is YES AND Litigation_Status is 'blank' OR "
-				+ "Litigation_Status is “Not Active” THEN status is true";
+				+ "Litigation_Status is Not Active THEN status is true";
 		record.clear();
 		record.put("Litigation_YesNo__c", "No");
 		record.put("Litigation_Resolved__c", "Yes");
@@ -5578,7 +5578,7 @@ public class ADCVDLib{
 		
 		//5
 		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is No AND Litigation_Status is not 'blank' OR "
-				+ "Litigation_Status is “Active” THEN status is true";
+				+ "Litigation_Status is Active THEN status is true";
 		record.clear();
 		record.put("Litigation_YesNo__c", "No");
 		record.put("Litigation_Resolved__c", "No");
@@ -6405,6 +6405,8 @@ public class ADCVDLib{
 		 //Prelim
 		 HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
 		 //1
+		 condition = "Edit All parties in agreement to the outcome? is 'No' and Published_Date "
+		 		+ "is not null(Initiation FR)"; 
 		 record.clear();
 	     record.put("segment__c", sgementId);
 		 record.put("Published_Date__c", todayStr);
@@ -6412,27 +6414,50 @@ public class ADCVDLib{
 		 record.put("Type__c", "Initiation");
 		 String frIdI = APITools.createObjectRecord("Federal_Register__c", record);
 		 record.clear();
-		 record.put("Actual_Initiation_Signature__c", todayStr);
-		 condition = "Edit All parties in agreement to the outcome? is 'No' and Published_Date "
-		 		+ "is not null(Initiation FR)"; 
+		 record.put("Actual_Initiation_Signature__c", todayStr);		 
 		 record.put("All_parties_in_agreement_to_the_outcome__c", "No");
 		 String code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
-		 
-		 condition = "If the All_parties_in_agreement_to_the_outcome is YES AND Actual_Preliminary_Signature "
-		 + "is blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
-		 
 		 //2
-		 condition = "If the All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature "
-		 + "is NOT blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 condition = "If the All_parties_in_agreement_to_the_outcome is YES AND Actual_Preliminary_Signature "
+		 + "is blank AND Segment Outcome is not 'Full Rescission' THEN status is true";	
+		 record.clear();
+		 record.put("All_parties_in_agreement_to_the_outcome__c", "Yes");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
+		
+		
+			record.clear();
+			record.put("Segment_Outcome__c", "Full Rescission");
+		 
+		 
+		 
 		 
 		 //3
 		 condition = "If the All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature "
-		 + "is blank AND Segment Outcome is 'Full Rescission' THEN status is true";
-		 
+		 + "is NOT blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 record.clear();
+		 record.put("Actual_Preliminary_Signature__c", todayStr);		 
+		 record.put("All_parties_in_agreement_to_the_outcome__c", "No");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
 		 //4
+		 condition = "If the All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature "
+		 + "is blank AND Segment Outcome is 'Full Rescission' THEN status is true";
+		 record.clear();
+		 record.put("Actual_Preliminary_Signature__c", "");		 
+		 record.put("All_parties_in_agreement_to_the_outcome__c", "No");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
+		 //5
 		 condition = "If the All_parties_in_agreement_to_the_outcome is YES AND Actual_Preliminary_Signature "
 		 + "is NOT blank AND Segment Outcome is 'Full Rescission' THEN status is true";
 
@@ -6459,19 +6484,19 @@ public class ADCVDLib{
 		 
 		 //2
 		 condition = "If the Is_This_Review_Expedited is NO AND Actual_Initiation_Signature is not blank AND Actual_Final_Signature "
-		 		+ " is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 		+ "is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //3
-		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is blank AND Actual_Final_Signature  "
+		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is blank AND Actual_Final_Signature "
 		 		+ "is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //4
 		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is not blank AND Actual_Final_Signature"
-		 		+ "  is NOT blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 		+ " is NOT blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //5
 		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is not blank AND Actual_Final_Signature"
-		 		+ "  is blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
+		 		+ " is blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
 		 
 		 //6
 		 condition = "The Is_This_Review_Expedited is No AND All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature"
@@ -6513,7 +6538,7 @@ public class ADCVDLib{
 				 ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
 		 
 		//2
-		 condition = "If the Litigation_YesNo is NOT Null  THEN status is true";
+		 condition = "If the Litigation_YesNo is NOT Null THEN status is true";
 
 		 
 		 //Litigation
@@ -6781,12 +6806,12 @@ public class ADCVDLib{
 		 
 		 //7
 		 condition = "The Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' "
-		 		+ "AND Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary)"
+		 		+ "AND Actual_Preliminary_Signature is not blank AND Published_Date (Type: Preliminary)"
 		 		+ " is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //8
 		 condition = "If the Type_of_Circumvention_Inquiry is NOT 'Later-Developed Merchandise' AND "
-		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary) "
+		 		+ "Actual_Preliminary_Signature is not blank AND Published_Date (Type: Preliminary) "
 		 		+ "is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //9
@@ -6796,17 +6821,17 @@ public class ADCVDLib{
 		 
 		 //10
 		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
-		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary)"
+		 		+ "Actual_Preliminary_Signature is not blank AND Published_Date (Type: Preliminary)"
 		 		+ " is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //11
 		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
-		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary) "
+		 		+ "Actual_Preliminary_Signature is not blank AND Published_Date (Type: Preliminary) "
 		 		+ "is not blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
 		 
 		 //12
 		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
-		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Final) "
+		 		+ "Actual_Preliminary_Signature is not blank AND Published_Date (Type: Final) "
 		 		+ "is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
 		 
 		 //13
@@ -6892,19 +6917,19 @@ public class ADCVDLib{
 				 ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
 		 //2
 		 condition = "If the Litigation is NO AND Litigation_Resolved is No AND (Litigation_Status "
-		 		+ "is blank OR Litigation_Status is “Not Active”) THEN status is true";
+		 		+ "is blank OR Litigation_Status is Not Active) THEN status is true";
 		 
 		 //3
 		 condition = "If the Litigation is Yes AND Litigation_Resolved is YES AND (Litigation_Status "
-		 		+ "is blank OR Litigation_Status is “Not Active”) THEN status is true";
+		 		+ "is blank OR Litigation_Status is Not Active) THEN status is true";
 				 
 		 //4
 		 condition = "If the Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status "
-		 		+ "is “Active”) THEN status is true";
+		 		+ "is Active) THEN status is true";
 				 
 		 //5
 		 condition = "If the Litigation is NO AND Litigation_Resolved is YES AND Litigation_Status"
-		 		+ "is “Active”) THEN status is true"; 
+		 		+ "is Active) THEN status is true"; 
 
 		//Customs
 		 HtmlReport.addHtmlStepTitle("Validate Status - Customs","Title");
@@ -7092,7 +7117,7 @@ public class ADCVDLib{
 		 //Final
 		condition = "IF 240day sunset review AND Segment.Actual_Preliminary_Signature__c is not blank "
 				+ "AND Published Date Type:Preliminary is not blank AND (Segment.Actual_Final_Signature__c"
-				+ " is blank OR Published Date Type:Final is blank OR Segment.Segment_Outcome__c is blank ) THEN Status is TRUE ";
+				+ "is blank OR Published Date Type:Final is blank OR Segment.Segment_Outcome__c is blank ) THEN Status is TRUE";
 		 record.clear();
          record.put("segment__c", sgementId);
 		 record.put("Published_Date__c", todayStr);
