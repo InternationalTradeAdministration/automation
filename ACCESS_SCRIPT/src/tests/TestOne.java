@@ -141,7 +141,6 @@ public class TestOne {
 		System.out.println(url+"___"+user);
 		if (!loginOn)
 		{
-			
 			guiTools.openBrowser(browserType);
 			loginOn = AccessLib.loginToAccess(url, user, password);
 		}

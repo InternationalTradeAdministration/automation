@@ -403,7 +403,6 @@ public class GuiTools extends InitTools{
 	{
 		WebDriver dr = getDriver();
 		dr.navigate().to(url);
-		
 	}
 	/**
 	 * This function get all the opened windows
@@ -439,9 +438,7 @@ public class GuiTools extends InitTools{
 									String StepPassFail,
 									String msgError) throws IOException
 	{
-		
-		
-		HtmlReport.setTcStatus(false);
+		//HtmlReport.setTcStatus(false);
 		testCaseStatus = false;
 		String aLink = "";
 		if(!msgError.equals(""))
@@ -450,7 +447,8 @@ public class GuiTools extends InitTools{
 			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
 		}
 		
-		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
+		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult,
+							   StepVpStep, StepPassFail, aLink);
 		Assert.fail( getTestCaseName()+ ": " +msgError);
 	}
 	

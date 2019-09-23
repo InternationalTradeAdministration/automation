@@ -47,7 +47,7 @@ public class BisFormLib{
 		//this.calendar = Calendar.getInstance();
 	}
 	/**
-	 * This method login to ADCVD web application
+	 * This method login to BIS232 web application
 	 * @param url: url for the application
 	 * @param user: user
 	 * @param password: password
@@ -991,6 +991,8 @@ public class BisFormLib{
 					"Not as expected", "Step", "fail", "Search for exclusive request");
 		}
 	}
+	
+	
 	
 	/**
 	 * This method preview the form after all steps are 

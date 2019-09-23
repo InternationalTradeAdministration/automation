@@ -299,7 +299,7 @@ public class TestOne {
 		//LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//record.put("ADCVD_Order__c", orderId);
 		String adminReviewId = createNewSegment(orderId, "Changed Circumstances Review", "");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatus_B(adminReviewId, "Changed Circumstances Review");
+		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatusChangedCircumstance(adminReviewId, "Changed Circumstances Review");
 	}
 	/**
 	 * This method is New_Shipper_Review_Status_Validation status
@@ -320,7 +320,7 @@ public class TestOne {
 		//LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//record.put("ADCVD_Order__c", orderId);
 		String adminReviewId = createNewSegment(orderId, "Anti-Circumvention Review", "");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatus_B(adminReviewId, "Anti-Circumvention Review");
+		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatusAntiCircumvention(adminReviewId, "Anti-Circumvention Review");
 	}
 	
 	/**

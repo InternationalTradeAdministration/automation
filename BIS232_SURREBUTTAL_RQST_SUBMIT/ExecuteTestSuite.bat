@@ -1,2 +1,2 @@
-java -Xmx1024m -jar Bis232_surreubuttal_req.jar > test.log
+java -Xmx1024m -jar Bis232_surrebuttal_submission.jar > test.log
 pause

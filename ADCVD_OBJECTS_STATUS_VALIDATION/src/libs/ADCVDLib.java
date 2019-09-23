@@ -6382,13 +6382,13 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method validate changed circumstance and Anti-circumvention
+	 * This method validate changed circumstance Review
 	 * statuses
 	 * @param row, row of elements
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
-	public static boolean validateSegmentStatus_B(String sgementId, String segType) throws Exception
+	public static boolean validateSegmentStatusChangedCircumstance(String sgementId, String segType) throws Exception
 	{
 		 boolean match = true;
 		 HtmlReport.addHtmlStepTitle("Validate '"+segType+"' statuses","Title");
@@ -6402,9 +6402,9 @@ public class ADCVDLib{
 		 JSONObject jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 		 ADCVDLib.validateObjectStatus("Positive", "Initiation", jObj.getString("Status__c"), condition);
-		 record.clear();
 		 //Prelim
-		 
+		 HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
+		 //1
 		 record.clear();
 	     record.put("segment__c", sgementId);
 		 record.put("Published_Date__c", todayStr);
@@ -6413,22 +6413,34 @@ public class ADCVDLib{
 		 String frIdI = APITools.createObjectRecord("Federal_Register__c", record);
 		 record.clear();
 		 record.put("Actual_Initiation_Signature__c", todayStr);
-		 if(segType.equalsIgnoreCase("Changed Circumstances Review"))
-		{	 
-			 condition = "Edit All parties in agreement to the outcome? is 'No' and Published_Date is not null(Initiation FR)"; 
-		     record.put("All_parties_in_agreement_to_the_outcome__c", "No");
-		}
-		else //Anti-circumvention
-		{
-			condition = "Type_of_Circumvention_Inquiry equal to 'Later-Developed Merchandise' and Published_Date "
-					+ "is not null(Initiation FR)"; 
-		    record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
-		}
+		 condition = "Edit All parties in agreement to the outcome? is 'No' and Published_Date "
+		 		+ "is not null(Initiation FR)"; 
+		 record.put("All_parties_in_agreement_to_the_outcome__c", "No");
 		 String code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
+		 
+		 condition = "If the All_parties_in_agreement_to_the_outcome is YES AND Actual_Preliminary_Signature "
+		 + "is blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //2
+		 condition = "If the All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature "
+		 + "is NOT blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //3
+		 condition = "If the All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature "
+		 + "is blank AND Segment Outcome is 'Full Rescission' THEN status is true";
+		 
+		 //4
+		 condition = "If the All_parties_in_agreement_to_the_outcome is YES AND Actual_Preliminary_Signature "
+		 + "is NOT blank AND Segment Outcome is 'Full Rescission' THEN status is true";
+
+		 
+		 
 		 //Final
+		 HtmlReport.addHtmlStepTitle("Validate Status - Final","Title");
+		 //1
 		 condition = "Actual_Preliminary_Signature is not null, Calculated_Preliminary_Signature is not null,"
 		 		+ " Published_Date__c(Preliminary FR) is not null";
 		 record.clear();
@@ -6444,7 +6456,53 @@ public class ADCVDLib{
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
+		 
+		 //2
+		 condition = "If the Is_This_Review_Expedited is NO AND Actual_Initiation_Signature is not blank AND Actual_Final_Signature "
+		 		+ " is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //3
+		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is blank AND Actual_Final_Signature  "
+		 		+ "is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //4
+		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is not blank AND Actual_Final_Signature"
+		 		+ "  is NOT blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //5
+		 condition = "If the Is_This_Review_Expedited is Yes AND Actual_Initiation_Signature is not blank AND Actual_Final_Signature"
+		 		+ "  is blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
+		 
+		 //6
+		 condition = "The Is_This_Review_Expedited is No AND All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature"
+		 		+ " is not blank AND Published Date (Type: Preliminary) is not blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //7
+		 condition = "If The Is_This_Review_Expedited is YES AND All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature "
+		 		+ "is not blank AND Published Date (Type: Preliminary) is not blank AND Segment Outcome is not 'Full Rescission' THEN "
+		 		+ "status is true";
+		 
+		 //8
+		 condition = "If The Is_This_Review_Expedited is No AND All_parties_in_agreement_to_the_outcome is YES AND Actual_Preliminary_Signature"
+		 		+ " is not blank AND Published Date (Type: Preliminary) is not blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //9
+		 condition = "If The Is_This_Review_Expedited is No AND All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature"
+		 		+ " is blank AND Published Date (Type: Preliminary) is not blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //10
+		 condition = "If The Is_This_Review_Expedited is No AND All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature"
+		 		+ " is not blank AND Published Date (Type: Preliminary) is blank AND Segment Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //11
+		 condition = "If The Is_This_Review_Expedited is No AND All_parties_in_agreement_to_the_outcome is No AND Actual_Preliminary_Signature"
+		 		+ " is not blank AND Published Date (Type: Preliminary) is not blank AND Segment Outcome is 'Full Rescission' THEN status is true";
+
+		 
+		 
 		//Hold----------------------------------confirm with Paul
+		 HtmlReport.addHtmlStepTitle("Validate Status - Hold","Title");
+		 //1
 		 condition = "Litigation_Hold_Expiration_Date is not null, Segment_Outcome is not null";
 		 record.clear();
 		 record.put("Litigation_Hold_Expiration_Date__c", todayStr);
@@ -6453,16 +6511,46 @@ public class ADCVDLib{
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
+		 
+		//2
+		 condition = "If the Litigation_YesNo is NOT Null  THEN status is true";
+
+		 
 		 //Litigation
+		 HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
+		 //1
 		 condition = "Litigation_YesNo is 'Yes', Litigation_Resolved is 'No'";
 		 record.clear();
 		 record.put("Litigation_YesNo__c", "Yes");
-		  record.put("Litigation_Resolved__c", "No");
+		 record.put("Litigation_Resolved__c", "No");
 		 code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "The Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status"
+		 		+ " is blank OR Litigation_Status is 'Not Active' THEN status is true";
+		 
+		 //3
+		 condition = "If the Litigation is NO AND Litigation_Resolved is No AND Litigation_Status "
+		 		+ "is blank OR Litigation_Status is 'Not Active' THEN status is true";
+		 
+		 //4
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is YES AND Litigation_Status"
+		 		+ " is blank OR Litigation_Status is 'Not Active' THEN status is true";
+		 
+		 //5
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status"
+		 		+ " is 'Active' THEN status is true";
+		 
+		 //6
+		 condition = "If the Litigation is NO AND Litigation_Resolved is YES AND Litigation_Status"
+		 		+ " is 'Active' THEN status is true";
+
+		 
 		//Customs
+		 HtmlReport.addHtmlStepTitle("Validate Status - Customs","Title");
+		 //1
 		 condition = "Litigation_YesNo is 'Yes', Litigation_Resolved is 'Yes'";
 		 record.clear();
 		 record.put("Litigation_YesNo__c", "Yes");
@@ -6471,7 +6559,42 @@ public class ADCVDLib{
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Customs", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Litigation is NO AND Litigation_Resolved is Yes AND "
+		 		+ "Have_Custom_Instruction_been_sent is No THEN status is true";
+		 
+		 //3
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND "
+		 		+ "Have_Custom_Instruction_been_sent is No THEN status is true";
+		 
+		 //4
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND "
+		 		+ "Have_Custom_Instruction_been_sent is YES THEN status is true";
+		 
+		 //5
+		 condition = "If the Litigation is NO AND Litigation_Resolved is NO AND "
+		 		+ "Have_Custom_Instruction_been_sent is No THEN status is true";
+		 
+		 //6
+		 condition = "The Litigation is No AND Have_Custom_Instruction_been_sent "
+		 		+ "is No THEN status is true";
+		 
+		 //7
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent "
+		 		+ "is No THEN status is true";
+		 
+		 //8
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent"
+		 		+ " is YES THEN status is true";
+		 
+		 //9
+		 condition = "If the Litigation is NO AND Have_Custom_Instruction_been_sent"
+		 		+ " is YES THEN status is true";
+
+		 
 		 //Closed
+		 HtmlReport.addHtmlStepTitle("Validate Status - Closed","Title");
+		 //1
 		 condition = "Litigation_YesNo is 'Yes', Litigation_Resolved is 'Yes' "
 		 		+ "Have_Custom_Instruction_been_sent = 'Yes'";
 		 record.clear();
@@ -6482,11 +6605,392 @@ public class ADCVDLib{
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 		 ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+		 
+		 //2
+		 condition = "If the Litigation is NO AND Litigation_Resolved is Yes AND "
+		 		+ "Have_Custom_Instruction_been_sent is Yes THEN status is true";
+		 
+		 //3
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND "
+		 		+ "Have_Custom_Instruction_been_sent is Yes THEN status is true";
+		 
+		 //4
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND "
+		 		+ "Have_Custom_Instruction_been_sent is NO THEN status is true";
+		 
+		 //5
+		 condition = "If the Litigation is NO AND Litigation_Resolved is NO AND "
+		 		+ "Have_Custom_Instruction_been_sent is NO THEN status is true";
+		 
+		 //6
+		 condition = "The Litigation is No AND Have_Custom_Instruction_been_sent "
+		 		+ "is Yes THEN status is true";
+		 
+		 //7
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent "
+		 		+ "is Yes THEN status is true";
+		 
+		 //8
+		 condition = "If the Litigation is No AND Have_Custom_Instruction_been_sent "
+		 		+ "is NO THEN status is true";
+		 
+		 //9
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent "
+		 		+ "is NO THEN status is true";
+
+		 return match;
+	}
+	
+	
+	/**
+	 * This method validate Anti-circumvention Review
+	 * statuses
+	 * @param row, row of elements
+	 * @return true if all statuses worked as expected false if not
+	 * @throws Exception
+	 */
+	public static boolean validateSegmentStatusAntiCircumvention(String sgementId,
+																	String segType) throws Exception
+	{
+		 boolean match = true;
+		 HtmlReport.addHtmlStepTitle("Validate '"+segType+"' statuses","Title");
+		 //Initiation
+		 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		 Date todayDate = new Date();
+		 String todayStr = dateFormat.format(todayDate);
+		 LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
+		 String condition = "Initial Status";
+		 String sqlString = "select+Status__c+from+segment__c+where+id='"+sgementId+"'";
+		 JSONObject jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+		 ADCVDLib.validateObjectStatus("Positive", "Initiation", jObj.getString("Status__c"), condition);
+		 record.clear();
+		 //Prelim
+		 HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
+		 //1
+		 condition = "Type_of_Circumvention_Inquiry equal to 'Later-Developed Merchandise' and Published_Date "
+					+ "is not null(Initiation FR)"; 
+		 record.clear();
+	     record.put("segment__c", sgementId);
+		 record.put("Published_Date__c", todayStr);
+		 record.put("Cite_Number__c", "None");
+		 record.put("Type__c", "Initiation");
+		 String frIdI = APITools.createObjectRecord("Federal_Register__c", record);
+		 record.clear();
+		 record.put("Actual_Initiation_Signature__c", todayStr);
+		 record.put("Type_of_Circumvention_Inquiry__c", "Later-Developed Merchandise");
+		 String code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'Yes' "
+		 		+ "AND Actual_Preliminary_Signature is blank AND Segment_Outcome is not 'Full Rescission'"
+		 		+ " THEN status is true";
+		 
+		 //3
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is blank AND Preliminary_Determination is 'Yes' AND "
+		 		+ "Actual_Preliminary_Signature is blank AND Segment_Outcome is not 'Full Rescission' "
+		 		+ "THEN status is true";
+		 
+		 //4
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'NO' AND"
+		 		+ " Actual_Preliminary_Signature is blank AND Segment_Outcome is not 'Full Rescission' "
+		 		+ "THEN status is true";
+		 
+		 //5
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'Yes' "
+		 		+ "AND Actual_Preliminary_Signature is NOT blank AND Segment_Outcome is not 'Full "
+		 		+ "Rescission' THEN status is true";
+		 
+		 //6
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'Yes' "
+		 		+ "AND Actual_Preliminary_Signature is blank AND Segment_Outcome is 'Full Rescission'"
+		 		+ " THEN status is true";
+		 
+		 //7
+		 condition = "The Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature"
+		 		+ " is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //8
+		 condition = "If the Type_of_Circumvention_Inquiry is NOT 'Later-Developed Merchandise' AND "
+		 		+ "Actual_Preliminary_Signature is blank AND Segment_Outcome is not 'Full Rescission' "
+		 		+ "THEN status is true";
+		 
+		 //9
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature"
+		 		+ " is NOT blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //10
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND Actual_Preliminary_Signature"
+		 		+ " is blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
+
+		 
+		 //Final
+		 HtmlReport.addHtmlStepTitle("Validate Status - Final","Title");
+		 //1
+		 condition = "Actual_Preliminary_Signature is not null, Calculated_Preliminary_Signature is not null,"
+		 		+ " Published_Date__c(Preliminary FR) is not null";
+		 record.clear();
+      	 record.put("segment__c", sgementId);
+		 record.put("Published_Date__c", todayStr);
+		 record.put("Cite_Number__c", "None");
+		 record.put("Type__c", "Preliminary");
+		 String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+		 record.clear();
+      	 record.put("Actual_Preliminary_Signature__c", todayStr);
+		 record.put("Calculated_Preliminary_Signature__c", todayStr);
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' "
+		 		+ "AND Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination "
+		 		+ "is 'Yes' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is "
+		 		+ "not 'Full Rescission' THEN status is true";
+		 
+		 //3
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' "
+		 		+ "AND Type_of_Circumvention_Inquiry is blank AND Preliminary_Determination is 'Yes' "
+		 		+ "AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is not 'Full "
+		 		+ "Rescission' THEN status is true";
+		 
+		 //4
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' "
+		 		+ "AND Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination "
+		 		+ "is 'NO' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is "
+		 		+ "not 'Full Rescission' THEN status is true";
+		 
+		 //5
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' "
+		 		+ "AND Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'Yes' "
+		 		+ "AND Actual_Preliminary_Signature is blank AND Segment_Outcome is not 'Full Rescission'"
+		 		+ " THEN status is true";
+		 
+		 //6
+		 condition = "If the Type_of_Circumvention_Inquiry is not 'Later-Developed Merchandise' "
+		 		+ "AND Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination "
+		 		+ "is 'Yes' AND Actual_Preliminary_Signature is not blank AND Segment_Outcome is "
+		 		+ "'Full Rescission' THEN status is true";
+		 
+		 //7
+		 condition = "The Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' "
+		 		+ "AND Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary)"
+		 		+ " is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //8
+		 condition = "If the Type_of_Circumvention_Inquiry is NOT 'Later-Developed Merchandise' AND "
+		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary) "
+		 		+ "is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //9
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
+		 		+ "Actual_Preliminary_Signature is blank AND Published_Date (Type: Preliminary) "
+		 		+ "is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //10
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
+		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary)"
+		 		+ " is blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //11
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
+		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Preliminary) "
+		 		+ "is not blank AND Segment_Outcome is 'Full Rescission' THEN status is true";
+		 
+		 //12
+		 condition = "If the Type_of_Circumvention_Inquiry is 'Later-Developed Merchandise' AND "
+		 		+ "Actual_Preliminary_Signature is not  blank AND Published_Date (Type: Final) "
+		 		+ "is not blank AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //13
+		 condition = "The Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'No' "
+		 		+ "AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //14
+		 condition = "If the Type_of_Circumvention_Inquiry IS 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'No' "
+		 		+ "AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //15
+		 condition = "If the Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' "
+		 		+ "AND Type_of_Circumvention_Inquiry is blank AND Preliminary_Determination is 'No' "
+		 		+ "AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //16
+		 condition = "If the Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND "
+		 		+ "Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'YES' "
+		 		+ "AND Segment_Outcome is not 'Full Rescission' THEN status is true";
+		 
+		 //17
+		 condition = "If the Type_of_Circumvention_Inquiry IS NOT 'Later-Developed Merchandise' AND"
+		 		+ " Type_of_Circumvention_Inquiry is not blank AND Preliminary_Determination is 'No' "
+		 		+ "AND Segment_Outcome is 'Full Rescission' THEN status is true";
+
+		 
+		 
+		//Hold----------------------------------confirm with Paul
+		 HtmlReport.addHtmlStepTitle("Validate Status - Hold","Title");
+		 //1
+		 condition = "Litigation_Hold_Expiration_Date is not null, Segment_Outcome is not null";
+		 record.clear();
+		 record.put("Litigation_Hold_Expiration_Date__c", todayStr);
+		 record.put("Segment_Outcome__c", "Withdrawn");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Hold", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Litigation is NOT Null AND Segment_Outcome is 'Full Rescission'"
+		 		+ " THEN Publication_date (Type:Rescission) +30 or 45 days AND status is true";
+		 
+		 //3
+		 condition = "If the Litigation is Null AND Segment_Outcome is NOT 'Full Rescission' "
+		 		+ "THEN Publication_date (Type:Rescission) +30 or 45 days AND status is true";
+		 
+		 //4
+		 condition = "If the Litigation is Null AND Segment_Outcome is 'Full Rescission' THEN "
+		 		+ "Publication_date (Type:Initiation) +30 or 45 days AND status is true";
+		 
+		 //5
+		 condition = "If the Litigation is NOT Null AND Segment_Outcome is NOT 'Full Rescission'"
+		 		+ " THEN Publication_date (Type:Final) +30 or 45 days AND status is true";
+		 
+		 //6
+		 condition = "The Litigation is Null AND Actual_Final_Signature is not null THEN "
+		 		+ "Actual_Final_Signature +30 or 45 days AND status is true";
+		 
+		 //7
+		 condition = "If the Litigation is NOT Null AND Actual_Final_Signature is not null "
+		 		+ "THEN Actual_Final_Signature +30 or 45 days AND status is true";
+		 
+		 //8
+		 condition = "If the Litigation is Null AND Actual_Final_Signature is null THEN"
+		 		+ " Actual_Final_Signature +30 or 45 days AND status is true";
+		 
+		 //9
+		 condition = "If the Litigation is NOT Null AND Actual_Final_Signature is null"
+		 		+ " THEN Actual_Final_Signature +30 or 45 days AND status is true";
+
+		 //Litigation
+		 HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
+		 //1
+		 condition = "Litigation_YesNo is 'Yes', Litigation_Resolved is 'No'";
+		 record.clear();
+		 record.put("Litigation_YesNo__c", "Yes");
+		  record.put("Litigation_Resolved__c", "No");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Litigation", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Litigation is NO AND Litigation_Resolved is No AND (Litigation_Status "
+		 		+ "is blank OR Litigation_Status is “Not Active”) THEN status is true";
+		 
+		 //3
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is YES AND (Litigation_Status "
+		 		+ "is blank OR Litigation_Status is “Not Active”) THEN status is true";
+				 
+		 //4
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is No AND Litigation_Status "
+		 		+ "is “Active”) THEN status is true";
+				 
+		 //5
+		 condition = "If the Litigation is NO AND Litigation_Resolved is YES AND Litigation_Status"
+		 		+ "is “Active”) THEN status is true"; 
+
+		//Customs
+		 HtmlReport.addHtmlStepTitle("Validate Status - Customs","Title");
+		 //1
+		 condition = "Litigation_YesNo is 'Yes', Litigation_Resolved is 'Yes'";
+		 record.clear();
+		 record.put("Litigation_YesNo__c", "Yes");
+		 record.put("Litigation_Resolved__c", "Yes");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Positive", "Customs", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Litigation is NO AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent"
+		 		+ " is No THEN status is true";
+		 
+		 //3
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent"
+		 		+ " is No THEN status is true";
+		 
+		 //4
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent"
+		 		+ " is YES THEN status is true";
+		 
+		 //5
+		 condition = "If the Litigation is NO AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent"
+		 		+ " is YES THEN status is true";
+		 
+		 //6
+		 condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is No THEN status is true";
+		 
+		 //7
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is No THEN status is true";
+		 
+		 //8
+		 condition = "If the Litigation is No AND Have_Custom_Instruction_been_sent is YES THEN status is true";
+		 
+		 //9
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is YES THEN status is true";
+
+		 //Closed
+		 HtmlReport.addHtmlStepTitle("Validate Status - Closed","Title");
+		 //1
+		 condition = "Litigation_YesNo is 'Yes', Litigation_Resolved is 'Yes' "
+		 		+ "Have_Custom_Instruction_been_sent = 'Yes'";
+		 record.clear();
+		 record.put("Litigation_YesNo__c", "Yes");
+		 record.put("Litigation_Resolved__c", "Yes");
+		 record.put("Have_Custom_Instruction_been_sent__c", "Yes");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+		 ADCVDLib.validateObjectStatus("Positive", "Closed", jObj.getString("Status__c"), condition);
+		 //2
+		 condition = "If the Litigation is NO AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent"
+		 		+ " is Yes THEN status is true";
+		 
+		 //3
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent"
+		 		+ " is Yes THEN status is true";
+		 
+		 //4
+		 condition = "If the Litigation is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent"
+		 		+ " is NO THEN status is true";
+		 
+		 //5
+		 condition = "If the Litigation is NO AND Litigation_Resolved is NO AND Have_Custom_Instruction_been_sent"
+		 		+ " is NO THEN status is true";
+		 
+		 //6
+		 condition = "The Litigation is No AND Have_Custom_Instruction_been_sent is Yes THEN status is true";
+		 
+		 //7
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is Yes THEN status is true";
+		 
+		 //8
+		 condition = "If the Litigation is No AND Have_Custom_Instruction_been_sent is NO THEN status is true";
+		 
+		 //9
+		 condition = "If the Litigation is YES AND Have_Custom_Instruction_been_sent is NO THEN status is true";
+		 
 		 return match;
 	}
 	
 	/**
-	 * This method validate changed circumstance and Anti-circumvention
+	 * This method validate 
 	 * statuses
 	 * @param row, row of elements
 	 * @return true if all statuses worked as expected false if not

@@ -57,7 +57,6 @@ public class APITools {
 										 String userName,
 										 String password) throws Exception
 	{
-		//password = "Hamdidouche_12XjESo2Yqpk8cZrcl5C8L1bpU";
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpPost httpPost = null;
 		int statusCode;
@@ -323,7 +322,6 @@ public class APITools {
 	        HttpDelete httpDelete = null;
 	        try {
 	            //create the JSON object containing the new lead details. "A-209-464"
-	           
 	            //System.out.println("JSON for record to be inserted:\n" + jsonObject.toString(1));
 	            //Construct the objects needed for the request
 	            httpClient = HttpClientBuilder.create().build();
@@ -331,7 +329,7 @@ public class APITools {
 	            httpDelete.addHeader(oauthHeader);
 	            httpDelete.addHeader(prettyPrintHeader);
 	            // The message we are going to post
-	           // StringEntity body = new StringEntity(jsonObject.toString(1));
+	            // StringEntity body = new StringEntity(jsonObject.toString(1));
 	            //body.setContentType("application/json");
 	            //httpPatch.setEntity(body);
 	            //Make the request

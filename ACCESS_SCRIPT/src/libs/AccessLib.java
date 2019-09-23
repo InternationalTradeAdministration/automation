@@ -117,11 +117,10 @@ public class AccessLib{
 		selectElementByValue(guiMap.get("SecurityClassification"), row.get("Security_Classification"));
 		selectElementByValue(guiMap.get("DocumentType"), row.get("Document_Type"));
 		enterText(guiMap.get("FiledOnBehalfOf"), row.get("Filed_On_Behalf_Of"));
-		String fileName="";
+		//String fileName="";
 		int nbrUpload=0;
 		//File_2	File_Title_3
 		addFiles(row, 0, 0);
-		
 		try{
 			nbrUpload = Integer.parseInt(row.get("Number_of_uploads"));
 			for(int j = 1; j<=nbrUpload; j++)
@@ -132,7 +131,8 @@ public class AccessLib{
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-			failTestCase("Number_of_uploads = "+row.get("Number_of_uploads"), "Number_of_uploads should have a number",
+			failTestCase("Number_of_uploads = "+row.get("Number_of_uploads"), 
+					"Number_of_uploads should have a number",
 					"Not as expected", "Step", "fail", "");
 		}
 		return create;
@@ -152,7 +152,7 @@ public class AccessLib{
 			if(!row.get("File_"+i).equals("") && !row.get("File_"+i).equals("N/A"))
 			{
 				String fileName = InitTools.getInputDataFolder()+"/input_files/"+row.get("File_"+i);
-				enterText(guiMap.get("fileUploadText"+i), "Iteration: "+iteration+" _ File "+i);
+				enterText(guiMap.get("fileUploadText"+i), "Iteration: "+iteration+" _ File: "+i);
 				enterTextFile(guiMap.get("fileUploadButton"+i), fileName);
 			}
 		}
