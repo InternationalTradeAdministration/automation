@@ -342,7 +342,7 @@ public class TestOne {
 		//LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//record.put("ADCVD_Order__c", orderId);
 		String scopeInquiryId = createNewSegment(orderId, "Scope Inquiry", "");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatus_C(scopeInquiryId, "Scope Inquiry");
+		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatusScope(scopeInquiryId, "Scope Inquiry");
 	}
 	
 	/**
@@ -364,7 +364,7 @@ public class TestOne {
 		//LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//record.put("ADCVD_Order__c", orderId);
 		String sunsetReviewId = createNewSegment(orderId, "Sunset Review", "240days");
-		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatus_D(sunsetReviewId, "Sunset Review");
+		testCaseStatus = testCaseStatus & ADCVDLib.validateSegmentStatusSunsetReview(sunsetReviewId, "Sunset Review");
 	}
 	
 	/**

@@ -2,7 +2,7 @@
   <test allow-return-values="false" group-by-instances="false" junit="false" name="Test" preserve-order="true" skipfailedinvocationcounts="false" thread-count="5">
     <classes>
       <class name="tests.TestOne">
-    <methods><include name="Changed_Circumstance_Review_Status_Validation"/></methods></class>
+    <methods><include name="Anticircumvention_Status_Validation"/></methods></class>
     </classes>
   </test> 
 </suite>
