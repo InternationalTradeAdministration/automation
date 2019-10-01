@@ -7789,40 +7789,61 @@ public class ADCVDLib{
 		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//prelim
 		//1
+		HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
 		String condition = "Initial Status";
 		String sqlString = "select+Status__c+from+segment__c+where+id='"+sgementId+"'";
 		JSONObject jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Positive", "Prelim", jObj.getString("Status__c"), condition);
+		
+		/*
+		record.put("Request_Filed__c", todayStr);
+		record.put("Actual_Date_of_Decision_on_HoP__c", todayStr);
+		record.put("Decision_on_How_to_Proceed__c", "Formal");
+		record.put("Type_of_Scope_Ruling__c", "K (1)");
+		*/
 		//2
-		condition = "The Type_of_Scope_Ruling is  'Formal' AND Actual_Preliminary_Signature is blank THEN status is true";
-		
-		//3
 		condition = "If the Type_of_Scope_Ruling is Not 'Formal' AND Actual_Preliminary_Signature is blank THEN status is true";
-		
-		//4
-		condition = "If the Type_of_Scope_Ruling is  'Formal' AND Actual_Preliminary_Signature is Notblank THEN status is true";
-		
-		//5
-		condition = "If the Type_of_Scope_Ruling is not 'Formal' AND Actual_Preliminary_Signature is not blank THEN status is true";
-		
-
-		
-		
-		/*//prelim
-		condition = "Initial Status";
-		sqlString = "select+Status__c+from+segment__c+where+id='"+sgementId+"'";
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Informal");	
+		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Segment_Outcome__c", "Completed");
+		record.put("Actual_Preliminary_Signature__c", "");
+	    String code = APITools.updateRecordObject("segment__c", sgementId, record);
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
-		ADCVDLib.validateObjectStatus("Positive", "prelim", jObj.getString("Status__c"), condition);*/
+				ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+		//3
+		condition = "If the Type_of_Scope_Ruling is  'Formal' AND Actual_Preliminary_Signature is Notblank THEN status is true";
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Actual_Final_Signature__c", "");
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+		//4
+		condition = "If the Type_of_Scope_Ruling is not 'Formal' AND Actual_Preliminary_Signature is not blank THEN status is true";
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Informal");	
+		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Prelim", jObj.getString("Status__c"), condition);
+
 		//Final
-		
+		HtmlReport.addHtmlStepTitle("Validate Status - Final","Title");
 		//1
 		condition = "Decision_on_How_to_Proceed equal to 'Formal', Preliminary_Determination is 'No'";
 		record.clear();
       	record.put("Decision_on_How_to_Proceed__c", "Formal");
+      	record.put("Calculated_Preliminary_Signature__c", todayStr);
 		record.put("Preliminary_Determination__c", "No");
-		String code = APITools.updateRecordObject("segment__c", sgementId, record);
+		code = APITools.updateRecordObject("segment__c", sgementId, record);
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 				 ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
@@ -7830,48 +7851,111 @@ public class ADCVDLib{
 		condition = "If the Decision_on_How_to_Proceed is not 'Formal' AND Actual_Preliminary_Signature is not "
 				+ "blank AND Published_Date (Type: Preliminary) is not blank AND Actual_Final_Signature is blank"
 				+ " THEN status is true";
-		
+		record.clear();
+        record.put("segment__c", sgementId);
+		record.put("Published_Date__c", todayStr);
+		record.put("Cite_Number__c", "None");
+		record.put("Type__c", "Preliminary");
+		String frIdP = APITools.createObjectRecord("Federal_Register__c", record);
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Actual_Final_Signature__c", "");
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//3
 		condition = "If the Decision_on_How_to_Proceed is 'Formal' AND Actual_Preliminary_Signature is blank AND"
 				+ " Published_Date (Type: Preliminary) is not blank AND Actual_Final_Signature is blank THEN status is true";
-		
-		//4
-		condition = "If the Decision_on_How_to_Proceed is 'Formal' AND Actual_Preliminary_Signature is not blank "
-				+ "AND Published_Date (Type: Preliminary) is blank AND Actual_Final_Signature is blank THEN status is true";
-		
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		record.put("Actual_Final_Signature__c", "");
+		record.put("Actual_Preliminary_Signature__c", "");
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//5
 		condition = "If the Decision_on_How_to_Proceed is 'Formal' AND Actual_Preliminary_Signature is not blank"
 				+ " AND Published_Date (Type: Preliminary) is not blank AND Actual_Final_Signature is not blank THEN status is true";
-		
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//6
 		condition = "If the Decision_on_How_to_Proceed is 'Formal' AND Actual_Preliminary_Signature is not blank"
 				+ " AND Published_Date (Type: Final) is not blank AND Actual_Final_Signature is blank THEN status is true";
-		
-		
-		//7
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Actual_Final_Signature__c", "");
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+		//4
+		condition = "If the Decision_on_How_to_Proceed is 'Formal' AND Actual_Preliminary_Signature is not blank "
+				+ "AND Published_Date (Type: Preliminary) is blank AND Actual_Final_Signature is blank THEN status is true";
+		code = APITools.deleteRecordObject("Federal_Register__c", frIdP);
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		record.put("Actual_Final_Signature__c", "");
+		record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
+		/*//7 not valid
 		condition = "The Decision_on_How_to_Proceed is 'Informal' AND Acutal_Final_Signature is blank THEN "
 				+ "status is true";
-		
 		//8
 		condition = "If the Decision_on_How_to_Proceed is not 'Informal' AND Acutal_Final_Signature is blank"
 				+ " THEN status is true";
-		
+		*/
 		//9
 		condition = "If the Decision_on_How_to_Proceed is 'Informal' AND Acutal_Final_Signature is not blank "
 				+ "THEN status is true";
-		
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Informal");	
+		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		//record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		//10
 		condition = "If the Decision_on_How_to_Proceed is  not 'Informal' AND Acutal_Final_Signature is not "
 				+ "blank THEN status is true";
-
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		//record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		
 		//Hold----------------------------------confirm with Paul
-		
+		HtmlReport.addHtmlStepTitle("Validate Status - Hold","Title");
 		//1
 		condition = "Actual_Final_Signature is not null, Segment_Outcome equal to complete";
 		record.clear();
 		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Decision_on_How_to_Proceed__c", "Formal");
 		record.put("Segment_Outcome__c", "Completed");
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
 		code = APITools.updateRecordObject("segment__c", sgementId, record);
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
@@ -7879,15 +7963,46 @@ public class ADCVDLib{
 		//2
 		condition = "If the Litigation is not Null AND Actual_Final_Signature is not null THEN Actual_Final_Signature"
 				+ " +30 or 45 days AND status is true";
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Actual_Final_Signature__c", todayStr);
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		//record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		
 		//3
 		condition = "If the Litigation is Null AND Actual_Final_Signature is null THEN Actual_Final_Signature +30 "
 				+ "or 45 days AND status is true";
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Actual_Final_Signature__c", "");
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		//record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		
 		//4
 		condition = "If the Litigation is not Null AND Actual_Final_Signature is null THEN Actual_Final_Signature +30 "
 				+ "or 45 days AND status is true";
-
+		record.clear();
+		record.put("Decision_on_How_to_Proceed__c", "Formal");	
+		record.put("Calculated_Preliminary_Signature__c", todayStr);
+		record.put("Actual_Final_Signature__c", "");
+		record.clear();
+		 record.put("Litigation_YesNo__c", "Yes");
+		 record.put("Litigation_Resolved__c", "No"); 
+		//record.put("Actual_Preliminary_Signature__c", todayStr);
+	    code = APITools.updateRecordObject("segment__c", sgementId, record);
+		jObj = APITools.getRecordFromObject(sqlString);
+		match = match & 
+				ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+		
+		
 		 //Litigation
 		 HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
 		//1
@@ -8139,11 +8254,7 @@ public class ADCVDLib{
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
 		 ADCVDLib.validateObjectStatus("Negative", "Closed", jObj.getString("Status__c"), condition);
-		 
-
-		
-		
-		return match;
+		 return match;
 	}
 	
 	/**
@@ -8162,6 +8273,7 @@ public class ADCVDLib{
 		String todayStr = dateFormat.format(todayDate);
 		LinkedHashMap<String, String> record = new LinkedHashMap<String, String>();
 		//prelim
+		HtmlReport.addHtmlStepTitle("Validate Status - Prelim","Title");
 		//1
 		String condition = "Initial Status";
 		String sqlString = "select+Status__c+from+segment__c+where+id='"+sgementId+"'";
@@ -8173,6 +8285,7 @@ public class ADCVDLib{
 		condition = "If the Actual_Preliminary_Signature__c is NOT blank THEN status is true";
 		 //Final
 		//1
+		HtmlReport.addHtmlStepTitle("Validate Status - Final","Title");
 		condition = "IF 240day sunset review AND Segment.Actual_Preliminary_Signature__c is not blank "
 				+ "AND Published Date Type:Preliminary is not blank AND (Segment.Actual_Final_Signature__c"
 				+ "is blank OR Published Date Type:Final is blank OR Segment.Segment_Outcome__c is blank ) THEN Status is TRUE";
@@ -8188,26 +8301,45 @@ public class ADCVDLib{
 		 String code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
-				 ADCVDLib.validateObjectStatus("Final", jObj.getString("Status__c"), condition);
+				 ADCVDLib.validateObjectStatus("Positive", "Final", jObj.getString("Status__c"), condition);
 		 //2
 		 condition = "If the 240 day sunset review AND Actual_Preliminary_Signature is blank AND Actual_Final_Signature"
 		 		+ " is blank THEN status is true";
-		 
+		 record.clear();
+		 record.put("Actual_Preliminary_Signature__c", "");
+		 record.put("Actual_Final_Signature__c", "");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		 //3
 		 condition = "If the 240 day sunset review AND Actual_Preliminary_Signature is not blank AND Actual_Final_Signature"
 		 		+ " is NOT blank THEN status is true";
-		 
+		 record.clear();
+		 record.put("Actual_Preliminary_Signature__c", todayStr);
+		 record.put("Actual_Final_Signature__c", todayStr);
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		 //4
 		 condition =  "If the 240 day sunset review AND Actual_Preliminary_Signature is blank AND Actual_Final_Signature "
 		 		+ "is NOT blank THEN status is true";
+		 record.clear();
+		 record.put("Actual_Preliminary_Signature__c", "");
+		 record.put("Actual_Final_Signature__c", todayStr);
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Negative", "Final", jObj.getString("Status__c"), condition);
 		 
-		 //5
+	/*	 //5
 		 condition =  "The 90day and 120day sunset review AND Actual_Final_Signature is blank THEN status is true";
 		 
 		 //6
 		 condition =  "If the 90day and 120day sunset review AND Actual_Final_Signature is NOT blank THEN status is true";
 
-		 
+		 */
 		 
 		//Amend Final
 		/* condition = "Actual_Final_Signature__c not nul, Segment_Outcome__c = 'Completed' "
@@ -8227,7 +8359,7 @@ public class ADCVDLib{
 		 match = match & 
 				 ADCVDLib.validateObjectStatus("Amend Final", jObj.getString("Status__c"), condition);*/
 		//Hold----------------------------------confirm with Paul
-		 
+		 HtmlReport.addHtmlStepTitle("Validate Status - Hold","Title");
 		 //1
 		 condition = "Litigation_Hold_Expiration_Date__c is not null, segment outcome equal to complete and "
 		 		+ "Litigation_Hold_Expiration_Date__c is not blank";
@@ -8237,20 +8369,44 @@ public class ADCVDLib{
 		 code = APITools.updateRecordObject("segment__c", sgementId, record);
 		 jObj = APITools.getRecordFromObject(sqlString);
 		 match = match & 
-				 ADCVDLib.validateObjectStatus("Hold", jObj.getString("Status__c"), condition);
+				 ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		 
 		 //2
 		 condition =  "If the Litigation is NOT Null AND Actual_Final_Signature is not null THEN "
 		 		+ "Actual_Final_Signature +30 or 45 days AND status is true";
-		 
+		 record.clear();
+		 record.put("Litigation_Hold_Expiration_Date__c", todayStr);
+		 record.put("Actual_Final_Signature__c", todayStr);
+		 record.put("Segment_Outcome__c", "Completed");
+		 record.put("Litigation_YesNo__c", "Yes");
+		 record.put("Litigation_Resolved__c", "No");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		 //3
 		 condition =  "If the Litigation is Null AND Actual_Final_Signature is null THEN "
 		 		+ "Actual_Final_Signature +30 or 45 days AND status is true";
-		 
+		 record.clear();
+		 record.put("Actual_Final_Signature__c", "");
+		 record.put("Litigation_YesNo__c", "");
+		 record.put("Litigation_Resolved__c", "");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
 		 //4
 		 condition =  "If the Litigation is NOT Null AND Actual_Final_Signature is null THEN "
 		 		+ "Actual_Final_Signature +30 or 45 days AND status is true";
-
+		 record.clear();
+		 record.put("Actual_Final_Signature__c", "");
+		 record.put("Litigation_YesNo__c", "Yes");
+		 record.put("Litigation_Resolved__c", "No");
+		 code = APITools.updateRecordObject("segment__c", sgementId, record);
+		 jObj = APITools.getRecordFromObject(sqlString);
+		 match = match & 
+				 ADCVDLib.validateObjectStatus("Negative", "Hold", jObj.getString("Status__c"), condition);
+		 
 		 
 		 //Litigation
 		 HtmlReport.addHtmlStepTitle("Validate Status - Litigation","Title");
