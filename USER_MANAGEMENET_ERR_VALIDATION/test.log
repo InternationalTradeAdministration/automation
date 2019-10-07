@@ -1,0 +1,103 @@
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\USER_MANAGEMENET_ERR_VALIDATION/input_data
+{Id=1, Test_Case_Name=Validate_First_Name, Test_Case_Description=Validate errors on User's First Name, Active=TRUE}
+{Id=2, Test_Case_Name=Validate_Last_Name, Test_Case_Description=Validate errors on User's Last Name, Active=TRUE}
+{Id=3, Test_Case_Name=Validate_User_Email, Test_Case_Description=Validate errors on User's Email, Active=TRUE}
+{Id=4, Test_Case_Name=Validate_User_Job_Title, Test_Case_Description=Validate errors on User's Job Title, Active=TRUE}
+{Id=5, Test_Case_Name=Validate_User_Employee_Type, Test_Case_Description=Validate errors on User's Employee Type, Active=FALSE}
+{Id=6, Test_Case_Name=Validate_User_Work_Phone, Test_Case_Description=Validate errors on User's Phone Number, Active=TRUE}
+{Id=7, Test_Case_Name=Validate_User_Mobile_Phone, Test_Case_Description=Validate errors on User's Mobile Number, Active=TRUE}
+[TestNGContentHandler] [WARN] It is strongly recommended to add "<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >" at the top of your file, otherwise TestNG may fail or not work as expected.
+[TestNG] Running:
+  C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\USER_MANAGEMENET_ERR_VALIDATION\testng.xml
+
+Executing Before class
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\USER_MANAGEMENET_ERR_VALIDATION/input_data
+{field_name=Preliminary Determination Item, field_tag=preliminaryDeterminationItem, locator_type=xpath, locator_value=//ul/li/a[contains(text(), '~val~')], description=Step 3}
+{field_name=userNameInput, field_tag=UserName, locator_type=xpath, locator_value=//input[(@id = 'Input_Email')], description=HOME}
+{field_name=passwordInput, field_tag=Password, locator_type=xpath, locator_value=//input[(@id = 'Input_Password')], description=HOME}
+{field_name=Home, field_tag=Home, locator_type=xpath, locator_value=//span[(@id = 'home-menu-option')]}
+{field_name=buttonLogin, field_tag=loginB, locator_type=xpath, locator_value=//button[text()='Log in' ], description=HOME}
+{field_name=Dbutton Done , field_tag=ButtonDone, locator_type=xpath, locator_value=//input[(@value= 'Done') ]}
+{field_name=Preview Before Submit, field_tag=PreviewBeforeSubmit, locator_type=xpath, locator_value=//input[(@id = 'ERSubmitButton') ], description=step5}
+{field_name=Exclusive request form, field_tag=ExclusiveRequestForm, locator_type=xpath, locator_value=//h2[text()='New Exclusion Request']}
+{field_name=Decision on How to Proceed, field_tag=decisiononHowtoProceed, locator_type=xpath, locator_value=//span[contains(text(), 'Decision on How to Proceed')]/ancestor::span[1]/following-sibling::div[1]/div/div/div/a, description=Step 3}
+{field_name=Create New Exclusion Request, field_tag=CreateNewExclusionRequest, locator_type=xpath, locator_value=//a[text()='Create New Exclusion Request'], description=Step 3}
+{field_name= U.S. Department of Commerce, field_tag=HomePage, locator_type=xpath, locator_value=//a[contains(text(),'U.S. Department of Commerce')], description=Step 3}
+{field_name=Step 3, field_tag=tabName, locator_type=xpath, locator_value=//li[contains(text(),'~val~')], description=Step 3}
+{field_name=Element Minimum value, field_tag=ElementMinValue, locator_type=xpath, locator_value=//input[(@title = 'Minimal Percentage of ~val~') or (@title = 'Minimum Percentage of ~val~')   or (@title = 'Minimum ~val~') or (@title = '~val~ Percentage Minimum')  or (@title = '~val~ Minimum')], description=Step 3}
+{field_name=Element Maximum value, field_tag=ElementMaxValue, locator_type=xpath, locator_value=//input[(@title = 'Maximal Percentage of ~val~') or (@title = 'Maximum Percentage of ~val~')  or (@title = 'Maximum ~val~') or (@title = '~val~ Percentage Maximum')  or (@title = '~val~ Maximum')], description=Step 3}
+{field_name=Element Minimum value out of range, field_tag=ElementMinValueMessageTd, locator_type=xpath, locator_value=//input[(@title = 'Minimal Percentage of ~val~') or (@title = 'Minimum Percentage of ~val~')   or (@title = 'Minimum ~val~') or (@title = '~val~ Percentage Minimum')  or (@title = '~val~ Minimum')]/ancestor::td[1], description=Step 3}
+{field_name=Element Maximum value out of range, field_tag=ElementMaxValueMessageTd, locator_type=xpath, locator_value=//input[(@title = 'Maximal Percentage of ~val~') or (@title = 'Maximum Percentage of ~val~')   or (@title = 'Maximum ~val~') or (@title = '~val~ Percentage Maximum')  or (@title = '~val~ Maximum')]/ancestor::td[1], description=Step 3}
+{field_name=Element Minimum value out of range, field_tag=ElementMinValueMessage, locator_type=xpath, locator_value=//input[(@title = 'Minimal Percentage of ~val~') or (@title = 'Minimum Percentage of ~val~')  or (@title = 'Minimum ~val~') or (@title = '~val~ Percentage Minimum')  or (@title = '~val~ Minimum')]/following-sibling::span[1], description=Step 3}
+{field_name=Element Maximum value out of range, field_tag=ElementMaxValueMessage, locator_type=xpath, locator_value=//input[(@title = 'Maximal Percentage of ~val~') or (@title = 'Maximum Percentage of ~val~')  or (@title = 'Maximum ~val~') or (@title = '~val~ Percentage Maximum')  or (@title = '~val~ Maximum')]/following-sibling::span[1], description=Step 3}
+{field_name=submit form, field_tag=submitForm, locator_type=xpath, locator_value=//input[@id='btnSubmitER'], description=Step 3}
+{field_name=Product Description, field_tag=ProductDescription, locator_type=xpath, locator_value=//textarea[@title='Product Description'], description=Step 3}
+{field_name=Product Description, field_tag=ProductDescriptionMessage, locator_type=xpath, locator_value=//textarea[@title='Product Description']/following-sibling::span[1], description=Step 3}
+{field_name=Step 1 - Element, field_tag=StepOneElement, locator_type=xpath, locator_value=//input[(@title = '~val~') ], description=Step 1}
+{field_name=Step 1 - Element msg, field_tag=StepOneElementMessage, locator_type=xpath, locator_value=//input[(@title = '~val~') ]/following-sibling::span[~val1~], description=Step 1}
+{field_name=Step 1 - Element div, field_tag=StepOneElementDiv, locator_type=xpath, locator_value=//input[(@title = '~val~') ]/ancestor::div[2], description=Step 1}
+{field_name=Step 1 - Element select, field_tag=StepOneElementSelect, locator_type=xpath, locator_value=//select[(@title = '~val~') ], description=Step 1}
+{field_name=Step 1 - Element select msg, field_tag=StepOneElementSelectMessage, locator_type=xpath, locator_value=//select[(@title = '~val~') ]/following-sibling::span[1], description=Step 1}
+{field_name=Step 1 - Element select div, field_tag=StepOneElementSelectDiv, locator_type=xpath, locator_value=//select[(@title = '~val~') ]/ancestor::div[2], description=Step 1}
+{field_name=OwnershipAnswer_true, field_tag=OwnershipAnswer_true, locator_type=xpath, locator_value=//input[(@id = 'OwnershipAnswer_true') ], description=Step 2}
+{field_name=BehalfOf_true, field_tag=BehalfOf_true, locator_type=xpath, locator_value=//input[(@id = 'BehalfOf_true') ], description=Step 2}
+{field_name=Step 2 - Element , field_tag=StepTwoElement, locator_type=xpath, locator_value=//input[(@title = '~val~') ], description=Step 2}
+{field_name=Step 2 - Element msg, field_tag=StepTwoElementMessage, locator_type=xpath, locator_value=//input[(@title = '~val~') ]/following-sibling::span[1], description=Step 2}
+{field_name=Step 2- Element div, field_tag=StepTwoElementDiv, locator_type=xpath, locator_value=//input[(@title = '~val~') ]/ancestor::div[2], description=Step 2}
+{field_name=Step 2 - Element select, field_tag=StepTwoElementSelect, locator_type=xpath, locator_value=//select[(@title = '~val~') ], description=Step 2}
+{field_name=Step 2 - Element select msg, field_tag=StepTwoElementSelectMessage, locator_type=xpath, locator_value=//select[(@title = '~val~') ]/following-sibling::span[1], description=Step 2}
+{field_name=Step 2 - Element select div, field_tag=StepTwoElementSelectDiv, locator_type=xpath, locator_value=//select[(@title = '~val~') ]/ancestor::div[2], description=Step 2}
+{field_name=Application Suitability, field_tag=ApplicationSuitability, locator_type=xpath, locator_value=//textarea[@title='Application Suitability'], description=Step 4}
+{field_name=Origin Country, field_tag=OriginCountry, locator_type=xpath, locator_value=//select[contains(@id, 'OriginCountry')], description=Step 4}
+{field_name=Export Country, field_tag=ExportCountry, locator_type=xpath, locator_value=//select[contains(@id, 'ExportCountry')], description=Step 4}
+{field_name=CBP Distinguish Comments, field_tag=CBPDistinguishComments, locator_type=xpath, locator_value=//textarea[@title='CBP Distinguish Comments'], description=Step 4}
+{field_name=Application Suitability Message, field_tag=ApplicationSuitabilityMessage, locator_type=xpath, locator_value=//textarea[@title='Application Suitability']/following-sibling::span[1], description=Step 4}
+{field_name=Export Country Message, field_tag=OriginExportCountryMessage, locator_type=xpath, locator_value=//select[contains(@id, 'ExportCountry')]/ancestor::table[1]/following-sibling::span[1]/span[1], description=Step 4}
+{field_name=Application Suitability Message, field_tag=CBPDistinguishCommentsMessage, locator_type=xpath, locator_value=//textarea[@title='CBP Distinguish Comments']/following-sibling::span[1], description=Step 4}
+{field_name=contry table, field_tag=OriginExportCountryTable, locator_type=xpath, locator_value=//select[contains(@id, 'ExportCountry')]/ancestor::table[1], description=Step 4}
+{field_name=Exclusion Quantity, field_tag=ExclusionQuantity, locator_type=xpath, locator_value=//input[contains(@id , 'ExclusionQty') ], description=step 4}
+{field_name=Step 5 - Element , field_tag=StepFiveElement, locator_type=xpath, locator_value=//input[(@title = '~val~') ], description=Step 5}
+{field_name=Step 5 - Element msg, field_tag=StepFiveElementMessage, locator_type=xpath, locator_value=//input[(@title = '~val~') ]/following-sibling::span[1], description=Step 5}
+{field_name=Step 5 - Element div, field_tag=StepFiveElementDiv, locator_type=xpath, locator_value=//input[(@title = '~val~') ]/ancestor::div[1], description=Step 5}
+{field_name=Main menu, field_tag=MainMenu, locator_type=xpath, locator_value=//button[@class='sidenav---sidenav-toggle---1KRjR']}
+{field_name=Add User, field_tag=AddUser, locator_type=xpath, locator_value=//div[@class='sidenav---navicon---3gCRo']//i[@data-icon-name='AddFriend']}
+{field_name=home page, field_tag=HomePage, locator_type=xpath, locator_value=//a[@aria-label='User Management']}
+{field_name=User fields, field_tag=UserField, locator_type=xpath, locator_value=//label[contains(., '~val~')]/parent::div[1]//input}
+{field_name=Error Message, field_tag=ErrorMessage, locator_type=xpath, locator_value=//label[contains(., '~val~')]/parent::div[1]/following-sibling::span[1]//span}
+Creating Process...
+"chrome.exe","28084","Console","1","106,796 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:06","User Management - Google Chrome"
+"chrome.exe","24368","Console","1","7,296 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","31356","Console","1","9,388 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","22440","Console","1","123,524 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:05","N/A"
+"chrome.exe","39848","Console","1","28,760 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:02","N/A"
+"chrome.exe","44984","Console","1","154,556 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:11","N/A"
+"chrome.exe","46360","Console","1","32,148 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","36488","Console","1","52,968 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","36724","Console","1","40,112 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","44216","Console","1","22,264 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+28084
+24368
+31356
+22440
+39848
+44984
+46360
+36488
+36724
+44216
+Creating Process...
+"chromedriver.exe","33900","Console","1","13,620 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+33900
+userDir C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\USER_MANAGEMENET_ERR_VALIDATION
+this a windows machine
+C:/libs
+highlight home page
+Click  on  element Main menu
+Element Main menu was not found on Gui
+
+===============================================
+Suite
+Total tests run: 6, Failures: 0, Skips: 6
+Configuration Failures: 1, Skips: 13
+===============================================
+
