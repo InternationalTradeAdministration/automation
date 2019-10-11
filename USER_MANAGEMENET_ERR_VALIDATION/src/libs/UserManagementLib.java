@@ -19,17 +19,14 @@ import static GuiLibs.GuiTools.clickElementJs;
 import static GuiLibs.GuiTools.enterText;
 import static GuiLibs.GuiTools.getElementAttribute;
 import static GuiLibs.GuiTools.elementExists;
+import static GuiLibs.GuiTools.holdSeconds;
+import static GuiLibs.GuiTools.selectElementByText;
+import static GuiLibs.GuiTools.scrollToElement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
 import javax.swing.JOptionPane;
-
 public class UserManagementLib{
-	
-	
-	
-	
 	public UserManagementLib() throws IOException {
 		//super();
 		//this.format = new SimpleDateFormat("M/d/yyyy");
@@ -79,14 +76,21 @@ public class UserManagementLib{
 			ArrayList<LinkedHashMap<String, String>> vlaues) throws Exception
 	{
 		boolean match = true;
-		String fieldValue, expectedError, id, actualError = "";
+		String fieldValue, expectedError, id, actualError;
+		System.out.println(fieldName + "-----------" );
 		for(LinkedHashMap<String, String> map : vlaues)
 		{
+			
 			fieldValue = map.get("Given_Value");			                    
 			id = map.get("Id");
+			actualError = "";
 			expectedError = map.get("Expected_Error");
 			enterText(replaceGui(guiMap.get("UserField"), fieldName), fieldValue);
-			if (expectedError.trim().equals(""))
+			enterText(replaceGui(guiMap.get("UserField"), "Suffix"), "");
+			holdSeconds(2);
+			//clickElementJs(replaceGui(guiMap.get("UserField"), "Suffix")); 
+			//holdSeconds(1);
+			if (expectedError.trim().equals("") || expectedError.trim().equalsIgnoreCase("Accepted"))
 			{
 				int currentWait = setBrowserTimeOut(3);
 				if(! elementExists(replaceGui(guiMap.get("ErrorMessage"), fieldName)))
@@ -99,58 +103,272 @@ public class UserManagementLib{
 				}
 				else
 				{
-					actualError = getElementAttribute(replaceGui(guiMap.get("ErrorMessage"), fieldName), "text");
-					if(actualError.equals("Previous Name"))
-					{
-						highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "green");
-						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying", 
-								"displayed error ["+actualError+"]", 
-								"VP", "pass", "Validate "+fieldName+" - "+id);
-						unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
-					}
-					else
-					{
-						match = false;
-						highlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName), "red");
-						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying",
-								"displayed error ["+actualError+"]", 
-								"VP", "fail", "Validate "+fieldName+" - "+id );
-						unHighlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName));
-					}
-					//Previous Name
+					match = false;
+					highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "red");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying", 
+							"displayed error ["+actualError+"]", 
+							"VP", "fail", "Validate "+fieldName+"-"+id);
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
 					
 				}
 				setBrowserTimeOut(currentWait);
 			}	
 			else
 			{
-				actualError = getElementAttribute(replaceGui(guiMap.get("ErrorMessage"), fieldName), "text");
-				if(actualError.trim().equalsIgnoreCase(expectedError.trim()))
-				{
-					highlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName), "green");
-					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]",
-							"displayed error ["+actualError+"]", 
-							"VP", "pass", "Validate "+fieldName+" - "+id );
-					unHighlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName));
+				if(elementExists(replaceGui(guiMap.get("ErrorMessage"), fieldName)))
+				{ 
+					actualError = getElementAttribute(replaceGui(guiMap.get("ErrorMessage"), fieldName), "text");
+					if(actualError.trim().equalsIgnoreCase(expectedError.trim()))
+					{
+						highlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName), "green");
+						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]",
+								"displayed error ["+actualError+"]", 
+								"VP", "pass", "Validate "+fieldName+" - "+id );
+						unHighlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName));
+					}
+					else
+					{
+						match = false;
+						highlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName), "red");
+						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]", 
+								"displayed error ["+actualError+"]", 
+								"VP", "fail", "Validate "+fieldName+" - "+id );
+						unHighlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName));
+					}
 				}
 				else
 				{
 					match = false;
-					highlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName), "red");
+					highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "red");
 					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]", 
 							"displayed error ["+actualError+"]", 
 							"VP", "fail", "Validate "+fieldName+" - "+id );
-					unHighlightElement(replaceGui(guiMap.get("ErrorMessage"), fieldName));
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+					
 				}
 			}
-			System.out.println(fieldName + "-----------" + fieldValue+ "---------------" + actualError);
 		}
-		
 		return match;
 	}
 	
-//	
+	
+	public static boolean validateEmployeeType(String fieldName, 
+			ArrayList<LinkedHashMap<String, String>> vlaues) throws Exception
+	{
+		boolean match = true;
+		String fieldValue, expectedError, id, actualError;
+		System.out.println(fieldName + "-----------" );
+		for(LinkedHashMap<String, String> map : vlaues)
+		{
+			
+			fieldValue = map.get("Given_Value");			                    
+			id = map.get("Id");
+			actualError = "";
+			expectedError = map.get("Expected_Error");
+			if(fieldValue.equalsIgnoreCase(""))
+			{
+				clickElementJs(replaceGui(guiMap.get("UserField"), fieldName));
+				clickElementJs(replaceGui(guiMap.get("UserField"), "Fax"));
+				if(elementExists(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName)))
+				{ 
+					actualError = getElementAttribute(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName), "text");
+					if(actualError.trim().equalsIgnoreCase(expectedError.trim()))
+					{
+						highlightElement(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName), "green");
+						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]",
+								"displayed error ["+actualError+"]", 
+								"VP", "pass", "Validate "+fieldName+" - "+id );
+						unHighlightElement(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName));
+					}
+					else
+					{
+						match = false;
+						highlightElement(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName), "red");
+						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]", 
+								"displayed error ["+actualError+"]", 
+								"VP", "fail", "Validate "+fieldName+" - "+id );
+						unHighlightElement(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName));
+					}
+				}
+				else
+				{
+					match = false;
+					highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "red");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]", 
+							"displayed error ["+actualError+"]", 
+							"VP", "fail", "Validate "+fieldName+" - "+id );
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+				}
+			}
+			else
+			{
+				//selectElementByText(replaceGui(guiMap.get("UserField"), fieldName), fieldValue);
+				clickElementJs(replaceGui(guiMap.get("UserField"), fieldName));
+				clickElementJs(replaceGui(guiMap.get("EmployeeType"), fieldValue));
+				holdSeconds(1);
+				int currentWait = setBrowserTimeOut(3);
+				if(! elementExists(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName)))
+				{ 
+					highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "green");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying",
+							"displayed error ["+actualError+"]", 
+							"VP", "pass", "Validate "+fieldName+" - "+id);
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+				}
+				else
+				{
+					match = false;
+					highlightElement(replaceGui(guiMap.get("ErrorMessageSelect"), fieldName), "red");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying", 
+							"displayed error ["+actualError+"]", 
+							"VP", "fail", "Validate "+fieldName+"-"+id);
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+					
+				}
+				setBrowserTimeOut(currentWait);
+				
+			}
+			
+		}
+		return match;
+	}
+	
+	
+	
+	
+	public static boolean validateOffice(String fieldName, 
+			ArrayList<LinkedHashMap<String, String>> vlaues) throws Exception
+	{
+		boolean match = true;
+		String fieldValue, expectedError, id, actualError;
+		System.out.println(fieldName + "----w2--4-h----" );
+		String oldVal = "";
+		scrollToElement(guiMap.get("SaveForLater"));
+		for(LinkedHashMap<String, String> map : vlaues)
+		{
+			fieldValue = map.get("Given_Value");			                    
+			id = map.get("Id");
+			actualError = "";
+			expectedError = map.get("Expected_Error");			
+			if(!fieldValue.equals(""))
+			{
+				clickElementJs(replaceGui(guiMap.get("EmployeeOfficeClick"), fieldName));
+				holdSeconds(1);
+				clickElementJs(replaceGui(guiMap.get("EmployeeOffice"), fieldValue));
+				
+			}
+			else
+			{
+				clickElementJs(replaceGui(guiMap.get("EmployeeOfficeDelete"), oldVal));
+				holdSeconds(1);
+			}
+			int currentWait = setBrowserTimeOut(3);
+			actualError = getElementAttribute(replaceGui(guiMap.get("EmployeeOfficeError"), fieldName), "text");
+			if(actualError.equals(actualError))
+			{ 
+				highlightElement(replaceGui(guiMap.get("EmployeeOfficeError"), fieldName), "green");
+				updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying",
+						"displayed error ["+actualError+"]", 
+						"VP", "pass", "Validate "+fieldName+" - "+id);
+				unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+			}
+			else
+			{
+				match = false;
+				highlightElement(replaceGui(guiMap.get("EmployeeOfficeError"), fieldName), "red");
+				updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying", 
+						"displayed error ["+actualError+"]", 
+						"VP", "fail", "Validate "+fieldName+"-"+id);
+				unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+			} 
+			setBrowserTimeOut(currentWait);
+			oldVal = fieldValue;
+		}
+		return match;
+	}
+	
+	public static boolean validateManager(String fieldName, 
+			ArrayList<LinkedHashMap<String, String>> vlaues) throws Exception
+	{
+		boolean match = true;
+		String fieldValue, expectedError, id, actualError;
+		System.out.println(fieldName + "----2-------" );
+		String oldVal = "";
+		scrollToElement(guiMap.get("SaveForLater"));
+		for(LinkedHashMap<String, String> map : vlaues)
+		{
+			fieldValue = map.get("Given_Value");			                    
+			id = map.get("Id");
+			actualError = "";
+			expectedError = map.get("Expected_Error");
+			
+			if(!fieldValue.equals(""))
+			{
+				enterText(replaceGui(guiMap.get("UserField"), fieldName), fieldValue);
+				holdSeconds(1);
+				clickElementJs(replaceGui(guiMap.get("UserField"), "Office"));
+				holdSeconds(2);
+				int currentWait = setBrowserTimeOut(3);
+				if(!elementExists(replaceGui(guiMap.get("EmployeeManagerError"), fieldName)))
+				{ 
+					highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "green");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying",
+							"displayed error ["+actualError+"]", 
+							"VP", "pass", "Validate "+fieldName+" - "+id);
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+				}
+				else
+				{
 
+					match = false;
+					highlightElement(replaceGui(guiMap.get("EmployeeManagerError"), fieldName), "red");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "No error should be displaying", 
+							"displayed error ["+actualError+"]", 
+							"VP", "fail", "Validate "+fieldName+"-"+id);
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+				} 
+				setBrowserTimeOut(currentWait);
+			}
+			else
+			{
+				clickElementJs(guiMap.get("EmployeeManagerDelete"));
+				if(elementExists(replaceGui(guiMap.get("EmployeeManagerError"), fieldName)))
+				{ 
+					actualError = getElementAttribute(replaceGui(guiMap.get("EmployeeManagerError"), fieldName), "text");
+					if(actualError.trim().equalsIgnoreCase(expectedError.trim()))
+					{
+						highlightElement(replaceGui(guiMap.get("EmployeeManagerError"), fieldName), "green");
+						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]",
+								"displayed error ["+actualError+"]", 
+								"VP", "pass", "Validate "+fieldName+" - "+id );
+						unHighlightElement(replaceGui(guiMap.get("EmployeeManagerError"), fieldName));
+					}
+					else
+					{
+						match = false;
+						highlightElement(replaceGui(guiMap.get("EmployeeManagerError"), fieldName), "red");
+						updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]", 
+								"displayed error ["+actualError+"]", 
+								"VP", "fail", "Validate "+fieldName+" - "+id );
+						unHighlightElement(replaceGui(guiMap.get("EmployeeManagerError"), fieldName));
+					}
+				}
+				else
+				{
+					match = false;
+					highlightElement(replaceGui(guiMap.get("UserField"), fieldName), "red");
+					updateHtmlReport("Validate "+fieldName+ ", Value = ["+fieldValue+"]", "Expected error ["+expectedError+"]", 
+							"displayed error ["+actualError+"]", 
+							"VP", "fail", "Validate "+fieldName+" - "+id );
+					unHighlightElement(replaceGui(guiMap.get("UserField"), fieldName));
+				}
+			}
+			oldVal = fieldValue;
+		}
+		return match;
+	}
+	
+	
 	/**
 	 * This method reads number from the screen
 	 * @param strNumber: number is string format

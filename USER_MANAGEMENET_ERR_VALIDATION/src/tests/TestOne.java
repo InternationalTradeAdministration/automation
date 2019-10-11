@@ -182,7 +182,7 @@ public class TestOne {
 		GuiTools.setTestCaseDescription(row.get(0).get("Test_Case_Description"));
 		printLog(GuiTools.getTestCaseName());
 		
-		testCaseStatus = UserManagementLib.validateFiledsErrors("Email", data);
+		testCaseStatus = UserManagementLib.validateEmployeeType("Employee Type", data);
 	}
 	/**
 	 * This method is used for work phone validation
@@ -213,6 +213,37 @@ public class TestOne {
 		printLog(GuiTools.getTestCaseName());
 		
 		testCaseStatus = UserManagementLib.validateFiledsErrors("Mobile Phone", data);
+	}
+	
+	/**
+	 * This method is used for mobile phone validation
+	*/
+	@Test(enabled = true, priority=7)
+	void Validate_User_Office() throws Exception
+	{
+		printLog("Validate_User_Mobile_Phone"); 	
+		ArrayList<LinkedHashMap<String, String>> row = XlsxTools.filterArrayList(scenarios, "Test_Case_Name=Validate_User_Office");
+		data = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "data", "Test_Case_Name=Validate_User_Office");
+		GuiTools.setTestCaseName(row.get(0).get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get(0).get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		testCaseStatus = UserManagementLib.validateOffice("Office", data);
+	}
+	
+	
+	/**
+	 * This method is used for mobile phone validation
+	*/
+	@Test(enabled = true, priority=7)
+	void Validate_User_Manager() throws Exception
+	{
+		printLog("Validate_User_Mobile_Phone"); 	
+		ArrayList<LinkedHashMap<String, String>> row = XlsxTools.filterArrayList(scenarios, "Test_Case_Name=Validate_User_Manager");
+		data = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "data", "Test_Case_Name=Validate_User_Manager");
+		GuiTools.setTestCaseName(row.get(0).get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get(0).get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		testCaseStatus = UserManagementLib.validateManager("Manager", data);
 	}
 	/**
 	 * This method if for getting the current test case information
