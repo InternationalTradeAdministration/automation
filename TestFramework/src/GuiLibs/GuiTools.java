@@ -28,8 +28,10 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.monte.screenrecorder.ScreenRecorder;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
@@ -43,7 +45,9 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import InitLibs.InitTools;
@@ -563,30 +567,6 @@ public class GuiTools extends InitTools{
 		imgIterator=imgIterator+1;
 		FileUtils.copyFile(source, new File(file));
 		return file;
-		
-		
-		/*TakesScreenshot takeScreenShot = (TakesScreenshot) driver;\
-		File source =  takeScreenShot.getScreenshotAs(OutputType.FILE);
-		String file = ssPath+"/"+ssName+imgIterator+".png";
-		imgIterator=imgIterator+1;
-		FileUtils.copyFile(source, new File(file));
-		org.openqa.selenium.Dimension dim =  driver.manage().window().getSize();
-		int width = dim.width;
-		int height = dim.height;
-		Image img = ImageIO.read(source);
-		BufferedImage bufferImage = new BufferedImage(width, height, BufferedImage.OPAQUE);
-		JavascriptExecutor executor = (JavascriptExecutor) driver;
-		long scrollYPos = (long) executor.executeScript("return window.scrollY;");
-		 scrollYPos = (long) executor.executeScript("return window.scrollY;");
-		//int currentPosition =  (int) executor.executeScript("return window.scrollY;");
-		//  scrollYPos = (Long) executor.executeScript("return window.scrollY;");
-		//long currentPosition = (long) executor.executeAsyncScript("return page.pageYOffset;");
-		bufferImage.getGraphics().drawImage(img, 0, 0, width, height, 0, 
-				(int)scrollYPos, width, height+(int)scrollYPos, null);
-		file = ssPath+"/"+ssName+imgIterator+".png";
-		ImageIO.write(bufferImage, "jpg", new File(file));
-		imgIterator = imgIterator+1;
-		return file;*/
 	}
 	
 	
@@ -651,6 +631,8 @@ public class GuiTools extends InitTools{
 			    if(e.isDisplayed()) element = e;
 			}
 			element.clear();
+			element.sendKeys(Keys.CONTROL + "a");
+			element.sendKeys(Keys.DELETE);
 			element.sendKeys(value);
 		}
 	}
@@ -664,53 +646,15 @@ public class GuiTools extends InitTools{
 	 */
 	public static void uploadFile(String file) throws Exception
 	{
-		
-		
 		StringSelection ss = new StringSelection(file);
-		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
-		
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);		
 		Robot robot = new Robot();
-
 		robot.keyPress(KeyEvent.VK_CONTROL);
 		robot.keyPress(KeyEvent.VK_V);
 		robot.keyRelease(KeyEvent.VK_V);
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyPress(KeyEvent.VK_ENTER);
-		robot.keyRelease(KeyEvent.VK_ENTER);
-		
-		
-		
-		
-		
-		/*printLog("Upload file "+ file);
-		String locType = map.get("locator_type");
-		//String locValue = map.get("locator_value");
-		String locValue = "//input[@id='ctl00_ctl00_ContentPlaceHolder1_maincontent_txtTitle1']";
-		if (!elementExists(locType, locValue))
-		{
-			printLog("Element "+ map.get("field_name")+" was "
-					+ "not found on Gui");
-			testCaseStatus = false;
-			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
-					"Element not found", "Step", "fail", map.get("field_name")+" not found");
-		}else
-		{
-			WebElement element = driver.findElement(byType(locType, locValue));
-			List<WebElement> items = driver.findElements(byType(locType, locValue));
-			for(WebElement e: items)
-			{
-			    if(e.isDisplayed()) element = e;
-			}
-			
-			
-			//JavascriptExecutor executor = (JavascriptExecutor)getDriver();
-			//executor.executeScript("arguments[0].style='';arguments[0].style.display = 'block'; arguments[0].style.visibility = 'visible';", element);
-
-			//((ChromeDriver) getDriver()).setFileDetector(new LocalFileDetector());
-			element.clear();
-			clickElementJs(map);
-			element.sendKeys(file);
-		}*/
+		robot.keyRelease(KeyEvent.VK_ENTER);	
 	}
 
 	/**
@@ -847,7 +791,8 @@ public class GuiTools extends InitTools{
 			 {
 				  System.out.println("File issue "+ file);
 		          failTestCase("Entering File", "File should be entered", 
-		        		  "File doesn't exist or path is too long: "+file, "Step", "fail", "file upload fail");;
+		        		  "File doesn't exist or path is too long: "+file, "Step", "fail",
+		        		  "file upload fail");
 			 }
 		}
 	}
@@ -881,9 +826,8 @@ public class GuiTools extends InitTools{
 			element.click();
 		}
 	}
-	
 	/**
-	 * This method selects an option from drop-down list by text
+	 * This method selects an option from drop-down list by text    
 	 * @param map: Web Element
 	 * @param textValue: value to put in the text field
 	 * @throws Exception 
@@ -903,6 +847,7 @@ public class GuiTools extends InitTools{
 					"Not as expected", "VP", "fail", "Filling element " + map.get("field_name"));
 		}else
 		{
+			clickElementJs(map);
 			Select dropdown = new Select(driver.findElement(byType(locType, locValue)));
 			try
 			{
@@ -1020,7 +965,7 @@ public class GuiTools extends InitTools{
 		String locValue = map.get("locator_value");
 		if (!elementExists(locType, locValue))
 		{
-			printLog("Element '"+ map.get("field_name")+"' was "
+			printLog("Element ' "+ map.get("field_name")+"' was "
 					+ "not found on GUI");
 		}else
 		{
@@ -1314,6 +1259,59 @@ public class GuiTools extends InitTools{
 		}
 		return null;
 	}
+	/**
+	 * This method switch to web alert
+	 */
+	public static void switchToAlert()
+	{
+		try {
+		    WebDriverWait wait = new WebDriverWait(driver, 2);
+		    wait.until(ExpectedConditions.alertIsPresent());
+		    Alert alert = driver.switchTo().alert();
+		    System.out.println(alert.getText());
+		    alert.accept();
+		    Assert.assertTrue(alert.getText().contains("Thanks."));
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method switch to window
+	 */
+	public static String switchToWindow()
+	{
+		String winHandleBefore = null;
+		try {
+			 winHandleBefore = driver.getWindowHandle();
+			 for(String winHandle : driver.getWindowHandles()){
+			    driver.switchTo().window(winHandle);
+			}
+
+			
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		return winHandleBefore;
+	}
+	
+	
+	/**
+	 * This method switch back to window
+	 */
+	public static void switchBackToWindow(String handleBefore)
+	{
+		try {
+			
+			driver.close();
+			// Switch back to original browser (first window)
+			driver.switchTo().window(handleBefore);
+
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * This method refreshes the current page
 	 */

@@ -2,8 +2,7 @@
   <test allow-return-values="false" group-by-instances="false" junit="false" name="Test" preserve-order="true" skipfailedinvocationcounts="false" thread-count="5">
     <classes>
       <class name="tests.TestOne">
-    
-    <methods><include name="First_test_Case"/></methods></class>
+    <methods><include name="Test_Case_001"/><include name="Test_Case_002"/></methods></class>
     </classes>
   </test> 
 </suite>

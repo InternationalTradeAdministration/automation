@@ -15,7 +15,17 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class XlsxTools {
-	public static ArrayList<LinkedHashMap<String, String>> readXlsxSheetInOrderAndFilter(String filePath, 
+	
+	/**
+	 * This read excel file into arraylist with filters
+	 * @param filePath: file path
+	 * @param tabName: tab name
+	 * @param filter: the applied filter
+	 * @throws Exception 
+	 * 
+	 */
+	public static ArrayList<LinkedHashMap<String, String>> 
+										  readXlsxSheetInOrderAndFilter(String filePath, 
 										  String tabName, 
 										  String filter) throws IOException
 	{
@@ -59,7 +69,13 @@ public class XlsxTools {
 	    	return allPool;
 	    }
 	}
-	
+	/**
+	 * This read excel file into hashmap with columns as keys
+	 * @param filePath: file path
+	 * @param tabName: tab name
+	 * @throws Exception 
+	 * 
+	 */
 	public static LinkedHashMap<String, String> readXlsxSheetWithFirstColKey(String filePath, 
 			  																String tabName) throws IOException
 	{
@@ -100,7 +116,13 @@ public class XlsxTools {
 		}
 		return map;
 	}
-	
+	/**
+	 * This read excelsX file into hashmap with columns as keys
+	 * @param filePath: file path
+	 * @param tabName: tab name
+	 * @throws Exception 
+	 * 
+	 */
 	public static ArrayList<LinkedHashMap<String, String>> readXlsxSheetAndFilter(String filePath, 
 										  String tabName, 
 										  String filter) throws IOException
@@ -124,7 +146,7 @@ public class XlsxTools {
 	      {
 	    	  Cell cellHeader = cellHeaderIterator.next();
 	          Cell cell = cellIterator.next();
-	          map.put(cellHeader.toString(), cell.toString());
+	          map.put(cellHeader.toString().trim(), cell.toString().trim());
 	      }
 	      System.out.println(map);
 	      allPool.add(new LinkedHashMap<String, String>(map));
@@ -141,6 +163,13 @@ public class XlsxTools {
 	    	return allPool;
 	    }
 	}
+	
+	/**
+	 * This read GuiMap file into hashmap
+	 * @param guiPool: file path
+	 * @throws Exception 
+	 * 
+	 */
 	public static LinkedHashMap<String, LinkedHashMap<String, String>> 
 	readGuiMap(ArrayList<LinkedHashMap<String, String>> guiPool) throws IOException
 	{
@@ -162,6 +191,13 @@ public class XlsxTools {
 		}
 		return guiMap;
 	}
+	/**
+	 * This method read an arraylist
+	 * @param inputArrayList: input list
+	 * @param filterWith filter
+	 * @throws Exception 
+	 * 
+	 */
 	public static ArrayList<LinkedHashMap<String, String>> filterArrayList(
 				  ArrayList<LinkedHashMap<String, String>> inputArrayList,
 				  String filterWith)

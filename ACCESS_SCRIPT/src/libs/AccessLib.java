@@ -31,8 +31,10 @@ import static GuiLibs.GuiTools.switchBackFromFrame;
 import static GuiLibs.GuiTools.switchToFrame;
 import static GuiLibs.GuiTools.unHighlightElement;
 import static GuiLibs.GuiTools.updateHtmlReport;
+import static GuiLibs.GuiTools.switchToAlert;
+import static GuiLibs.GuiTools.switchBackToWindow;
+import static GuiLibs.GuiTools.switchToWindow;
 import static ReportLibs.ReportTools.printLog;
-
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -41,6 +43,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -136,6 +139,71 @@ public class AccessLib{
 					"Not as expected", "Step", "fail", "");
 		}
 		return create;
+	}
+	
+	/**
+	 * This method validates fields help messages
+	 * @param row: map of test case's data
+	 * @return true case created correctly, false if not
+	 * @exception Exception
+	*/
+	public static boolean ValidateFieldsHelpMessages(LinkedHashMap<String, String> row) throws Exception
+	{
+		boolean validate = true;
+		clickElementJs(guiMap.get("EFileDocument"));
+		for (HashMap.Entry<String, String> entry : row.entrySet()) 
+		{
+			String fieldName = entry.getKey().trim();
+			String fieldExpectedMessage = entry.getValue().trim();
+			switch (entry.getKey())
+			{
+				case "Quick Search":
+				{ 	
+					highlightElement(guiMap.get("fieldHelpLink_4"), "blue");
+					clickElementJs(guiMap.get("fieldHelpLink_4"));
+					break;
+				}
+				case "Title": case "Upload File(s)":
+				{
+					scrollToElement(replaceGui(guiMap.get("fieldHelpLink_2"),fieldName));
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_2"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_2"),fieldName));
+					//
+					break;
+				}
+				case "Submit": case "Reset": case "Cancel":
+				{
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName));
+					break;
+				}
+				
+				default:
+				{
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName));
+					break;
+				}
+			}//switch
+			String originalHadle = switchToWindow();
+			//clickElementJs(guiMap.get("helpMessage"));
+			String fieldActualMessage = getElementAttribute(guiMap.get("helpMessage"), "text");
+			if (fieldActualMessage.equalsIgnoreCase(fieldExpectedMessage))
+			{
+				highlightElement(guiMap.get("helpMessage"), "green");
+				updateHtmlReport("validate field ["+fieldName+"]", "expected message is ["+fieldExpectedMessage+"]",
+						"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName);
+			}
+			else
+			{
+				validate = false;
+				highlightElement(guiMap.get("helpMessage"), "red");
+				updateHtmlReport("validate field ["+fieldName+"]", "expected message is ["+fieldExpectedMessage+"]",
+						"Actual message is ["+fieldActualMessage+"]", "VP", "fail", "Screen shot - "+fieldName);
+			}
+			switchBackToWindow(originalHadle);
+		}
+		return validate;
 	}
 	
 	/**

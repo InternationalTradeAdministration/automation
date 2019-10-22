@@ -8,7 +8,12 @@ import java.util.HashMap;
 import static ReportLibs.ReportTools.printLog;
 
 public class FileTools {
-	
+	/**
+	 * This method reads a text file into a hashmap
+	 * @param settingFile: file path
+	 * @throws Exception 
+	 * 
+	 */
 	public static HashMap<String, String> readTextFile(String settingFile) 
 			throws IOException
 	{

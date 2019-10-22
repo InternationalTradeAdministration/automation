@@ -43,8 +43,6 @@ public class InitTools {
 	public static void setActualResultFolder(String actualRsltFolder) {
 		actualResultFolder = actualRsltFolder;
 	}
-	
-	
 	public static String getTesterName() {
 		return testerName;
 	}
@@ -96,6 +94,4 @@ public class InitTools {
 	public void setConfigInfos(HashMap<String, String> configInfos) {
 		InitTools.configInfos = configInfos;
 	}
-
-	
 }
