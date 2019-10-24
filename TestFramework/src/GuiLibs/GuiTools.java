@@ -741,9 +741,10 @@ public class GuiTools extends InitTools{
 			    		element = e;
 			    	}
 			}
-
+			try{
 			JavascriptExecutor executor = (JavascriptExecutor)driver;
 			executor.executeScript("arguments[0].click();", element);
+			}catch(Exception e){e.printStackTrace();}
 			
 		}else
 		{

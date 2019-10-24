@@ -30,7 +30,7 @@ public class TestOne {
 	HashMap<String, String> mapConfInfos;
 	String browserType;
 	static XlsxTools xlsxTools;
-	static ArrayList<LinkedHashMap<String, String>> dataPool, dataPool_2;
+	static ArrayList<LinkedHashMap<String, String>> dataPool, dataPoolHelpmsg, dataPoolErrorMsg;
 	ArrayList<LinkedHashMap<String, String>> guiPool;
 	static AccessLib accessLib;
 	//public static boolean testCaseStatus;
@@ -48,7 +48,8 @@ public class TestOne {
 		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/Access_Regression.xlsx";
 		System.out.println("dataPoolPath "+dataPoolPath);
 		dataPool  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Regression", "Active=TRUE");
-		dataPool_2  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Help", "");
+		dataPoolHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Help", "");
+		dataPoolErrorMsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Validation", "");
 		String testNgTemplate = InitTools.getInputDataFolder()+"/template/testng_template.xml";
 		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
 		System.out.println("testNgTemplate "+testNgTemplate);
@@ -125,12 +126,12 @@ public class TestOne {
 	    }
 	}
 	/**
-	 * This method is for ADCVD case creation and validation
+	 * This method is E-File creation
 	*/
 	@Test(enabled = true, priority=1)
 	void Test_Case_001() throws Exception
 	{
-		printLog("First_test_Case");
+		printLog("Test_Case_001");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_001");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -150,12 +151,12 @@ public class TestOne {
 	}
 	
 	/**
-	 * This method is for ADCVD case creation and validation
+	 * This method is for message validation
 	*/
 	@Test(enabled = true, priority=1)
 	void Test_Case_002() throws Exception
 	{
-		printLog("First_test_Case");
+		printLog("Test_Case_002");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_002");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -171,8 +172,34 @@ public class TestOne {
 			loginOn = AccessLib.loginToAccess(url, user, password);
 		}
 		holdSeconds(2);
-		row = dataPool_2.get(0);
+		row = dataPoolHelpmsg.get(0);
 		testCaseStatus =  AccessLib.ValidateFieldsHelpMessages(row);
+	}
+	
+	
+	/**
+	 * This method is for error validation
+	*/
+	@Test(enabled = true, priority=1)
+	void Test_Case_003() throws Exception
+	{
+		printLog("Test_Case_003");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_003");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = AccessLib.loginToAccess(url, user, password);
+		}
+		holdSeconds(2);
+		testCaseStatus =  AccessLib.ValidateFieldsErrorMessages(dataPoolErrorMsg);
 	}
 	
 	
@@ -180,7 +207,8 @@ public class TestOne {
 	/**
 	 * This method if for getting the current test case information
 	*/
-	public LinkedHashMap<String, String> getTestCaseInfo(ArrayList<LinkedHashMap<String, String>> dataPool, String tcTagName)
+	public LinkedHashMap<String, String> getTestCaseInfo(ArrayList<LinkedHashMap<String, String>> dataPool, 
+																			String tcTagName)
 	{
 		for(LinkedHashMap<String, String> map : dataPool)
 		{
