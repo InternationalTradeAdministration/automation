@@ -3,9 +3,7 @@
  * Mouloud Hamdidouche
  * December, 2018
 */
-
 package libs;
-
 import static GuiLibs.GuiTools.checkElementExists;
 import static GuiLibs.GuiTools.clickElement;
 import static GuiLibs.GuiTools.clickElementJs;
@@ -34,6 +32,7 @@ import static GuiLibs.GuiTools.updateHtmlReport;
 import static GuiLibs.GuiTools.switchToAlert;
 import static GuiLibs.GuiTools.switchBackToWindow;
 import static GuiLibs.GuiTools.switchToWindow;
+import static GuiLibs.GuiTools.selectElementByText;
 import static ReportLibs.ReportTools.printLog;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -55,6 +54,7 @@ import javax.swing.text.FieldView;
 import org.testng.ISuiteListener;
 
 import InitLibs.InitTools;
+import ReportLibs.HtmlReport;
 
 public class AccessLib{
 	public static String filedDate,
@@ -83,8 +83,6 @@ public class AccessLib{
 	{
 		boolean loginStatus = true;
 		navigateTo(url);
-		int currentTimeOut = setBrowserTimeOut(3);
-		setBrowserTimeOut(currentTimeOut);
 		enterText(guiMap.get("userName"), user);
 		enterText(guiMap.get("password"), password);
 		clickElementJs(guiMap.get("Agreement"));
@@ -195,14 +193,14 @@ public class AccessLib{
 			if (fieldActualMessage.equalsIgnoreCase(fieldExpectedMessage))
 			{
 				highlightElement(guiMap.get("helpMessage"), "green");
-				updateHtmlReport("validate field ["+fieldName+"]", "expected message is ["+fieldExpectedMessage+"]",
+				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
 						"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName);
 			}
 			else
 			{
 				validate = false;
 				highlightElement(guiMap.get("helpMessage"), "red");
-				updateHtmlReport("validate field ["+fieldName+"]", "expected message is ["+fieldExpectedMessage+"]",
+				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
 						"Actual message is ["+fieldActualMessage+"]", "VP", "fail", "Screen shot - "+fieldName);
 			}
 			switchBackToWindow(originalHadle);
@@ -215,30 +213,34 @@ public class AccessLib{
 	 * @return true case created correctly, false if not
 	 * @exception Exception
 	*/
-	public static boolean ValidateFieldsErrorMessages(ArrayList<LinkedHashMap<String, String>> list) throws Exception
+	public static boolean ValidateFieldsErrorMessages(
+			ArrayList<LinkedHashMap<String, String>> list) throws Exception
 	{
 		boolean validate = true;
 		int i=0;
+		String previousFiledName= "";
+		//pageRefresh(); 
+		clickElementJs(guiMap.get("HomePage"));
 		clickElementJs(guiMap.get("EFileDocument"));
 		for (LinkedHashMap<String, String> row: list) 
 		{
 			i++;
-			System.out.println("");
-			//invalidCaseNumber
-			//fieldError_1
-			int currentWait = 0;
+			System.out.println("x");
 			String fieldName = row.get("Filed Name").trim();
 			String givenValue = row.get("Given Value").trim();
 			//String expectedDisplayedError = row.get("Displayed Error");
-			String errorValue;
+			String errorValue, errorValue2;
+			if(!previousFiledName.equalsIgnoreCase(fieldName))
+			{
+				HtmlReport.addHtmlStepTitle("VALIDATE FIELD: "+fieldName.toUpperCase(),"Title");
+			}
 			switch (fieldName)
 			{
-			
 				case "Case Number": 
 				{ 	
 					enterText(guiMap.get("txtCaseNumber"), givenValue);
-					clickElementJs(guiMap.get("submitButton"));
 					holdSeconds(1);
+					clickElementJs(guiMap.get("submitButton"));
 					if(givenValue.equals(""))
 					{
 						errorValue = getElementAttribute(replaceGui(guiMap.get("fieldError_1"),
@@ -246,18 +248,18 @@ public class AccessLib{
 						if( errorValue.contains("display: inline") )
 						{
 							highlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName), "green");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName));
 							
 						}else
 						{
+							validate = false;
 							highlightElement(guiMap.get("txtCaseNumber"), "red");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(guiMap.get("txtCaseNumber"));
 						}
-						
 					}else//not empty
 					{
 						if(caseNumberFormat(givenValue))//not right format
@@ -267,31 +269,33 @@ public class AccessLib{
 							if( errorValue.contains("display: none") )
 							{
 								highlightElement(guiMap.get("txtCaseNumber"), "green");
-								updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should not be displayed",
+								updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should not be displayed",
 										"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
 								unHighlightElement(guiMap.get("txtCaseNumber"));
 								
 							}else
 							{
+								validate = false;
 								highlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName), "red");
-								updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should not be displayed",
+								updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should not be displayed",
 										"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
 								unHighlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName));
 							}
 						}else // not right format
 						{
-							currentWait = setBrowserTimeOut(2);
+							//currentWait = setBrowserTimeOut(2);
 							if( elementExists(guiMap.get("invalidCaseNumber")) )
 							{
 								highlightElement(guiMap.get("invalidCaseNumber"), "green");
-								updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+								updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 										"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
 								unHighlightElement(guiMap.get("invalidCaseNumber"));
 								
 							}else
 							{
+								validate = false;
 								highlightElement(guiMap.get("txtCaseNumber"), "red");
-								updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+								updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 										"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
 								unHighlightElement(guiMap.get("txtCaseNumber"));
 							}
@@ -302,95 +306,178 @@ public class AccessLib{
 				case "Segment": case "Security Classification": 
 				case "Document Type": case "Segment Specific Information":
 				{
-					selectElementByValue(replaceGui(guiMap.get("filedSelect_1"), fieldName), givenValue);
-					clickElementJs(guiMap.get("submitButton"));
-					holdSeconds(1);
-					errorValue = getElementAttribute(replaceGui(guiMap.get("fieldError_1"),
-							fieldName), "Style");
 					if(!givenValue.equals(""))
 					{
+						selectElementByText(replaceGui(guiMap.get("filedSelect_1"), fieldName), givenValue);
+						clickElementJs(guiMap.get("submitButton"));
+						errorValue = getElementAttribute(replaceGui(guiMap.get("fieldError_1"),
+								fieldName), "Style");
 						if( errorValue.contains("display: none") )
 						{
 							highlightElement(replaceGui(guiMap.get("filedSelect_1"), fieldName), "green");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should not be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should not be displayed",
 									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(replaceGui(guiMap.get("filedSelect_1"), fieldName));
 							
 						}else
 						{
+							validate = false;
 							highlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName), "red");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should not be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should not be displayed",
 									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(guiMap.get("fieldError_1"));
 						}
 					}else//empty
 					{
+						//selectElementByText(replaceGui(guiMap.get("filedSelect_1"), fieldName), givenValue);
+						clickElementJs(guiMap.get("submitButton"));
+						errorValue = getElementAttribute(replaceGui(guiMap.get("fieldError_1"),
+								fieldName), "Style");
 						if( errorValue.contains("display: inline") )
 						{
 							highlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName), "green");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName));
 							
 						}else
 						{
+							validate = false;
 							highlightElement(replaceGui(guiMap.get("filedSelect_1"), fieldName), "red");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(guiMap.get("filedSelect_1"));
 						}
 					}
 					break;
 				}
-				
 				case "Filed On Behalf Of (collective entity)":
 				{
 					enterText(guiMap.get("FiledOnBehalfOf"), givenValue);
 					clickElementJs(guiMap.get("submitButton"));	
 					holdSeconds(1);
-					errorValue = getElementAttribute(replaceGui(guiMap.get("fieldError_1"),
-							fieldName), "Style");
+					errorValue = getElementAttribute(guiMap.get("FiledOnBehalfOfError"), "Style");
 					if(!givenValue.equals(""))
 					{
 						if( errorValue.contains("display: none") )
 						{
 							highlightElement(guiMap.get("FiledOnBehalfOf"), "green");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should not be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should not be displayed",
 									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(guiMap.get("FiledOnBehalfOf"));
 							
 						}else
 						{
-							highlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName), "red");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should not be displayed",
+							validate = false;
+							highlightElement(guiMap.get("FiledOnBehalfOfError"), "red");
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should not be displayed",
 									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
-							unHighlightElement(guiMap.get("fieldError_1"));
+							unHighlightElement(guiMap.get("FiledOnBehalfOfError"));
 						}
 					}else//empty
 					{
 						if( errorValue.contains("display: inline") )
 						{
-							highlightElement(replaceGui(guiMap.get("fieldError_1"),	fieldName), "green");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+							highlightElement(guiMap.get("FiledOnBehalfOfError"), "green");
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
-							unHighlightElement(guiMap.get("fieldError_1"));
+							unHighlightElement(guiMap.get("FiledOnBehalfOfError"));
 							
 						}else
 						{
+							validate = false;
 							highlightElement(guiMap.get("FiledOnBehalfOf"), "red");
-							updateHtmlReport("validate field ["+fieldName+" = "+givenValue+"]", "Error message should be displayed",
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
 									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
 							unHighlightElement(guiMap.get("FiledOnBehalfOf"));
 						}
 					}
 					break;
 				}
+				//fieldError_fileUpload   fileUploadButton1
 				case "Title":
 				{
-					break;
-				}
-				case "Upload File(s)":
-				{
+					scrollToElement(replaceGui(guiMap.get("fieldHelpLink_2"), "Title"));
+					if(!givenValue.equals(""))
+					{
+						String fileName = InitTools.getInputDataFolder()+"/input_files/test_file_1.xlsx";
+						enterText(guiMap.get("FiledOnBehalfOf"), "");
+						enterText(guiMap.get("fileUploadText1"), givenValue);
+						enterTextFile(guiMap.get("fileUploadButton1"), fileName);
+						clickElementJs(guiMap.get("submitButton"));
+						errorValue = getElementAttribute(guiMap.get("fieldError_title"), "Style");
+						errorValue2 = getElementAttribute(guiMap.get("fieldError_fileUpload"), "Style");
+						if( errorValue.contains("display: none") )
+						{
+							highlightElement(guiMap.get("fileUploadText1"), "green");
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
+									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
+							unHighlightElement(guiMap.get("fileUploadText1"));
+							
+						}else
+						{
+							validate = false;
+							highlightElement(guiMap.get("fieldError_title"), "red");
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
+									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
+							unHighlightElement(guiMap.get("fieldError_title"));
+						}
+						//fieldError_fileUpload   fileUploadButton1
+						if( errorValue2.contains("display: none") )
+						{
+							highlightElement(guiMap.get("fileUploadButton1"), "green");
+							updateHtmlReport("file upload = [test_file_1.xlsx]", "Error message should be displayed",
+									"As expected", "VP", "pass", "Screen shot - file upload -" + i);
+							unHighlightElement(guiMap.get("fileUploadButton1"));
+							
+						}else
+						{
+							validate = false;
+							highlightElement(guiMap.get("fieldError_fileUpload"), "red");
+							updateHtmlReport("file upload = [test_file_1.xlsx]", "Error message should be displayed",
+									"Not as expected", "VP", "fail", "Screen shot - file upload -" + i);
+							unHighlightElement(guiMap.get("fieldError_fileUpload"));
+						}
+					}
+					else
+					{
+						enterText(guiMap.get("fileUploadText1"), givenValue);
+						clickElementJs(guiMap.get("submitButton"));					
+						//fieldError_title   fileUploadText1
+						errorValue = getElementAttribute(guiMap.get("fieldError_title"), "Style");
+						errorValue2 = getElementAttribute(guiMap.get("fieldError_fileUpload"), "Style");
+						if( errorValue.contains("display: inline") )
+						{
+							highlightElement(guiMap.get("fieldError_title"), "green");
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
+									"As expected", "VP", "pass", "Screen shot - "+fieldName + "-" + i);
+							unHighlightElement(guiMap.get("fieldError_title"));
+							
+						}else
+						{
+							validate = false;
+							highlightElement(guiMap.get("fileUploadText1"), "red");
+							updateHtmlReport(fieldName+" = ["+givenValue+"]", "Error message should be displayed",
+									"Not as expected", "VP", "fail", "Screen shot - "+fieldName + "-" + i);
+							unHighlightElement(guiMap.get("fileUploadText1"));
+						}
+						//fieldError_fileUpload   fileUploadButton1
+						if( errorValue2.contains("display: inline") )
+						{
+							highlightElement(guiMap.get("fieldError_fileUpload"), "green");
+							updateHtmlReport("file upload = []", "Error message should be displayed",
+									"As expected", "VP", "pass", "Screen shot - file upload -" + i);
+							unHighlightElement(guiMap.get("fieldError_fileUpload"));
+							
+						}else
+						{
+							validate = false;
+							highlightElement(guiMap.get("fileUploadButton1"), "red");
+							updateHtmlReport("file upload = []", "Error message should be displayed",
+									"Not as expected", "VP", "pass", "Screen shot - file upload -" + i);
+							unHighlightElement(guiMap.get("fileUploadButton1"));
+						}
+					}
 					break;
 				}
 				default:
@@ -398,6 +485,7 @@ public class AccessLib{
 					break;
 				}
 			}//switch
+			previousFiledName = fieldName;
 		}//for
 		return validate;
 	}

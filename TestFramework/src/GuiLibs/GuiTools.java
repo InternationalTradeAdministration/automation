@@ -561,8 +561,14 @@ public class GuiTools extends InitTools{
 								 			   String ssName) 
 								 			   throws IOException
 	{
+		File source = null;
+		try{
 		TakesScreenshot takeScreenShot = (TakesScreenshot) driver;
-		File source =  takeScreenShot.getScreenshotAs(OutputType.FILE);
+		source =  takeScreenShot.getScreenshotAs(OutputType.FILE);
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		String file = ssPath+"/"+ssName+imgIterator+".png";
 		imgIterator=imgIterator+1;
 		FileUtils.copyFile(source, new File(file));
@@ -630,11 +636,17 @@ public class GuiTools extends InitTools{
 			{
 			    if(e.isDisplayed()) element = e;
 			}
+			
 			element.clear();
+			System.out.println("element.clear();");
 			element.sendKeys(Keys.CONTROL + "a");
+			System.out.println("element.sendKeys(Keys.CONTROL + );");
 			element.sendKeys(Keys.DELETE);
+			System.out.println("element.sendKeys(Keys.DELETE);");
 			element.sendKeys(value);
+			System.out.println("element.sendKeys(value);");
 		}
+		System.out.println(value + " entred");
 	}
 	
 	/**
@@ -848,7 +860,7 @@ public class GuiTools extends InitTools{
 					"Not as expected", "VP", "fail", "Filling element " + map.get("field_name"));
 		}else
 		{
-			clickElementJs(map);
+			//clickElementJs(map);
 			Select dropdown = new Select(driver.findElement(byType(locType, locValue)));
 			try
 			{
@@ -858,6 +870,7 @@ public class GuiTools extends InitTools{
 						"Not as expected", "VP", "fail", "Select element "+ textValue);
 			}
 		}
+		System.out.println(textValue+ " selected");
 	}
 	
 	/**
@@ -1152,14 +1165,20 @@ public class GuiTools extends InitTools{
 		{
 			WebElement element = driver.findElement(byType(locType, locValue));
 			List<WebElement> items = driver.findElements(byType(locType, locValue));
-			
-			for(WebElement e: items)
+			try
 			{
-			    if(e.isDisplayed()) element = e;
+				for(WebElement e: items)
+				{
+				    if(e.isDisplayed()) element = e;
+				}
+				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+				executor.executeScript("arguments[0].setAttribute('style', 'border:"
+						+ " 2px dashed "+color+";');", element);
+				printLog(map.get("field_name") + " highlighted ");
+			}catch (Exception e)
+			{
+				e.printStackTrace();
 			}
-			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
-			executor.executeScript("arguments[0].setAttribute('style', 'border:"
-					+ " 2px dashed "+color+";');", element);
 		}
 	}
 	
@@ -1179,14 +1198,20 @@ public class GuiTools extends InitTools{
 					+ "not found on Gui");
 		}else
 		{
-			WebElement element = driver.findElement(byType(locType, locValue));
-			List<WebElement> items = driver.findElements(byType(locType, locValue));
-			for(WebElement e: items)
+			try{
+				WebElement element = driver.findElement(byType(locType, locValue));
+				List<WebElement> items = driver.findElements(byType(locType, locValue));
+				for(WebElement e: items)
+				{
+				    if(e.isDisplayed()) element = e;
+				}
+				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+				executor.executeScript("arguments[0].style.border='0px'", element);
+				printLog(map.get("field_name") + "unhighlighted ");
+			}catch (Exception e)
 			{
-			    if(e.isDisplayed()) element = e;
+				e.printStackTrace();
 			}
-			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
-			executor.executeScript("arguments[0].style.border='0px'", element);
 		}
 	}
 	
