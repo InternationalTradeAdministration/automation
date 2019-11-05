@@ -767,6 +767,50 @@ public class GuiTools extends InitTools{
 		}
 	}
 	
+	
+	
+	/**
+	 * This method clicks on element
+	 * @param map: Web Element
+	 * @throws Exception 
+	 * 
+	 */
+	public static void clickNiemElementJs(HashMap<String, String> map, int niem) throws Exception
+	{
+		printLog("Click  on  element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int count = 0;
+		if (elementExists(locType, locValue))
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+				count++;
+			    if(e.isEnabled()) 
+			    {
+			    		element = e;
+			    		if (count == niem) break;
+			    }
+			}
+			try{
+			JavascriptExecutor executor = (JavascriptExecutor)driver;
+			executor.executeScript("arguments[0].click();", element);
+			}catch(Exception e){e.printStackTrace();}
+			
+		}else
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}
+	}
+	
+	
+	
+	
 	/**
 	 * This method enter file name into file type input
 	 * @param map: Web Element
@@ -1170,6 +1214,47 @@ public class GuiTools extends InitTools{
 				for(WebElement e: items)
 				{
 				    if(e.isDisplayed()) element = e;
+				}
+				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+				executor.executeScript("arguments[0].setAttribute('style', 'border:"
+						+ " 2px dashed "+color+";');", element);
+				printLog(map.get("field_name") + " highlighted ");
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/**
+	 * This method highlights niem element on the page
+	 * @param map: gui element
+	 * @param color: the used color for highlighting 
+	 * @throws Exception
+	 */
+	public static void highlightNiemElement(HashMap<String, String> map,
+										String color, int niem) throws Exception
+	{
+		printLog("highlight "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int count=0;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on GUI");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			try
+			{
+				for(WebElement e: items)
+				{
+					count++;
+				    if(e.isDisplayed()) element = e;
+				    if (count == niem) break;
 				}
 				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 				executor.executeScript("arguments[0].setAttribute('style', 'border:"

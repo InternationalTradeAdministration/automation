@@ -2,7 +2,7 @@
   <test allow-return-values="false" group-by-instances="false" junit="false" name="Test" preserve-order="true" skipfailedinvocationcounts="false" thread-count="5">
     <classes>
       <class name="tests.TestOne">
-    <methods><include name="Test_Case_001"/><include name="Test_Case_002"/><include name="Test_Case_003"/></methods></class>
+    <methods><include name="Submit_With_Add_Files"/><include name="Submit_With_Similar_Submission"/><include name="Submit_As_Manual_Submission"/><include name="Validate_Efile_Help_Messages"/><include name="Validate_Efile_Error_Messages"/><include name="Validate_Update_Profile_Help_Messages"/><include name="Validate_Efile_Register_Help_Messages"/></methods></class>
     </classes>
   </test> 
 </suite>

@@ -6,7 +6,9 @@
 package libs;
 import static GuiLibs.GuiTools.checkElementExists;
 import static GuiLibs.GuiTools.clickElement;
+import static GuiLibs.GuiTools.highlightNiemElement;
 import static GuiLibs.GuiTools.clickElementJs;
+import static GuiLibs.GuiTools.clickNiemElementJs;
 import static GuiLibs.GuiTools.enterTextFile;
 import static GuiLibs.GuiTools.elementExists;
 import static GuiLibs.GuiTools.enterText;
@@ -116,6 +118,7 @@ public class AccessLib{
 	{
 		boolean create = true;
 		create = true;
+		String type = row.get("type")+"";
 		clickElementJs(guiMap.get("EFileDocument"));
 		enterText(guiMap.get("txtCaseNumber"), row.get("Case_Number"));
 		selectElementByValue(guiMap.get("Segment"), row.get("Segment"));
@@ -125,33 +128,71 @@ public class AccessLib{
 		//String fileName="";
 		int nbrUpload=0;
 		//File_2	File_Title_3
-		addFiles(row, 0, 0);
-		try{
-			nbrUpload = Integer.parseInt(row.get("Number_of_uploads"));
-			for(int j = 1; j<=nbrUpload; j++)
-			{
-				clickElementJs(guiMap.get("addMoreFiles"));
-				addFiles(row, j, nbrUpload);
-			}
-		}catch(Exception e)
+		if (type.equalsIgnoreCase("manual submission"))
 		{
-			e.printStackTrace();
-			failTestCase("Number_of_uploads = "+row.get("Number_of_uploads"), 
-					"Number_of_uploads should have a number",
-					"Not as expected", "Step", "fail", "");
+			clickElementJs(guiMap.get("manualSubmission"));
+			holdSeconds(1);
+			enterText(guiMap.get("txtTitle"), row.get("Title")); 	
+			enterText(guiMap.get("txtPageCount"), row.get("Page_Count"));
+			clickElementJs(guiMap.get("submitButton"));
+			holdSeconds(2);
+			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_ENTER);
+			robot.keyRelease(KeyEvent.VK_ENTER);
+			//holdSeconds(10);
+			if(!checkElementExists(guiMap.get("barCode")))
+			{
+				failTestSuite("Manual submission", 
+						"User is able to perform manual submission", 
+					"Not as expected", "Step", "fail", "manual submission");
+			}else
+			{
+				highlightElement(guiMap.get("barCode"), "green");
+				holdSeconds(2);
+				String barCode = getElementAttribute(guiMap.get("barCode"), "text");
+				updateHtmlReport("Manual submission", 
+						"User is able to perform manual submission", 
+					"As expected", "Step", "pass", "manual submission");
+			}
+		}
+		else
+		{
+			addFiles(row, 0, 0, "");
+			try{
+				nbrUpload = Integer.parseInt(row.get("Number_of_uploads"));
+				for(int j = 1; j<=nbrUpload; j++)
+				{
+					if (type.equalsIgnoreCase("add more files"))
+					{
+						clickElementJs(guiMap.get("addMoreFiles"));
+						addFiles(row, j, nbrUpload, "");
+					}
+					else
+					{
+						clickElementJs(guiMap.get("similarSubmissionButton"));
+						addFiles(row, j, nbrUpload, row.get("Security_Classification"));
+					}
+				}
+			}catch(Exception e)
+			{
+				create = false;
+				e.printStackTrace();
+				failTestCase("Number_of_uploads = "+row.get("Number_of_uploads"), 
+						"Number_of_uploads should have a number",
+						"Not as expected", "Step", "fail", "");
+			}
 		}
 		return create;
 	}
-	
 	/**
-	 * This method validates fields help messages
+	 * This method validates fields help messages of e file
 	 * @param row: map of test case's data
 	 * @return true case created correctly, false if not
 	 * @exception Exception
 	*/
-	public static boolean ValidateFieldsHelpMessages(LinkedHashMap<String, String> row) throws Exception
+	public static boolean ValidateFieldsEFileHelpMessages(LinkedHashMap<String, String> row) throws Exception
 	{
-		boolean validate = true;
+		boolean validate = true, scl=true;;
 		clickElementJs(guiMap.get("EFileDocument"));
 		for (HashMap.Entry<String, String> entry : row.entrySet()) 
 		{
@@ -170,6 +211,93 @@ public class AccessLib{
 					scrollToElement(replaceGui(guiMap.get("fieldHelpLink_2"),fieldName));
 					highlightElement(replaceGui(guiMap.get("fieldHelpLink_2"),fieldName), "blue");
 					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_2"),fieldName));
+					//
+					break;
+				}
+				case "Submit": case "Reset": case "Cancel":
+				{
+					if(scl)	scrollToElement(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName));
+					scl=false;
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName));
+					break;
+				}
+				default:
+				{
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName));
+					break;
+				}
+			}//switch
+			String originalHadle = switchToWindow();
+			//clickElementJs(guiMap.get("helpMessage"));
+			String fieldActualMessage = getElementAttribute(guiMap.get("helpMessage"), "text");
+			if (fieldActualMessage.equalsIgnoreCase(fieldExpectedMessage))
+			{
+				highlightElement(guiMap.get("helpMessage"), "green");
+				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
+						"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName);
+			}
+			else
+			{
+				validate = false;
+				highlightElement(guiMap.get("helpMessage"), "red");
+				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
+						"Actual message is ["+fieldActualMessage+"]", "VP", "fail", "Screen shot - "+fieldName);
+			}
+			switchBackToWindow(originalHadle);
+		}
+		return validate;
+	}
+	
+	
+	/**
+	 * This method validates fields of update profile help messages of e file
+	 * @param row: map of test case's data
+	 * @return true case created correctly, false if not
+	 * @exception Exception
+	*/
+	public static boolean ValidateFieldsUpdateProfileHelpMessages(LinkedHashMap<String, String> row) throws Exception
+	{
+		boolean validate = true;
+		clickElementJs(guiMap.get("updateProfile"));
+		for (HashMap.Entry<String, String> entry : row.entrySet()) 
+		{
+			String fieldName = entry.getKey().trim();
+			String fieldExpectedMessage = entry.getValue().trim();
+			switch (entry.getKey())
+			{
+				case "Quick Search":
+				{ 	
+					highlightElement(guiMap.get("fieldHelpLink_4"), "blue");
+					clickElementJs(guiMap.get("fieldHelpLink_4"));
+					break;
+				}
+				case "Security Question 1": 
+				{
+					scrollToElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")));
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), "blue", 1);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), 1);
+					//
+					break;
+				}
+				case "Answer 1":
+				{
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), "blue", 1);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), 1);
+					break;
+				}
+				case "Security Question 2": 
+				{
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), "blue", 2);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), 2);
+					//
+					break;
+				}
+				case "Answer 2":
+				{
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), "blue", 2);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), 2);
 					//
 					break;
 				}
@@ -194,7 +322,109 @@ public class AccessLib{
 			{
 				highlightElement(guiMap.get("helpMessage"), "green");
 				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
-						"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName);
+						"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName.replace(":", ""));
+			}
+			else
+			{
+				validate = false;
+				highlightElement(guiMap.get("helpMessage"), "red");
+				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
+						"Actual message is ["+fieldActualMessage+"]", "VP", "fail", "Screen shot - "+fieldName);
+			}
+			switchBackToWindow(originalHadle);
+		}
+		return validate;
+	}
+	
+	
+	
+	/**
+	 * This method validates fields of update profile help messages of e file
+	 * @param row: map of test case's data
+	 * @return true case created correctly, false if not
+	 * @exception Exception
+	*/
+	public static boolean ValidateFieldsRegisterHelpMessages(LinkedHashMap<String, String> row) throws Exception
+	{
+		
+		//linkLogout
+	//	linkEfileRegister
+
+		boolean validate = true;
+		int currentWait = setBrowserTimeOut(3);
+		if(elementExists(guiMap.get("linkLogout")))
+		{
+			clickElementJs(guiMap.get("linkLogout"));
+		}
+		clickElementJs(guiMap.get("linkEfileRegister"));
+		setBrowserTimeOut(currentWait);
+		clickElementJs(guiMap.get("buttonAccept"));
+		
+		
+		
+		for (HashMap.Entry<String, String> entry : row.entrySet()) 
+		{
+			String fieldName = entry.getKey().trim();
+			String fieldExpectedMessage = entry.getValue().trim();
+			switch (entry.getKey())
+			{
+				case "Quick Search":
+				{ 	
+					highlightElement(guiMap.get("fieldHelpLink_4"), "blue");
+					clickElementJs(guiMap.get("fieldHelpLink_4"));
+					break;
+				}
+				case "Security Question 1": 
+				{
+					scrollToElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")));
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), "blue", 1);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), 1);
+					//
+					break;
+				}
+				case "Answer 1":
+				{
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), "blue", 1);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 1", "")), 1);
+					//
+					break;
+				}
+				case "Security Question 2": 
+				{
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), "blue", 2);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), 2);
+					//
+					break;
+				}
+				case "Answer 2":
+				{
+					highlightNiemElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), "blue", 2);
+					clickNiemElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName.replace(" 2", "")), 2);
+					//
+					break;
+				}
+				case "Submit": case "Reset": case "Cancel":
+				{
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_3"),fieldName));
+					break;
+				}
+				
+				default:
+				{
+					highlightElement(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName), "blue");
+					clickElementJs(replaceGui(guiMap.get("fieldHelpLink_1"),fieldName));
+					break;
+				}
+			}//switch
+			String originalHadle = switchToWindow();
+			//clickElementJs(guiMap.get("helpMessage"));
+			String fieldActualMessage = getElementAttribute(guiMap.get("helpMessage"), "text");
+			if (fieldActualMessage.equalsIgnoreCase(fieldExpectedMessage))
+			{
+				highlightElement(guiMap.get("helpMessage"), "green");
+				updateHtmlReport(fieldName, "expected message is ["+fieldExpectedMessage+"]",
+						"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName.replace(":", ""));
 			}
 			else
 			{
@@ -500,9 +730,18 @@ public class AccessLib{
 	 * @return true case created correctly, false if not
 	 * @exception Exception
 	*/
-	public static void addFiles(LinkedHashMap<String, String> row, int iteration, int total) throws Exception
+	public static void addFiles(LinkedHashMap<String, String> row,
+								int iteration, 
+				
+					
+								int total,
+								String securityClass) throws Exception
 	{
 	
+		if (!securityClass.equalsIgnoreCase(""))
+		{
+			selectElementByValue(guiMap.get("SecurityClassification"), securityClass);
+		}
 		for(int i=1; i<=5; i++)
 		{
 			if(!row.get("File_"+i).equals("") && !row.get("File_"+i).equals("N/A"))
@@ -517,7 +756,7 @@ public class AccessLib{
 		Robot robot = new Robot();
 		robot.keyPress(KeyEvent.VK_ENTER);
 		robot.keyRelease(KeyEvent.VK_ENTER);
-		holdSeconds(10);
+		//holdSeconds(10);
 		if(! checkElementExists(guiMap.get("barCode")))
 		{
 			failTestSuite("submitting File", 
@@ -556,6 +795,7 @@ public class AccessLib{
 		if (fieldActualMessage.equalsIgnoreCase(fieldExpectedMessage))
 		{
 			highlightElement(guiMap.get("helpMessage"), "green");
+			
 			updateHtmlReport("validate field ["+fieldName+"]", "expected message is ["+fieldExpectedMessage+"]",
 					"expected message is ["+fieldActualMessage+"]", "VP", "pass", "Screen shot - "+fieldName);
 		}

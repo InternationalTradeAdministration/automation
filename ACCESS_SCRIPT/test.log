@@ -1,6 +1,72 @@
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 dataPoolPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data/datapool/Access_Regression.xlsx
-{Id=1.0, Test_Case_Name=First_test_Case, Test_Case_Tag=TC_TAG_001, Test_Case_Description=First_test_Case, Case_Number=A-000-000, Segment=INV - Investigation, Security_Classification=Public Document, Document_Type=Letter, Filed_On_Behalf_Of=Test, File_1=test_File_1.xlsx, File_2=test_File_2.xlsx, File_3=, File_4=test_File_4.xlsx, File_5=test_File_5.xlsx, Number_of_uploads=3, Active=TRUE}
+{Id=1.0, Test_Case_Name=Submit_With_Add_Files, Test_Case_Tag=TC_TAG_001, Test_Case_Description=Submit E-File with multiple uploads (Add files), Case_Number=A-000-000, Segment=INV - Investigation, Security_Classification=BPI Document – May Not Be Released Under APO, Document_Type=APO, Title=, Page_Count=, Filed_On_Behalf_Of=Test, File_1=test_File_1.xlsx, File_2=test_File_2.xlsx, File_3=, File_4=test_File_4.xlsx, File_5=test_File_5.xlsx, Number_of_uploads=1, Active=TRUE}
+{Id=2.0, Test_Case_Name=Submit_With_Similar_Submission, Test_Case_Tag=TC_TAG_002, Test_Case_Description=Submit E-File with multiple uploads (similar submission ), Case_Number=A-000-000, Segment=INV - Investigation, Security_Classification=Public Document, Document_Type=Brief, Title=, Page_Count=, Filed_On_Behalf_Of=Test, File_1=test_File_1.xlsx, File_2=test_File_2.xlsx, File_3=, File_4=test_File_4.xlsx, File_5=test_File_5.xlsx, Number_of_uploads=1, Active=TRUE}
+{Id=3.0, Test_Case_Name=Submit_As_Manual_Submission, Test_Case_Tag=TC_TAG_003, Test_Case_Description=Submit E-File as manual submission, Case_Number=A-000-000, Segment=INV - Investigation, Security_Classification=Public Document, Document_Type=Data, Title=Title Test, Page_Count=100, Filed_On_Behalf_Of=Test, File_1=, File_2=, File_3=, File_4=, File_5=, Number_of_uploads=N/A, Active=TRUE}
+{Id=4.0, Test_Case_Name=Validate_Efile_Help_Messages, Test_Case_Tag=TC_TAG_004, Test_Case_Description=Validate E-File fields Help Messages, Case_Number=, Segment=, Security_Classification=, Document_Type=, Title=, Page_Count=, Filed_On_Behalf_Of=, File_1=, File_2=, File_3=, File_4=, File_5=, Number_of_uploads=, Active=TRUE}
+{Id=5.0, Test_Case_Name=Validate_Efile_Error_Messages, Test_Case_Tag=TC_TAG_005, Test_Case_Description=Validate E-File fields Error Messages, Case_Number=, Segment=, Security_Classification=, Document_Type=, Title=, Page_Count=, Filed_On_Behalf_Of=, File_1=, File_2=, File_3=, File_4=, File_5=, Number_of_uploads=, Active=TRUE}
+{Id=6, Test_Case_Name=Validate_Update_Profile_Help_Messages, Test_Case_Tag=TC_TAG_006, Test_Case_Description=Validate update profile fields Help Messages, Case_Number=, Segment=, Security_Classification=, Document_Type=, Title=, Page_Count=, Filed_On_Behalf_Of=, File_1=, File_2=, File_3=, File_4=, File_5=, Number_of_uploads=, Active=TRUE}
+{Id=7, Test_Case_Name=Validate_Efile_Register_Help_Messages, Test_Case_Tag=TC_TAG_007, Test_Case_Description=Validate E file register fields Help Messages, Case_Number=, Segment=, Security_Classification=, Document_Type=, Title=, Page_Count=, Filed_On_Behalf_Of=, File_1=, File_2=, File_3=, File_4=, File_5=, Number_of_uploads=, Active=TRUE}
+{Quick Search=Click 'Quick Search' to perform search for selected criteria., Case Number=Enter the case number of the proceeding., Segment=Select the segment of the proceeding., Segment Begin Date=Enter the segment beginning date in mm/dd/yyyy format., Segment End Date=Enter the segment end date in mm/dd/yyyy format., Segment Specific Information=Select the segment specific information of the proceeding. If not listed select “Request” or contact case analyst to add respective segment profile., Security Classification=Select the type of security classification of the document. e.g. Public Document, Document Type=Select the type of document that most closely describes this filing., Filed On Behalf Of (collective entity)=Enter the company/entity, (or if applicable, the collective company/entity name) on whose behalf this submission is filed., Manual Submission=Check this box if the document will be paper filed (manual) and not electronically filed., Bracketing Not Final/1 Day Lag Filing(You must resubmit final version next business day)=Select the checkbox if Bracketing Not Final/1 Day Lag Filing. You must resubmit final version next business day., Comments=Enter information or instructions about the document being filed., Title=Enter the Title of the document being submitted., Upload File(s)=Click 'Browse' or 'Upload File(s)' or 'Choose File(s)' to attach following file types for electronic submission. Limit the length of the filename to 80 characters, Filename should not contain any special characters.
+
+Document Files:
+.pdf - Portable Document Format
+
+Data Files:
+.accdb - Data (MS Access)
+.csv - Comma Separated Values
+.dat - Data
+.dbf - dBase
+.log - SAS log file
+.lst - SAS output file
+.mda - Data (MS Access)
+.mdb - Database (MS Access)
+.prn - Printer Text File
+.SAS - SAS Program
+.sas7bcat - SAS System file catalog
+.sas7bdat - SAS System data set
+.sas7bndx - SAS System index
+.sas7bpgm - SAS System Stored Program
+.sas7bvew - SAS Data Set View
+.sas7mdb - SAS System multidimensional database
+.SD2 - Version 6 SAS dataset
+.ss2 - Version 6 SAS stored program
+.ss7 - Version 7 and Version 8 SAS stored program
+.txt - Text File
+.xls - MS Excel
+.xlsx - MS Excel new format
+.zip - Compressed Archive File
+.egp - SAS Enterprise Guide Project
+
+Video Files:
+.mp4 - MPEG-4
+.mpg - MPEG 1 System Stream
+.wmv - Windows Media File
+
+Size Limit:
+1. User can upload up to 5 PDF each with 5 MB limit totaling 25 MB.
+2. User can upload 1 data file up to 25 MB or upload multiple data files totaling 25 MB.
+3. There is a 25 MB limit for PDF and data file(s) uploaded in one attempt.
+4. If an individual data file is greater than 25 MB, it must be submitted manually on CD-ROM or DVD., Submit=Click 'Submit' to transmit information in the form to the system., Reset=Click 'Reset' to undo the edits you have made in the form., Cancel=Click 'Cancel' to return back to home page. Edits to the form will not be saved.}
+{Quick Search=Click 'Quick Search' to perform search for selected criteria., Title=Enter job title., Country Code=Enter Country Code. Country Code is required for non-USA numbers., Phone(area/city code + number)=Enter primary phone number. Please do not format it in any way - ( ) space etc., Firm/Organization Address=Enter Firm/Organization Address., Firm/Organization Phone(area/city code + number)=Enter Firm/Organization Phone., Admitted to Practice in(U.S. Jurisdictions and Courts only)=Enter U.S. jurisdiction(s) and court(s) where you are admitted to practice law, otherwise leave Blank., Security Question 1=Select a question from the list that you can easily remember., Answer 1=Enter the answer for the question. Note: the answer is not case sensitive., Security Question 2=Select the second question from the list that you can easily remember., Answer 2=Enter the answer for the second question. Note: the answer is not case sensitive., Proxy(Lead Attorneys Only: Designate up to two APO-authorized Proxy users.)=If you are an E-Filer listed as the Lead Attorney on the APO Service List for a segment, you may designate up to two Proxy users to access BPI documents on your behalf. This designation applies for all segments in which you are listed as the Lead Attorney, therefore select only a support staff Proxy user that has signed your firm’s internal Acknowledgment for Support Staff for each of the segments in which you are the Lead Attorney. Similarly, select only an attorney Proxy user that appears as an authorized applicant on all the same APO service lists in which you are the Lead Attorney. Unauthorized access to third party BPI by a Proxy user constitutes an APO violation., PIN (4 digits)=Select Permanent 4 digit Personal Identification Number (PIN). You will need this to access BPI portion of the site or for future update to your profile. You will not be able to change PIN once it is set. Please select a PIN that you will remember., Confirm PIN=Re-enter the same PIN to confirm the PIN., Submit=Click 'Submit' to transmit information in the form to the system., Reset=Click 'Reset' to undo the edits you have made in the form., Cancel=Click 'Cancel' to return back to home page. Edits to the form will not be saved.}
+{Full Name=Enter user's Full Name such as John A. Doe, Title=Enter job title., Country Code=Enter Country Code. Country Code is required for non-USA numbers., Phone(area/city code + number)=Enter primary phone number. Please do not format it in any way - ( ) space etc., Firm/Organization Name=Select the firm/organization in which you are employed. If your firm/organization name is not found in the list, please select 'Others' and enter your firm/organization name in the box below., If Others, Enter Firm:=Enter firm or organization name., Firm/Organization Address=Enter Firm/Organization Address., Firm/Organization Phone(area/city code + number)=Enter Firm/Organization Phone., Admitted to Practice in(U.S. Jurisdictions and Courts only)=Enter U.S. jurisdiction(s) and court(s) where you are admitted to practice law, otherwise leave Blank., Case No. and Segment=Provide one active case number and segment in which you plan to participate by e-filing a submission, e.g., A-000-000 POR 01/01/2010 – 12/31/2010. If you will not e-file any submissions or will not access BPI portion of the site, hit 'Cancel' below and register as a Guest User instead., Username=Enter an email address as your username. This email address must be your own individual email address used in the normal course of business for your firm/organization. Do not enter a group or general email address., Password=Enter your desired password. The password must be a minimum of 12 characters, and contain at least 1 uppercase, lowercase letter, number, and special character., Confirm Password=Re-enter the same password to confirm the password., Security Question 1=Select a question from the list that you can easily remember., Answer 1=Enter the answer for the question. Note: the answer is not case sensitive., Security Question 2=Select the second question from the list that you can easily remember., Answer 2=Enter the answer for the second question. Note: the answer is not case sensitive., Security Code=Enter the letters you see in the image below., Submit=Click 'Submit' to transmit information in the form to the system., Reset=Click 'Reset' to undo the edits you have made in the form., Cancel=Click 'Cancel' to return back to home page. Edits to the form will not be saved.}
+{Filed Name=Case Number, Given Value=abcd}
+{Filed Name=Case Number, Given Value=A-000}
+{Filed Name=Case Number, Given Value=000-000}
+{Filed Name=Case Number, Given Value=}
+{Filed Name=Case Number, Given Value=A-000-000}
+{Filed Name=Segment, Given Value=}
+{Filed Name=Segment, Given Value=CCR - Changed Circumstances}
+{Filed Name=Segment Specific Information, Given Value=}
+{Filed Name=Segment Specific Information, Given Value=Request New Segment}
+{Filed Name=Security Classification, Given Value=}
+{Filed Name=Security Classification, Given Value=BPI Document – May Be Released Under APO}
+{Filed Name=Document Type, Given Value=}
+{Filed Name=Document Type, Given Value=APO}
+{Filed Name=Filed On Behalf Of (collective entity), Given Value=}
+{Filed Name=Filed On Behalf Of (collective entity), Given Value=test}
+{Filed Name=Title, Given Value=}
+{Filed Name=Title, Given Value=title}
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 testNgTemplate C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data/template/testng_template.xml
 testNgPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/testng.xml
@@ -14,12 +80,19 @@ C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/inpu
 {field_name=password, field_tag=password, locator_type=xpath, locator_value=//input[contains(@id, 'txtPassword')]}
 {field_name=Agreement, field_tag=Agreement, locator_type=xpath, locator_value=//input[contains(@id, 'chkAgreement')]}
 {field_name=E-file link, field_tag=EFileDocument, locator_type=xpath, locator_value=//a[text()='E-File Document']}
+{field_name=update profile, field_tag=updateProfile, locator_type=xpath, locator_value=//a[text()='Update Profile']}
+{field_name=logout, field_tag=linkLogout, locator_type=xpath, locator_value=//a[text()='Logout']}
+{field_name=logout, field_tag=linkEfileRegister, locator_type=xpath, locator_value=//a[text()='E-Filer Registration']}
 {field_name=acces link, field_tag=AccessLink, locator_type=xpath, locator_value=//span[contains(text(), 'ACCESS')]}
 {field_name=case numbere, field_tag=txtCaseNumber, locator_type=xpath, locator_value=//span[text()='Case Number']/ancestor::tr[1]/td[4]//input}
+{field_name=title, field_tag=txtTitle, locator_type=xpath, locator_value=//span[text()='Title']/ancestor::tr[1]/td[4]//input}
+{field_name=Manual submission, field_tag=manualSubmission, locator_type=xpath, locator_value=//span[text()='Manual Submission']/ancestor::tr[1]/td[4]//input}
+{field_name=page count, field_tag=txtPageCount, locator_type=xpath, locator_value=//span[text()='Page Count']/ancestor::tr[1]/td[4]//input}
 {field_name=segment, field_tag=Segment, locator_type=xpath, locator_value=//span[text()='Segment']/ancestor::tr[1]/td[4]//select}
 {field_name=Security Classification, field_tag=SecurityClassification, locator_type=xpath, locator_value=//span[text()='Security Classification']/ancestor::tr[1]/td[4]//select}
 {field_name=Document Type, field_tag=DocumentType, locator_type=xpath, locator_value=//span[text()='Document Type']/ancestor::tr[1]/td[4]//select}
-{field_name=Filed On Behalf Of (collective entity), field_tag=FiledOnBehalfOf, locator_type=xpath, locator_value=//span[text()='Filed On Behalf Of (collective entity)']/ancestor::tr[1]/td[4]//textarea}
+{field_name=select fields, field_tag=filedSelect_1, locator_type=xpath, locator_value=//span[text()='~val~']/ancestor::tr[1]/td[4]//select}
+{field_name=Filed On Behalf Of (collective entity), field_tag=FiledOnBehalfOf, locator_type=xpath, locator_value=//span[text()='Filed On Behalf Of (collective entity)']/ancestor::tr[1]//textarea}
 {field_name=file to upload text 1, field_tag=fileUploadText1, locator_type=xpath, locator_value=//input[@id='ctl00_ctl00_ContentPlaceHolder1_maincontent_txtTitle1']}
 {field_name=file to upload text 2, field_tag=fileUploadText2, locator_type=xpath, locator_value=//input[@id='ctl00_ctl00_ContentPlaceHolder1_maincontent_txtTitle2']}
 {field_name=file to upload text 3, field_tag=fileUploadText3, locator_type=xpath, locator_value=//input[@id='ctl00_ctl00_ContentPlaceHolder1_maincontent_txtTitle3']}
@@ -33,88 +106,509 @@ C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/inpu
 {field_name=submit button, field_tag=submitButton, locator_type=ID, locator_value=ctl00_ctl00_ContentPlaceHolder1_maincontent_btnSubmit}
 {field_name=Created bar code, field_tag=barCode, locator_type=xpath, locator_value=//span[text()='Bar Code:']/ancestor::td[1]/following-sibling::td[1]/span[1]}
 {field_name=Add more files button, field_tag=addMoreFiles, locator_type=xpath, locator_value=//input[@id='ctl00_ContentPlaceHolder1_btnAddAttachment']}
+{field_name=similar submission button, field_tag=similarSubmissionButton, locator_type=xpath, locator_value=//input[@value = 'E-File Similar Submission']}
+{field_name=field help link 1, field_tag=fieldHelpLink_1, locator_type=xpath, locator_value=//span[.= '~val~']/ancestor::tr[1]/td[3]/input[1]}
+{field_name=field help link 2, field_tag=fieldHelpLink_2, locator_type=xpath, locator_value=//span[contains(., '~val~')]/ancestor::tbody[1]/tr[1]//input[1]}
+{field_name=field help link 3, field_tag=fieldHelpLink_3, locator_type=xpath, locator_value=//input[@value='~val~']/ancestor::td[1]/following-sibling::td[1]/input}
+{field_name=field help link 4, field_tag=fieldHelpLink_4, locator_type=xpath, locator_value=//input[@value='Quick Search']/following-sibling::input}
+{field_name=Help message, field_tag=helpMessage, locator_type=xpath, locator_value=//span[@id='lblMessage']}
+{field_name=invalid Case number error, field_tag=invalidCaseNumber, locator_type=xpath, locator_value=//span[contains(., 'ERROR: Invalid Case Number')]}
+{field_name=field error link 1, field_tag=fieldError_1, locator_type=xpath, locator_value=//span[.= '~val~']/ancestor::tr[1]/td[4]//span}
+{field_name=field error link 2, field_tag=fieldError_title, locator_type=xpath, locator_value=//input[contains(@name, 'txtTitle1')]/following-sibling::span}
+{field_name=field error link 3, field_tag=fieldError_fileUpload, locator_type=xpath, locator_value=//input[contains(@name, 'fileupload1')]/following-sibling::span}
+{field_name=Home page, field_tag=HomePage, locator_type=xpath, locator_value=//a[contains(., 'Home')]}
+{field_name=Filed On Behalf Of ERROR, field_tag=FiledOnBehalfOfError, locator_type=xpath, locator_value=//span[text()='Filed On Behalf Of (collective entity)']/ancestor::tr[1]//textarea/following-sibling::span[1]}
+{field_name=button accept, field_tag=buttonAccept, locator_type=xpath, locator_value=//input[@value= 'Accept']}
 beforeMethod()
 beforeMethod()
-First_test_Case
-First_test_Case
+Submit_With_Add_Files
+Submit_With_Add_Files
 start Test
 https://access.trade.gov/login.aspx___hmouloud1@gmail.com
 Creating Process...
 Creating Process...
-"chromedriver.exe","13520","Console","1","3,268 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:01","N/A"
-13520
+"chromedriver.exe","22320","Console","1","10,368 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:13","N/A"
+22320
 userDir C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT
 this a windows machine
 C:/libs
 Enter text for user name
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+hmouloud1@gmail.com entred
 Enter text for password
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+bENeAPfvk7gy entred
 Click  on  element Agreement
 highlight acces link
+acces link highlighted 
 Click  on  element E-file link
 Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+A-000-000 entred
 select INV - Investigation from element segment
-select Public Document from element Security Classification
-select Letter from element Document Type
+select BPI Document – May Not Be Released Under APO from element Security Classification
+select APO from element Document Type
 Enter text for Filed On Behalf Of (collective entity)
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Test entred
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 1
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 1 entred
 Enter text for file to upload button 1
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 2
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 2 entred
 Enter text for file to upload button 2
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 4
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 4 entred
 Enter text for file to upload button 4
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 5
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 5 entred
 Enter text for file to upload button 5
 Click  on  element submit button
 highlight Created bar code
+Created bar code highlighted 
 Get the text of the element Created bar code
 Click  on  element Add more files button
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 1
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 1 entred
 Enter text for file to upload button 1
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 2
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 2 entred
 Enter text for file to upload button 2
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 4
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 4 entred
 Enter text for file to upload button 4
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Enter text for file to upload text 5
-Enter text for file to upload button 5
-Click  on  element submit button
-Click  on  element Add more files button
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 1
-Enter text for file to upload button 1
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 2
-Enter text for file to upload button 2
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 4
-Enter text for file to upload button 4
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 5
-Enter text for file to upload button 5
-Click  on  element submit button
-Click  on  element Add more files button
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 1
-Enter text for file to upload button 1
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 2
-Enter text for file to upload button 2
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 4
-Enter text for file to upload button 4
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
-Enter text for file to upload text 5
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 5 entred
 Enter text for file to upload button 5
 Click  on  element submit button
 afterMethod()
-First_test_Case
+Submit_With_Add_Files
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+beforeMethod()
+beforeMethod()
+Submit_With_Similar_Submission
+Submit_With_Similar_Submission
+start Test
+https://access.trade.gov/login.aspx___hmouloud1@gmail.com
+Click  on  element E-file link
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+A-000-000 entred
+select INV - Investigation from element segment
+select Public Document from element Security Classification
+select Brief from element Document Type
+Enter text for Filed On Behalf Of (collective entity)
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Test entred
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 1
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 1 entred
+Enter text for file to upload button 1
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 2
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 2 entred
+Enter text for file to upload button 2
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 4
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 4 entred
+Enter text for file to upload button 4
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 5
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 0 _ File: 5 entred
+Enter text for file to upload button 5
+Click  on  element submit button
+highlight Created bar code
+Created bar code highlighted 
+Get the text of the element Created bar code
+Click  on  element similar submission button
+select Public Document from element Security Classification
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 1
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 1 entred
+Enter text for file to upload button 1
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 2
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 2 entred
+Enter text for file to upload button 2
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 4
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 4 entred
+Enter text for file to upload button 4
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+Enter text for file to upload text 5
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Iteration: 1 _ File: 5 entred
+Enter text for file to upload button 5
+Click  on  element submit button
+afterMethod()
+Submit_With_Similar_Submission
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+beforeMethod()
+beforeMethod()
+Submit_As_Manual_Submission
+Submit_As_Manual_Submission
+start Test
+https://access.trade.gov/login.aspx___hmouloud1@gmail.com
+Click  on  element E-file link
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+A-000-000 entred
+select INV - Investigation from element segment
+select Public Document from element Security Classification
+select Data from element Document Type
+Enter text for Filed On Behalf Of (collective entity)
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Test entred
+Click  on  element Manual submission
+Enter text for title
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+Title Test entred
+Enter text for page count
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+100 entred
+Click  on  element submit button
+afterMethod()
+Submit_As_Manual_Submission
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+beforeMethod()
+beforeMethod()
+Validate_Efile_Help_Messages
+Validate_Efile_Help_Messages
+start Test
+https://access.trade.gov/login.aspx___hmouloud1@gmail.com
+Click  on  element E-file link
+highlight field help link 4
+field help link 4 highlighted 
+Click  on  element field help link 4
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 1
+field help link 1 highlighted 
+Click  on  element field help link 1
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+Scroll to element field help link 2
+highlight field help link 2
+field help link 2 highlighted 
+Click  on  element field help link 2
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+Scroll to element field help link 2
+highlight field help link 2
+field help link 2 highlighted 
+Click  on  element field help link 2
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+Scroll to element field help link 3
+highlight field help link 3
+field help link 3 highlighted 
+Click  on  element field help link 3
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 3
+field help link 3 highlighted 
+Click  on  element field help link 3
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+highlight field help link 3
+field help link 3 highlighted 
+Click  on  element field help link 3
+Get the text of the element Help message
+highlight Help message
+Help message highlighted 
+afterMethod()
+Validate_Efile_Help_Messages
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+beforeMethod()
+beforeMethod()
+Validate_Efile_Error_Messages
+Validate_Efile_Error_Messages
+start Test
+https://access.trade.gov/login.aspx___hmouloud1@gmail.com
+Click  on  element Home page
+Click  on  element E-file link
+x
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+abcd entred
+Click  on  element submit button
+highlight invalid Case number error
+invalid Case number error highlighted 
+unhighlight invalid Case number error
+invalid Case number errorunhighlighted 
+x
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+A-000 entred
+Click  on  element submit button
+highlight invalid Case number error
+invalid Case number error highlighted 
+unhighlight invalid Case number error
+invalid Case number errorunhighlighted 
+x
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+000-000 entred
+Click  on  element submit button
+highlight invalid Case number error
+invalid Case number error highlighted 
+unhighlight invalid Case number error
+invalid Case number errorunhighlighted 
+x
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+ entred
+Click  on  element submit button
+Get the Style of the element field error link 1
+highlight field error link 1
+field error link 1 highlighted 
+unhighlight field error link 1
+field error link 1unhighlighted 
+x
+Enter text for case numbere
+element.clear();
+element.sendKeys(Keys.CONTROL + );
+element.sendKeys(Keys.DELETE);
+element.sendKeys(value);
+A-000-000 entred
+Click  on  element submit button
+Get the Style of the element field error link 1
+highlight field error link 1
+field error link 1 highlighted 
+unhighlight field error link 1
+field error link 1unhighlighted 
+x
+Click  on  element submit button
+Get the Style of the element field error link 1
+highlight field error link 1
+field error link 1 highlighted 
+unhighlight field error link 1
+field error link 1unhighlighted 
+x
+select CCR - Changed Circumstances from element select fields
+CCR - Changed Circumstances selected
+Click  on  element submit button
+Get the Style of the element field error link 1
+highlight select fields
+select fields highlighted 
+unhighlight select fields
+select fieldsunhighlighted 
+x
+Click  on  element submit button
+Get the Style of the element field error link 1
+highlight select fields
+select fields highlighted 
+unhighlight select fields
+Element select fields was not found on Gui
+x
+select Request New Segment from element select fields
+afterMethod()
+Validate_Efile_Error_Messages
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+beforeMethod()
+beforeMethod()
+Validate_Update_Profile_Help_Messages
+Validate_Update_Profile_Help_Messages
+start Test
+https://access.trade.gov/login.aspx___hmouloud1@gmail.com
+Click  on  element update profile
+highlight field help link 4
+field help link 4 highlighted 
+Click  on  element field help link 4
+Get the text of the element Help message
+Element Help message was not found on GUI
+afterMethod()
+Validate_Update_Profile_Help_Messages
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
+beforeMethod()
+beforeMethod()
+Validate_Efile_Register_Help_Messages
+Validate_Efile_Register_Help_Messages
+start Test
+https://access.trade.gov/login.aspx___hmouloud1@gmail.com
+Click  on  element logout
+Element logout was not found on Gui
+afterMethod()
+Validate_Efile_Register_Help_Messages
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
 Executing After class
 C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\ACCESS_SCRIPT/input_data
@@ -122,7 +616,7 @@ null
 
 ===============================================
 Suite
-Total tests run: 1, Failures: 0, Skips: 0
+Total tests run: 7, Failures: 4, Skips: 0
 Configuration Failures: 1, Skips: 0
 ===============================================
 

@@ -30,7 +30,8 @@ public class TestOne {
 	HashMap<String, String> mapConfInfos;
 	String browserType;
 	static XlsxTools xlsxTools;
-	static ArrayList<LinkedHashMap<String, String>> dataPool, dataPoolHelpmsg, dataPoolErrorMsg;
+	static ArrayList<LinkedHashMap<String, String>> dataPool, eFileHelpmsg,
+	updateProfileHelpmsg, dataPoolErrorMsg, eFileRegisterHelpmsg;
 	ArrayList<LinkedHashMap<String, String>> guiPool;
 	static AccessLib accessLib;
 	//public static boolean testCaseStatus;
@@ -48,8 +49,10 @@ public class TestOne {
 		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/Access_Regression.xlsx";
 		System.out.println("dataPoolPath "+dataPoolPath);
 		dataPool  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Regression", "Active=TRUE");
-		dataPoolHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Help", "");
-		dataPoolErrorMsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Validation", "");
+		eFileHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "E-file Fields Help", "");
+		updateProfileHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Update Profile Fileds Help", "");
+		eFileRegisterHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "E-Filer Register Fileds Help", "");
+		dataPoolErrorMsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Error Validation", "");
 		String testNgTemplate = InitTools.getInputDataFolder()+"/template/testng_template.xml";
 		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
 		System.out.println("testNgTemplate "+testNgTemplate);
@@ -129,9 +132,9 @@ public class TestOne {
 	 * This method is E-File creation
 	*/
 	@Test(enabled = true, priority=1)
-	void Test_Case_001() throws Exception
+	void Submit_With_Add_Files() throws Exception
 	{
-		printLog("Test_Case_001");
+		printLog("Submit_With_Add_Files");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_001");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -146,7 +149,7 @@ public class TestOne {
 			guiTools.openBrowser(browserType);
 			loginOn = AccessLib.loginToAccess(url, user, password);
 		}
-		holdSeconds(2);
+		row.put("type", "add more files");
 		testCaseStatus = AccessLib.createEFileDocument(row);
 	}
 	
@@ -154,9 +157,9 @@ public class TestOne {
 	 * This method is for message validation
 	*/
 	@Test(enabled = true, priority=1)
-	void Test_Case_002() throws Exception
+	void Submit_With_Similar_Submission() throws Exception
 	{
-		printLog("Test_Case_002");
+		printLog("Submit_With_Similar_Submission");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_002");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -166,14 +169,14 @@ public class TestOne {
 		String user = mapConfInfos.get("user_name");
 		String password = mapConfInfos.get("password");	
 		System.out.println(url+"___"+user);
+
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
 			loginOn = AccessLib.loginToAccess(url, user, password);
 		}
-		holdSeconds(2);
-		row = dataPoolHelpmsg.get(0);
-		testCaseStatus =  AccessLib.ValidateFieldsHelpMessages(row);
+		row.put("type", "similar submission");
+		testCaseStatus = AccessLib.createEFileDocument(row);
 	}
 	
 	
@@ -181,9 +184,9 @@ public class TestOne {
 	 * This method is for error validation
 	*/
 	@Test(enabled = true, priority=1)
-	void Test_Case_003() throws Exception
+	void Submit_As_Manual_Submission() throws Exception
 	{
-		printLog("Test_Case_003");
+		printLog("Submit_As_Manual_Submission");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_003");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -198,12 +201,110 @@ public class TestOne {
 			guiTools.openBrowser(browserType);
 			loginOn = AccessLib.loginToAccess(url, user, password);
 		}
-		holdSeconds(2);
-		testCaseStatus =  AccessLib.ValidateFieldsErrorMessages(dataPoolErrorMsg);
+		row.put("type", "manual submission");
+		testCaseStatus = AccessLib.createEFileDocument(row);
+	}
+	
+	/**
+	 * This method is for message validation
+	*/
+	@Test(enabled = true, priority=1)
+	void Validate_Efile_Help_Messages() throws Exception
+	{
+		printLog("Validate_Efile_Help_Messages");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_004");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = AccessLib.loginToAccess(url, user, password);
+		}
+		row = eFileHelpmsg.get(0);
+		testCaseStatus =  AccessLib.ValidateFieldsEFileHelpMessages(row);
 	}
 	
 	
+	/**
+	 * This method is for error validation
+	*/
+	@Test(enabled = true, priority=1)
+	void Validate_Efile_Error_Messages() throws Exception
+	{
+		printLog("Validate_Efile_Error_Messages");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_005");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = AccessLib.loginToAccess(url, user, password);
+		}
+		testCaseStatus =  AccessLib.ValidateFieldsErrorMessages(dataPoolErrorMsg);
+	}
 	
+	/**
+	 * This method is for update profile fields message validation
+	*/
+	@Test(enabled = true, priority=1)
+	void Validate_Update_Profile_Help_Messages() throws Exception
+	{
+		printLog("Validate_Update_Profile_Help_Messages");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_006");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = AccessLib.loginToAccess(url, user, password);
+		}
+		row = updateProfileHelpmsg.get(0);
+		testCaseStatus =  AccessLib.ValidateFieldsUpdateProfileHelpMessages(row);
+	}
+	
+	
+	/**
+	 * This method is for message validation
+	*/
+	@Test(enabled = true, priority=1)
+	void Validate_Efile_Register_Help_Messages() throws Exception
+	{
+		printLog("Validate_Efile_Register_Help_Messages");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_007");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = AccessLib.loginToAccess(url, user, password);
+		}
+		row = eFileRegisterHelpmsg.get(0);
+		testCaseStatus =  AccessLib.ValidateFieldsRegisterHelpMessages(row);
+	}
 	/**
 	 * This method if for getting the current test case information
 	*/

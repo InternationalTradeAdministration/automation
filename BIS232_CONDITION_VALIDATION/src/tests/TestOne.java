@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -49,7 +50,6 @@ public class TestOne {
 	//public static LinkedHashMap<String, String> jFile;
 	public static void main(String[] args) throws Exception 
 	{
-		
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
 		bisFormLib = new BisFormLib();
@@ -146,6 +146,7 @@ public class TestOne {
 	    	HtmlReport.buildHtmalReportForTestSuite();
 			guiTools.closeBrowser();
 			System.exit(0);
+			
 	    }
 	}
 	@DataProvider(name = "fetchingData")

@@ -159,6 +159,13 @@ public class HtmlReport extends InitTools{
 						+  testCaseSteps.get(i).get("stepDesc")+"</td>"
 						+ "</tr>"; 
 			}
+			/*else if(testCaseSteps.get(i).get("StepPassFail").equalsIgnoreCase("Warning"))
+			{
+				line = "<tr class='Warning'>"
+						+ "<td colspan='7' class='Warning'>"
+						+  testCaseSteps.get(i).get("stepDesc")+"</td>"
+						+ "</tr>"; 
+			}*/
 			else
 			{
 					line = "<tr id='"+testCaseSteps.get(i).get("StepPassFail")+"'>"
