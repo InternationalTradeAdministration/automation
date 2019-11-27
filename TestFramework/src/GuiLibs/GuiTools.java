@@ -618,7 +618,7 @@ public class GuiTools extends InitTools{
 	 */
 	public static void enterText(LinkedHashMap<String, String> map, String value) throws Exception
 	{
-		printLog("Enter text for "+ map.get("field_name"));
+		printLog("Enter text for  "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
 		if (!elementExists(locType, locValue))
@@ -636,19 +636,66 @@ public class GuiTools extends InitTools{
 			{
 			    if(e.isDisplayed()) element = e;
 			}
-			
-			element.clear();
-			System.out.println("element.clear();");
-			element.sendKeys(Keys.CONTROL + "a");
-			System.out.println("element.sendKeys(Keys.CONTROL + );");
-			element.sendKeys(Keys.DELETE);
-			System.out.println("element.sendKeys(Keys.DELETE);");
+			try
+			{
 			element.sendKeys(value);
+			element.sendKeys(Keys.UP);
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 			System.out.println("element.sendKeys(value);");
 		}
 		System.out.println(value + " entred");
 	}
 	
+	
+	/**
+	 * This method Enter text into a text field
+	 * @param map: Web Element
+	 * @param value: value to put in the text field
+	 * @throws Exception 
+	 * 
+	 */
+	public static void enterTextAndClear(LinkedHashMap<String, String> map, String value) throws Exception
+	{
+		printLog("Enter text for  "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			testCaseStatus = false;
+			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
+					"Element not found", "Step", "fail", map.get("field_name")+" not found");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
+			//clickElement(map);
+			element.clear();
+			//System.out.println("element.clear();");
+			/*element.sendKeys(Keys.CONTROL + "a");
+			System.out.println("element.sendKeys(Keys.CONTROL + );");
+			element.sendKeys(Keys.DELETE);
+			System.out.println("element.sendKeys(Keys.DELETE);");
+			holdSeconds(1);*/
+			try
+			{
+				element.sendKeys(value);
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("element.sendKeys(value);");
+		}
+		System.out.println(value + " entred");
+	}
 	/**
 	 * This method uploads file
 	 * @param map: Web Element
@@ -966,6 +1013,38 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
+	 * This method return the option of a select
+	 * @param map: Web Element
+	 * @param value: value of the option
+	 * @throws Exception 
+	 * 
+	 */
+	public static String[] getSelectValues(HashMap<String, String> map) throws Exception
+	{
+		printLog("select element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		String[] vals = null; int i=0;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue)); 
+	        Select select = new Select(element);  
+	       java.util.List<WebElement> options = select.getOptions();
+	       vals = new String[options.size()];
+	        for(WebElement item:options)  
+	        {  
+	        	vals[i] = item.getText().trim(); i++;
+	        	System.out.println("Dropdown values are "+ item.getText()); 
+	        }
+		}
+		return vals;
+	}
+	
+	/**
 	 * This method sleeps for a moment
 	 * @param seconds: number of seconds to hold
 	 * @throws InterruptedException 
@@ -974,6 +1053,16 @@ public class GuiTools extends InitTools{
 	public static void holdSeconds(int seconds) throws InterruptedException
 	{
 		Thread.sleep(1000*seconds);
+	}
+	/**
+	 * This method sleeps for a moment
+	 * @param seconds: number of seconds to hold
+	 * @throws InterruptedException 
+	 * 
+	 */
+	public static void holdMilliSeconds(int milliSeconds) throws InterruptedException
+	{
+		Thread.sleep(milliSeconds);
 	}
 	/**
 	 * This method finds element by type
@@ -1503,5 +1592,9 @@ public class GuiTools extends InitTools{
 	 */
 	public void setThreadId(long threadId) {
 		this.threadId = threadId;
+	}
+	public static String removeSpecialChar(String str)
+	{
+		return str.replace(":", "").replace(">", "-").replace("<", "-").replace("?", "");
 	}
 }
