@@ -1718,22 +1718,24 @@ public class BisFormLib{
 					case "condition 20":
 					{
 						conditionDetails = "...then ASTM A313 must be listed or the cell may be blank.";
-						String productStandards_Designation = getProdValue(jObj, "ProductStandards", "Designation");
-						resultValues = getFormatedResultValues("productStandards_Designation", productStandards_Designation);
+						String org = getProdValue(jObj, "ProductStandards", "Organization");
+						String des = getProdValue(jObj, "ProductStandards", "Designation");
+						resultValues = getFormatedResultValues("Organization", org, "Designation", des );
 						singleResults[20] = checkAndReport("Condition 20", conditionDetails, resultValues, 
-								("ASTM-A313".equalsIgnoreCase(productStandards_Designation) || "ASTM A313".equalsIgnoreCase(productStandards_Designation))
-								|| "".equalsIgnoreCase(productStandards_Designation));
+										("ASTM".equalsIgnoreCase(org) && "A313".equalsIgnoreCase(des))||
+										("".equalsIgnoreCase(org) && "".equalsIgnoreCase(des)));
 						ovralResult = ovralResult & singleResults[20];
 						break;
 					}
 					case "condition 21":
 					{
 						conditionDetails = "Cold heading quality steel ...then ASTM F2282 must be listed or the cell may be blank.";
-						String productStandards_Designation = getProdValue(jObj, "ProductStandards", "Designation");
-						resultValues = getFormatedResultValues("productStandards_Designation", productStandards_Designation);
+						String org = getProdValue(jObj, "ProductStandards", "Organization");
+						String des = getProdValue(jObj, "ProductStandards", "Designation");
+						resultValues = getFormatedResultValues("Organization", org, "Designation", des);
 						singleResults[21] = checkAndReport("Condition 21", conditionDetails, resultValues, 
-								("ASTM-F2282".equalsIgnoreCase(productStandards_Designation) || "ASTM F2282".equalsIgnoreCase(productStandards_Designation))
-								|| "".equalsIgnoreCase(productStandards_Designation));
+								("ASTM".equalsIgnoreCase(org) && "F2282".equalsIgnoreCase(des))||
+								("".equalsIgnoreCase(org) && "".equalsIgnoreCase(des)));
 						ovralResult = ovralResult & singleResults[21];
 						break;
 					}
@@ -3238,9 +3240,21 @@ public class BisFormLib{
 						}
 						break;
 					}
+					case "condition 145":{
+						conditionDetails = "...If the condition 145 is present, then send it to the manual review.";
+						HtmlReport.addHtmlStep("<span class = 'Warning'>Validate {condition 145}</span>", 
+								"<span class = 'Warning'>"+ conditionDetails +"</span>" ,
+								"<span class = 'Warning'>Send it to the manual review.</span>" , 
+								"<span class = 'Warning'>N/A</span>",
+								"Warning", "");
+						break;
+					}
+					
+					
+					
 					default :
 					{
-						failTestSuite("Validate condition", "All conditions are valid", 
+						failTestCase("Validate condition", "All conditions are valid", 
 								condition+" is not a valid condition", "Step", "fail", "");
 						break;
 					}
@@ -3819,7 +3833,7 @@ public class BisFormLib{
 					}
 					default:
 					{
-						failTestSuite("Validate condition", "All conditions are valid", 
+						failTestCase("Validate condition", "All conditions are valid", 
 								condition+" is not a valid condition", "Step", "fail", "");
 						break;
 					}
