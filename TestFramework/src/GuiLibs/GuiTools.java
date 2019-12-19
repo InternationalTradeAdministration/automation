@@ -4,9 +4,7 @@
  * December, 2018
 */
 package GuiLibs;
-//import ReportLibs.ReportTools;
 import static ReportLibs.ReportTools.printLog;
-
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -23,9 +21,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import javax.imageio.ImageIO;
-
 import org.apache.commons.io.FileUtils;
 import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.Alert;
@@ -42,14 +38,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
 import InitLibs.InitTools;
 import ReportLibs.HtmlReport;
 import ru.yandex.qatools.ashot.AShot;
@@ -103,7 +98,7 @@ public class GuiTools extends InitTools{
 	    
 	}
 	*//**
-	 * This function will start recording
+	 * This function will stop recording
 	 * @param folder: where the video will be saved
 	 * @param fileName: the name of the video file
 	 * @param voice: with o without voice
@@ -156,10 +151,11 @@ public class GuiTools extends InitTools{
 	/**
 	 * This function set browser timeout
 	 * @param browserTimeOut: time for wait, in seconds
-	 */
+	*/
 	public static int setBrowserTimeOut(int browserTimeOut)
 	{
-		getDriver().manage().timeouts().implicitlyWait(browserTimeOut, TimeUnit.SECONDS);
+		getDriver().manage().timeouts().implicitlyWait(browserTimeOut,
+				TimeUnit.SECONDS);
 		int currentTimeOut = setTimeOut(browserTimeOut);
 		return currentTimeOut;
 	}
@@ -167,11 +163,10 @@ public class GuiTools extends InitTools{
 	 * This function set browser process ID
 	 * @param browserExe: browser type
 	 * @throws Exception
-	 */
+	*/
 	public static void setUpBrowserProcessId(String browserExe) throws Exception
 	{
 		String title = "New Browser[" +new Random().nextInt(100)+ "]";
-		//String title = "New Browser[100]";
 		executeScript("document.title = \"" +title+ "\";"); 
 		try
 		{
@@ -186,11 +181,11 @@ public class GuiTools extends InitTools{
 	 * This function get browser process ID
 	 * @param browserType: browser type
 	 * @param title: Browser title
-	 */
+	 * @return process ID
+	*/
 	public static String getNewProcessId(String browserType, String title)
 	{
 		try {
-	         // create a new process
 			String str, commandeLine = "tasklist /v /fo csv | findstr /i \""+ browserType+"\"";
 	         System.out.println("Creating Process...");
 	         Process p = Runtime.getRuntime().exec("cmd /c "+commandeLine);
@@ -211,6 +206,7 @@ public class GuiTools extends InitTools{
 	/**
 	 * This function get all browser process IDs
 	 * @param browserType: browser type
+	 * @return list of process IDs
 	 */
 	public static ArrayList<String> getAllProcessIds(String browserType)
 	{
@@ -236,6 +232,7 @@ public class GuiTools extends InitTools{
 	/**
 	 * This function execute script
 	 * @param script: script name
+	 * @return Object Js object
 	 */
 	public static Object executeScript(String script) throws Exception
 	{
@@ -269,7 +266,6 @@ public class GuiTools extends InitTools{
 		getDriver().quit();
 		Runtime.getRuntime().exec("cmd /c taskkill /PID " + 
 		getBrowserProcessId());
-		
 	}
 	/**
 	 * This function kills process
@@ -284,13 +280,12 @@ public class GuiTools extends InitTools{
 			{
 				System.out.println(pId);
 				Runtime.getRuntime().exec("cmd /c taskkill /F /PID " +pId);
-				//Runtime.getRuntime().exec("cmd /c taskkill /PID " +getBrowserProcessId());
 			}
 		}
-		
 	}
 	/**
 	 * This function gets IE driver
+	 * @return IE webdriver
 	 */
 	@SuppressWarnings("deprecation")
 	public WebDriver getIeDriver()
@@ -308,6 +303,7 @@ public class GuiTools extends InitTools{
 	}
 	/**
 	 * This function gets Firefox driver
+	 * @return Firefox webdriver
 	 */
 	public WebDriver getFirefoxDriver()
 	{
@@ -317,15 +313,14 @@ public class GuiTools extends InitTools{
 				"application/octet-stream");
 		capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
 		return new FirefoxDriver(capabilities);*/
-		
 		System.out.println(getLibFolder());
-		 System.setProperty("WebDriver.gecko.driver",getLibFolder()+"/geckodriver.exe");
-
-		    return new FirefoxDriver();
+		System.setProperty("WebDriver.gecko.driver",getLibFolder()+"/geckodriver.exe");
+		return new FirefoxDriver();
 		//geckodriver.exe
 	}
 	/**
 	 * This function gets Chrome driver
+	 * @return chrome webdriver
 	 */
 	public WebDriver getChromeDriver()
 	{
@@ -348,13 +343,11 @@ public class GuiTools extends InitTools{
 			 Chrome_Profile_Path = "/Users/"+getTesterName()+"/Library/Application Support/Google";
 		}
 		/* Storing the Chrome Profile Path in Chrome_Profile_Path variable. */
-		
 		/* Creating an instance of ChromeOptions (i.e objChrome_Profile) */
 		ChromeOptions Chrome_Profile = new ChromeOptions();
 		/* Disabling the chrome browser extensions */
 		Chrome_Profile.addArguments("chrome.switches","--disable-extensions"); 
 		/* Adding Chrome profile by .addArguments to objChrome_Profile  */
-		
 		Chrome_Profile.addArguments("user-data-dir=" + Chrome_Profile_Path);
 		/*Initializing the Webdriver instance (i.e. driver) to open Chrome Browser and passing the Chrome Profile as argument */
 		//driver = new ChromeDriver(Chrome_Profile);
@@ -366,7 +359,66 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
-	 * This function gets Chrome driver
+	 * This method fail test case
+	 * @param stepDesc, Step description
+	 * @param stepExpectResult, Step expected result
+	 * @param stepActualResult, Step actual result
+	 * @param StepVpStep, Verification point or step
+	 * @param StepPassFail, always fail
+	 * @param msgError, Error message, and screen shot name
+	 */
+	public static void failTestCase(String stepDesc, 
+									String stepExpectResult, 
+									String stepActualResult, 
+									String StepVpStep, 
+									String StepPassFail,
+									String msgError) throws IOException
+	{
+		//HtmlReport.setTcStatus(false);
+		testCaseStatus = false;
+		String aLink = "";
+		if(!msgError.equals(""))
+		{
+			String screenShotPath = takeScreenShot(msgError, true);
+			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
+		}
+		
+		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult,
+							   StepVpStep, StepPassFail, aLink);
+		Assert.fail( getTestCaseName()+ ": " +msgError);
+	}
+	
+	/**
+	 * This method fail test suite
+	 * @param stepDesc, Step description
+	 * @param stepExpectResult, Step expected result
+	 * @param stepActualResult, Step actual result
+	 * @param StepVpStep, Verification point or step
+	 * @param StepPassFail, always fail
+	 * @param msgError, Error message, and screen shot name
+	 */
+	public static void failTestSuite(String stepDesc, 
+									 String stepExpectResult, 
+									 String stepActualResult, 
+									 String StepVpStep, 
+									 String StepPassFail,
+									 String msgError) throws IOException
+	{
+		String aLink = "";
+		testCaseStatus = false;
+		if(!msgError.equals(""))
+		{
+			String screenShotPath = takeScreenShot(msgError, true);
+			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
+		}
+		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, 
+				StepVpStep, StepPassFail, aLink);
+		tearDown = true;
+		Assert.fail( getTestCaseName()+ ": " +msgError);
+	}
+	
+	/**
+	 * This function gets chrome driver
 	 */
 	public WebDriver getChromeDriverOff()
 	{
@@ -399,96 +451,12 @@ public class GuiTools extends InitTools{
 		//capabilities.setBrowserName("chrome");
 		//return new ChromeDriver(capabilities);
 	}
-	/**
-	 * This function navigate to Given url
-	 * @param url: url to navigate to
-	 */
-	public static void navigateTo(String url)
-	{
-		WebDriver dr = getDriver();
-		dr.navigate().to(url);
-	}
-	/**
-	 * This function get all the opened windows
-	 */
-	Set<String> getAllWindows()
-	{
-		return getDriver().getWindowHandles();
-	}
-	/**
-	 * This function switch windows
-	 */
-	void switchToWindow(String window)
-	{
-		getDriver().switchTo().window(window);
-	}
-	/**
-	 * This method close current window
-	 */
-	void closeCurrentWindow()
-	{
-		if(getDriver()!=null)
-		{
-			getDriver().close();
-		}
-	}
-	/**
-	 * This method close current window
-	 */
-	public static void failTestCase(String stepDesc, 
-									String stepExpectResult, 
-									String stepActualResult, 
-									String StepVpStep, 
-									String StepPassFail,
-									String msgError) throws IOException
-	{
-		//HtmlReport.setTcStatus(false);
-		testCaseStatus = false;
-		String aLink = "";
-		if(!msgError.equals(""))
-		{
-			String screenShotPath = takeScreenShot(msgError, true);
-			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
-		}
-		
-		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult,
-							   StepVpStep, StepPassFail, aLink);
-		Assert.fail( getTestCaseName()+ ": " +msgError);
-	}
 	
 	/**
-	 * This method fails test case
-	 * @param stepDesc:step descrition
-	 * @param stepExpectResult: step expected result
-	 * @param stepActualResult: step actual result
-	 * @param StepVpStep: step or vp
-	 * @param StepPassFail: pass or fail
-	 * @param msgError: error message
-	 * @throws IOException 
-	 * 
-	 */
-	public static void failTestSuite(String stepDesc, 
-									 String stepExpectResult, 
-									 String stepActualResult, 
-									 String StepVpStep, 
-									 String StepPassFail,
-									 String msgError) throws IOException
-	{
-		String aLink = "";
-		//HtmlReport.setTcStatus(false);
-		testCaseStatus = false;
-		if(!msgError.equals(""))
-		{
-			String screenShotPath = takeScreenShot(msgError, true);
-			aLink = "<a href = '"+screenShotPath+"'>"+msgError+"</a>";
-		}
-		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
-		tearDown = true;
-		Assert.fail( getTestCaseName()+ ": " +msgError);
-	}
-	/**
-	 * This method takes screenshot of all page
+	 * This method takes screenshot
 	 * @param ssName: screenshot's name
+	 * @param fullPage, full page or visible part
+	 * @return string containing the path to the screen shot 
 	 * @throws IOException 
 	 * 
 	 */
@@ -510,26 +478,11 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
-	 * This method takes screen shot of the visible part
-	 * @param ssName: screenshot's name
-	 * @param ssDescription: screenshot's description
-	 * @throws IOException 
-	 * 
-	 */
-	/*public static String takePrintScreen(String ssName, String ssDescription) 
-			throws IOException
-	{
-		String ssPath = takeVisibleScreenShot(getDriver(), 
-				getOutputResultFolder()+"/html", ssName);
-		HtmlReport.addLinkStepToHtmlReport(ssName, ssDescription, ssPath);
-		return ssPath;
-	}*/
-	
-	/**
 	 * This method takes screenshot of all page
 	 * @param driver: driver
 	 * @param ssPath: screenshot's path
 	 * @param ssName: screenshot name
+	 * @return string containing the path to the screen shot
 	 * @throws IOException 
 	 * 
 	 */
@@ -553,6 +506,7 @@ public class GuiTools extends InitTools{
 	 * @param driver: driver
 	 * @param ssPath: screenshot's path
 	 * @param ssName: screenshot name
+	 * @return string containing the path to the screen shot
 	 * @throws IOException 
 	 * 
 	 */
@@ -575,10 +529,61 @@ public class GuiTools extends InitTools{
 		return file;
 	}
 	
+	/**
+	 * This function navigate to Given url
+	 * @param url: URL to navigate to to the page
+	*/
+	public static void navigateTo(String url)
+	{
+		WebDriver dr = getDriver();
+		dr.navigate().to(url);
+	}
+	/**
+	 * This function get all the opened windows
+	 * @return set of window handles
+	 */
+	Set<String> getAllWindows()
+	{
+		return getDriver().getWindowHandles();
+	}
+	/**
+	 * This function switch windows
+	 */
+	void switchToWindow(String window)
+	{
+		getDriver().switchTo().window(window);
+	}
+	/**
+	 * This method close current window
+	 */
+	void closeCurrentWindow()
+	{
+		if(getDriver()!=null)
+		{
+			getDriver().close();
+		}
+	}
+	
+	/**
+	 * This method takes screen shot of the visible part
+	 * @param ssName: screenshot's name
+	 * @param ssDescription: screenshot's description
+	 * @throws IOException 
+	 * 
+	 */
+	/*public static String takePrintScreen(String ssName, String ssDescription) 
+			throws IOException
+	{
+		String ssPath = takeVisibleScreenShot(getDriver(), 
+				getOutputResultFolder()+"/html", ssName);
+		HtmlReport.addLinkStepToHtmlReport(ssName, ssDescription, ssPath);
+		return ssPath;
+	}*/
 	
 	/**
 	 * This method checks if element exists
 	 * @param map: Web Element
+	 * @return true if element exist, false if not
 	 * @throws Exception 
 	 * 
 	 */
@@ -588,9 +593,20 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
+	 * This method checks if element Visible
+	 * @param map: Web Element
+	 * @return true if element visible, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean checkElementVisible(LinkedHashMap<String, String> map) throws Exception
+	{
+		return checkElementVisible(map.get("locator_type"), map.get("locator_value"));
+	}
+	/**
 	 * This method checks if element exists
-	 * @param locType: The type of locator
-	 * @param locValue: the value of locator
+	 * @param map: Web Element
+	 * @return true if element exist, false if not
 	 * @throws Exception 
 	 * 
 	 */
@@ -607,6 +623,27 @@ public class GuiTools extends InitTools{
 		   present = false;
 		}
 		return present;
+	}
+	/**
+	 * This method checks if element Visible
+	 * @param map: Web Element
+	 * @return true if element visible, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean checkElementVisible(String locType, String locValue) throws Exception
+	{
+		boolean visible;
+		try {
+		   if(getDriver().findElement(byType(locType, locValue)).isDisplayed())
+		   visible = true;
+		   else visible = false;
+		} catch (NoSuchElementException e) {
+			visible = false;
+			e.printStackTrace();
+		   
+		}
+		return visible;
 	}
 	
 	/**
@@ -649,15 +686,59 @@ public class GuiTools extends InitTools{
 		System.out.println(value + " entred");
 	}
 	
-	
 	/**
 	 * This method Enter text into a text field
+	 * @param map: Web Element
+	 * @param value: value to put in the text field
+	 * @param niem: the niem element
+	 * @throws Exception 
+	 * 
+	 */
+	public static void enterText(LinkedHashMap<String, String> map, String value, int niem) throws Exception
+	{
+		printLog("Enter text for  "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int count = 1;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			testCaseStatus = false;
+			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
+					"Element not found", "Step", "fail", map.get("field_name")+" not found");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			    if (niem == count) break;
+			    count ++;
+			}
+			try
+			{
+			element.sendKeys(value);
+			element.sendKeys(Keys.UP);
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("element.sendKeys(value);");
+		}
+		System.out.println(value + " entred");
+	}
+	
+	/**
+	 * This method Enter text into a text field after clearing the field content
 	 * @param map: Web Element
 	 * @param value: value to put in the text field
 	 * @throws Exception 
 	 * 
 	 */
-	public static void enterTextAndClear(LinkedHashMap<String, String> map, String value) throws Exception
+	public static void enterTextAndClear(LinkedHashMap<String, String> map,
+			String value) throws Exception
 	{
 		printLog("Enter text for  "+ map.get("field_name"));
 		String locType = map.get("locator_type");
@@ -698,11 +779,9 @@ public class GuiTools extends InitTools{
 	}
 	/**
 	 * This method uploads file
-	 * @param map: Web Element
-	 * @param value: value to put in the text field
+	 * @param file: the file to be uploaded
 	 * @throws Exception 
-	 * 
-	 */
+	*/
 	public static void uploadFile(String file) throws Exception
 	{
 		StringSelection ss = new StringSelection(file);
@@ -717,8 +796,9 @@ public class GuiTools extends InitTools{
 	}
 
 	/**
-	 * This method takes screenshot of the visible part
+	 * This method checks if element exists
 	 * @param map: Web element
+	 * @return true if element found, false if not
 	 * @throws Exception 
 	 * 
 	 */
@@ -728,9 +808,10 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
-	 * This method verifies if element exists, if not fail test case
+	 * This method verifies if element exists
 	 * @param locType: The type of locator
 	 * @param locValue: the value of locator
+	 * @return true if element found, false if not
 	 * @throws Exception 
 	 * 
 	 */
@@ -814,11 +895,10 @@ public class GuiTools extends InitTools{
 		}
 	}
 	
-	
-	
 	/**
-	 * This method clicks on element
-	 * @param map: Web Element
+	 * This method clicks on niem element
+	 * @param map, Web Element
+	 * @param niem, niem element
 	 * @throws Exception 
 	 * 
 	 */
@@ -827,18 +907,18 @@ public class GuiTools extends InitTools{
 		printLog("Click  on  element "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
-		int count = 0;
+		int count = 1;
 		if (elementExists(locType, locValue))
 		{
 			WebElement element = driver.findElement(byType(locType, locValue));
 			List<WebElement> items = driver.findElements(byType(locType, locValue));
 			for(WebElement e: items)
 			{
-				count++;
 			    if(e.isEnabled()) 
 			    {
 			    		element = e;
 			    		if (count == niem) break;
+			    		count++;
 			    }
 			}
 			try{
@@ -855,12 +935,10 @@ public class GuiTools extends InitTools{
 		}
 	}
 	
-	
-	
-	
 	/**
 	 * This method enter file name into file type input
 	 * @param map: Web Element
+	 * @param file, the file name to be entred 
 	 * @throws Exception 
 	 * 
 	 */
@@ -885,8 +963,7 @@ public class GuiTools extends InitTools{
 			    if(e.isDisplayed()) element = e;
 			}
 			 ((JavascriptExecutor) getDriver()).executeScript(
-	         "arguments[0].style.visibility = 'visible'; "
-	         + " ",
+	         "arguments[0].style.visibility = 'visible'; arguments[0].style = ''; arguments[0].style.display = 'block';",
 	         element);
 			 try
 			 {
@@ -900,14 +977,18 @@ public class GuiTools extends InitTools{
 			 }
 		}
 	}
-	
+	/*file_input = driver.find_element_by_xpath("//input[@class = 'dz-hidden-input']")
+	# make the input visible:
+	driver.execute_script('arguments[0].style = ""; arguments[0].style.display = "block";
+	arguments[0].style.visibility = "visible";', file_input)
+	# send file:
+	file_input.send_keys("C:\\Users\\nicolas\\Documents\\CT\\Séance_du_Lundi_15_février.pdf")*/
 	
 	/**
 	 * This method clicks on element
 	 * @param map: Web Element
 	 * @throws Exception 
-	 * 
-	 */
+	*/
 	public static void clickElement(HashMap<String, String> map) throws Exception
 	{
 		printLog("Click on element "+ map.get("field_name"));
@@ -927,9 +1008,94 @@ public class GuiTools extends InitTools{
 			{
 			    if(e.isDisplayed()) element = e;
 			}
-			element.click();
+			element.sendKeys("\n");
 		}
 	}
+	
+
+	/**
+	 * This method clicks on element
+	 * @param map: Web Element
+	 * @throws Exception 
+	 * @param niem, niem element
+	*/
+	public static void clickNiemElement(HashMap<String, String> map, int niem) throws Exception
+	{
+		printLog("Click on element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int count = 1;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}else
+		{
+			WebElement element = null;
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			    if (count == niem) break;
+			    count++;
+			}
+			element.sendKeys("\n");
+		}
+	}
+	
+	
+	/**
+	 * This method selects an option from drop-down list by text    
+	 * @param map: Web Element
+	 * @param textValue: value to put in the text field
+	 * @throws Exception 
+	 * 
+	 */
+	public static void selectNiemElementByText(HashMap<String, String> map, 
+										   String textValue, int niem) throws Exception
+	{
+		printLog("select "+textValue+" from element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int count = 1;
+		WebElement element = null;
+		
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element '"+ map.get("field_name")+"' was "
+					+ "not found on Gui");
+			failTestCase("Filling element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Filling element " + map.get("field_name"));
+		}else
+		{
+		List<WebElement> items = driver.findElements(byType(locType, locValue));
+		for(WebElement e: items)
+		{
+		    if(e.isEnabled()) 
+		    {
+		    		element = e;
+		    		if (count == niem) break;
+		    		count++;
+		    }
+		}
+		try{
+			Select dropdown = new Select(element);
+			try
+			{
+				dropdown.selectByVisibleText(textValue);
+			}catch(Exception e){
+				failTestCase("Select element "+ textValue, "Element ["+textValue+ "] should be in"
+						+ " the list of options",
+						"Not as expected", "VP", "fail", "Select element "+ textValue);
+			}
+		}catch(Exception e){e.printStackTrace();}
+		
+		}
+		System.out.println(textValue+ " selected");
+	}
+	
 	/**
 	 * This method selects an option from drop-down list by text    
 	 * @param map: Web Element
@@ -1013,9 +1179,9 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
-	 * This method return the option of a select
-	 * @param map: Web Element
-	 * @param value: value of the option
+	 * This method return all options of a select
+	 * @param map, Web Element
+	 * @return a list of options in the dropdown list
 	 * @throws Exception 
 	 * 
 	 */
@@ -1056,7 +1222,7 @@ public class GuiTools extends InitTools{
 	}
 	/**
 	 * This method sleeps for a moment
-	 * @param seconds: number of seconds to hold
+	 * @param milliSeconds: number of milliseconds to hold
 	 * @throws InterruptedException 
 	 * 
 	 */
@@ -1068,9 +1234,10 @@ public class GuiTools extends InitTools{
 	 * This method finds element by type
 	 * @param locType: The type of locator
 	 * @param locValue: the value of locator
+	 * @return object BY
 	 * @throws Exception 
 	 * 
-	 */
+	*/
 	public static By byType(String locType, String locValue) throws Exception
 	{
 		switch(locType.toUpperCase())
@@ -1104,7 +1271,7 @@ public class GuiTools extends InitTools{
 	 * @param map: Web Element
 	 * @throws Exception 
 	 * 
-	 */
+	*/
 	public static void scrollToElement(HashMap<String, String> map) throws Exception
 	{
 		printLog("Scroll to element "+ map.get("field_name"));
@@ -1125,7 +1292,6 @@ public class GuiTools extends InitTools{
 			    		element = e;
 			    	}
 			}
-			//WebElement element = driver.findElement(By.id("gbqfd"));
 			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 			Point point = element.getLocation();
 			executor.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
@@ -1135,9 +1301,45 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
+	 * This method scrolls a niem given element
+	 * @param map, Web Element
+	 * @param niem, the niem element
+	 * @throws Exception 
+	 * 
+	 */
+	public static void scrollToNiemElement(HashMap<String, String> map, int niem) throws Exception
+	{
+		printLog("Scroll to element "+ map.get("field_name"));
+		int position = 1;
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element ' "+ map.get("field_name")+"' was "
+					+ "not found on GUI");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) 
+			    	{
+			    		element = e;
+			    		if (niem == position) break;
+			    		position++;
+			    	}
+			}
+			JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+			Point point = element.getLocation();
+			executor.executeScript("window.scrollTo(0, -document.body.scrollHeight);");
+			holdSeconds(1);
+			executor.executeScript("javascript:window.scrollBy("+point.getX()+","+(point.getY()-300)+")");
+		}
+	}
+	/**
 	 * This method scrolls by pixels
 	 * @param pixels: number of pixels to scroll down
-	 * @throws Exception 
 	 * 
 	 */
 	public static void scrollByPixel(int pixels)
@@ -1148,8 +1350,6 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method scrolls to the top of the page
-	 * @throws Exception 
-	 * 
 	 */
 	public static void scrollToTheTopOfPage()
 	{
@@ -1160,9 +1360,7 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method scrolls to the bottom of the page
-	 * @throws Exception 
-	 * 
-	 */
+	*/
 	public static void scrollToTheBottomOfPage()
 	{
 		JavascriptExecutor executor = (JavascriptExecutor)getDriver();
@@ -1179,7 +1377,7 @@ public class GuiTools extends InitTools{
 	 * @param StepSs: error message/screen shot
 	 * @throws IOException 
 	 * 
-	 */
+	*/
 	public static void updateHtmlReport(String stepDesc, 
 										String stepExpectResult, 
 										String stepActualResult, 
@@ -1196,8 +1394,38 @@ public class GuiTools extends InitTools{
 		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
 	}
 	
+	
 	/**
 	 * This method updates report
+	 * @param stepDesc:step descrition
+	 * @param stepExpectResult: step expected result
+	 * @param stepActualResult: step actual result
+	 * @param StepVpStep: step or VP
+	 * @param StepPassFail: pass or fail
+	 * @param StepSs: error message/screen shot
+	 * @param fullPage: fall page or the visible part
+	 * @throws IOException 
+	 * 
+	*/
+	public static void updateHtmlReport(String stepDesc, 
+										String stepExpectResult, 
+										String stepActualResult, 
+										String StepVpStep,
+										String StepPassFail,
+										String StepSs, 
+										boolean fullPage) throws IOException
+	{
+		String aLink  = "";
+		if (!"".equals(StepSs))
+		{
+			String screenShotPath = takeScreenShot(StepSs, fullPage);
+			aLink = "<a href = '"+screenShotPath+"'>"+StepSs+"</a>";
+		}
+		HtmlReport.addHtmlStep(stepDesc, stepExpectResult, stepActualResult, StepVpStep, StepPassFail, aLink);
+	}
+	
+	/**
+	 * This method updates overall report
 	 * @param stepDesc:step descrition
 	 * @param stepExpectResult: step expected result
 	 * @param stepActualResult: step actual result
@@ -1224,11 +1452,11 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
-	 * This method replace the GUI
-	 * @param guiRow: gui element
-	 * @param newValue: gui element new value
-	 * 
-	 */
+	 * This method replace the GUI element value
+	 * @param guiRow, gui element
+	 * @param newValue, gui element new value
+	 * @return gui element
+	*/
 	public static  LinkedHashMap<String, String> replaceGui (HashMap<String, String> guiRow, 
 													   		 String...  newValues)
 	{
@@ -1279,8 +1507,8 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method highlights element on the page
-	 * @param map: gui element
-	 * @param color: the used color for highlighting 
+	 * @param map, gui element
+	 * @param color, the used color for highlighting 
 	 * @throws Exception
 	 */
 	public static void highlightElement(HashMap<String, String> map,
@@ -1315,11 +1543,11 @@ public class GuiTools extends InitTools{
 		}
 	}
 	
-	
 	/**
 	 * This method highlights niem element on the page
 	 * @param map: gui element
 	 * @param color: the used color for highlighting 
+	 * @param niem, the niem element
 	 * @throws Exception
 	 */
 	public static void highlightNiemElement(HashMap<String, String> map,
@@ -1328,7 +1556,7 @@ public class GuiTools extends InitTools{
 		printLog("highlight "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
-		int count=0;
+		int count=1;
 		if (!elementExists(locType, locValue))
 		{
 			printLog("Element "+ map.get("field_name")+" was "
@@ -1341,9 +1569,9 @@ public class GuiTools extends InitTools{
 			{
 				for(WebElement e: items)
 				{
-					count++;
 				    if(e.isDisplayed()) element = e;
 				    if (count == niem) break;
+				    count++;
 				}
 				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 				executor.executeScript("arguments[0].setAttribute('style', 'border:"
@@ -1370,6 +1598,8 @@ public class GuiTools extends InitTools{
 		{
 			printLog("Element "+ map.get("field_name")+" was "
 					+ "not found on Gui");
+			failTestCase("Unhighlight element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "unhighlight element " + map.get("field_name"));
 		}else
 		{
 			try{
@@ -1390,7 +1620,86 @@ public class GuiTools extends InitTools{
 	}
 	
 	/**
-	 * This method switch to frame
+	 * This method gets element attribute
+	 * @param map: gui element
+	 * @param attribute: HTML Element's property(text, value, href...)
+	 * @throws Exception
+	 */
+	public static String[] getElementValuesIntoArray(HashMap<String, String> map, 
+											 String attribute) throws Exception
+	{
+		printLog("Get the "+attribute+" of the element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		String [] listOfValues = null;
+		int j=0;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on GUI");
+			failTestCase("Get values of element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}else
+		{
+			//WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			listOfValues = new String [items.size()];
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) 
+			    	{
+			    		if ("text".equalsIgnoreCase(attribute))
+			    			listOfValues[j] = e.getText();
+						else
+							listOfValues[j] = e.getAttribute(attribute) ;
+			    		j++;
+			    	}
+			}
+		}
+		return listOfValues;
+	}
+	/**
+	 * This method unhighlights niem element on the page
+	 * @param map: gui element
+	 * @param niem, the niem element
+	 * @throws Exception
+	 */
+	public static void unHighlightNiemElement(HashMap<String, String> map, 
+			int niem) throws Exception
+	{
+		printLog("unhighlight "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int position = 1;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			failTestCase("Unhighlight element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}else
+		{
+			try{
+				WebElement element = driver.findElement(byType(locType, locValue));
+				List<WebElement> items = driver.findElements(byType(locType, locValue));
+				for(WebElement e: items)
+				{
+				    if(e.isDisplayed()) element = e;
+				    if(niem==position) break;
+				    position++;
+				}
+				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+				executor.executeScript("arguments[0].style.border='0px'", element);
+				printLog(map.get("field_name") + "unhighlighted ");
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * This method switches to frame
 	 * @param map: gui element
 	 * @throws Exception
 	 */
@@ -1405,6 +1714,8 @@ public class GuiTools extends InitTools{
 		{
 			printLog("frame "+ map.get("field_name")+" was "
 					+ "not found on Gui");
+			failTestCase("Switch to Form " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "farm element " + map.get("field_name"));
 		}else
 		{
 			WebElement element = driver.findElement(byType(locType, locValue));
@@ -1417,7 +1728,7 @@ public class GuiTools extends InitTools{
 		}
 	}
 	/**
-	 * This method switch to frame
+	 * This method switches back from frame
 	 * @param map: gui element
 	 * @throws Exception
 	 */
@@ -1427,8 +1738,8 @@ public class GuiTools extends InitTools{
 	}
 	/**
 	 * This method gets element attribute
-	 * @param map: gui element
-	 * @param attribute: Element's HTML property
+	 * @param map, gui element
+	 * @param attribute, Element's HTML property
 	 * @throws Exception
 	 */
 	public static String getElementAttribute(HashMap<String, String> map, 
@@ -1441,6 +1752,8 @@ public class GuiTools extends InitTools{
 		{
 			printLog("Element "+ map.get("field_name")+" was "
 					+ "not found on GUI");
+			failTestCase("Get attribute element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
 		}else
 		{
 			WebElement element = driver.findElement(byType(locType, locValue));
@@ -1538,6 +1851,7 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method gets process identifier
+	 * @return process ID
 	 */
 	public String getBrowserProcessId() {
 		return browserProcessId;
@@ -1553,6 +1867,7 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method gets current test case name
+	 * @return current test case name
 	 */
 	public String getCurrentTestCaseName() {
 		return currentTestCaseName;
@@ -1567,13 +1882,13 @@ public class GuiTools extends InitTools{
 	}
 	/**
 	 * This method gets browser name
+	 * @return browser name
 	 */
 	public String getBrowserName() {
 		return browserName;
 	}
 	/**
 	 * This method sets browser name
-	 * @param browserName
 	 */
 	public void setBrowserName(String browserName) {
 		this.browserName = browserName;
@@ -1581,6 +1896,7 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method gets thread id
+	 * @return thread ID
 	 */
 	public long getThreadId() {
 		return threadId;
@@ -1588,13 +1904,20 @@ public class GuiTools extends InitTools{
 	
 	/**
 	 * This method sets thread
-	 * @param threadId: thread identifier
+	 * @param threadId, thread identifier
 	 */
 	public void setThreadId(long threadId) {
 		this.threadId = threadId;
 	}
+	
+	/**
+	 * This method removes special characters fron a string
+	 * @param str, string to remove special char from
+	 * @return string without special characters
+	 */
 	public static String removeSpecialChar(String str)
 	{
 		return str.replace(":", "").replace(">", "-").replace("<", "-").replace("?", "");
 	}
+	
 }

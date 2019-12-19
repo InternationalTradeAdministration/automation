@@ -22,7 +22,7 @@ import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import OfficeLibs.XlsxTools;
 import ReportLibs.HtmlReport;
-import libs.AccessLib;
+import libs.ExporterLib;
 
 public class TestOne {
 	public static GuiTools guiTools;
@@ -30,10 +30,9 @@ public class TestOne {
 	HashMap<String, String> mapConfInfos;
 	String browserType;
 	static XlsxTools xlsxTools;
-	static ArrayList<LinkedHashMap<String, String>> dataPool, eFileHelpmsg, manageAPOAHelpmsg,
-	updateProfileHelpmsg, dataPoolErrorMsg, eFileRegisterHelpmsg, manageEOAHelpmsg,checkFiles;
+	static ArrayList<LinkedHashMap<String, String>> dataPool;
 	ArrayList<LinkedHashMap<String, String>> guiPool;
-	static AccessLib accessLib;
+	static ExporterLib exporterLib;
 	//public static boolean testCaseStatus;
 	public static Timestamp startTime, suiteStartTime;
 	public static Timestamp endTime;
@@ -43,19 +42,12 @@ public class TestOne {
 	{
 		guiTools = new GuiTools();
 		xlsxTools = new XlsxTools();
-		accessLib = new AccessLib();
+		exporterLib = new ExporterLib();
 		TestNG testng = new TestNG();
 		List<String> suites = Lists.newArrayList();
-		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/Access_Regression.xlsx";
+		String dataPoolPath = InitTools.getInputDataFolder()+"/datapool/Exporter_Regression.xlsx";
 		System.out.println("dataPoolPath "+dataPoolPath);
 		dataPool  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Regression", "Active=TRUE");
-		eFileHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "E-file Fields Help", "");
-		updateProfileHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Update Profile Fileds Help", "");
-		eFileRegisterHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "E-Filer Register Fileds Help", "");
-		dataPoolErrorMsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Fields Error Validation", "");
-		manageEOAHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Manage Entry Of Appearance Help", "");
-		manageAPOAHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Manage APO Application Help", "");
-		checkFiles  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Check Files", "");
 		String testNgTemplate = InitTools.getInputDataFolder()+"/template/testng_template.xml";
 		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
 		System.out.println("testNgTemplate "+testNgTemplate);
@@ -135,9 +127,9 @@ public class TestOne {
 	 * This method is E-File creation
 	*/
 	@Test(enabled = true)
-	void Submit_With_Add_Files_Excel() throws Exception
+	void Create_Content_Biography() throws Exception
 	{
-		printLog("Submit_With_Add_Files_Excel");
+		printLog("Create_Content_Biography");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_001");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -150,19 +142,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row.put("type", "add more files");
-		testCaseStatus = AccessLib.createEFileDocument(row);
+		row.put("Content_Type", "Biography");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Feature Article content
 	*/
 	@Test(enabled = true)
-	void Submit_With_Similar_Submission_Excel() throws Exception
+	void Create_Content_Feature_Article() throws Exception
 	{
-		printLog("Submit_With_Similar_Submission_Excel");
+		printLog("Create_Content_Feature_Article");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_002");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -172,23 +165,22 @@ public class TestOne {
 		String user = mapConfInfos.get("user_name");
 		String password = mapConfInfos.get("password");	
 		System.out.println(url+"___"+user);
-
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row.put("type", "similar submission");
-		testCaseStatus = AccessLib.createEFileDocument(row);
+		row.put("Content_Type", "Feature Article");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
 	/**
-	 * This method is E-File creation
+	 * This method is creating How To content
 	*/
 	@Test(enabled = true)
-	void Submit_With_Add_Files_Pdf() throws Exception
+	void Create_Content_How_To() throws Exception
 	{
-		printLog("Submit_With_Add_Files_Pdf");
+		printLog("Create_Content_How_To");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_003");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -201,19 +193,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row.put("type", "add more files");
-		testCaseStatus = AccessLib.createEFileDocument(row);
+		row.put("Content_Type", "How To");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Image Library content
 	*/
 	@Test(enabled = true)
-	void Submit_With_Similar_Submission_Pdf() throws Exception
+	void Create_Content_Image_Library() throws Exception
 	{
-		printLog("Submit_With_Similar_Submission_Pdf");
+		printLog("Create_Content_Image_Library");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_004");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -223,23 +216,23 @@ public class TestOne {
 		String user = mapConfInfos.get("user_name");
 		String password = mapConfInfos.get("password");	
 		System.out.println(url+"___"+user);
-
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row.put("type", "similar submission");
-		testCaseStatus = AccessLib.createEFileDocument(row);
+		row.put("Content_Type", "Image Library");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
-	
+
+
 	/**
-	 * This method is for error validation
+	 * This method is creating Internship content
 	*/
 	@Test(enabled = true)
-	void Submit_As_Manual_Submission() throws Exception
+	void Create_Content_Internship() throws Exception
 	{
-		printLog("Submit_As_Manual_Submission");
+		printLog("Create_Content_Internship");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_005");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -252,19 +245,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row.put("type", "manual submission");
-		testCaseStatus = AccessLib.createEFileDocument(row);
+		row.put("Content_Type", "Internship");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Knowledge Product content
 	*/
 	@Test(enabled = true)
-	void Validate_Efile_Help_Messages() throws Exception
+	void Create_Content_Knowledge_Product() throws Exception
 	{
-		printLog("Validate_Efile_Help_Messages");
+		printLog("Create_Content_Knowledge_Product");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_006");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -277,18 +271,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row = eFileHelpmsg.get(0);
-		testCaseStatus =  AccessLib.validateFieldsEFileHelpMessages(row);
+		row.put("Content_Type", "Knowledge Product");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
+	
 	/**
-	 * This method is for error validation
+	 * This method is creating News Blog content
 	*/
 	@Test(enabled = true)
-	void Validate_Efile_Error_Messages() throws Exception
+	void Create_Content_News_Blog() throws Exception
 	{
-		printLog("Validate_Efile_Error_Messages");
+		printLog("Create_Content_News_Blog");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_007");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -301,17 +297,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		testCaseStatus =  AccessLib.ValidateFieldsErrorMessages(dataPoolErrorMsg);
+		row.put("Content_Type", "News Blog");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
+	
 	/**
-	 * This method is for update profile fields message validation
+	 * This method is creating Office content
 	*/
 	@Test(enabled = true)
-	void Validate_Update_Profile_Help_Messages() throws Exception
+	void Create_Content_Office() throws Exception
 	{
-		printLog("Validate_Update_Profile_Help_Messages");
+		printLog("Create_Content_Office");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_008");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -324,24 +323,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		row = updateProfileHelpmsg.get(0);
-		testCaseStatus =  AccessLib.validateFieldsUpdateProfileHelpMessages(row);
+		row.put("Content_Type", "Office");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Press Release content
 	*/
-	
-	//manageEOAHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Manage Entry Of Appearance Help", "");
-	//manageAPOAHelpmsg  = XlsxTools.readXlsxSheetAndFilter(dataPoolPath, "Manage APO Application Help", "");
-	
-	
 	@Test(enabled = true)
-	void Validate_Manage_Entry_Of_Appearance_Help_Messages() throws Exception
+	void Create_Content_Press_Release() throws Exception
 	{
-		printLog("Validate_Manage_Entry_Of_Appearance_Help_Messages");
+		printLog("Create_Content_Press_Release");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_009");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -354,19 +349,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		String cn = row.get("Case_Number");
-		row = manageEOAHelpmsg.get(0);
-		testCaseStatus =  AccessLib.validateFieldsManageEntryOfAppearanceHelpMessages(row, cn);
+		row.put("Content_Type", "Press Release");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Series Aggregator content
 	*/
 	@Test(enabled = true)
-	void Validate_Manage_APO_Application_Help_Messages() throws Exception
+	void Create_Content_Series_Aggregator() throws Exception
 	{
-		printLog("Validate_Manage_APO_Application_Help_Messages");
+		printLog("Create_Content_Series_Aggregator");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_010");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -379,19 +375,19 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		String cn = row.get("Case_Number");
-		row = manageAPOAHelpmsg.get(0);
-		testCaseStatus =  AccessLib.validateFieldsManageApoApplicationHelpMessages(row, cn);
+		row.put("Content_Type", "Series Aggregator");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Service Offering content
 	*/
 	@Test(enabled = true)
-	void Create_Entry_Of_Appearance() throws Exception
+	void Create_Content_Service_Offering() throws Exception
 	{
-		printLog("Create_Entry_Of_Appearance");
+		printLog("Create_Content_Service_Offering");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_011");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -404,17 +400,19 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		testCaseStatus =  AccessLib.createEntryOfAppearance(row);
+		row.put("Content_Type", "Service Offering");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Success Story content
 	*/
 	@Test(enabled = true)
-	void Create_APO_Application() throws Exception
+	void Create_Content_Success_Story() throws Exception
 	{
-		printLog("Create_APO_Application");
+		printLog("Create_Content_Success_Story");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_012");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -427,18 +425,19 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		String cn = row.get("Case_Number");
-		testCaseStatus =  AccessLib.createApoApplication(row);
+		row.put("Content_Type", "Success Story");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Sub-topic Page content
 	*/
 	@Test(enabled = true)
-	void Check_Files_For_Efiles() throws Exception
+	void Create_Content_Sub_topic_Page() throws Exception
 	{
-		printLog("Check_Files_For_Efiles");
+		printLog("Create_Content_Sub_topic_Page");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_013");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -451,19 +450,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		//row = eFileRegisterHelpmsg.get(0);
-		testCaseStatus =  AccessLib.checkFilesEfile(checkFiles);
+		row.put("Content_Type", "Sub-topic Page");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating Trade Lead content
 	*/
 	@Test(enabled = true)
-	void Validate_EOA_Fields_Populated() throws Exception
+	void Create_Content_Trade_Lead() throws Exception
 	{
-		printLog("Other_Entry_Of_Appearance_Check_Fileds");
+		printLog("Create_Content_Trade_Lead");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_014");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -476,19 +476,19 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		testCaseStatus =  AccessLib.otherEntryOfAppearanceCheckFields(row);
+		row.put("Content_Type", "Trade Lead");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
-	
 	/**
-	 * This method is for message validation
+	 * This method is creating Video Library content
 	*/
 	@Test(enabled = true)
-	void Validate_APO_Fields_Populated() throws Exception
+	void Create_Content_Video_Library() throws Exception
 	{
-		printLog("Other_APO_Application_Check_Fileds");
+		printLog("Create_Content_Video_Library");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_015");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -501,17 +501,20 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		testCaseStatus =  AccessLib.otherApoCheckFields(row);
+		row.put("Content_Type", "Video Library");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
+	
+	
 	/**
-	 * This method is for message validation
+	 * This method is creating About Us content
 	*/
 	@Test(enabled = true)
-	void Resubmit_EOA_Under_Other_Entries() throws Exception
+	void Create_Content_About_Us() throws Exception
 	{
-		printLog("Resubmit_EOA_Under_Other_Entries");
+		printLog("Create_Content_About_Us");
 		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_016");
 		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
 		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
@@ -524,59 +527,12 @@ public class TestOne {
 		if (!loginOn)
 		{
 			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
 		}
-		testCaseStatus =  AccessLib.resubmitEoa(row);
+		row.put("Content_Type", "About Us");
+		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
-	
-	/**
-	 * This method is for message validation
-	*/
-	@Test(enabled = true)
-	void Resubmit_APO_Under_Other_Entries() throws Exception
-	{
-		printLog("Resubmit_APO_Under_Other_Entries");
-		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_017");
-		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
-		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
-		printLog(GuiTools.getTestCaseName());
-		System.out.println("start Test");
-		String url = mapConfInfos.get("url");
-		String user = mapConfInfos.get("user_name");
-		String password = mapConfInfos.get("password");	
-		System.out.println(url+"___"+user);
-		if (!loginOn)
-		{
-			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
-		}
-		testCaseStatus =  AccessLib.resubmitApo(row);
-	}
-	/**
-	 * This method is for message validation
-	*/
-	@Test(enabled = true)
-	void Validate_Efile_Register_Help_Messages() throws Exception
-	{
-		printLog("Validate_Efile_Register_Help_Messages");
-		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_018");
-		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
-		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
-		printLog(GuiTools.getTestCaseName());
-		System.out.println("start Test");
-		String url = mapConfInfos.get("url");
-		String user = mapConfInfos.get("user_name");
-		String password = mapConfInfos.get("password");	
-		System.out.println(url+"___"+user);
-		if (!loginOn)
-		{
-			guiTools.openBrowser(browserType);
-			loginOn = AccessLib.loginToAccess(url, user, password);
-		}
-		row = eFileRegisterHelpmsg.get(0);
-		testCaseStatus =  AccessLib.validateFieldsRegisterHelpMessages(row);
-	}
 	/**
 	 * This method if for getting the current test case information
 	*/
