@@ -1,2 +1,2 @@
-java -Xmx1024m -jar Access_Regression.jar> test.log
+java -Xmx1024m -jar Exporter_Portal.jar> test.log
 pause
