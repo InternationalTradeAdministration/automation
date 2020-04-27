@@ -40,22 +40,30 @@ import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.Map.Entry;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import ReportLibs.HtmlReport;
 import ServiceLibs.APITools;
 
 public class ADCVDLib{
-	public static String petitionFiledDate, petitionId,
-	actualInitiationSignature, calculatedInitiationSignature, 
+	public static String petitionFiledDate, caseId, caseId2, petitionId,petitionId2, investigationId,
+	orderId, segmentId,newShipId2, scopeInqId2, sunsetRevId2,
+	adminReviewId, antiCirId, changeCirId, expeditedRevId, orderId2, segmentId2,
+	newShipId, scopeInqId, sunsetRevId,	investigationId2,remandId, litigationId,
+	 adminReviewId2, antiCirId2, changeCirId2, expeditedRevId2,	
+	whereAmI, actualInitiationSignature, calculatedInitiationSignature,  
 	petitionOutcome, petitionInitiationAnnouncementDate="";
+	public static boolean standardTolling = true;
 	public static int petitionInitiationExtension;
-	public static ArrayList<LinkedHashMap<String, String>> tollingDates;
+	//public static ArrayList<LinkedHashMap<String, String>> tollingDates;
+	public static JSONObject  standardTollingDaysObj, recordTollingDaysObj;
 	static DateFormat format;
 	static Calendar calendar;
 	static String caseType;
-	static String investigationId;
-	static String orderId;
+	public static String standardTollingDaysStr, recordTollingDaysStr, upadtedWith;
+	//static String orderId;
 	public ADCVDLib() throws IOException {
 		//super();
 		this.format = new SimpleDateFormat("yyyy-MM-dd");
@@ -131,7 +139,6 @@ public class ADCVDLib{
 		//Calculated Initiation Signature
 		String calculatedInitiationSignature = calculateDate(petitionInitiationExtension+20, 
 				"Calculated Initiation Signature", "calendar", petitionFiledDate);
-		
 		//Initiation Issues Due to DAS		 
 		String initiationIssuesDueToDas = calculateDate(-3, "Initiation Concurrence Due to DAS",  
 				"business", calculatedInitiationSignature);
@@ -165,17 +172,12 @@ public class ADCVDLib{
 		}//switch
 		return allMatches;
 	}
-	
-	
-	
-	
-
-	
 	/**
-	 * @param rObj, record from petion
-	 * @param 
-	 * This method validates investigation fields
-	 * @return true if all dates matches, false if not
+	 * This method validates Investigation dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
 	 * @exception Exception
 	*/
 	public static boolean validateInvestigationFields(	JSONObject rObj,
@@ -204,7 +206,6 @@ public class ADCVDLib{
 	   	actualInitiationSignature = noNullVal(pObj.getString("Actual_Initiation_Signature__c"));
 	   	calculatedInitiationSignature = noNullVal(pObj.getString("Calculated_Initiation_Signature__c"));
 	   	petitionInitiationExtension =readNumberFromDb(noNullVal(pObj.getString("Initiation_Extension_of_days__c")));
-		//petitionFiledDate = date;
 		////////////////////////////////////////////////////////////////////////
 		//Calculated ITC Prelim Determination
 		String calculatedITCPrelimDetermination="";
@@ -272,7 +273,6 @@ public class ADCVDLib{
 					"Calculated Final Signature", "calendar",  
 				!actualPreliminarySignature.equals("")?actualPreliminarySignature:calculatedPreliminarySignature);
 		}
-		
 		//Final Team Meeting Deadline
 		String finalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", 
 				"calendar", calculatedFinalSignature);
@@ -499,253 +499,15 @@ public class ADCVDLib{
 				break;
 			}
 		}//switch
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/* //Next Announcement Date
-		String nextAnnouncementDate = "";
-		if(datePassed(preliminaryAnnouncementDate) && datePassed(amendedPreliminaryAnnouncementDate) && 
-				datePassed(finalAnnouncementDate) && datePassed(amendedFinalAnnouncementDate))
-		{
-			nextAnnouncementDate = "";
-		}
-		else if(investigationOutcome.equals("Completed") || investigationOutcome.equals(""))
-		{
-			if(!datePassed(preliminaryAnnouncementDate))
-			{
-				nextAnnouncementDate = preliminaryAnnouncementDate;
-			}
-			else if(!datePassed(finalAnnouncementDate))
-			{
-				nextAnnouncementDate = finalAnnouncementDate;
-			}
-		}
-		else
-		{
-			nextAnnouncementDate = "";
-		}
-		actualValue = noNullVal(rObj.getString("Next_Announcement_Date__c"));
-		allMatches = allMatches & compareAndReport("Next Announcement Date", nextAnnouncementDate, actualValue);
-		
-		//Next Due to DAS Deadline		
-		String nextDueToDasDeadline = "";
-		if(actualPreliminarySignature.equals("") && signatureOfPrelimPostponementFr.equals("") 
-				&& !datePassed(calculatedPostponementOfPrelimDeterFr))
-		{
-			nextDueToDasDeadline = calculatedPostponementOfPrelimDeterFr;
-		}
-		else if(actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = prelimIssuesDueToDas;
-		}
-		else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = prelimConcurrenceDueToDas;
-		}
-		else if(actualPreliminarySignature.equals(""))
-		{
-			nextDueToDasDeadline = calculatedPreliminarySignature;
-		}
-		else if(amendThePreliminaryDetermination.equalsIgnoreCase("Yes") && actualAmendedPrelimDeterminationSig.equals("")
-				&& actualAmendFinalIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = amendPrelimIssuesDueToDas;
-		}
-		else if(amendThePreliminaryDetermination.equalsIgnoreCase("Yes") && actualAmendedPrelimDeterminationSig.equals("")
-				&& actualAmendFinalConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = amendPrelimConcurrenceDueToDas;
-		}
-		else if(actualAmendedPrelimDeterminationSig.equals("") && amendThePreliminaryDetermination.equalsIgnoreCase("Yes"))
-		{
-			nextDueToDasDeadline = CalcAmendedPrelimDeterminationSig;
-		}
-		else if(actualfinalSignature.equals("") && actualFinalIssuesToDas.equalsIgnoreCase(""))
-		{
-			nextDueToDasDeadline = finalIssuesDueToDas;
-		}
-		else if(actualfinalSignature.equals("") && actualFinalConcurrenceToDas.equalsIgnoreCase(""))
-		{
-			nextDueToDasDeadline = finalConcurrenceDueToDas;
-		}
-		else if(actualfinalSignature.equals("") )
-		{
-			nextDueToDasDeadline = calculatedFinalSignature;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = amendFinalIssuesDueToDas;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = amendFinalConcurrenceDueToDas;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals(""))
-		{
-			nextDueToDasDeadline = calculatedAmendedFinalSignature;
-		}
-		else if(federalRegisterPublishDate.equals(""))
-		{
-			nextDueToDasDeadline = calculatedOrderFrSignature;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c"));
-		allMatches = allMatches & compareAndReport("Next Due to DAS Deadline", nextDueToDasDeadline, actualValue);
-		//Next Major Deadline
-		String nextMajorDeadline="";
-		if(actualPreliminarySignature.equals("") && investigationOutcome.equals(""))
-		{
-			nextMajorDeadline = calculatedPreliminarySignature;
-		}
-		else if (actualAmendedPrelimDeterminationSig.equals("")&& investigationOutcome.equals("")
-				&& amendThePreliminaryDetermination.equalsIgnoreCase("Yes"))
-		{
-			nextMajorDeadline = CalcAmendedPrelimDeterminationSig;
-		}
-		else if(actualfinalSignature.equals("") && investigationOutcome.equals(""))
-		{
-			nextMajorDeadline = calculatedFinalSignature;
-		}
-		else if(actualAmendedFinalSignature.equals("") && investigationOutcome.equals("") && willYouAmendTheFinal.equalsIgnoreCase("Yes"))
-		{
-			nextMajorDeadline = calculatedAmendedFinalSignature;
-		}
-		else if(federalRegisterPublishDate.equals(""))
-		{
-			nextMajorDeadline = calculatedOrderFrSignature;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Major_Deadline__c"));
-		allMatches = allMatches & compareAndReport("Next Major Deadline", nextMajorDeadline, actualValue);
-		//Next Office Deadline
-		String nextOfficeDeadline = "";
-		if(actualPreliminarySignature.equals("") && ! datePassed(calculatedITCPrelimDetermination))
-		{
-			nextOfficeDeadline = calculatedITCPrelimDetermination;
-		}
-		else if(actualPreliminarySignature.equals("") && ! datePassed(calculatedPrelimExtensionRequestFile))
-		{
-			nextOfficeDeadline = calculatedPrelimExtensionRequestFile;
-		}
-		else if(actualPreliminarySignature.equals("") && signatureOfPrelimPostponementFr.equals("")
-				&& ! datePassed(calculatedPostponementOfPrelimDeterFr))
-		{
-			nextOfficeDeadline = calculatedPostponementOfPrelimDeterFr;
-		}
-		else if(actualPreliminarySignature.equals("") && !datePassed(prelimTeamMeetingDeadline))
-		{
-			nextOfficeDeadline = prelimTeamMeetingDeadline;
-		}
-		else if(actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = prelimIssuesDueToDas;
-		}
-		else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = prelimConcurrenceDueToDas;
-		}
-		else if(actualPreliminarySignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedPreliminarySignature;
-		}
-		else if(amendThePreliminaryDetermination.equals("Yes") && actualAmendedPrelimDeterminationSig.equals("")
-				&& actualAmendPrelimIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = amendPrelimIssuesDueToDas;
-		}
-		else if(amendThePreliminaryDetermination.equals("Yes") && actualAmendedPrelimDeterminationSig.equals("")
-				&& actualAmendPrelimConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = amendPrelimConcurrenceDueToDas;
-		}
-		else if(amendThePreliminaryDetermination.equals("Yes") && actualAmendedPrelimDeterminationSig.equals(""))
-		{
-			nextOfficeDeadline = CalcAmendedPrelimDeterminationSig;
-		}
-		else if(actualfinalSignature.equals("") && ! datePassed(finalTeamMeetingDeadline))
-		{
-			nextOfficeDeadline = finalTeamMeetingDeadline;
-		}
-		else if(actualfinalSignature.equals("") && actualFinalIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = finalIssuesDueToDas;
-		}
-		else if(actualfinalSignature.equals("") && actualFinalConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = finalConcurrenceDueToDas;
-		}
-		else if(actualfinalSignature.equals("") )
-		{
-			nextOfficeDeadline = calculatedFinalSignature;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = amendFinalIssuesDueToDas;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = amendFinalConcurrenceDueToDas;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedAmendedFinalSignature;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("")
-				&& actualAmendFinalConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = amendFinalConcurrenceDueToDas;
-		}
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedAmendedFinalSignature;
-		}
-		else if(!datePassed(estItcNotificationToDocOfFinalDeterm))
-		{
-			nextOfficeDeadline = estItcNotificationToDocOfFinalDeterm;
-		}
-		else if(federalRegisterPublishDate.equals(""))
-		{
-			nextOfficeDeadline = calculatedOrderFrSignature;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Office_Deadline__c"));
-		allMatches = allMatches & compareAndReport("Next Office Deadline", nextOfficeDeadline, actualValue);*/
 		return allMatches;
 	}
 	
-
-	
 	/**
-	 * This method validates new administrator review segment
-	 * @return true if all dates matches, false if not
+	 * This method validates administrative review dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentAdministrativeReview(JSONObject rObj,
@@ -846,105 +608,6 @@ public class ADCVDLib{
 				"business", calculatedFinalSignature);
 		finalAnnouncementDate = calculateDate(1, "Final Announcement Date", "business", 
 				!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);		
-		/*if(publishedDate.equals("") )
-		{
-			nextMajorDeadline = calculatedPreliminarySignature;
-		} else if(actualFinalSignature.equals(""))
-		{
-			nextMajorDeadline = calculatedFinalSignature;
-		}else if (actualAmendedFinalSignature.equals("") && publishedDate.equals("") &&
-				willYouAmendTheFinal.equalsIgnoreCase("Yes"))
-		{
-			nextMajorDeadline = calculatedAmendedFinalSignature;
-		}
-		
-		if(actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = prelimIssuesDueToDas;
-		}else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = prelimConcurrenceDueToDas;
-		}else if(actualPreliminarySignature.equals("") && segmentOutcome.equals(""))								
-		{
-			nextDueToDasDeadline = calculatedPreliminarySignature;
-		}else if(actualFinalSignature.equals("") && actualFinalIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = finalIssuesDueToDas;
-		}else if(actualFinalSignature.equals("") && actualFinalConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = finalConcurrenceDueToDas;
-		}else if(actualFinalSignature.equals("") && segmentOutcome.equals(""))
-		{
-			nextDueToDasDeadline = calculatedFinalSignature;
-		}else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = amendFinalIssuesDueToDas; 
-		}else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = amendFinalConcurrenceDueToDas;
-		}else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals(""))
-		{
-			nextDueToDasDeadline = calculatedAmendedFinalSignature;
-		}
-		if(actualPreliminarySignature.equals("") && !datePassed(prelimTeamMeetingDeadline))
-		{
-			nextOfficeDeadline = prelimTeamMeetingDeadline;
-		}
-		else if(actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = prelimIssuesDueToDas;
-		}
-		else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = prelimConcurrenceDueToDas;
-		}
-		else if(actualPreliminarySignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedPreliminarySignature;
-		}
-		else if (actualFinalSignature.equals("") && !datePassed(finalTeamMeetingDeadline) )
-		{
-			nextOfficeDeadline = finalTeamMeetingDeadline;
-		}
-		
-		else if(actualFinalSignature.equals("") && actualFinalIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = finalIssuesDueToDas;
-		}
-		else if(actualFinalSignature.equals("") && actualFinalConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = finalConcurrenceDueToDas;
-		}
-		else if(actualFinalSignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedFinalSignature;
-		}
-		//IF published_date_c (type: Final) is blank AND Actual_Final_Signaturec is not blank THEN Calculated_Final_FR_signature_c
-		else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = amendFinalIssuesDueToDas; 
-		}else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals("") 
-				&& actualAmendFinalConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = amendFinalConcurrenceDueToDas;
-		}else if(willYouAmendTheFinal.equalsIgnoreCase("Yes") && actualAmendedFinalSignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedAmendedFinalSignature;
-		}
-		String nextAnnouncementDate = "";
-		if(!datePassed(preliminaryAnnouncementDate) && (segmentOutcome.equals("") || 
-				segmentOutcome.equalsIgnoreCase("Completed")))
-		{
-			nextAnnouncementDate = preliminaryAnnouncementDate;
-		}
-		else if (!datePassed(finalAnnouncementDate) && (segmentOutcome.equals("") || 
-				segmentOutcome.equalsIgnoreCase("Completed")))
-		{
-			nextAnnouncementDate = finalAnnouncementDate;
-		}*/
 		switch (dateName)
 		{
 			case "Calculated_Preliminary_Signature__c":
@@ -1036,30 +699,6 @@ public class ADCVDLib{
 				allMatches = allMatches & compareAndReport(dateType, date, amendedFinalAnnouncementDate, actualValue);
 				break;
 			}
-			/*case "Next_Major_Deadline__c":
-			{
-				actualValue = noNullVal(rObj.getString("Next_Major_Deadline__c"));
-				allMatches = allMatches & compareAndReport(dateType, date, nextMajorDeadline, actualValue);
-				break;
-			}
-			case "Next_Due_to_DAS_Deadline__c":
-			{
-				actualValue = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c"));
-				allMatches = allMatches & compareAndReport(dateType, date, nextDueToDasDeadline, actualValue);
-				break;
-			}
-			case "Next_Office_Deadline__c":
-			{
-				actualValue = noNullVal(rObj.getString("Next_Office_Deadline__c"));
-				allMatches = allMatches & compareAndReport(dateType, date, nextOfficeDeadline, actualValue);
-				break;
-			}
-			case "Next_Announcement_Date__c":
-			{
-				actualValue = noNullVal(rObj.getString("Next_Announcement_Date__c"));
-				allMatches = allMatches & compareAndReport(dateType, date, nextAnnouncementDate, actualValue);		
-				break;
-			}*/
 			default:
 			{
 				//
@@ -1068,10 +707,12 @@ public class ADCVDLib{
 		return allMatches;
 	}
 	
-	
 	/**
-	 * This method validates new Anti-Circumvention review segment
-	 * @return true if all dates matches, false if not
+	 * This method validates Anti Circumvention dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentAntiCircumventionReview(JSONObject rObj,
@@ -1132,8 +773,6 @@ public class ADCVDLib{
 				"business", calculatedFinalSignature);
 		String finalConcurrenceDueToDas = calculateDate(-5, "Final Concurrence Due to DAS", 
 				"business", calculatedFinalSignature);
-		
-		///////////////
 		switch (dateName)
 		{
 			//Calculated Initiation Signature
@@ -1240,8 +879,11 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method validates new Changed-Circumstance review segment
-	 * @return true if all dates matches, false if not
+	 * This method validates changed circumstance dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentChangedCircumstancesReview(JSONObject rObj,
@@ -1451,8 +1093,12 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method validates new Shipper_Review review segment
-	 * @return true if all dates matches, false if not
+	 * This method validates new shipper review dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
+	 * @param litigationType, type of litigation
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentShipperReview(JSONObject rObj,
@@ -1518,150 +1164,135 @@ public class ADCVDLib{
 		"business", calculatedAmendedFinalSignature);
 		switch (dateName)
 		{
-		
-		case "Calculated_Amended_Final_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Amended_Final_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedAmendedFinalSignature, actualValue);
-			break;
-		}
-		//Amended_Final_Announcement_Date__c
-		case "Amend_Final_Issues_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			amendFinalIssuesDueToDas, actualValue);
-			break;
-		}
-		case "Amend_Final_Concurrence_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			amendFinalConcurrenceDueToDas, actualValue);
-			break;
-		}
-		case "Amended_Final_Announcement_Date__c":
-		{
-			actualValue = noNullVal(rObj.getString("Amended_Final_Announcement_Date__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			amendedFinalAnnouncementDate, actualValue);
-			break;
-		}
-		//Preliminary Announcement Date
-		case "Preliminary_Announcement_Date__c":
-		{
-			actualValue = noNullVal(rObj.getString("Preliminary_Announcement_Date__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			preliminaryAnnouncementDate, actualValue);
-			break;
-		}
-		//Calculated Initiation Signature
-		case "Calculated_Initiation_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Initiation_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedInitiationSignature, actualValue);
-			break;
-		}
-		//Calculated Final Signature
-		case "Calculated_Final_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedFinalSignature, actualValue);
-			break;
-		}
-		//Final Announcement Date
-		case "Final_Announcement_Date__c":
-		{
-			actualValue = noNullVal(rObj.getString("Final_Announcement_Date__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, finalAnnouncementDate, actualValue);
-			break;
-		}
-		/*//Initiation Issues Due to DAS
-		case "Initiation_Issues_Due_to_DAS__c":
-		{
-		actualValue = noNullVal(rObj.getString("Initiation_Issues_Due_to_DAS__c"));
-		allMatches = allMatches & compareAndReport(dateType, date, 
-		initiationIssuesDueToDas, actualValue);
-		break;
-		}
-		//Initiation Concurrence Due to DAS
-		case "Initiation_Concurrence_Due_to_DAS__c":
-		{
-		actualValue = noNullVal(rObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
-		allMatches = allMatches & compareAndReport(dateType, date, 
-		initiationConcurrenceDueToDas, actualValue);
-		break;
-		}*/
-		//Calculated Preliminary Signature
-		case "Calculated_Preliminary_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedPreliminarySignature, actualValue);
-			break;
-		}
-		//Prelim Team Meeting Deadline
-		case "Prelim_Team_Meeting_Deadline__c":
-		{
-			actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, prelimTeamMeetingDeadline, 
-			actualValue);
-			break;
-		}
-		//Prelim Issues Due to DAS
-		case "Prelim_Issues_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, prelimIssuesDueToDas,
-			actualValue);
-			break;
-		}
-		//Prelim Concurrence Due to DAS
-		case "Prelim_Concurrence_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, prelimConcurrenceDueToDas,
-			actualValue);
-			break;
-		}
-		//Final Team Meeting Deadline
-		case "Final_Team_Meeting_Deadline__c":
-		{
-			actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, finalTeamMeetingDeadline,
-			actualValue);
-			break;
-		}
-		//Final Issues Due to DAS
-		case "Final_Issues_Due_to_DAS__c":
-		{
-		actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
-		allMatches = allMatches & compareAndReport(dateType, date, finalIssuesDueToDas, 
-		actualValue);
-		break;
-		}
-		//Final Concurrence Due to DAS
-		case "Final_Concurrence_Due_to_DAS__c":
-		{
-		actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
-		allMatches = allMatches & compareAndReport(dateType, date, finalConcurrenceDueToDas,
-		actualValue);
-		break;
-		}
-		
-		default:
-		{
-		break;
-		}
+			case "Calculated_Amended_Final_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Amended_Final_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedAmendedFinalSignature, actualValue);
+				break;
+			}
+			//Amended_Final_Announcement_Date__c
+			case "Amend_Final_Issues_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Amend_Final_Issues_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				amendFinalIssuesDueToDas, actualValue);
+				break;
+			}
+			case "Amend_Final_Concurrence_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Amend_Final_Concurrence_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				amendFinalConcurrenceDueToDas, actualValue);
+				break;
+			}
+			case "Amended_Final_Announcement_Date__c":
+			{
+				actualValue = noNullVal(rObj.getString("Amended_Final_Announcement_Date__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				amendedFinalAnnouncementDate, actualValue);
+				break;
+			}
+			//Preliminary Announcement Date
+			case "Preliminary_Announcement_Date__c":
+			{
+				actualValue = noNullVal(rObj.getString("Preliminary_Announcement_Date__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				preliminaryAnnouncementDate, actualValue);
+				break;
+			}
+			//Calculated Initiation Signature
+			case "Calculated_Initiation_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Initiation_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedInitiationSignature, actualValue);
+				break;
+			}
+			//Calculated Final Signature
+			case "Calculated_Final_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedFinalSignature, actualValue);
+				break;
+			}
+			//Final Announcement Date
+			case "Final_Announcement_Date__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Announcement_Date__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalAnnouncementDate, actualValue);
+				break;
+			}
+			//Calculated Preliminary Signature
+			case "Calculated_Preliminary_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedPreliminarySignature, actualValue);
+				break;
+			}
+			//Prelim Team Meeting Deadline
+			case "Prelim_Team_Meeting_Deadline__c":
+			{
+				actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, prelimTeamMeetingDeadline, 
+				actualValue);
+				break;
+			}
+			//Prelim Issues Due to DAS
+			case "Prelim_Issues_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, prelimIssuesDueToDas,
+				actualValue);
+				break;
+			}
+			//Prelim Concurrence Due to DAS
+			case "Prelim_Concurrence_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, prelimConcurrenceDueToDas,
+				actualValue);
+				break;
+			}
+			//Final Team Meeting Deadline
+			case "Final_Team_Meeting_Deadline__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalTeamMeetingDeadline,
+				actualValue);
+				break;
+			}
+			//Final Issues Due to DAS
+			case "Final_Issues_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalIssuesDueToDas, 
+				actualValue);
+				break;
+			}
+			//Final Concurrence Due to DAS
+			case "Final_Concurrence_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalConcurrenceDueToDas,
+				actualValue);
+				break;
+			}
+			default:
+			{
+				break;
+			}
 		}
 		return allMatches;
 	}
 	/**
-	 * This method validates new Shipper_Review review segment
-	 * @return true if all dates matches, false if not
+	 * This method validates Scope Inquiry dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentScopeInquiry(JSONObject rObj,
@@ -1740,7 +1371,6 @@ public class ADCVDLib{
 			finalConcurrenceDueToDas = calculateDate(-5, "Final Concurrence Due to DAS",  
 					"business", calculatedFinalSignature);
 		}
-		
 		//Deadline for Decision on How to Proceed
 		String deadlineForDecisionOnHowToProceed  = calculateDate(45, "Deadline for Decision on How to Proceed",
 		"calendar", requestFiled);
@@ -1752,111 +1382,114 @@ public class ADCVDLib{
 				"business", deadlineForDecisionOnHowToProceed);
 		switch (dateName)
 		{
-		//Deadline for Decision on How to Proceed
-		case "Deadline_for_Decision_on_How_to_Proceed__c":
-		{
-			actualValue = noNullVal(rObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, deadlineForDecisionOnHowToProceed, actualValue);
-			break;
-		}
-		//Decision on HOP Concurrence Due to DAS
-		case "Decision_on_HOP_Concurrence_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Decision_on_HOP_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, decisionOnHopConcurrenceDueToDas, actualValue);
-			break;
-		}
-		//Decision on HOP Issues Due to DAS
-		case "Decision_on_HOP_Issues_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Decision_on_HOP_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, decisionOnHopIssuesDueToDas, actualValue);
-			break;
-		}
-		//Calculated Initiation Signature
-		case "Calculated_Initiation_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Initiation_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedInitiationSignature, actualValue);
-			break;
-		}
-		//Calculated Final Signature
-		case "Calculated_Final_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedFinalSignature, actualValue);
-			break;
-		}
-		
-		//Calculated Preliminary Signature
-		case "Calculated_Preliminary_Signature__c":
-		{
-			actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
-			allMatches = allMatches & compareAndReport(dateType, date,  
-			calculatedPreliminarySignature, actualValue);
-			break;
-		}
-		//Prelim Team Meeting Deadline
-		case "Prelim_Team_Meeting_Deadline__c":
-		{
-			actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, prelimTeamMeetingDeadline, 
-			actualValue);
-			break;
-		}
-		//Prelim Issues Due to DAS
-		case "Prelim_Issues_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, prelimIssuesDueToDas,
-			actualValue);
-			break;
-		}
-		//Prelim Concurrence Due to DAS
-		case "Prelim_Concurrence_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, prelimConcurrenceDueToDas,
-			actualValue);
-			break;
-		}
-		//Final Team Meeting Deadline
-		case "Final_Team_Meeting_Deadline__c":
-		{
-			actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, finalTeamMeetingDeadline,
-			actualValue);
-			break;
-		}
-		//Final Issues Due to DAS
-		case "Final_Issues_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, finalIssuesDueToDas, 
-			actualValue);
-			break;
-		}
-		//Final Concurrence Due to DAS
-		case "Final_Concurrence_Due_to_DAS__c":
-		{
-			actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport(dateType, date, finalConcurrenceDueToDas,
-			actualValue);
-			break;
-		}
-		
-		default:
-		{
-			break;
-		}
+			//Deadline for Decision on How to Proceed
+			case "Deadline_for_Decision_on_How_to_Proceed__c":
+			{
+				actualValue = noNullVal(rObj.getString("Deadline_for_Decision_on_How_to_Proceed__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, deadlineForDecisionOnHowToProceed, actualValue);
+				break;
+			}
+			//Decision on HOP Concurrence Due to DAS
+			case "Decision_on_HOP_Concurrence_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Decision_on_HOP_Concurrence_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, decisionOnHopConcurrenceDueToDas, actualValue);
+				break;
+			}
+			//Decision on HOP Issues Due to DAS
+			case "Decision_on_HOP_Issues_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Decision_on_HOP_Issues_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, decisionOnHopIssuesDueToDas, actualValue);
+				break;
+			}
+			//Calculated Initiation Signature
+			case "Calculated_Initiation_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Initiation_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedInitiationSignature, actualValue);
+				break;
+			}
+			//Calculated Final Signature
+			case "Calculated_Final_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedFinalSignature, actualValue);
+				break;
+			}
+			
+			//Calculated Preliminary Signature
+			case "Calculated_Preliminary_Signature__c":
+			{
+				actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
+				allMatches = allMatches & compareAndReport(dateType, date,  
+				calculatedPreliminarySignature, actualValue);
+				break;
+			}
+			//Prelim Team Meeting Deadline
+			case "Prelim_Team_Meeting_Deadline__c":
+			{
+				actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, prelimTeamMeetingDeadline, 
+				actualValue);
+				break;
+			}
+			//Prelim Issues Due to DAS
+			case "Prelim_Issues_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, prelimIssuesDueToDas,
+				actualValue);
+				break;
+			}
+			//Prelim Concurrence Due to DAS
+			case "Prelim_Concurrence_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, prelimConcurrenceDueToDas,
+				actualValue);
+				break;
+			}
+			//Final Team Meeting Deadline
+			case "Final_Team_Meeting_Deadline__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalTeamMeetingDeadline,
+				actualValue);
+				break;
+			}
+			//Final Issues Due to DAS
+			case "Final_Issues_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalIssuesDueToDas, 
+				actualValue);
+				break;
+			}
+			//Final Concurrence Due to DAS
+			case "Final_Concurrence_Due_to_DAS__c":
+			{
+				actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
+				allMatches = allMatches & compareAndReport(dateType, date, finalConcurrenceDueToDas,
+				actualValue);
+				break;
+			}
+			
+			default:
+			{
+				break;
+			}
 		}
 		return allMatches;
 	}
 	/**
-	 * This method validates new Expidited review segment
-	 * @return true if all dates matches, false if not
+	 * This method validates Expedited review dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
 	 * @exception Exception
 	*/
 	public static boolean validateNewSegmentExpiditedReview(JSONObject rObj,
@@ -1986,22 +1619,6 @@ public class ADCVDLib{
 				allMatches = allMatches & compareAndReport(dateType, date, finalAnnouncementDate, actualValue);
 				break;
 			}
-			/*//Initiation Issues Due to DAS
-			case "Initiation_Issues_Due_to_DAS__c":
-			{
-				actualValue = noNullVal(rObj.getString("Initiation_Issues_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport(dateType, date, 
-						initiationIssuesDueToDas, actualValue);
-				break;
-			}
-			//Initiation Concurrence Due to DAS
-			case "Initiation_Concurrence_Due_to_DAS__c":
-			{
-				actualValue = noNullVal(rObj.getString("Initiation_Concurrence_Due_to_DAS__c"));
-				allMatches = allMatches & compareAndReport(dateType, date, 
-						initiationConcurrenceDueToDas, actualValue);
-				break;
-			}*/
 			//Calculated Preliminary Signature
 			case "Calculated_Preliminary_Signature__c":
 			{
@@ -2066,13 +1683,13 @@ public class ADCVDLib{
 		}
 		return allMatches;
 	}
-	
-
-	
-	
 	/**
-	 * This method validates new Scope Inquiry review segment dates
-	 * @return true if all dates matches, false if not
+	 * This method validates Litigation dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
+	 * @param sunSetType, type sunset segment
 	 * @exception Exception
 	*/
 	public static boolean validateSunSetReviewDatesByTypeJSONObject (JSONObject rObj,
@@ -2083,7 +1700,7 @@ public class ADCVDLib{
 	{
 		boolean allMatches = true;
 		String actualValue = "";
-		String publishedDateFinal = "";
+		String publishedDateFinal = ""+"";
 		String actualFinalSignature = "";
 		//Notice of Intent to Participate
 		String noticeOfIntentToParticipate = calculateDate(15, 
@@ -2352,360 +1969,11 @@ public class ADCVDLib{
 		}
 		return allMatches;
 	}
-	/**
-	 * This method validates new Scope Inquiry review segment dates
-	 * @return true if all dates matches, false if not
-	 * @exception Exception
-	*/
-	public static boolean validateSunSetReviewDatesByType(JSONObject rObj, String sunSetType, String publishedDate) throws Exception
-	{
-		boolean matches = true;
-		String actualValue = "";
-		String publishedDateFinal = "";
-		String actualFinalSignature = "";
-		//Notice of Intent to Participate
-		String noticeOfIntentToParticipate = calculateDate(15, 
-				"Notice of Intent to Participate", "calendar", publishedDate);
-		actualValue = noNullVal(rObj.getString("Notice_of_Intent_to_Participate__c"));
-		matches = matches & compareAndReport("Notice of Intent to Participate", 
-				noticeOfIntentToParticipate, actualValue);
-		//Notify Cluster Coordinator No Interest
-		String notifyClusterCoordinatorNoInterest = calculateDate(1, 
-				"Notify Cluster Coordinator No Interest", "calendar",
-				noticeOfIntentToParticipate);
-		actualValue = noNullVal(rObj.getString("Notify_Cluster_Coordinator_No_Interest__c"));
-		matches = matches & compareAndReport("Notify Cluster Coordinator No Interest", 
-				notifyClusterCoordinatorNoInterest, actualValue);
-		//Substantive responses Due For All Parties
-		String substantiveResponsesDueForAllParties = calculateDate(30,
-				"Substantive Response Due For All Parties", 
-				"calendar", publishedDate);
-		actualValue = noNullVal(rObj.getString("Substantive_Response_Due_For_All_Parties__c"));
-		System.out.println("");																			 
-		matches = matches & compareAndReport("Substantive Response Due For All Parties", 
-				substantiveResponsesDueForAllParties, actualValue);
-		//Inform Cluster Coordinator if No Response
-		String informClusterCoordinatorIfNoRespons = calculateDate(1, 
-				"Inform Cluster Coordinator if No Respons", "calendar",
-				substantiveResponsesDueForAllParties);
-		actualValue = noNullVal(rObj.getString("Inform_Cluster_Coordinator_if_No_Respons__c"));
-		matches = matches & compareAndReport("Inform Cluster Coordinator if No Respons", 
-				informClusterCoordinatorIfNoRespons, actualValue);
-		
-		//Actual Revocation or Continuation FR - Actual_Revocation_or_Continuation_FR__c???
-		/*String actualRevocationOrContinuationFr = calculateDate(1, "Actual Revocation or Continuation FR", "calendar",
-				substantiveResponsesDueForAllParties);
-		actualValue = getElementAttribute(replaceGui(guiMap.get("sunSetReviewDate"),"Actual Revocation or Continuation FR"), "text");
-		matches = matches & compareAndReport("sunSetReviewDate", "Actual Revocation or Continuation FR", 
-				actualRevocationOrContinuationFr, actualValue);*/
-				
-		//Inadequate Domestic Response note to ITC
-		if(sunSetType.endsWith("90 Day"))
-		{
-			String inadequateDomesticResponseNoteToITC = calculateDate(40, 
-					"Inadequate Domestic Response note to ITC", "calendar",
-					publishedDate);
-			actualValue = noNullVal(rObj.getString("Inadequate_Domestic_Response_note_to_ITC__c"));
-			matches = matches & compareAndReport("Inadequate Domestic Response note to ITC", 
-					inadequateDomesticResponseNoteToITC, actualValue);
-		}
-		//Calculated Final Signature
-		int cfsDays;
-		if(sunSetType.endsWith("90 Day")) cfsDays = 90; 
-		else if(sunSetType.endsWith("120 Day")) cfsDays = 120;
-		else cfsDays = 240;
-		String calculatedFinalSignature = calculateDate(cfsDays, 
-				"Calculated Final Signature", "calendar", publishedDate);
-		actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
-		matches = matches & compareAndReport("Calculated Final Signature", 
-				calculatedFinalSignature, actualValue);
-		
-		if(sunSetType.endsWith("90 Day"))
-		{
-			//Final Announcement Date
-			String finalAnnouncementDate = calculateDate(1, "Final Announcement Date", "business",
-					!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);
-			actualValue = noNullVal(rObj.getString("Final_Announcement_Date__c"));
-			matches = matches & compareAndReport("Final Announcement Date", 
-					finalAnnouncementDate, actualValue);
-			//Update ACE (Customs Module)
-			String UpdateAceCustomsModule="";
-			if(actualFinalSignature.equals("") && publishedDateFinal.equals("") && 
-					!calculatedFinalSignature.equals(""))
-			{
-				UpdateAceCustomsModule = calculateDate(6, "Update ACE (Customs Module)", 
-						"calendar",	calculatedFinalSignature);
-			}
-			else if(actualFinalSignature.equals("") && publishedDateFinal.equals(""))
-			{
-				UpdateAceCustomsModule = calculateDate(-1, "Update ACE (Customs Module)", "calendar",
-						actualFinalSignature);
-			}
-			else if(!publishedDateFinal.equals(""))
-			{
-				UpdateAceCustomsModule = calculateDate(-1, "Update ACE (Customs Module)", "calendar",
-						publishedDateFinal);
-			}
-			actualValue = noNullVal(rObj.getString("Update_ACE_Customs_Module__c"));
-			matches = matches & compareAndReport("Update ACE (Customs Module)", 
-					UpdateAceCustomsModule, actualValue);
-		}
-		else
-		{
-			//Hide if continuation_or_revocation__c is not = Revocation
-			//IF Actual_Revocation_or_Continuation_FR__c  is blank AND Publish_Date__c (type = Revocation) is blank THEN Calculated_Revocation_or_Continuation_FR__c  + 6; 
-			//IF Actual_Revocation_or_Continuation_FR__c  is not blank AND Publish_Date__c (type = Revocation) is blank THEN Actual_Revocation_or_Continuation_FR__c  + 6; 
-			//IF Publish_Date__c (type = Revocation) is not blank THEN Publish_Date__c (type = Revocation) -1
-		}
-		/*//Notify ITC of No Domestic Interest
-		if(sunSetType.endsWith("90 Day"))
-		{
-			String notifyItcOfNoDomesticInterest = calculateDate(20, 
-					"Notify ITC of No Domestic Interest", "calendar",
-					publishedDate);
-			actualValue = getElementAttribute(replaceGui(guiMap.get("sunSetReviewDate"),
-					"Notify ITC of No Domestic Interest"), "text");
-			matches = matches & compareAndReport("sunSetReviewDate", 
-					"Notify ITC of No Domestic Interest", 
-					notifyItcOfNoDomesticInterest, actualValue);
-		}*/
-		//Final Issues Due to DAS
-		String finalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS", "business",
-				calculatedFinalSignature);
-		actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
-		matches = matches & compareAndReport("Final Issues Due to DAS", finalIssuesDueToDas, actualValue);
-		//Final Concurrencec Due to DAS
-		String finalConcurrenceDueToDas = calculateDate(-5, "Final Concurrence Due to DAS", "business",
-				calculatedFinalSignature);
-		actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
-		matches = matches & compareAndReport("Final Concurrence Due to DAS", 
-				finalConcurrenceDueToDas, actualValue);
-		String finalTeamMeetingDeadline = "";
-		if(sunSetType.equals("240 Day"))
-		{
-			//Final Team Meeting Deadline
-			finalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", 
-					"calendar", calculatedFinalSignature);
-			actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
-			matches = matches & compareAndReport("Final Team Meeting Deadline",	finalTeamMeetingDeadline, actualValue);
-		}
-		//Final Announcement Date
-		if(sunSetType.equals("120 Day"))
-		{
-			String finalAnnouncementDate = calculateDate(1, "Final Announcement Date", "business",
-					!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);
-			actualValue = noNullVal(rObj.getString("Final_Announcement_Date__c"));
-			matches = matches & compareAndReport("Final Announcement Date", 
-					finalAnnouncementDate, actualValue);
-		}
-		
-		//Issue Liquidation/Revocation Instruction
-		if(sunSetType.equals("90 Day"))
-		{
-			String issueLiquidationRevocationInstruction="";
-			if(actualFinalSignature.equals("") && publishedDateFinal.equals("") && 
-					!calculatedFinalSignature.equals(""))
-			{
-				issueLiquidationRevocationInstruction = calculateDate(22, 
-						"Issue Liquidation/Revocation Instruction", "calendar",
-						calculatedFinalSignature);
-			}
-			else if(actualFinalSignature.equals("") && publishedDateFinal.equals(""))
-			{
-				issueLiquidationRevocationInstruction = calculateDate(22, 
-						"Issue Liquidation/Revocation Instruction", "calendar",
-						actualFinalSignature);
-			}
-			else if(!publishedDateFinal.equals(""))
-			{
-				issueLiquidationRevocationInstruction = calculateDate(15, 
-						"Issue Liquidation/Revocation Instruction", "calendar",
-						publishedDateFinal);
-			}
-			actualValue = noNullVal(rObj.getString("Issue_Liquidation_Revocation_Instruction__c"));
-			matches = matches & compareAndReport("Issue Liquidation/Revocation Instruction", 
-					issueLiquidationRevocationInstruction, actualValue);
-		}
-		else
-		{
-			//Hide if continuation_or_revocation__c is not = Revocation
-			//IF Actual_Revocation_or_Continuation_FR__c  is blank AND Publish_Date__c (type = Revocation) is blank THEN Calculated_Revocation_or_Continuation_FR__c  + 6; 
-			//IF Actual_Revocation_or_Continuation_FR__c  is not blank AND Publish_Date__c (type = Revocation) is blank THEN Actual_Revocation_or_Continuation_FR__c  + 6; 
-			//IF Publish_Date__c (type = Revocation) is not blank THEN Publish_Date__c (type = Revocation) -1
-		}
-		
-		if(sunSetType.endsWith("120 Day"))
-		{
-			//Memorandum on Adequacy Determination
-			String memorandumOnAdequacyDetermination = calculateDate(110, 
-					"Memorandum on Adequacy Determination", "calendar",publishedDate);
-			actualValue = noNullVal(rObj.getString("Memorandum_on_Adequacy_Determination__c"));
-			matches = matches & compareAndReport("Memorandum on Adequacy Determination", 
-					memorandumOnAdequacyDetermination, actualValue);
-			//Rebuttal Comments Due
-			String rebuttalCommentsDue = calculateDate(35, 
-					"Rebuttal Comments Due", "calendar",publishedDate);
-			actualValue = noNullVal(rObj.getString("Rebuttal_Comments_Due__c"));
-			matches = matches & compareAndReport("Rebuttal Comments Due", rebuttalCommentsDue, actualValue);
-			//Comments on Adequacy Determination Filed
-			String commentsOnAdequacyDeterminationFiled = calculateDate(70, 
-					"Comments on Adequacy Determination Filed", "calendar",publishedDate);
-			actualValue = noNullVal(rObj.getString("Comments_on_Adequacy_Determination_Filed__c"));
-			matches = matches & compareAndReport("Comments on Adequacy Determination Filed", 
-					commentsOnAdequacyDeterminationFiled, actualValue);
-		}
-		String calculatedPreliminarySignature = "";
-		String prelimConcurrenceDueToDas = "";
-		String prelimIssuesDueToDas  = "";
-		String prelimTeamMeetingDeadline = "";
-		if(sunSetType.endsWith("240 Day"))
-		{
-			//Adequacy Determination & Letter to ITC
-			String adequacyDeterminationLetter = calculateDate(50, 
-					"Adequacy Determination & Letter to ITC", "calendar",publishedDate);
-			actualValue = noNullVal(rObj.getString("Adequacy_Determination_Letter_to_ITC__c"));
-			matches = matches & compareAndReport("Adequacy Determination & Letter to ITC", 
-					adequacyDeterminationLetter, actualValue);
-			//Calculated Preliminary Signature
-			calculatedPreliminarySignature = calculateDate(110, 
-					"Calculated Preliminary Signature", "calendar",publishedDate);
-			actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
-			matches = matches & compareAndReport("Calculated Preliminary Signature", 
-					calculatedPreliminarySignature, actualValue); 
-			//Prelim Issues Due to DAS
-			prelimIssuesDueToDas = calculateDate(-10, "Prelim Issues Due to DAS", 
-					"business", calculatedPreliminarySignature);
-			actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
-			matches = matches & compareAndReport("Prelim Issues Due to DAS", 
-					prelimIssuesDueToDas, actualValue); 
-			//Prelim Concurrence Due to DAS
-			prelimConcurrenceDueToDas = calculateDate(-5, "Prelim Concurrence Due to DAS", 
-					"business",calculatedPreliminarySignature);
-			actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
-			matches = matches & compareAndReport("Prelim Concurrence Due to DAS", 
-					prelimConcurrenceDueToDas, actualValue);
-			//Prelim Team Meeting Deadline
-			prelimTeamMeetingDeadline = calculateDate(-21, "Prelim Team Meeting Deadline", 
-					"calendar",calculatedPreliminarySignature);
-			actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
-			matches = matches & compareAndReport("Prelim Team Meeting Deadline", 
-					prelimTeamMeetingDeadline, actualValue);
-			//Rebuttal Comments Due
-			String rebuttalCommentsDue = calculateDate(35, "Rebuttal Comments Due", "calendar",publishedDate);
-			actualValue = noNullVal(rObj.getString("Rebuttal_Comments_Due__c"));
-			matches = matches & compareAndReport("Rebuttal Comments Due", rebuttalCommentsDue, actualValue);
-			//scrollToElement(replaceGui(guiMap.get("sunSetReviewDate"),"Adequacy Determination & Letter to ITC"));
-		}
-		String nextMajorDeadline = "", nextDueToDasDeadline="", nextOfficeDeadline="";
-		String actualPreliminarySignature = "", actualPrelimIssuesToDas = "", 
-				actualPrelimConcurrenceToDas="", segmentOutcome="", actualFinalIssuesToDas = "",
-						actualFinalConcurrenceToDas = "", calculatedFinalFRSignature="";
-		//Next Major Deadline
-		if(sunSetType.equalsIgnoreCase("240 Day") && actualPreliminarySignature.equals(""))
-		{
-			nextMajorDeadline = calculatedPreliminarySignature;
-		}else if(actualFinalSignature.equals(""))
-		{
-			nextMajorDeadline = calculatedFinalSignature;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Major_Deadline__c"));
-		matches = matches & compareAndReport("Next Major Deadline", nextMajorDeadline, actualValue);
-		
-		//Next Due to DAS Deadline
-		if(sunSetType.equalsIgnoreCase("240 Day") && actualPreliminarySignature.equals("") 
-				&& actualPrelimIssuesToDas.equals("") 
-				)
-		{
-			nextDueToDasDeadline = prelimIssuesDueToDas;
-		}else if(actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals("") 
-				&& sunSetType.endsWith("240 Day"))
-		{
-			nextDueToDasDeadline = actualPrelimConcurrenceToDas;
-		}else if(sunSetType.equalsIgnoreCase("240 Day") && actualPreliminarySignature.equals("") 
-				&& segmentOutcome.equals("") 
-				)
-		{
-			nextDueToDasDeadline = calculatedPreliminarySignature;
-		}
-		else if(actualFinalSignature.equals("") && actualFinalIssuesToDas.equals(""))
-		{
-			nextDueToDasDeadline = finalIssuesDueToDas;
-		}else if(actualFinalSignature.equals("") && actualFinalConcurrenceToDas.equals(""))
-		{
-			nextDueToDasDeadline = actualPrelimConcurrenceToDas;
-		}else if (actualFinalSignature.equals("") && segmentOutcome.equals(""))
-		{
-			nextDueToDasDeadline = calculatedFinalFRSignature;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c"));
-		matches = matches & compareAndReport("Next Due to DAS Deadline", nextDueToDasDeadline, actualValue);
-		
-		//Next Office Deadline
-		if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && !datePassed(prelimTeamMeetingDeadline) 
-				)
-		{
-			nextOfficeDeadline = prelimTeamMeetingDeadline;
-		}else if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && actualPrelimIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = prelimIssuesDueToDas;
-		}else if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && actualPrelimConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = actualPrelimConcurrenceToDas;
-		}else if(sunSetType.endsWith("240 Day") && actualPreliminarySignature.equals("") && segmentOutcome.equals(""))
-		{
-			nextOfficeDeadline = calculatedPreliminarySignature;
-		}else if(actualFinalSignature.equals("") && !datePassed(finalTeamMeetingDeadline))
-		{
-			nextOfficeDeadline = finalTeamMeetingDeadline;
-		}else if(actualFinalSignature.equals("") && actualFinalIssuesToDas.equals(""))
-		{
-			nextOfficeDeadline = prelimIssuesDueToDas;
-		}else if(actualFinalSignature.equals("") && actualFinalConcurrenceToDas.equals(""))
-		{
-			nextOfficeDeadline = actualPrelimConcurrenceToDas;
-		}else if (actualFinalSignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedFinalSignature;
-		}else if(publishedDate.equals("") && actualFinalSignature.equals(""))
-		{
-			nextOfficeDeadline = calculatedFinalFRSignature;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Office_Deadline__c"));
-		matches = matches & compareAndReport("Next Office Deadline", nextOfficeDeadline, actualValue);
-		
-		//Preliminary Announcement Date
-		String preliminaryAnnouncementDate = calculateDate(1, "Preliminary Announcement Date", 
-				"calendar",  
-		!actualPreliminarySignature.equals("")?actualPreliminarySignature:calculatedPreliminarySignature);
-		//Final Announcement Date
-		String finalAnnouncementDate = calculateDate(1, "Final Announcement Date", 
-				"calendar", 
-				!actualFinalSignature.equals("")?actualFinalSignature:calculatedFinalSignature);
-		//Next Announcement Date
-		String nextAnnouncementDate = "";
-		if(!datePassed(preliminaryAnnouncementDate) && (segmentOutcome.equals("") || 
-				segmentOutcome.equalsIgnoreCase("Completed")))
-		{
-			
-			nextAnnouncementDate = preliminaryAnnouncementDate;
-		}
-		else if (!datePassed(finalAnnouncementDate) && (segmentOutcome.equals("") || 
-				segmentOutcome.equalsIgnoreCase("Completed")))
-		{
-			nextAnnouncementDate = finalAnnouncementDate;
-		}
-		actualValue = noNullVal(rObj.getString("Next_Announcement_Date__c"));
-		matches = matches & compareAndReport("Next Announcement Date", nextAnnouncementDate, actualValue);	
-		return matches;
-	}
-	
-	
-	
-	
 	
 	/**
 	 * This method validates Litigation fields
-	 * @return true if all dates matches, false if not
+	 * @param rObj, object containing dates
+	 * @param litigationType, type of litigation
 	 * @exception Exception
 	*/
 	public static boolean validateLitigationFields(JSONObject rObj, 
@@ -2950,276 +2218,19 @@ public class ADCVDLib{
 			allMatches = allMatches & compareAndReport("Next Office Deadline", nextOfficeDeadline, actualValue);
 		}
 			return allMatches;
-		
 	}
 	
 	/**
-	 * This method validates Litigation fields
-	 * @return true if all dates matches, false if not
+	 * This method validates Litigation dates
+	 * @param rObj, object containing dates
+	 * @param dateName, Name of the date to be tested
+	 * @param dateType, type of the date (weekend, holiday...etc)
+	 * @param date, Date value
+	 * @param litigationType, type of litigation
 	 * @exception Exception
 	*/
-	public static boolean validateLitigationFieldsOld(JSONObject rObj, String litigationType) throws Exception
-	{
-		boolean allMatches = true;
-		String actualValue, requestFiled = "", expectedFinalSignatureBeforeExt = "";
-		String calculatedFinalSignature = "", calculatedPreliminarySignature="",
-			   calculatedDraftRemandreleaseToparty = "",  prelimIssuesDueToDas="",
-					   prelimConcurrenceDueToDas="", prelimTeamMeetingDeadline="";
-		String draftRemandIssuesDueToDas="", draftRemandConcurrenceDueToDas="",
-			   finalTeamMeetingDeadline = "";
-		//boolean matches = true;
-		//String litigationType = row.get("Litigation_Type");
-		//Prelim Extension (# of days)
-		int prelimExtensionDays = readNumberFromDb(noNullVal(rObj.getString("Prelim_Extension_of_days__c")));
-		//
-		int finalExtensionDays = readNumberFromDb(noNullVal(rObj.getString("Final_Extension_of_days__c")));
-		//Request Filed
-		if(litigationType.equalsIgnoreCase("International Litigation"))
-		{
-			requestFiled = noNullVal(rObj.getString("Request_Filed__c"));
-		}else //Calculated Draft Remand release to party
-		{
-			expectedFinalSignatureBeforeExt	 = noNullVal(rObj.getString("Expected_Final_Signature_Before_Ext__c"));
-		}
-		//International
-		if(litigationType.equalsIgnoreCase("International Litigation"))
-		{
-			//Calculated Preliminary Signature
-			calculatedPreliminarySignature = calculateDate(45 + prelimExtensionDays, "Calculated Preliminary Signature", 
-					"calendar",requestFiled);
-			actualValue = noNullVal(rObj.getString("Calculated_Preliminary_Signature__c"));
-			allMatches = allMatches & compareAndReport("Calculated Preliminary Signature", 
-					calculatedPreliminarySignature, actualValue); 
-			//Prelim Issues Due to DAS
-			prelimIssuesDueToDas = calculateDate(-10, "Prelim Issues Due to DAS", "business", calculatedPreliminarySignature);
-			actualValue = noNullVal(rObj.getString("Prelim_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport("Prelim Issues Due to DAS", 
-					prelimIssuesDueToDas, actualValue); 
-			//Prelim Concurrence Due to DAS
-			prelimConcurrenceDueToDas = calculateDate(-5, "Prelim Concurrence Due to DAS", "business", calculatedPreliminarySignature);
-			actualValue = noNullVal(rObj.getString("Prelim_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport("Prelim Concurrence Due to DAS", 
-					prelimConcurrenceDueToDas, actualValue);
-			//Prelim Team Meeting Deadline
-			prelimTeamMeetingDeadline = calculateDate(-21, "Prelim Team Meeting Deadline", "calendar", calculatedPreliminarySignature);
-			actualValue = noNullVal(rObj.getString("Prelim_Team_Meeting_Deadline__c"));
-			allMatches = allMatches & compareAndReport("Prelim Team Meeting Deadline", 
-					prelimTeamMeetingDeadline, actualValue);
-			//Calculated Final Signature
-			calculatedFinalSignature = calculateDate(180 + finalExtensionDays, "Calculated Final Signature", "Calendar", 
-						requestFiled.equals("")?expectedFinalSignatureBeforeExt:requestFiled);
-			actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
-			allMatches = allMatches & compareAndReport("Calculated Final Signature",
-					calculatedFinalSignature, actualValue);
-		}
-		else//Remand
-		{
-			//Calculated Draft Remand release to party
-			calculatedDraftRemandreleaseToparty = calculateDate(-30 + prelimExtensionDays, 
-					"Calculated Draft Remand release to party",	"Calendar", expectedFinalSignatureBeforeExt);
-			actualValue = noNullVal(rObj.getString("Calculated_Draft_Remand_release_to_party__c"));
-			allMatches = allMatches & compareAndReport("Calculated Draft Remand release to party",
-					calculatedDraftRemandreleaseToparty, actualValue);
-			//Draft Remand Issues Due to DAS
-			draftRemandIssuesDueToDas = calculateDate(-10, "Draft Remand Issues Due to DAS", "business", 
-					calculatedDraftRemandreleaseToparty);
-			actualValue = noNullVal(rObj.getString("Draft_Remand_Issues_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport("Draft Remand Issues Due to DAS", 
-					draftRemandIssuesDueToDas, actualValue); 
-			//Draft Remand Concurrence Due to DAS
-			draftRemandConcurrenceDueToDas = calculateDate(-5, "Draft Remand Concurrence Due to DAS", "business", 
-					calculatedDraftRemandreleaseToparty);
-			actualValue = noNullVal(rObj.getString("Draft_Remand_Concurrence_Due_to_DAS__c"));
-			allMatches = allMatches & compareAndReport("Draft Remand Concurrence Due to DAS", 
-					draftRemandConcurrenceDueToDas, actualValue);
-			//Calculated Final Signature
-			calculatedFinalSignature = calculateDate(finalExtensionDays, "Calculated Final Signature", "Calendar", 
-						requestFiled.equals("")?expectedFinalSignatureBeforeExt:requestFiled);
-			actualValue = noNullVal(rObj.getString("Calculated_Final_Signature__c"));
-			allMatches = allMatches & compareAndReport("Calculated Final Signature",
-					calculatedFinalSignature, actualValue);
-		}
-		
-		//Final Issues Due to DAS
-		String FinalIssuesDueToDas = "";
-		FinalIssuesDueToDas = calculateDate(-10, "Final Issues Due to DAS",  "business", calculatedFinalSignature);
-		actualValue = noNullVal(rObj.getString("Final_Issues_Due_to_DAS__c"));
-		allMatches = allMatches & compareAndReport("Final Issues Due to DAS", FinalIssuesDueToDas, actualValue);
-		//Final Concurrence Due to DAS
-		String FinalConcurrenceDueToDas = "";
-		FinalConcurrenceDueToDas = calculateDate(-5, "Final Concurrence Due to DAS",  "business", calculatedFinalSignature);
-		actualValue = noNullVal(rObj.getString("Final_Concurrence_Due_to_DAS__c"));
-		allMatches = allMatches & compareAndReport("Final Concurrence Due to DAS", 
-		FinalConcurrenceDueToDas, actualValue);
-		if(litigationType.equalsIgnoreCase("International Litigation"))
-		{
-		//Final Team Meeting Deadline
-		
-		finalTeamMeetingDeadline = calculateDate(-21, "Final Team Meeting Deadline", "calendar", calculatedFinalSignature);
-		actualValue = noNullVal(rObj.getString("Final_Team_Meeting_Deadline__c"));
-		allMatches = allMatches & compareAndReport("Final Team Meeting Deadline",
-				finalTeamMeetingDeadline, actualValue);
-		}
-		String actualPreliminarySignature = "";
-		String actualFinalSignature = "";
-		String nextMajorDeadline = "";
-		String actualPrelimIssuesToDas="";
-		String actualPrelimConcurrenceToDas="";
-		//next dates
-		if(litigationType.equalsIgnoreCase("International Litigation"))
-		{
-			//Next Major Deadline
-			if("".equals(actualPreliminarySignature))
-			{
-				nextMajorDeadline = calculatedPreliminarySignature;
-			}else if ("".equals(actualFinalSignature))
-			{
-				nextMajorDeadline = calculatedFinalSignature;
-			}
-			actualValue = noNullVal(rObj.getString("Next_Major_Deadline__c"));
-			allMatches = allMatches & compareAndReport("Next Major Deadline", nextMajorDeadline, actualValue);
-			//Next Due to DAS Deadline
-			String nextDueToDasDeadline = "", actualFinalIssuesToDas="", actualFinalConcurrenceToDas="";
-			if("".equals(actualPreliminarySignature) && "".equals(actualPrelimIssuesToDas))
-			{
-				nextDueToDasDeadline = prelimIssuesDueToDas;
-			}else if("".equals(actualPreliminarySignature) && "".equals(actualPrelimConcurrenceToDas))
-			{
-				nextDueToDasDeadline = prelimConcurrenceDueToDas;
-			}else if("".equals(actualPreliminarySignature))
-			{
-				nextDueToDasDeadline = calculatedPreliminarySignature;
-			}
-			else if("".equals(actualFinalSignature) && "".equals(actualFinalIssuesToDas))
-			{
-				nextDueToDasDeadline = FinalIssuesDueToDas;
-			}else if("".equals(actualFinalSignature) && "".equals(actualFinalConcurrenceToDas))
-			{
-				nextDueToDasDeadline = FinalConcurrenceDueToDas;
-			}else if("".equals(actualFinalSignature))
-			{
-				nextDueToDasDeadline = calculatedFinalSignature;
-			}
-			actualValue = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c"));
-			allMatches = allMatches & compareAndReport("Next Due to DAS Deadline",
-					nextDueToDasDeadline, actualValue);
-			//Next Office Deadline
-			String nextOfficeDeadline="";
-			if ("".equals(actualPreliminarySignature) && datePassed(prelimTeamMeetingDeadline))
-			{
-				nextOfficeDeadline = prelimTeamMeetingDeadline;
-			}
-			else if("".equals(actualPreliminarySignature) && "".equals(actualPrelimIssuesToDas))
-			{
-				nextOfficeDeadline = prelimIssuesDueToDas;
-			}else if("".equals(actualPreliminarySignature) && "".equals(actualPrelimConcurrenceToDas))
-			{
-				nextOfficeDeadline = prelimConcurrenceDueToDas;
-			}else if("".equals(actualPreliminarySignature))
-			{
-				nextOfficeDeadline = calculatedPreliminarySignature;
-			}
-			else if ("".equals(actualFinalSignature) && datePassed(finalTeamMeetingDeadline))
-			{
-				nextOfficeDeadline = finalTeamMeetingDeadline;
-			}
-			else if("".equals(actualFinalSignature) && "".equals(actualFinalIssuesToDas))
-			{
-				nextOfficeDeadline = FinalIssuesDueToDas;
-			}else if("".equals(actualFinalSignature) && "".equals(actualFinalConcurrenceToDas))
-			{
-				nextOfficeDeadline = FinalConcurrenceDueToDas;
-			}else if("".equals(actualFinalSignature))
-			{
-				nextOfficeDeadline = calculatedFinalSignature;
-			}
-			actualValue = noNullVal(rObj.getString("Next_Office_Deadline__c"));
-			allMatches = allMatches & compareAndReport("Next Office Deadline",
-					nextOfficeDeadline, actualValue);
-		}
-		else
-		{
-			//Next Major Deadline
-			String actualDraftRemandReleasedToParty = "";
-			if("".equals(actualDraftRemandReleasedToParty))
-			{
-				nextMajorDeadline = calculatedDraftRemandreleaseToparty;
-			}else if ("".equals(actualFinalSignature))
-			{
-				nextMajorDeadline = calculatedFinalSignature;
-			}
-			actualValue = noNullVal(rObj.getString("Next_Major_Deadline__c"));
-			allMatches = allMatches & compareAndReport("Next Major Deadline",
-				nextMajorDeadline, actualValue);
-			
-			//Next Due to DAS Deadline
-			String nextDueToDasDeadline = "", actualFinalIssuesToDas="", actualFinalConcurrenceToDas="",
-					actualDraftRemandIssuesToDas = "", actualDraftRemandConcurrencceToDas="";
-			if("".equals(actualDraftRemandReleasedToParty) && "".equals(actualDraftRemandIssuesToDas))
-			{
-				nextDueToDasDeadline = draftRemandIssuesDueToDas;
-			}else if("".equals(actualDraftRemandReleasedToParty) && "".equals(actualDraftRemandConcurrencceToDas))
-			{
-				nextDueToDasDeadline = draftRemandConcurrenceDueToDas;
-			}else if("".equals(actualDraftRemandReleasedToParty))
-			{
-				nextDueToDasDeadline = calculatedDraftRemandreleaseToparty;
-			}
-			else if("".equals(actualFinalSignature) && "".equals(actualFinalIssuesToDas))
-			{
-				nextDueToDasDeadline = FinalIssuesDueToDas;
-			}else if("".equals(actualFinalSignature) && "".equals(actualFinalConcurrenceToDas))
-			{
-				nextDueToDasDeadline = FinalConcurrenceDueToDas;
-			}else if("".equals(actualFinalSignature))
-			{
-				nextDueToDasDeadline = calculatedFinalSignature;
-			}	
-			actualValue = noNullVal(rObj.getString("Next_Due_to_DAS_Deadline__c")); 
-			allMatches = allMatches & compareAndReport("Next Due to DAS Deadline",
-					nextDueToDasDeadline, actualValue);
-			//Next Office Deadline
-			String nextOfficeDeadline="";
-			if ("".equals(actualDraftRemandReleasedToParty) && datePassed(prelimTeamMeetingDeadline))
-			{
-				nextOfficeDeadline = prelimTeamMeetingDeadline;
-			}
-			else if("".equals(actualDraftRemandReleasedToParty) && "".equals(actualDraftRemandIssuesToDas))
-			{
-				nextOfficeDeadline = draftRemandIssuesDueToDas;
-			}else if("".equals(actualDraftRemandReleasedToParty) && "".equals(actualDraftRemandConcurrencceToDas))
-			{
-				nextOfficeDeadline = draftRemandConcurrenceDueToDas;
-			}else if("".equals(actualDraftRemandReleasedToParty))
-			{
-				nextOfficeDeadline = calculatedDraftRemandreleaseToparty;
-			}
-			else if ("".equals(actualFinalSignature) && datePassed(finalTeamMeetingDeadline))
-			{
-				nextOfficeDeadline = finalTeamMeetingDeadline;
-			}
-			else if("".equals(actualFinalSignature) && "".equals(actualFinalIssuesToDas))
-			{
-				nextOfficeDeadline = FinalIssuesDueToDas;
-			}else if("".equals(actualFinalSignature) && "".equals(actualFinalConcurrenceToDas))
-			{
-				nextOfficeDeadline = FinalConcurrenceDueToDas;
-			}else if("".equals(actualFinalSignature))
-			{
-				nextOfficeDeadline = calculatedFinalSignature;
-			}	
-			actualValue = noNullVal(rObj.getString("Next_Office_Deadline__c"));
-			allMatches = allMatches & compareAndReport("Next Office Deadline", nextOfficeDeadline, actualValue);
-		}
-		return allMatches;
-	}
-	
-	/**
-	 * This method validates Litigation fields
-	 * @return true if all dates matches, false if not
-	 * @exception Exception
-	*/
-	public static boolean validateLitigationFields(JSONObject rObj, String dateName,
+	public static boolean validateLitigationFields(JSONObject rObj, 
+												   String dateName,
 												   String dateType,
 												   String date,
 												   String litigationType) throws Exception
@@ -3370,24 +2381,7 @@ public class ADCVDLib{
 			}
 		}
 		return allMatches;
-		
 	}
-	/**
-	 * This method verifies if given date is passed or not
-	 * @param date: date to check
-	 * @return pass if passed, false if not
-	*/
-	public static boolean datePassedOld(String date) throws ParseException
-	{
-		if (date == null || date.equals("")) return true;
-		Date todayDate = new Date();
-		String todayDateStr = new SimpleDateFormat("yyyy-MM-dd").format(todayDate);
-		if(format.parse(date).compareTo(format.parse(todayDateStr))<0) return true;
-		else return false;
-	}
-	
-	
-	
 	/**
 	 * This method verifies if given date is passed or not
 	 * @param date: date to check
@@ -3404,12 +2398,6 @@ public class ADCVDLib{
 		if(((DateFormat) format).parse(date).compareTo(((DateFormat) format).parse(todayDateStr))<0) return true;
 		else return false;
 	}
-	
-	
-	
-	
-	
-	
 	/**
 	 * This method creates random case number
 	 * @return case number
@@ -3420,13 +2408,14 @@ public class ADCVDLib{
 		String str2 = "00"+new Random().nextInt(999);
 		return str1.substring(str1.length()-3)+ "-" +  str2.substring(str2.length()-3);
 	}
-	
 	/**
 	 * This method calculates date based on other dates
+	 * @param val, dates value
 	 * @param params: given dates
 	 * @return calculated date
+	 * @throws JSONException 
 	*/
-	static String calculateDate(int val, String ...params) throws ParseException
+	static String calculateDate(int val, String ...params) throws ParseException, JSONException
 	{
 		//Date todayDate = new Date();
 		int iterator, numberBusinessDays ;
@@ -3447,7 +2436,6 @@ public class ADCVDLib{
 			date = format.parse(params[2]);
 			calendar.setTime(date);
 		}
-		//
 		String landsOn = "";
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -3460,7 +2448,6 @@ public class ADCVDLib{
 			int nbd = numberBusinessDays;
 			while((nbd > 0 )) 
 			{
-				//System.out.println(c.getTime());
 				if(!isHoliday(c) && (!isWeekEnd(c)))
 				{
 					nbd--;
@@ -3469,34 +2456,21 @@ public class ADCVDLib{
 			}
 			landsOn = format.format(c.getTime());
 		}
-		///
-		
 		if(params[1].equals("business"))
 		{
 			int toll=0;
 			if(iterator>0)
 			{
-				//numberBusinessDays = 3;
 				for(int i = 1; i <= numberBusinessDays ; i++ ) 
 				{
-					//System.out.println(calendar.getTime());
 					calendar.add(Calendar.DAY_OF_MONTH, iterator);
 					if(!isBusinessDay(calendar))
 					{
 						i--;
 					}
 				}
-				//System.out.println(calendar.getTime());
 				while(!isBusinessDay(calendar)) 
 				{
-//					System.out.println(calendar.getTime());
-//					System.out.println(isTollingDay(calendar));
-//					System.out.println(isHoliday(calendar));
-//					System.out.println(isWeekEnd(calendar));
-//					//if ((!isTollingDay(calendar)) 
-//							//&& (!isHoliday(calendar)) && !isWeekEnd(calendar))
-//					//toll--;
-//					System.out.println(calendar.getTime());
 					calendar.add(Calendar.DAY_OF_MONTH, iterator);
 				}
 			}
@@ -3504,7 +2478,6 @@ public class ADCVDLib{
 			{
 				for(int i = 1; i <= numberBusinessDays ; i++ ) 
 				{
-					//System.out.println(calendar.getTime());
 					if(isTollingDay(calendar))
 					{
 						toll++;
@@ -3518,15 +2491,12 @@ public class ADCVDLib{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
 					}
 				}
-				//System.out.println(calendar.getTime());
 				while(toll>0)
 				{
-					//System.out.println(toll+"___"+calendar.getTime());
 					if(isBusinessDay(calendar))
 					{
 						toll--;
 					}
-					//System.out.println(toll+"___"+calendar.getTime());
 					if(params[0].contains("DAS"))
 					{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
@@ -3539,14 +2509,6 @@ public class ADCVDLib{
 				while((isTollingDay(calendar)) 
 						|| (isHoliday(calendar)) || isWeekEnd(calendar)) 
 				{
-					System.out.println(calendar.getTime());
-					System.out.println(isTollingDay(calendar));
-					System.out.println(isHoliday(calendar));
-					System.out.println(isWeekEnd(calendar));
-					//if ((!isTollingDay(calendar)) 
-							//&& (!isHoliday(calendar)) && !isWeekEnd(calendar))
-					//toll--;
-					//System.out.println(calendar.getTime());
 					if(params[0].contains("DAS"))
 					{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
@@ -3572,18 +2534,8 @@ public class ADCVDLib{
 						i--;
 					}
 				}
-				System.out.println(calendar.getTime());
-				//landsOn = format.format(c.getTime());
 				while(!isBusinessDay(calendar)) 
 				{
-					//System.out.println(calendar.getTime());
-					//System.out.println(isTollingDay(calendar));
-					//System.out.println(isHoliday(calendar));
-					//System.out.println(isWeekEnd(calendar));
-					//if ((!isTollingDay(calendar)) 
-							//&& (!isHoliday(calendar)) && !isWeekEnd(calendar))
-					//toll--;
-					//System.out.println(calendar.getTime());
 					if(params[0].contains("DAS"))
 					{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
@@ -3598,17 +2550,14 @@ public class ADCVDLib{
 			{
 				for(int i = 1; i <= numberBusinessDays ; i++ ) 
 				{
-					//System.out.println(calendar.getTime());
 					calendar.add(Calendar.DAY_OF_MONTH, iterator);
 					if(isTollingDay(calendar))
 					{
 						toll++;
 					}
 				}
-				//System.out.println(calendar.getTime());
 				while(toll>0)
 				{
-					//System.out.println(toll+"___"+calendar.getTime());
 					if(params[0].contains("DAS"))
 					{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
@@ -3621,14 +2570,6 @@ public class ADCVDLib{
 				}
 				while(!isBusinessDay(calendar)) 
 				{
-					//System.out.println(calendar.getTime());
-					//System.out.println(isTollingDay(calendar));
-					//System.out.println(isHoliday(calendar));
-					//System.out.println(isWeekEnd(calendar));
-					//if ((!isTollingDay(calendar)) 
-							//&& (!isHoliday(calendar)) && !isWeekEnd(calendar))
-					//toll--;
-					//System.out.println(calendar.getTime());
 					if(params[0].contains("DAS"))
 					{
 						calendar.add(Calendar.DAY_OF_MONTH, iterator);
@@ -3640,7 +2581,6 @@ public class ADCVDLib{
 				}
 			}
 		}
-		//System.out.print(format.format(calendar.getTime())+"#"+landsOn);
 		return format.format(calendar.getTime())+"#"+landsOn;
 	}
 	/**
@@ -3650,7 +2590,6 @@ public class ADCVDLib{
 	*/
 	static String calculateLitigationDate(int val, String ...params) throws ParseException
 	{
-		//Date todayDate = new Date();
 		int iterator, numberBusinessDays ;
 		iterator = (val<0)? -1:1;
 		Date date;
@@ -3791,8 +2730,9 @@ public class ADCVDLib{
 	 * @param cal: calendar date
 	 * @return true if it is a business date, false if not
 	 * @throws ParseException 
+	 * @throws JSONException 
 	*/
-	public static boolean isBusinessDay(Calendar cal) throws ParseException{
+	public static boolean isBusinessDay(Calendar cal) throws ParseException, JSONException{
 		// check if weekend
 		if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || 
 				cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
@@ -3938,6 +2878,16 @@ public class ADCVDLib{
 										   String expectedValues, 
 										   String actualValue) throws Exception 
 	{
+		String startDate, endDate;
+		JSONObject tollingDaysObjDisplay;
+		String hover= "";
+		String sbStr = "";
+		if (standardTollingDaysStr.length()>2) sbStr = standardTollingDaysStr.substring(2);
+		hover = "Updated with: \n"+ upadtedWith + "\n\n Standard Tolling Days: \n"+sbStr;
+		if(!standardTolling)
+		{
+			hover = hover+"\n\n" + "Record Tolling Days: \n"+ recordTollingDaysStr;
+		}
 		String expectedValue, landsOn;
 		if(expectedValues.equals("Empty") || expectedValues.equals("")) 
 		{
@@ -3962,51 +2912,23 @@ public class ADCVDLib{
 		printLog("expectedValue: "+expectedValue + " Versus " + "actualValue: "  + actualValue);
 		if (expectedValue.equalsIgnoreCase(actualValue))
 		{
-			updateHtmlReport("Lands on "+dateType+"-->["+fallsOn+"]", 
+			updateHtmlReport("<abbr title='"+hover+"'>Lands on "+dateType+"-->["+fallsOn+"]</abbr>...more info!", 
 					expectedValue, actualValue, 
 					"VP", "pass", "");
 			return true;
 		}
 		else
 		{
-			updateHtmlReport("Lands on "+dateType+"-->["+fallsOn+"]", 
+			updateHtmlReport("<abbr title='"+hover+"'>Lands on "+dateType+"-->["+fallsOn+"]</abbr> ...more info!", 
 					expectedValue, actualValue, 
 					"VP", "fail", "");
 			return false;
 		}
 	}
 	
-	
 	/**
 	 * This method gets validate element and report
-	 * @param elementName: Element's name
-	 * @param expectedValue: expected value
-	 * @param actualValue: actual value
-	 * @return if the element value is as expected, false if not
-	 * @throws Exception
-	 */
-	public static boolean compareAndReportOld(String elementName, 
-										   String expectedValue, 
-										   String actualValue) throws Exception 
-	{
-		if((expectedValue==null)||expectedValue.equals("")) expectedValue = "Empty";
-		if((actualValue==null)||actualValue.equals("")) actualValue = "Empty";
-		printLog(elementName + " -- " + "expectedValue:"+expectedValue + " Versus " +"actualValue:"+ actualValue);
-		if (expectedValue.equalsIgnoreCase(actualValue))
-		{
-			updateHtmlReport("Validate ["+ elementName +"]", expectedValue, actualValue, "VP", "pass", "");
-			return true;
-		}
-		else
-		{
-			updateHtmlReport("Validate ["+ elementName +"]", expectedValue, actualValue, "VP", "fail", "");
-			return false;
-		}
-	}
-	/**
-	 * This method gets validate element and report
-	 * @param htmlfield: Gui element
-	 * @param elementName: Element's name
+	 * @param elementName: element name
 	 * @param expectedValue: expected value
 	 * @param actualValue: actual value
 	 * @return if the element value is as expected, false if not
@@ -4022,16 +2944,12 @@ public class ADCVDLib{
 		printLog(elementName + " -- " + expectedValue + " Versus " + actualValue);
 		if (expectedValue.equalsIgnoreCase(actualValue))
 		{
-			//highlightElement(replaceGui(guiMap.get(htmlfield), elementName), "green");
 			updateHtmlReport("Validate ["+ elementName +"]", expectedValue, actualValue, "VP", "pass", "");
-			//unHighlightElement(replaceGui(guiMap.get(htmlfield), elementName));
 			return true;
 		}
 		else
 		{
-			//highlightElement(replaceGui(guiMap.get(htmlfield), elementName), "red");
 			updateHtmlReport("Validate ["+ elementName +"]", expectedValue, actualValue, "VP", "fail", "");
-			//unHighlightElement(replaceGui(guiMap.get(htmlfield), elementName));
 			return false;
 		}
 	}
@@ -4081,43 +2999,96 @@ public class ADCVDLib{
 		}
 	}
 	
-	
-	
 	/**
-	 * This method checks if cal lands in tolling dates
+	 * This method checks if calendar date lands in tolling dates
 	 * @param cal: calendar date
 	 * @return true if tolling date, false if not
-	 * @exception Exception
+	 * @throws ParseException, JSONException 
 	*/
-	public static boolean isTollingDay(Calendar cal) throws ParseException
+	public static boolean isTollingDay(Calendar cal) throws ParseException, JSONException
 	{	
 		boolean isTolling = false;
 		Date startDate, endDate;
-		for(LinkedHashMap<String, String> map:tollingDates)
+		JSONObject tollingDaysObj;
+		if(standardTolling)
 		{
-			//System.out.println(cal.getTime());
-			startDate = format.parse( map.get("Starting_Date"));
-			endDate = format.parse( map.get("End_Date"));
-			if (
-					(cal.getTime().after(startDate) && cal.getTime().before(endDate))
-					||(cal.getTime().compareTo(startDate)==0)
-					||(cal.getTime().compareTo(endDate)==0)
-				)
+			tollingDaysObj = standardTollingDaysObj;
+		}else
+		{
+			tollingDaysObj = recordTollingDaysObj;
+		}
+		if(tollingDaysObj != null)
+		{ 
+			JSONArray jsonArray = tollingDaysObj.getJSONArray("records");
+			for (int ite = 0; 
+					ite< Integer.parseInt(tollingDaysObj.getString("totalSize"))
+					;ite++)
 			{
-				return true;
+				JSONObject jsonObject = jsonArray.getJSONObject(ite);
+				startDate = format.parse( (String) jsonObject.get("Start_Date__c"));
+				endDate = format.parse( (String) jsonObject.get("End_Date__c"));
+				
+				if (
+						(cal.getTime().after(startDate) && cal.getTime().before(endDate))
+						||(cal.getTime().compareTo(startDate)==0)
+						||(cal.getTime().compareTo(endDate)==0)
+					)
+				{
+					return true;
+				}
 			}
+			
+		}else
+		{
+			return isTolling;
 		}
 		return isTolling;
 	}
 	
-	     
+	/**
+	 * This method convert null value to blank
+	 * @param str, a string that may have a null value
+	 * @return blank if null or keep same string
+	*/    
     public static String noNullVal(String str)
     {
     	String  strC = (str==null||str.equals("null"))?"":str;
     	return strC;
     }
     
-
+    /**
+	 * This method gets a tolling days from JSONObject
+	 * @param tdObj, the JSONObject
+	 * @return Tolling days in a formated string
+	 * @throws Exception
+	*/  
+    public static String getTollingDaysStr(JSONObject tdObj) throws Exception
+    {
+    	String startDate, endDate;
+		JSONObject tollingDaysObjDisplay;
+		String tdays = "";
+		if(standardTolling)
+		{
+			tollingDaysObjDisplay = standardTollingDaysObj;
+		}else
+		{
+			tollingDaysObjDisplay = recordTollingDaysObj;
+		}
+		if(tollingDaysObjDisplay != null)
+		{ 
+			JSONArray jsonArray = tdObj.getJSONArray("records");
+			for (int ite = 0; 
+					ite< Integer.parseInt(tdObj.getString("totalSize"))
+					;ite++)
+			{
+				JSONObject jsonObject = jsonArray.getJSONObject(ite);
+				startDate = (String) jsonObject.get("Start_Date__c");
+				endDate = (String) jsonObject.get("End_Date__c");
+				tdays = tdays+", ["+startDate+"#"+endDate+"]";
+			}
+		}
+		return "{"+tdays+"}";
+    }
 	/**
 	 * This method gets validate element and report
 	 * @param clause: conditions
@@ -4150,8 +3121,9 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method gets element attribute
-	 * @param row: row of elements
+	 * This method checks self initiated dates from the object
+	 * @param obj: JSONObject
+	 * @param populated, dates are populated or not
 	 * @return true if all dates are as expected, false, if not.
 	 * @throws Exception
 	 */
@@ -4219,7 +3191,7 @@ public class ADCVDLib{
 	
 	/**
 	 * This method read and save segment dates
-	 * @return HashMap of dates
+	 * @return msg message to be displayed in the report
 	 * @throws Exception
 	 */
 	public static LinkedHashMap<String, String> readSegmentDates(String msg) throws Exception
@@ -4286,8 +3258,11 @@ public class ADCVDLib{
 		return dates;
 	}
 	/**
-	 * This method read and save segment dates
-	 * @return HashMap of dates
+	 * This method checks dates when AR is linked to NSR
+	 * @return arDates, dates of AR
+	 * @param nsrDatesBefore, Dates of NSR before linking
+	 * @param nsrDatesAfter, Dates of NSR after linking
+	 * @return true if dates are as expected, false if not
 	 * @throws Exception
 	 */
 	public static boolean alignNsrToArAndValidate(LinkedHashMap<String, String> arDates, 
@@ -4344,7 +3319,7 @@ public class ADCVDLib{
 	
 	/**
 	 * This method validate investigation's statuses
-	 * @param row, row of elements
+	 * @param investigationId, investigation identifier
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
@@ -4384,8 +3359,6 @@ public class ADCVDLib{
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Amend Prelim", jObj.getString("Status__c"), condition);
-		
-		
 		//Final
 		condition = "IF the Published Date (Type:  final) is blank AND Actual_Preliminary_Signature is not blank AND Published_Date_c "
 				+ "(Type: Preliminary) is not blank AND Actual_Final_Signature__c is not blank AND Actual_Amended_Prelim_Determination_Sig "
@@ -4400,8 +3373,6 @@ public class ADCVDLib{
 		
 		match = match & 
 		ADCVDLib.validateObjectStatus("Final", jObj.getString("Status__c"), condition);
-		
-		
 		//Pending Order
 		condition = "IF Published_Date__c (Type:  Preliminary) is not blank AND Published_Date__c (Type:  Final) is not blank "
 				+ "AND Actual_Preliminary_Signature__c is not blank AND Actual_Final_Signature__c is not blank "
@@ -4418,8 +3389,6 @@ public class ADCVDLib{
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Pending Order", jObj.getString("Status__c"), condition);
-		
-		
 		//Suspended
 		condition = "The Investigation Outcome is 'Suspension Agreement' THEN Status is true";
 		record.clear();
@@ -4428,8 +3397,6 @@ public class ADCVDLib{
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Suspended", jObj.getString("Status__c"), condition);
-		
-		
 		//Hold
 		condition = "IF The Litigation Picklist is Null AND the Investigation Outcome is “ITC Negative Prelim” THEN Published Date "
 				+ "(Type:  ITC Prelim) + 30 or 45 days AND status true";
@@ -4440,8 +3407,6 @@ public class ADCVDLib{
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Hold", jObj.getString("Status__c"), condition);
-		
-		
 		//Litigation
 		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is No AND Litigation_Status is 'blank' OR Litigation_Status "
 				+ "is “Not Active” THEN status is true  ";
@@ -4452,9 +3417,6 @@ public class ADCVDLib{
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Litigation", jObj.getString("Status__c"), condition);
-		
-		
-		
 		//Customs
 		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent "
 				+ "is No THEN status is true";
@@ -4463,12 +3425,9 @@ public class ADCVDLib{
 		record.put("Litigation_Resolved__c", "Yes");
 		record.put("Have_Custom_Instruction_been_sent__c", "No");
 		code = APITools.updateRecordObject("Investigation__c", investigationId, record);
-		
 		jObj = APITools.getRecordFromObject(sqlString);
 		match = match & 
 		ADCVDLib.validateObjectStatus("Customs", jObj.getString("Status__c"), condition);
-		
-		
 		//Closed
 		condition = "IF the Litigation picklist is Yes AND Litigation_Resolved is Yes AND Have_Custom_Instruction_been_sent "
 				+ "is Yes THEN status is true";
@@ -4480,8 +3439,6 @@ public class ADCVDLib{
 		ADCVDLib.validateObjectStatus("Closed", jObj.getString("Status__c"), condition);
 		return match;
 	}
-	
-	
 	
 	/**
 	 * This method validate Administrative Review, Expedited Review, New Shipper Review
@@ -4578,11 +3535,11 @@ public class ADCVDLib{
 		 
 	}
 	
-	
 	/**
 	 * This method validate hanged circumstance and Anticircumvention
 	 * statuses
-	 * @param row, row of elements
+	 * @param sgementId, segment identifier
+	 * @param segType, type of segment
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
@@ -4602,7 +3559,6 @@ public class ADCVDLib{
 		 ADCVDLib.validateObjectStatus("Initiation", jObj.getString("Status__c"), condition);
 		 record.clear();
 		 //Prelim
-		 
 		 record.clear();
 	     record.put("segment__c", sgementId);
 		 record.put("Published_Date__c", todayStr);
@@ -4684,9 +3640,10 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method validate changed circumstance and Anti-circumvention
+	 * This method validate statuses of other segment types
 	 * statuses
-	 * @param row, row of elements
+	 * @param sgementId, segment identifier
+	 * @param segType, type of segment
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
@@ -4759,7 +3716,6 @@ public class ADCVDLib{
 		 match = match & 
 		 ADCVDLib.validateObjectStatus("Closed", jObj.getString("Status__c"), condition);
 		 return match;
-		 
 	}
 	
 	/**
@@ -4862,10 +3818,10 @@ public class ADCVDLib{
 	}
 	
 	/**
-	 * This method gets validate element and report
-	 * @param ScenarioType: Positive or Negative
-	 * @param testedStatus: status, tested status
-	 * @param actualstatus: actual status
+	 * This method gets validate status and report
+	 * @param testedStatus: tested status name
+	 * @param actualstatus: actual status value
+	 * @param condition: scenario's conditions
 	 * @return true if the status is as expected, false if not
 	 * @throws Exception
 	 */
@@ -4889,7 +3845,7 @@ public class ADCVDLib{
 	
 	/**
 	 * This method validate petition's statuses
-	 * @param row, row of elements
+	 * @param petitionId, Petition identifier
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
@@ -4941,11 +3897,11 @@ public class ADCVDLib{
       return match;
 	}
 	
-	
 	/**
-	 * This method validate Litigations statuses
+	 * This method validate Litigation statuses
 	 * statuses
-	 * @param row, row of elements
+	 * @param litigId, litigation identifier
+	 * @param litigType, litigation type
 	 * @return true if all statuses worked as expected false if not
 	 * @throws Exception
 	 */
@@ -4981,6 +3937,4 @@ public class ADCVDLib{
 		ADCVDLib.validateObjectStatus("Closed", jObj.getString("Status__c"), condition);
 		return match;
 	}
-	
-	
 }
