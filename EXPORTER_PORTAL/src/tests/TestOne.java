@@ -533,6 +533,545 @@ public class TestOne {
 		testCaseStatus = ExporterLib.createContent(row);
 	}
 	
+	
+	/**
+	 * This method is creating S1 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S1() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S1");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_017");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S1");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+
+	/**
+	 * This method is creating S2 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S2() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S2");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_018");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S2");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating S3 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S3() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S2");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_019");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S3");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating S4 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S4() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S4");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_020");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S4");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating S5 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S5() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S5");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_021");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S5");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating S6 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S6() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S6");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_022");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S6");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating S7 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S7() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S7");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_023");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S7");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating S8 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S8() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S8");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_024");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S8");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating S8 content
+	*/
+	@Test(enabled = true)
+	void Create_Section_Landing_Page_S9() throws Exception
+	{
+		printLog("Create_Section_Landing_Page_S9");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_025");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Section Landing Page - S9");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating T1 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T1() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T1");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_026");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T1");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating T2 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T2() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T2");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_027");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T2");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating T3 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T3() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T3");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_028");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T3");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating T4 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T4() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T4");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_029");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T4");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating T5 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T5() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T5");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_030");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T5");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	
+	/**
+	 * This method is creating T6 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T6() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T6");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_031");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T6");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating T7 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T7() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T7");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_032");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T7");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	/**
+	 * This method is creating T8 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T8() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T8");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_033");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "STopic Landing Page - T8");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating T9 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T9() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T9");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_034");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T9");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating T10 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T10() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T10");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_035");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T10");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+	
+	/**
+	 * This method is creating T11 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T11() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T11");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_036");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T11");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
+
+	/**
+	 * This method is creating T12 content
+	*/
+	@Test(enabled = true)
+	void Create_Topic_Landing_Page_T12() throws Exception
+	{
+		printLog("Create_Topic_Landing_Page_T12");
+		LinkedHashMap<String, String> row = getTestCaseInfo(dataPool, "TC_TAG_037");
+		GuiTools.setTestCaseName(row.get("Test_Case_Name"));
+		GuiTools.setTestCaseDescription(row.get("Test_Case_Description"));
+		printLog(GuiTools.getTestCaseName());
+		System.out.println("start Test");
+		String url = mapConfInfos.get("url");
+		String user = mapConfInfos.get("user_name");
+		String password = mapConfInfos.get("password");	
+		System.out.println(url+"___"+user);
+		if (!loginOn)
+		{
+			guiTools.openBrowser(browserType);
+			loginOn = ExporterLib.loginToExporter(url, user, password);
+		}
+		row.put("Content_Type", "Topic Landing Page - T12");
+		testCaseStatus = ExporterLib.createContent(row);
+	}
+	
 	/**
 	 * This method if for getting the current test case information
 	*/

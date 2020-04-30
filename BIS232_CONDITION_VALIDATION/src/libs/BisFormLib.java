@@ -1240,13 +1240,14 @@ public class BisFormLib{
 		for(int i=0; i<listConditions.length; i++)
 		{ 
 			String condition = listConditions[i];
+			//Some codes needs to be sent directly to Manual
 			if (productType.equalsIgnoreCase("Steel"))
 			{
 				switch(condition.toLowerCase())
 				{
 					case "condition 1":
 					{
-						conditionDetails ="Non-alloy ...then the maximum percentage must be less than 0.3 percent of aluminum,"
+						/*conditionDetails ="Non-alloy ...then the maximum percentage must be less than 0.3 percent of aluminum,"
 								+ " and less than 0.1 percent of antimony, and less than 0.1 percent of bismuth, and less than "
 								+ "0.0008 percent of boron, and less than 0.3 percent of chromium, and less than 0.3 percent of "
 								+ "cobalt, and less than 0.4 percent of copper, and less than 0.4 percent of lead, and less than "
@@ -1254,7 +1255,16 @@ public class BisFormLib{
 								+ "of nickel, and less than 0.06 percent of niobium, and less than 0.1 percent selenium, and 0.6 "
 								+ "percent of silicon, and less than 0.1 percent tellurium, and less than 0.05 percent of titanium, "
 								+ "and less than 0.3 percent of tungsten (wolfram), and less than 0.1 percent of vanadium, and "
-								+ "less than 0.05 percent of zirconium.";
+								+ "less than 0.05 percent of zirconium.";*/
+						conditionDetails ="the maximum percentage must be less than 0.3 percent of aluminum, and less than 0.1 "
+								+ "percent of antimony, and less than 0.1 percent of bismuth, and less than 0.0008 percent of boron, "
+								+ "and less than 0.3 percent of chromium, and less than 0.3 percent of cobalt, and less than 0.4 percent"
+								+ " of copper, and less than 0.4 percent of lead, ***and less than 0.1 percent magnesium***, and "
+								+ "less than 1.65 percent of manganese, and less than 0.08 percent of molybdenum, and less than 0.3"
+								+ " percent of nickel, and less than 0.06 percent of niobium, and less than 0.1 percent selenium, "
+								+ "and 0.6 percent of silicon, and less than 0.1 percent tellurium, and less than 0.05 percent of "
+								+ "titanium, and less than 0.3 percent of tungsten (wolfram), and less than 0.1 percent of vanadium, "
+								+ "and less than 0.05 percent of zirconium.";
 						String aluminumMax =  getProdValue(jObj, "ChemicalComposition", "Aluminum", "Maximum");
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
 						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
@@ -1263,6 +1273,7 @@ public class BisFormLib{
 						String cobaltMax =  getProdValue(jObj, "ChemicalComposition", "Cobalt", "Maximum");
 						String copperMax =  getProdValue(jObj, "ChemicalComposition", "Copper", "Maximum");
 						String leadMax =  getProdValue(jObj, "ChemicalComposition", "Lead", "Maximum");
+						String magnesiumMax =  getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum");
 						String manganeseMax =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Maximum");
 						String molybdenumMax =  getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
@@ -1276,16 +1287,16 @@ public class BisFormLib{
 						String zirconiumMax =  getProdValue(jObj, "ChemicalComposition", "Zirconium", "Maximum");
 						resultValues = getFormatedResultValues("aluminumMax", aluminumMax, "antimonyMax", antimonyMax,
 								"bismuthMax", bismuthMax, "boronMax", boronMax, "chromiumMax", chromiumMax, "cobaltMax", cobaltMax,
-								"copperMax", copperMax, "leadMax", leadMax, "manganeseMax", manganeseMax, "molybdenumMax", molybdenumMax,
-								"nickelMax", nickelMax, "niobiumMax", niobiumMax, "seleniumMax", seleniumMax, "siliconMax", siliconMax,
-								"telluriumMax", telluriumMax, "titaniumMax", titaniumMax, "tungstenMax", tungstenMax, 
-								"vanadiumMax", vanadiumMax, "zirconiumMax", zirconiumMax);
-						singleResults[1] = checkAndReport("Condition 1", conditionDetails, resultValues, 
+								"copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, "manganeseMax", manganeseMax,
+								"molybdenumMax", molybdenumMax,	"nickelMax", nickelMax, "niobiumMax", niobiumMax, "seleniumMax", 
+								seleniumMax, "siliconMax", siliconMax, "telluriumMax", telluriumMax, "titaniumMax", titaniumMax, "tungstenMax",
+								tungstenMax, "vanadiumMax", vanadiumMax, "zirconiumMax", zirconiumMax);
+								singleResults[1] = checkAndReport("Condition 1", conditionDetails, resultValues, 
 								(Float.parseFloat(aluminumMax)<0.3f && Float.parseFloat(antimonyMax)<0.1f &&
 								 Float.parseFloat(bismuthMax)<0.1f && Float.parseFloat(boronMax)<0.0008f &&
 								 Float.parseFloat(chromiumMax)<0.3f && Float.parseFloat(cobaltMax)<0.3f &&	
 								 Float.parseFloat(copperMax)<0.4f && Float.parseFloat(leadMax)<0.4f &&
-								 Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f &&
+								 Float.parseFloat(magnesiumMax)<0.1f && Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f &&
 								 Float.parseFloat(nickelMax)<0.3f && Float.parseFloat(niobiumMax)<0.06f &&
 								 Float.parseFloat(seleniumMax)<0.1f && Float.parseFloat(siliconMax)<0.6f &&
 								 Float.parseFloat(telluriumMax)<0.1f && Float.parseFloat(titaniumMax)<0.05f &&
@@ -1308,7 +1319,7 @@ public class BisFormLib{
 					}
 					case "condition 3":
 					{
-						conditionDetails ="Alloy ...then at least one of the minimum percentages must be equal to or greater "
+						/*conditionDetails ="Alloy ...then at least one of the minimum percentages must be equal to or greater "
 								+ "than 0.3 percent of aluminum, or equal to or greater than 0.1 percent of antimony, or equal "
 								+ "to or greater than 0.1 percent of bismuth, or equal to or greater than 0.0008 percent of "
 								+ "boron, or equal to or greater than 0.3 percent of chromium, or equal to or greater than 0.3 percent "
@@ -1319,7 +1330,21 @@ public class BisFormLib{
 								+ "greater than 0.6 percent of silicon, or equal to or greater than 0.1 percent tellurium, or equal "
 								+ "to or greater than 0.05 percent of titanium, or equal to or greater than 0.3 percent of "
 								+ "tungsten (wolfram), or equal to or greater than 0.1 percent of vanadium, or equal to or greater t"
-								+ "han 0.05 percent of zirconium.";
+								+ "han 0.05 percent of zirconium.";*/
+						
+						conditionDetails ="then at least one of the minimum percentages must be equal to or greater than 0.3 percent of aluminum, "
+								+ "or equal to or greater than 0.1 percent of antimony, or equal to or greater than 0.1 percent of bismuth, "
+								+ "or equal to or greater than 0.0008 percent of boron, or equal to or greater than 0.3 percent of chromium, "
+								+ "or equal to or greater than 0.3 percent of cobalt, or equal to or greater than 0.4 percent of copper, "
+								+ "or equal to or greater than 0.4 percent of lead, ***or equal to or greater than 0.1 percent magnesium***, "
+								+ "or equal to or greater than 1.65 percent of manganese, or equal to or greater than 0.08 percent of molybdenum,"
+								+ " or equal to or greater than 0.3 percent of nickel, or equal to or greater than 0.06 percent of niobium, "
+								+ "or equal to or greater than 0.1 percent selenium, or equal to or greater than 0.6 percent of silicon, "
+								+ "or equal to or greater than 0.1 percent tellurium, or equal to or greater than 0.05 percent of titanium, "
+								+ "or equal to or greater than 0.3 percent of tungsten (wolfram), or equal to or greater than 0.1 percent of vanadium,"
+								+ " or equal to or greater than 0.05 percent of zirconium.";
+						
+						
 						String aluminumMin =  getProdValue(jObj, "ChemicalComposition", "Aluminum", "Minimum");
 						String antimonyMin =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Minimum");
 						String bismuthMin =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Minimum");
@@ -1328,6 +1353,7 @@ public class BisFormLib{
 						String cobaltMin =  getProdValue(jObj, "ChemicalComposition", "Cobalt", "Minimum");
 						String copperMin =  getProdValue(jObj, "ChemicalComposition", "Copper", "Minimum");
 						String leadMin =  getProdValue(jObj, "ChemicalComposition", "Lead", "Minimum");
+						String magnesiumMin =  getProdValue(jObj, "ChemicalComposition", "Magnesium", "Minimum");
 						String manganeseMin =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum");
 						String molybdenumMin =  getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
 						String nickelMin =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
@@ -1341,7 +1367,7 @@ public class BisFormLib{
 						String zirconiumMin =  getProdValue(jObj, "ChemicalComposition", "Zirconium", "Minimum");
 						resultValues = getFormatedResultValues("aluminumMin", aluminumMin, "antimonyMin", antimonyMin,
 						"bismuthMin", bismuthMin, "boronMin", boronMin, "chromiumMin", chromiumMin, "cobaltMin", cobaltMin,
-						"copperMin", copperMin, "leadMin", leadMin, "manganeseMin", manganeseMin, "molybdenumMin", molybdenumMin,
+						"copperMin", copperMin, "leadMin", leadMin, "magnesiumMin", magnesiumMin, "manganeseMin", manganeseMin, "molybdenumMin", molybdenumMin,
 						"nickelMin", nickelMin, "niobiumMin", niobiumMin, "seleniumMin", seleniumMin, "siliconMin", siliconMin,
 						"telluriumMin", telluriumMin, "titaniumMin", titaniumMin, "tungstenMin", tungstenMin, 
 						"vanadiumMin", vanadiumMin, "zirconiumMin", zirconiumMin);
@@ -1351,7 +1377,7 @@ public class BisFormLib{
 						Float.parseFloat(bismuthMin)>=0.1f || Float.parseFloat(boronMin)>=0.0008f ||
 						Float.parseFloat(chromiumMin)>=0.3f || Float.parseFloat(cobaltMin)>=0.3f ||	
 						Float.parseFloat(copperMin)>=0.4f || Float.parseFloat(leadMin)>=0.4f ||
-						Float.parseFloat(manganeseMin)>=1.65f || Float.parseFloat(molybdenumMin)>=0.08f ||
+						Float.parseFloat(magnesiumMin)>=0.1f || Float.parseFloat(manganeseMin)>=1.65f || Float.parseFloat(molybdenumMin)>=0.08f ||
 						Float.parseFloat(nickelMin)>=0.3f || Float.parseFloat(niobiumMin)>=0.06f ||
 						Float.parseFloat(seleniumMin)>=0.1f || Float.parseFloat(siliconMin)>=0.6f ||
 						Float.parseFloat(telluriumMin)>=0.1f || Float.parseFloat(titaniumMin)>=0.05f ||
@@ -1589,8 +1615,8 @@ public class BisFormLib{
 								+ "manganese must be equal to or less than 1.9 percent, and the minimum silicon must be equal to or "
 								+ "greater than 0.6 percent, and the maximum silicon must be equal to or less than 2.3 percent.";
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
-						String manganeseMin = getProdValue(jObj, "ChemicalComposition", "Magnesium", "Minimum");
-						String manganeseMax = getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum");
+						String manganeseMin = getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum");
+						String manganeseMax = getProdValue(jObj, "ChemicalComposition", "Manganese", "Maximum");
 						String siliconMin = getProdValue(jObj, "ChemicalComposition", "Silicon", "Minimum");
 						String siliconMax = getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
 						resultValues = getFormatedResultValues("carbonMax", carbonMax, "manganeseMin", manganeseMin,
@@ -1752,7 +1778,7 @@ public class BisFormLib{
 					}
 					case "condition 23":
 					{
-						conditionDetails ="Non-alloy ...then the maximum percentage must be less than 0.3 percent of aluminum,"
+						/*conditionDetails ="Non-alloy ...then the maximum percentage must be less than 0.3 percent of aluminum,"
 								+ " and less than 0.1 percent of antimony, and less than 0.1 percent of bismuth, and less than "
 								+ "0.0008 percent of boron, and less than 0.3 percent of chromium, and less than 0.3 percent of "
 								+ "cobalt, and less than 0.4 percent of copper, and less than 0.4 percent of lead, and less than "
@@ -1760,7 +1786,16 @@ public class BisFormLib{
 								+ "of nickel, and less than 0.06 percent of niobium, and less than 0.1 percent selenium, and 0.6 "
 								+ "percent of silicon, and less than 0.1 percent tellurium, and less than 0.05 percent of titanium, "
 								+ "and less than 0.3 percent of tungsten (wolfram), and less than 0.1 percent of vanadium, and "
-								+ "less than 0.05 percent of zirconium.";
+								+ "less than 0.05 percent of zirconium.";*/
+						
+						conditionDetails ="then the maximum percentage must be less than 0.3 percent of aluminum, and less than 0.1 "
+								+ "percent of antimony, and less than 0.1 percent of bismuth, and less than 0.0008 percent of boron, "
+								+ "and less than 0.3 percent of chromium, and less than 0.3 percent of cobalt, and less than 0.4 percent "
+								+ "of copper, and less than 0.4 percent of lead, ***and less than 0.1 percent magnesium***, and less than"
+								+ " 1.65 percent of manganese, and less than 0.08 percent of molybdenum, and less than 0.3 percent of nickel,"
+								+ " and less than 0.06 percent of niobium, and less than 0.1 percent selenium, and 0.6 percent of silicon,"
+								+ " and less than 0.1 percent tellurium, and less than 0.05 percent of titanium, and less than 0.3 percent "
+								+ "of tungsten (wolfram), and less than 0.1 percent of vanadium, and less than 0.05 percent of zirconium.";
 						String aluminumMax =  getProdValue(jObj, "ChemicalComposition", "Aluminum", "Maximum");
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
 						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
@@ -1769,6 +1804,7 @@ public class BisFormLib{
 						String cobaltMax =  getProdValue(jObj, "ChemicalComposition", "Cobalt", "Maximum");
 						String copperMax =  getProdValue(jObj, "ChemicalComposition", "Copper", "Maximum");
 						String leadMax =  getProdValue(jObj, "ChemicalComposition", "Lead", "Maximum");
+						String magnesiumMax =  getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum");
 						String manganeseMax =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Maximum");
 						String molybdenumMax =  getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Maximum");
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
@@ -1782,7 +1818,7 @@ public class BisFormLib{
 						String zirconiumMax =  getProdValue(jObj, "ChemicalComposition", "Zirconium", "Maximum");
 						resultValues = getFormatedResultValues("aluminumMax", aluminumMax, "antimonyMax", antimonyMax,
 						"bismuthMax", bismuthMax, "boronMax", boronMax, "chromiumMax", chromiumMax, "cobaltMax", cobaltMax,
-						"copperMax", copperMax, "leadMax", leadMax, "manganeseMax", manganeseMax, "molybdenumMax", molybdenumMax,
+						"copperMax", copperMax, "leadMax", leadMax, "magnesiumMax", magnesiumMax, "manganeseMax", manganeseMax, "molybdenumMax", molybdenumMax,
 						"nickelMax", nickelMax, "niobiumMax", niobiumMax, "seleniumMax", seleniumMax, "siliconMax", siliconMax,
 						"telluriumMax", telluriumMax, "titaniumMax", titaniumMax, "tungstenMax", tungstenMax, 
 						"vanadiumMax", vanadiumMax, "zirconiumMax", zirconiumMax);
@@ -1792,7 +1828,7 @@ public class BisFormLib{
 						Float.parseFloat(bismuthMax)<0.1f && Float.parseFloat(boronMax)<0.0008f &&
 						Float.parseFloat(chromiumMax)<0.3f && Float.parseFloat(cobaltMax)<0.3f &&	
 						Float.parseFloat(copperMax)<0.4f && Float.parseFloat(leadMax)<0.4f &&
-						Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f &&
+						Float.parseFloat(magnesiumMax)<0.1f && Float.parseFloat(manganeseMax)<1.65f && Float.parseFloat(molybdenumMax)<0.08f &&
 						Float.parseFloat(nickelMax)<0.3f && Float.parseFloat(niobiumMax)<0.06f &&
 						Float.parseFloat(seleniumMax)<0.1f && Float.parseFloat(siliconMax)<0.6f &&
 						Float.parseFloat(telluriumMax)<0.1f && Float.parseFloat(titaniumMax)<0.05f &&
@@ -1803,7 +1839,7 @@ public class BisFormLib{
 					}
 					case "condition 24":
 					{
-						conditionDetails ="Alloy ...then at least one of the minimum percentages must be equal to or greater "
+						/*conditionDetails ="Alloy ...then at least one of the minimum percentages must be equal to or greater "
 								+ "than 0.3 percent of aluminum, or equal to or greater than 0.1 percent of antimony, or equal "
 								+ "to or greater than 0.1 percent of bismuth, or equal to or greater than 0.0008 percent of "
 								+ "boron, or equal to or greater than 0.3 percent of chromium, or equal to or greater than 0.3 percent "
@@ -1814,7 +1850,19 @@ public class BisFormLib{
 								+ "greater than 0.6 percent of silicon, or equal to or greater than 0.1 percent tellurium, or equal "
 								+ "to or greater than 0.05 percent of titanium, or equal to or greater than 0.3 percent of "
 								+ "tungsten (wolfram), or equal to or greater than 0.1 percent of vanadium, or equal to or greater t"
-								+ "han 0.05 percent of zirconium.";
+								+ "han 0.05 percent of zirconium.";*/
+						
+						conditionDetails ="then at least one of the minimum percentages must be equal to or greater than 0.3 percent of aluminum,"
+								+ " or equal to or greater than 0.1 percent of antimony, or equal to or greater than 0.1 percent of bismuth, "
+								+ "or equal to or greater than 0.0008 percent of boron, or equal to or greater than 0.3 percent of chromium, "
+								+ "or equal to or greater than 0.3 percent of cobalt, or equal to or greater than 0.4 percent of copper, "
+								+ "or equal to or greater than 0.4 percent of lead, ***or equal to or greater than 0.1 percent magnesium***, "
+								+ "or equal to or greater than 1.65 percent of manganese, or equal to or greater than 0.08 percent of molybdenum,"
+								+ " or equal to or greater than 0.3 percent of nickel, or equal to or greater than 0.06 percent of niobium, "
+								+ "or equal to or greater than 0.1 percent selenium, or equal to or greater than 0.6 percent of silicon, "
+								+ "or equal to or greater than 0.1 percent tellurium, or equal to or greater than 0.05 percent of titanium, "
+								+ "or equal to or greater than 0.3 percent of tungsten (wolfram), or equal to or greater than 0.1 percent of vanadium, "
+								+ "or equal to or greater than 0.05 percent of zirconium.";
 						String aluminumMin =  getProdValue(jObj, "ChemicalComposition", "Aluminum", "Minimum");
 						String antimonyMin =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Minimum");
 						String bismuthMin =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Minimum");
@@ -1823,6 +1871,7 @@ public class BisFormLib{
 						String cobaltMin =  getProdValue(jObj, "ChemicalComposition", "Cobalt", "Minimum");
 						String copperMin =  getProdValue(jObj, "ChemicalComposition", "Copper", "Minimum");
 						String leadMin =  getProdValue(jObj, "ChemicalComposition", "Lead", "Minimum");
+						String magnesiumMin =  getProdValue(jObj, "ChemicalComposition", "Magnesium", "Minimum");
 						String manganeseMin =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum");
 						String molybdenumMin =  getProdValue(jObj, "ChemicalComposition", "Molybdenum", "Minimum");
 						String nickelMin =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
@@ -1836,16 +1885,16 @@ public class BisFormLib{
 						String zirconiumMin =  getProdValue(jObj, "ChemicalComposition", "Zirconium", "Minimum");
 						resultValues = getFormatedResultValues("aluminumMin", aluminumMin, "antimonyMin", antimonyMin,
 						"bismuthMin", bismuthMin, "boronMin", boronMin, "chromiumMin", chromiumMin, "cobaltMin", cobaltMin,
-						"copperMin", copperMin, "leadMin", leadMin, "manganeseMin", manganeseMin, "molybdenumMin", molybdenumMin,
-						"nickelMin", nickelMin, "niobiumMin", niobiumMin, "seleniumMin", seleniumMin, "siliconMin", siliconMin,
-						"telluriumMin", telluriumMin, "titaniumMin", titaniumMin, "tungstenMin", tungstenMin, 
-						"vanadiumMin", vanadiumMin, "zirconiumMin", zirconiumMin);
+						"copperMin", copperMin, "leadMin", leadMin, "magnesiumMin", magnesiumMin, "manganeseMin", manganeseMin, 
+						"molybdenumMin", molybdenumMin, "nickelMin", nickelMin, "niobiumMin", niobiumMin, "seleniumMin", 
+						seleniumMin, "siliconMin", siliconMin, "telluriumMin", telluriumMin, "titaniumMin", titaniumMin,
+						"tungstenMin", tungstenMin, "vanadiumMin", vanadiumMin, "zirconiumMin", zirconiumMin);
 						singleResults[24] = checkAndReport("Condition 24", conditionDetails, resultValues, 
 						(
 						Float.parseFloat(aluminumMin)>=0.3f || Float.parseFloat(antimonyMin)>=0.1f ||
 						Float.parseFloat(bismuthMin)>=0.1f || Float.parseFloat(boronMin)>=0.0008f ||
 						Float.parseFloat(chromiumMin)>=0.3f || Float.parseFloat(cobaltMin)>=0.3f ||	
-						Float.parseFloat(copperMin)>=0.4f || Float.parseFloat(leadMin)>=0.4f ||
+						Float.parseFloat(copperMin)>=0.4f || Float.parseFloat(leadMin)>=0.4f || Float.parseFloat(magnesiumMin)>=0.1f ||
 						Float.parseFloat(manganeseMin)>=1.65f || Float.parseFloat(molybdenumMin)>=0.08f ||
 						Float.parseFloat(nickelMin)>=0.3f || Float.parseFloat(niobiumMin)>=0.06f ||
 						Float.parseFloat(seleniumMin)>=0.1f || Float.parseFloat(siliconMin)>=0.6f ||
@@ -1883,14 +1932,17 @@ public class BisFormLib{
 					}
 					case "condition 27":
 					{
-						conditionDetails = "...then the minimum outside diameter must be equal to or greater than 114.3 mm and"
+						/*conditionDetails = "...then the minimum outside diameter must be equal to or greater than 114.3 mm and"
 								+ " less than 406.4 mm, and the maximum outside diameter must be equal to or greater than 114.3 "
-								+ "mm and less than 406.4 mm.";
+								+ "mm and less than 406.4 mm.";*/
+						conditionDetails = "...then the minimum outside diameter must be equal to or greater than 114.3 mm and equal"
+								+ " to or less than 406.4 mm, and the maximum outside diameter must be equal to or greater"
+								+ " than 114.3 mm and equal to or less than 406.4 mm.";
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						singleResults[27] = checkAndReport("Condition 27", conditionDetails, resultValues, 
-						(Float.parseFloat(outsideDiameterMin)>=114.3 && Float.parseFloat(outsideDiameterMin)<406.4f 
+						(Float.parseFloat(outsideDiameterMin)>=114.3 && Float.parseFloat(outsideDiameterMin)<=406.4f 
 						&& Float.parseFloat(outsideDiameterMax)>=114.3f	&& Float.parseFloat(outsideDiameterMax)<406.4f)); 
 						ovralResult = ovralResult & singleResults[27];
 						break;
@@ -2152,16 +2204,20 @@ public class BisFormLib{
 					}
 					case "condition 50":
 					{
-						conditionDetails = "...then the minimum outside diameter must be equal to or "
+						/*conditionDetails = "...then the minimum outside diameter must be equal to or "
 								+ "greater than 190.5 mm and equal to or less than 285.8 mm, "
 								+ "and the maximum outside diameter must be equal to or greater than 190.5 mm "
-								+ "and less than 285.8 mm.";
+								+ "and less than 285.8 mm.";*/
+						conditionDetails = "the minimum outside diameter must be equal to or greater than 190.5 mm and equal to or less than 285.8 mm,"
+								+ " and the maximum outside diameter must be equal to or greater than 190.5 mm and ***equal to*** or less than 285.8 mm.";
+						
+						
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						singleResults[50] = checkAndReport("Condition 50", conditionDetails, resultValues, 
 						(Float.parseFloat(outsideDiameterMin) >=190.5f && Float.parseFloat(outsideDiameterMin) <= 285.8f 
-						&&	Float.parseFloat(outsideDiameterMax) >= 190.5f && Float.parseFloat(outsideDiameterMax) < 285.8f));
+						&&	Float.parseFloat(outsideDiameterMax) >= 190.5f && Float.parseFloat(outsideDiameterMax) <= 285.8f));
 						ovralResult = ovralResult & singleResults[50];
 						break;
 					}
@@ -2231,14 +2287,16 @@ public class BisFormLib{
 					}
 					case "condition 53":
 					{
-						conditionDetails = "...then the minimum outside diameter must be greater than 406.4 mm and equal to or less than 609.6 mm,"
-								+ " and the maximum outside diameter must be equal to or greater than 406.4 mm and less than 609.6 mm.";
+						/*conditionDetails = "...then the minimum outside diameter must be greater than 406.4 mm and equal to or less than 609.6 mm,"
+								+ " and the maximum outside diameter must be equal to or greater than 406.4 mm and less than 609.6 mm.";*/
+						conditionDetails = "the minimum outside diameter must be greater than 406.4 mm and equal to or less than 609.6 mm,"
+								+ " and the maximum outside diameter must be ***greater than 406.4 mm*** and equal to or less than 609.6 mm.";
 						String outsideDiameterMin = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Minimum");
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						resultValues = getFormatedResultValues("outsideDiameterMin", outsideDiameterMin, "outsideDiameterMax", outsideDiameterMax);
 						singleResults[53] = checkAndReport("Condition 53", conditionDetails, resultValues, 
 						(Float.parseFloat(outsideDiameterMin) > 406.4f && Float.parseFloat(outsideDiameterMin) <= 609.6f 
-						&&	Float.parseFloat(outsideDiameterMax) >= 406.4f	&& Float.parseFloat(outsideDiameterMax) < 609.6f)); 
+						&&	Float.parseFloat(outsideDiameterMax) > 406.4f	&& Float.parseFloat(outsideDiameterMax) < 609.6f)); 
 						ovralResult = ovralResult & singleResults[53];
 						break;
 					}
@@ -2552,13 +2610,15 @@ public class BisFormLib{
 					}
 					case "condition 80":
 					{
-						conditionDetails = "...then the minimum thickness must be equal to or greater than 0.5 "
-								+ "mm and the maximum thickness must be less than 1 mm.";
+						/*conditionDetails = "...then the minimum thickness must be equal to or greater than 0.5 "
+								+ "mm and the maximum thickness must be less than 1 mm.";*/
+						conditionDetails = "…then the minimum thickness must be equal to or greater than 0.5 mm "
+								+ "and the maximum thickness must be equal to or less than 1 mm";
 						String thicknessMin = getProdValue(jObj, "ProductDimensions", "Thickness", "Minimum");
 						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
 						resultValues = getFormatedResultValues("thicknessMin", thicknessMin, "thicknessMax", thicknessMax);
 						singleResults[80] = checkAndReport("Condition 80", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMin) >= 0.5f && Float.parseFloat(thicknessMax)<1f));
+								(Float.parseFloat(thicknessMin) >= 0.5f && Float.parseFloat(thicknessMax)<=1f));
 						ovralResult = ovralResult & singleResults[80];
 						break;
 					}
@@ -3107,7 +3167,7 @@ public class BisFormLib{
 								+ "and the minimum percentage of silicon must be greater than 0.6 percent.";
 						String outsideDiameterMax = getProdValue(jObj, "ProductDimensions", "OutsideDiameter", "Maximum");
 						String carbonMax = getProdValue(jObj, "ChemicalComposition", "Carbon", "Maximum");
-						String manganeseMin = getProdValue(jObj, "ChemicalComposition", "Magnesium", "Minimum");
+						String manganeseMin =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum");
 						String siliconMin = getProdValue(jObj, "ChemicalComposition", "Silicon", "Minimum");
 						resultValues = getFormatedResultValues("outsideDiameterMax", outsideDiameterMax, "carbonMax", carbonMax,
 								"manganeseMin", manganeseMin, "siliconMin", siliconMin);
@@ -3620,8 +3680,6 @@ public class BisFormLib{
 						float magnesiumMax =  Float.parseFloat(getProdValue(jObj, "ChemicalComposition", "Magnesium", "Maximum"));
 						String manganeseMin =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Minimum");//
 						String manganeseMax =  getProdValue(jObj, "ChemicalComposition", "Manganese", "Maximum");
-						//     
-						
 						String antimonyMax =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Maximum");
 						String bismuthMax =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Maximum");
 						String boronMax =  getProdValue(jObj, "ChemicalComposition", "Boron", "Maximum");
@@ -3630,7 +3688,6 @@ public class BisFormLib{
 						String copperMax =  getProdValue(jObj, "ChemicalComposition", "Copper", "Maximum");
 						String ironMax =  getProdValue(jObj, "ChemicalComposition", "Iron", "Maximum");
 						String leadMax =  getProdValue(jObj, "ChemicalComposition", "Lead", "Maximum");
-						
 						String nickelMax =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Maximum");
 						String niobiumMax =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Maximum");
 						String nitrogenMax =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Maximum");
@@ -3643,7 +3700,6 @@ public class BisFormLib{
 						String tungstenMax =  getProdValue(jObj, "ChemicalComposition", "Tungsten", "Maximum");
 						String vanadiumMax =  getProdValue(jObj, "ChemicalComposition", "Vanadium", "Maximum");
 						String zincMax =  getProdValue(jObj, "ChemicalComposition", "Zinc", "Maximum");
-						//
 						String antimonyMin =  getProdValue(jObj, "ChemicalComposition", "Antimony", "Minimum");
 						String bismuthMin =  getProdValue(jObj, "ChemicalComposition", "Bismuth", "Minimum");
 						String boronMin =  getProdValue(jObj, "ChemicalComposition", "Boron", "Minimum");
@@ -3652,7 +3708,6 @@ public class BisFormLib{
 						String copperMin =  getProdValue(jObj, "ChemicalComposition", "Copper", "Minimum");
 						String ironMin =  getProdValue(jObj, "ChemicalComposition", "Iron", "Minimum");
 						String leadMin =  getProdValue(jObj, "ChemicalComposition", "Lead", "Minimum");
-						
 						String nickelMin =  getProdValue(jObj, "ChemicalComposition", "Nickel", "Minimum");
 						String niobiumMin =  getProdValue(jObj, "ChemicalComposition", "Niobium", "Minimum");
 						String nitrogenMin =  getProdValue(jObj, "ChemicalComposition", "Nitrogen", "Minimum");
@@ -3812,11 +3867,13 @@ public class BisFormLib{
 					}
 					case "condition 21":
 					{
-						conditionDetails ="...then the maximum thickness must be less than or equal to 0.01 mm.";
-						String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
-						resultValues = getFormatedResultValues("thicknessMax", thicknessMax);
+						//conditionDetails ="...then the maximum thickness must be less than or equal to 0.01 mm.";
+						//String thicknessMax = getProdValue(jObj, "ProductDimensions", "Thickness", "Maximum");
+						conditionDetails ="…then the maximum silicon must be less than 25 percent"; 
+						String siliconMax =  getProdValue(jObj, "ChemicalComposition", "Silicon", "Maximum");
+						resultValues = getFormatedResultValues("siliconMax", siliconMax);
 						ovralResult = ovralResult & checkAndReport("Condition 21", conditionDetails, resultValues, 
-								(Float.parseFloat(thicknessMax) <= 0.01f ));
+								(Float.parseFloat(siliconMax) < 25f ));
 						break;
 					}
 					case "condition 22":

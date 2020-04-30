@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import org.apache.http.Header;
@@ -152,6 +153,7 @@ public class APITools {
                 try {
                     JSONObject json = new JSONObject(responseString);
                     System.out.println("JSON result of Query:\n" + json.toString(1));
+                    System.out.println("JSON result of Query:\n" + json);
                     JSONArray jsonArray = json.getJSONArray("records");
                     jsonObject = jsonArray.getJSONObject(0);
                     
@@ -176,6 +178,60 @@ public class APITools {
         httpClient.getConnectionManager().shutdown();
         return jsonObject;
 	 }
+     
+     /**
+ 	 * This function is used to fetch all record from SALESFORCE application
+ 	 * @param query: query
+ 	 * @return JSON object
+ 	 */
+      public static JSONObject getAllRecordFromObject(String query) 
+      {
+         System.out.println("\n_______________ Query to return record from Object _______________");
+         JSONObject jsonObject = null;
+         HttpClient httpClient = null;
+         HttpGet httpGet = null;
+         try {
+             httpClient = HttpClientBuilder.create().build();
+             String uri = baseUri + "/query?q="+query;
+             System.out.println("Query URL: " + uri);
+             httpGet = new HttpGet(uri);
+             System.out.println("oauthHeader2: " + oauthHeader);
+             httpGet.addHeader(oauthHeader);
+             httpGet.addHeader(prettyPrintHeader);
+             // Make the request.
+             HttpResponse response = httpClient.execute(httpGet);
+             // Process the result
+             int statusCode = response.getStatusLine().getStatusCode();
+             if (statusCode == 200) {
+                 String responseString = EntityUtils.toString(response.getEntity());
+                 try {
+                     jsonObject = new JSONObject(responseString);
+                    // System.out.println("JSON result of Query:\n" + json.toString(1));
+                    // System.out.println("JSON result of Query:\n" + json);
+                     //JSONArray jsonArray = json.getJSONArray("records");
+                    // jsonObject = jsonArray.getJSONObject(0);
+                     
+                 } catch (JSONException je) {
+                     je.printStackTrace();
+                 }
+             } else {
+                 System.out.println("Query was unsuccessful. Status code returned is " + statusCode);
+                 System.out.println("An error has occured. Http status: " + 
+                 response.getStatusLine().getStatusCode());
+                 System.out.println(getBody(response.getEntity().getContent()));
+                 return jsonObject;
+             }
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
+         } catch (NullPointerException npe) {
+             npe.printStackTrace();
+         }
+         if(httpGet!=null)
+         httpGet.releaseConnection();
+         if(httpClient!=null)
+         httpClient.getConnectionManager().shutdown();
+         return jsonObject;
+ 	 }
   	/**
   	 * This function is used to create record in any object
   	 * @param apiObjectName: API Object Name
@@ -186,14 +242,15 @@ public class APITools {
  	 public static String createObjectRecord(String apiObjectName, 
  											 LinkedHashMap<String, String> rowRec) 
  	 {
-         System.out.println("\n_______________ INSERT Record to "+apiObjectName+" _______________");
+         System.out.println("\n______________ INSERT Record to "+apiObjectName+" _______________");
+         //rowRec.put("Petition__c", "a3Ur00000001a6oEAA");
          String uri = baseUri + "/sobjects/"+apiObjectName+"/";
          System.out.println("uri" +uri);
          String returnId = null;
          HttpClient httpClient = null;
          HttpPost httpPost = null;
          try {
-             //create the JSON object containing the new lead details. "A-209-464"
+        	 
              JSONObject jsonObject = new JSONObject();
              for (Entry<String, String> entry : rowRec.entrySet())  
              {
@@ -221,7 +278,7 @@ public class APITools {
                  // Store the retrieved lead id to use when we update the lead.
                  returnId = json.getString("id");
              } else {
-                 System.out.println("Insertion unsuccessful. Status code returned is " + statusCode);
+                 System.out.println("Insertion UNsuccessful. Status code returned is " + statusCode);
              }
          } catch (JSONException e) {
              System.out.println("Issue creating JSON or processing results");
@@ -352,6 +409,63 @@ public class APITools {
 	        httpClient.getConnectionManager().shutdown();
 	        return returnId;
 	    } 
+		/* 
+		 
+		 *//**
+		 	 * This function is used to delete record in any object
+		 	 * @param apiObjectName: API Object Name
+		 	 * @param recordId: SALESFORCE id of the record to be updated
+		 	 * @param rowRec, Map containing fields name/value of the record
+		 	 * to be updated
+		 	 * @return  ID of the record created.
+		 	 * @throws Exception
+		 	 *//*
+			 public static String deleteMultipleRecordObject(String apiObjectName,
+					 								 LinkedHashMap<String, String> ids) 
+			 {
+		        System.out.println("\n_______________ Delete Records from "+apiObjectName+" _______________");
+		       
+		        
+		        
+		    	for (HashMap.Entry tid : ids.entrySet()) 
+		    	{
+		            
+		        
+		    	
+			        String uri = baseUri + "/sobjects/"+apiObjectName+"/"+tid;
+			        System.out.println("uri" +uri);
+			        String returnId = null;
+			        HttpClient httpClient = null;
+			        HttpDelete httpDelete = null;
+			        try {
+			            httpClient = HttpClientBuilder.create().build();
+			            httpDelete = new HttpDelete(uri);
+			            httpDelete.addHeader(oauthHeader);
+			            httpDelete.addHeader(prettyPrintHeader);
+			            HttpResponse response = httpClient.execute(httpDelete);
+			            //Process the results
+			            int statusCode = response.getStatusLine().getStatusCode();
+			            if (statusCode == 204) {
+			            	returnId = statusCode+"";
+			            } else {
+			                System.out.println("updating unsuccessful. Status code returned is " + statusCode);
+			            }
+			        }  catch (IOException ioe) {
+			            ioe.printStackTrace();
+			        } catch (NullPointerException npe) {
+			            npe.printStackTrace();
+			        }
+			        
+		        
+		          }//for
+		        
+		        
+		        if(httpDelete!=null)
+		        httpDelete.releaseConnection();
+		        if(httpClient!=null)
+		        httpClient.getConnectionManager().shutdown();
+		        return returnId;
+		    } */
 	/**
 	 * This function get body of JSON file
 	 * @param inputStream: input stream
@@ -374,6 +488,7 @@ public class APITools {
         }
         return result;
     }
+    
     
   /*  *//**
 	 * This function get body of JSON file

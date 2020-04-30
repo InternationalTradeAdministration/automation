@@ -1,5 +1,5 @@
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-dataPoolPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data/datapool/Exporter_Regression.xlsx
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+dataPoolPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data/datapool/Exporter_Regression.xlsx
 {Id=1.0, Test_Case_Name=Create_Content_Biography, Test_Case_Tag=TC_TAG_001, Test_Case_Description=Create 'Biograph' content, ITA_Employee=Yes, Content_Category=ITA Partner, Content_Title=Title of Biography, Content_Public_Title=Publich Title of Biography, Trade_Lead_Title=N/A, Content_Business_Office_Unit=2222, Content_Media=Yes, Content_Summary=A biography, or simply bio, is a detailed description of a person's life. It involves more than just the basic facts like education, work, relationships, and death; it portrays a person's experience of these life events. Unlike a profile or curriculum vitae (résumé), a biography presents a subject's life story, highlighting various aspects of his or her life, including intimate details of experience, and may include an analysis of the subject's personality., Content_Body=One of the earliest biographers was Cornelius Nepos, who published his work Excellentium Imperatorum Vitae ("Lives of outstanding generals") in 44 BC. Longer and more extensive biographies were written in Greek by Plutarch, in his Parallel Lives, published about 80 A.D. In this work famous Greeks are paired with famous Romans, for example the orators Demosthenes and Cicero, or the generals Alexander the Great and Julius Caesar; some fifty biographies from the work survive. Another well-known collection of ancient biographies is De vita Caesarum ("On the Lives of the Caesars") by Suetonius, written about AD 121 in the time of the emperor Hadrian. 
 In the early Middle Ages (AD 400 to 1450), there was a decline in awareness of the classical culture in Europe. During this time, the only repositories of knowledge and records of the early history in Europe were those of the Roman Catholic Church. Hermits, monks, and priests used this historic period to write biographies. Their subjects were usually restricted to the church fathers, martyrs, popes, and saints. Their works were meant to be inspirational to the people and vehicles for conversion to Christianity (see Hagiography). One significant secular example of a biography from this period is the life of Charlemagne by his courtier Einhard., Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
 {Id=2.0, Test_Case_Name=Create_Content_Feature_Article, Test_Case_Tag=TC_TAG_002, Test_Case_Description=Create 'Feature Article' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of Feature Article, Content_Public_Title=Publich Title of Feature Article, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=After the Deluge (painting)Annunciation (Memling)Beaune AltarpieceThe Battle of Alexander at IssusThe Blind Leading the BlindBoydell Shakespeare GalleryBritomart Redeems Faire AmoretCampbell's Soup CansCandaules, King of Lydia, Shews his Wife by Stealth to Gyges, One of his Ministers, as She Goes to BedCloud GateThe Colossus of Rhodes (Dalí)The Combat: Woman Pleading for the VanquishedCrown FountainCrucifix (Cimabue, Santa Croce)Crucifixion and Last Judgement diptychThe Dawn of Love (painting)DenbiesThe Destroying Angel and Daemons of Evil Interrupting the Orgies of the Vicious and IntemperateThe Disasters of WarDresden TriptychDrowning GirlDürer's RhinocerosEarly Netherlandish paintingThe Entombment (Bouts)Equestrian statue of Edward HornerAn Experiment on a Bird in the Air Pump, Content_Body=The Founding Ceremony of the NationFountain of TimeFour Freedoms (Norman Rockwell)The Four Stages of CrueltyFour Times of the DayFragment of a CrucifixionFreedom from Want (painting)Freedom of Worship (painting)Funerary artFunerary Monument to Sir John HawkwoodThe Garden of Earthly DelightsGothic boxwood miniatureHead VIHoly Thorn ReliquaryHope (painting)Hours of Mary of BurgundyLas MeninasLéal SouvenirLook MickeyMadonna in the ChurchThe Magdalen ReadingMigration of the Serbs (painting)Mosaics of DelosMuseum of Bad ArtMusidora: The Bather 'At the Doubtful Breeze Alarmed'Nativity (Christus)Olmec colossal headsOviriPope Paul III and His GrandsonsPortrait Diptych of Dürer's ParentsPortrait of a Lady (van der Weyden)Portrait of Maria PortinariPortrait of Monsieur BertinPortrait of a Young Girl (Christus)Preparing for a Fancy Dress BallThe Princesse de Broglie
@@ -15,15 +15,8 @@ You may not be a web designer or a professional coder - that’s where website bui
 Choosing a website builder
 What kind of website do you want to create? A personal website might have a cleaner,  simpler design, while an online store requires a different set of strategies and resources. We are here to walk you through these decisions and provide tips to help you make the best decision., Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
 {Id=4.0, Test_Case_Name=Create_Content_Image_Library, Test_Case_Tag=TC_TAG_004, Test_Case_Description=Create 'Image Library' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of Image Library, Content_Public_Title=Publich Title of Image Library, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
-{Id=5.0, Test_Case_Name=Create_Content_Internship, Test_Case_Tag=TC_TAG_005, Test_Case_Description=Create 'Internship' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of Internship, Content_Public_Title=Publich Title of Internship, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=y using our content, products & services you agree to our Terms of Service and Privacy Policy. 
-The information in this site is based on different reviews made by third parties, as well as own view and sources. Reproduction in whole or in part in any form or medium without express written permission of Affiliate Marketing Corp is prohibited.., Content_Body=Helping you build a website 
-Do you want to create a website, but don’t have coding experience? We provide thorough comparisons of the most popular and successful website builders. Take a look at our analyses - we’ve pooled our experts’ knowledge to help you decide which website builder will meet your particular needs.
- 
-Building your website
-You may not be a web designer or a professional coder - that’s where website builders come in. They facilitate the process of creating a website, making it accessible to everyone, regardless of your programming know-how. Using website builders’ streamlined and premade templates and themes, you can easily launch a professional website.
- 
-Choosing a website builder
-What kind of website do you want to create? A personal website might have a cleaner,  simpler design, while an online store requires a different set of strategies and resources. We are here to walk you through these decisions and provide tips to help you make the best decision., Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
+{Id=5.0, Test_Case_Name=Create_Content_Internship, Test_Case_Tag=TC_TAG_005, Test_Case_Description=Create 'Internship' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of Internship, Content_Public_Title=Publich Title of Internship, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=N/A, Content_Body=y using our content, products & services you agree to our Terms of Service and Privacy Policy. 
+The information in this site is based on different reviews made by third parties, as well as own view and sources. Reproduction in whole or in part in any form or medium without express written permission of Affiliate Marketing Corp is prohibited.., Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
 {Id=6.0, Test_Case_Name=Create_Content_Knowledge_Product, Test_Case_Tag=TC_TAG_006, Test_Case_Description=Create 'Knowledge Product' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of Knowledge Product, Content_Public_Title=Publich Title of Knowledge Product, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=By 2004, the role of blogs became increasingly mainstream, as political consultants, news services, and candidates began using them as tools for outreach and opinion forming. Blogging was established by politicians and political candidates to express opinions on war and other issues and cemented blogs' role as a news source. (See Howard Dean and Wesley Clark.) Even politicians not actively campaigning, such as the UK's Labour Party's MP Tom Watson, began to blog to bond with constituents. In January 2005, Fortune magazine listed eight bloggers whom business people "could not ignore": Peter Rojas, Xeni Jardin, Ben Trott, Mena Trott, Jonathan Schwartz, Jason Goldman, Robert Scoble, and Jason Calacanis.[26], Content_Body=Individuals or organization may aggregate selected feeds on specific topic, product or service and provide combined view for its readers. This allows readers to concentrate on reading instead of searching for quality on-topic content and managing subscriptions. Many such aggregation called planets from name of Planet (software) that perform such aggregation, hosting sites usually have planet. subdomain in domain name (like http://planet.gnome.org/)., Page_Contributor=N/A, Save_As=Ready for Approval, comment=, Active=TRUE}
 {Id=7.0, Test_Case_Name=Create_Content_News_Blog, Test_Case_Tag=TC_TAG_007, Test_Case_Description=Create 'News Blog' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of New Blog, Content_Public_Title=Publich Title of New Blog, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=A blog (a truncation of "weblog")[1] is a discussion or informational website published on the World Wide Web consisting of discrete, often informal diary-style text entries (posts). Posts are typically displayed in reverse chronological order, so that the most recent post appears first, at the top of the web page. Until 2009, blogs were usually the work of a single individual,[citation needed] occasionally of a small group, and often covered a single subject or topic, Content_Body=The emergence and growth of blogs in the late 1990s coincided with the advent of web publishing tools that facilitated the posting of content by non-technical users who did not have much experience with HTML or computer programming. Previously, a knowledge of such technologies as HTML and File Transfer Protocol had been required to publish content on the Web, and early Web users therefore tended to be hackers and computer enthusiasts. In the 2010s, the majority are interactive Web 2.0 websites, allowing visitors to leave online comments, and it is this interactivity that distinguishes them from other static websites.[2] In that sense, blogging can be seen as a form of social networking service. Indeed, bloggers do not only produce content to post on their blogs, but also often build social relations with their readers and other bloggers.[3] However, there are high-readership blogs which do not allow comments., Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
 {Id=8.0, Test_Case_Name=Create_Content_Office, Test_Case_Tag=TC_TAG_008, Test_Case_Description=Create 'Office' content, ITA_Employee=No, Content_Category=N/A, Content_Title=######, Content_Public_Title=public title 8, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=in North America, traditionally the symbol "-30-" appears after the boilerplate or body and before the media contact information, indicating to media that the release has ended. A more modern equivalent has been the "###" symbol. In other countries, other means of indicating the end of the release may be used, such as the text "ends".
@@ -54,22 +47,22 @@ Australia (Government)
 United Kingdom (Government)
 Canada (Government), Page_Contributor=N/A, Save_As=Ready for Approval, comment=, Active=TRUE}
 {Id=15.0, Test_Case_Name=Create_Content_Video_Library, Test_Case_Tag=TC_TAG_015, Test_Case_Description=Create 'Video Library' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of  Video Library, Content_Public_Title=Publich Title of Video Library, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
-{Id=16.0, Test_Case_Name=Create_Content_About_Us, Test_Case_Tag=TC_TAG_016, Test_Case_Description=Create 'About Us' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Title of  About Us, Content_Public_Title=N/A, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=Our trade leads database contains contract opportunities for U.S. businesses selling their products and services overseas. These export opportunities come from a variety of official government agencies and non-government organizations.  Currently, trade leads are provided from the following sources:, Content_Body=U.S. State Department’s Business Information Database System (BIDS)
+{Id=16.0, Test_Case_Name=Create_Content_About_Us, Test_Case_Tag=TC_TAG_016, Test_Case_Description=Create 'About Us' content, ITA_Employee=No, Content_Category=N/A, Content_Title=Public Title of  About Us, Content_Public_Title=Title of  About Us, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=Our trade leads database contains contract opportunities for U.S. businesses selling their products and services overseas. These export opportunities come from a variety of official government agencies and non-government organizations.  Currently, trade leads are provided from the following sources:, Content_Body=U.S. State Department’s Business Information Database System (BIDS)
 U.S. Federal Government Business Opportunities (FedBizOps)
 U.S. Trade and Development Agency (USTDA)
 The Millennium Challenge Corporation
 Australia (Government)
 United Kingdom (Government)
 Canada (Government), Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, comment=, Active=TRUE}
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-testNgTemplate C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data/template/testng_template.xml
-testNgPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/testng.xml
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+testNgTemplate C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data/template/testng_template.xml
+testNgPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/testng.xml
 [TestNGContentHandler] [WARN] It is strongly recommended to add "<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >" at the top of your file, otherwise TestNG may fail or not work as expected.
 [TestNG] Running:
-  C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL\testng.xml
+  C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL\testng.xml
 
 Executing Before class
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
 {field_name=Filed On Behalf Of ERROR, field_tag=FiledOnBehalfOfError, locator_type=xpath, locator_value=//span[text()='Filed On Behalf Of (collective entity)']/ancestor::tr[1]//textarea/following-sibling::span[1]}
 {field_name=User name, field_tag=UserName, locator_type=xpath, locator_value=//input[@id='edit-name']}
 {field_name=Pass word, field_tag=Password, locator_type=xpath, locator_value=//input[@id='edit-pass']}
@@ -88,7 +81,7 @@ C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXP
 {field_name=Select Type Category, field_tag=SelectTypeCategory, locator_type=xpath, locator_value=//select[(contains(@id, 'edit-field-biography-type-category') ) or (contains(@id, 'edit-field-news-blog-type-category') )]}
 {field_name=Select Media, field_tag=SelectMedia, locator_type=xpath, locator_value=//input[(@value='Select Image') or (@value='Select Video') or (@value='Select Block')]}
 {field_name=Select Page Contributor, field_tag=SelectPageContributor, locator_type=xpath, locator_value=//tr[~val~]//select[contains(@class, 'simpler-select form-select required simpler-select-root') or contains(@class, 'simpler-select form-select simpler-select-root')]}
-{field_name=Add another Item contributor, field_tag=AddAnotherItem, locator_type=xpath, locator_value=//h4[contains(., 'Page Contributor')]//ancestor::table[1]/following-sibling::div[1]//input[@value='Add another item']}
+{field_name=Add another Item contributor, field_tag=AddAnotherItem, locator_type=xpath, locator_value=//h4[contains(., 'Page Contributor')]//ancestor::table[1]/following-sibling::div[1 or 2]//input[@value='Add another item']}
 {field_name=Save as, field_tag=SaveAs, locator_type=xpath, locator_value=//select[contains(@id, 'edit-moderation-state-0-state')]}
 {field_name=Button Preview, field_tag=ButtonPreview, locator_type=xpath, locator_value=//input[@id='edit-preview']}
 {field_name=Button Save, field_tag=ButtonSave, locator_type=xpath, locator_value=//input[@id='edit-submit']}
@@ -102,198 +95,69 @@ C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXP
 {field_name=summary filed, field_tag=summaryFiled, locator_type=xpath, locator_value=//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']}
 {field_name=body filed, field_tag=bodyField, locator_type=xpath, locator_value=//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']}
 {field_name=start and end dates, field_tag=valueDate, locator_type=xpath, locator_value=//input[contains(@id, 'value-date') ]}
+{field_name=log out, field_tag=LogOut, locator_type=xpath, locator_value=//ul[@class='header__dropdown']//a[(contains(@href, 'user/logout')) and (.='Log out')]}
 beforeMethod()
 beforeMethod()
 Create_Content_Biography
 Create_Content_Biography
 start Test
-http://ita-testing2.mobomo.net/___Creator1
+preview.trade.gov___QA_Creator
 Creating Process...
+"chrome.exe","15844","Console","1","111,092 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:09","Log in | International Trade Administration - Google Chrome"
+"chrome.exe","1616","Console","1","7,316 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","18332","Console","1","9,420 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","528","Console","1","85,148 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:06","N/A"
+"chrome.exe","17432","Console","1","26,400 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:01","N/A"
+"chrome.exe","10904","Console","1","30,860 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","13884","Console","1","64,252 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:02","N/A"
+"chrome.exe","8728","Console","1","21,204 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+15844
+1616
+18332
+528
+17432
+10904
+13884
+8728
 Creating Process...
-"chromedriver.exe","8868","Console","1","13,468 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:06","N/A"
-8868
-userDir C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL
+"chromedriver.exe","16636","Console","1","13,136 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+16636
+userDir C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL
 this a windows machine
 C:/libs
-highlight Home page
-Element Home page was not found on GUI
-Click  on  element Main menu
-Element Main menu was not found on Gui
 afterMethod()
 Create_Content_Biography
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
 beforeMethod()
 beforeMethod()
 Create_Content_Feature_Article
 Create_Content_Feature_Article
 start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Feature_Article
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_How_To
-Create_Content_How_To
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_How_To
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Image_Library
-Create_Content_Image_Library
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Image_Library
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Internship
-Create_Content_Internship
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Internship
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Knowledge_Product
-Create_Content_Knowledge_Product
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Knowledge_Product
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_News_Blog
-Create_Content_News_Blog
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_News_Blog
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Office
-Create_Content_Office
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Office
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Press_Release
-Create_Content_Press_Release
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Press_Release
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Series_Aggregator
-Create_Content_Series_Aggregator
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Series_Aggregator
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Service_Offering
-Create_Content_Service_Offering
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Service_Offering
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Success_Story
-Create_Content_Success_Story
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Success_Story
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Sub_topic_Page
-Create_Content_Sub_topic_Page
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Sub_topic_Page
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Trade_Lead
-Create_Content_Trade_Lead
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Trade_Lead
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_Video_Library
-Create_Content_Video_Library
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_Video_Library
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-beforeMethod()
-beforeMethod()
-Create_Content_About_Us
-Create_Content_About_Us
-start Test
-http://ita-testing2.mobomo.net/___Creator1
-Click  on  element Main menu
-Element Main menu was not found on Gui
-afterMethod()
-Create_Content_About_Us
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-Executing After class
-C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\git\automation\EXPORTER_PORTAL/input_data
-null
-
-===============================================
-Suite
-Total tests run: 16, Failures: 16, Skips: 0
-Configuration Failures: 1, Skips: 0
-===============================================
-
+preview.trade.gov___QA_Creator
+Creating Process...
+"chrome.exe","4636","Console","1","100,472 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:02","New Tab - Google Chrome"
+"chrome.exe","15416","Console","1","7,300 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","16436","Console","1","9,456 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","16408","Console","1","137,296 K","Running","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:01","N/A"
+"chrome.exe","15644","Console","1","24,448 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","15736","Console","1","59,380 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","17536","Console","1","20,452 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","13396","Console","1","30,128 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","3084","Console","1","14,472 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+"chrome.exe","7420","Console","1","14,696 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+4636
+15416
+16436
+16408
+15644
+15736
+17536
+13396
+3084
+7420
+Creating Process...
+"chromedriver.exe","14360","Console","1","13,096 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:00","N/A"
+14360
+userDir C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL
+this a windows machine
+C:/libs

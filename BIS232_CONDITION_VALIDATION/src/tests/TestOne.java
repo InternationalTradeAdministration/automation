@@ -225,6 +225,9 @@ public class TestOne {
 		 catch(Exception e){e.printStackTrace();}
 		 GuiTools.setTestCaseName(scenarioName+" - "+productType);
 		 GuiTools.setTestCaseDescription(scenarioName+" - "+productType);
+		 
+		//Some codes needs to be sent directly to Manual 7211140030, 7220110000 and 7225506000
+		
 		 if (!steelConditions.containsKey(htsUsCode) && !aluminumConditions.containsKey(htsUsCode) )
 		 {
 			 String htsUsCode10digits = htsUsCode;
@@ -256,9 +259,21 @@ public class TestOne {
 			 		+ "condition sheet" , 
 				"No row found in the condition sheet for the code: "+htsUsCode, "VP", "fail", "");
 		 }
-		 testCaseStatus =  testCaseStatus & 
+		 else if(conditionList.contains("Condition 146"))
+		 {
+			 HtmlReport.addHtmlStep("<span class = 'Warning'>Validate {condition 144}</span>", 
+						"<span class = 'Warning'>"+ "N/A" +"</span>" ,
+						"<span class = 'Warning'>Send it to the manual review.</span>" , 
+						"<span class = 'Warning'>N/A</span>",
+						"Warning", ""); 
+		 }
+		 else
+		 {
+			 testCaseStatus =  testCaseStatus & 
 					BisFormLib.ValidateConditions(jsonObject, productType, conditionList, actualResult);
-		printLog(GuiTools.getTestCaseName());
+		 }
+		//printLog(GuiTools.getTestCaseName());
+	 
 	}
 
 	/**

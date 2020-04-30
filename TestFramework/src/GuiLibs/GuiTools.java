@@ -536,6 +536,7 @@ public class GuiTools extends InitTools{
 	public static void navigateTo(String url)
 	{
 		WebDriver dr = getDriver();
+		//dr.navigate()
 		dr.navigate().to(url);
 	}
 	/**
@@ -603,6 +604,62 @@ public class GuiTools extends InitTools{
 	{
 		return checkElementVisible(map.get("locator_type"), map.get("locator_value"));
 	}
+	
+	/**
+	 * This method checks if element Visible
+	 * @param map: Web Element
+	 * @return true if element visible, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean checkElementVisible(String locType, String locValue) throws Exception
+	{
+		boolean visible;
+		try {
+		   if(getDriver().findElement(byType(locType, locValue)).isEnabled())
+		   visible = true;
+		   else visible = false;
+		} catch (NoSuchElementException e) {
+			visible = false;
+			e.printStackTrace();
+		   
+		}
+		return visible;
+	}
+	
+	/**
+	 * This method checks if element Enabled
+	 * @param map: Web Element
+	 * @return true if element visible, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean checkElementIsEnabled(LinkedHashMap<String, String> map) throws Exception
+	{
+		return checkElementIsEnabled(map.get("locator_type"), map.get("locator_value"));
+	}
+	
+	/**
+	 * This method checks if element Enabled
+	 * @param map: Web Element
+	 * @return true if element visible, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean checkElementIsEnabled(String locType, String locValue) throws Exception
+	{
+		boolean enabled;
+		try {
+		   if(getDriver().findElement(byType(locType, locValue)).isEnabled())
+			   enabled = true;
+		   else enabled = false;
+		} catch (NoSuchElementException e) {
+			enabled = false;
+			e.printStackTrace();
+		}
+		return enabled;
+	}
+	
 	/**
 	 * This method checks if element exists
 	 * @param map: Web Element
@@ -624,27 +681,6 @@ public class GuiTools extends InitTools{
 		}
 		return present;
 	}
-	/**
-	 * This method checks if element Visible
-	 * @param map: Web Element
-	 * @return true if element visible, false if not
-	 * @throws Exception 
-	 * 
-	 */
-	public static boolean checkElementVisible(String locType, String locValue) throws Exception
-	{
-		boolean visible;
-		try {
-		   if(getDriver().findElement(byType(locType, locValue)).isDisplayed())
-		   visible = true;
-		   else visible = false;
-		} catch (NoSuchElementException e) {
-			visible = false;
-			e.printStackTrace();
-		   
-		}
-		return visible;
-	}
 	
 	/**
 	 * This method Enter text into a text field
@@ -655,7 +691,7 @@ public class GuiTools extends InitTools{
 	 */
 	public static void enterText(LinkedHashMap<String, String> map, String value) throws Exception
 	{
-		printLog("Enter text for  "+ map.get("field_name"));
+		printLog("Enter text for "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
 		if (!elementExists(locType, locValue))
@@ -676,7 +712,53 @@ public class GuiTools extends InitTools{
 			try
 			{
 			element.sendKeys(value);
-			element.sendKeys(Keys.UP);
+			//element.sendKeys(Keys.UP);
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("element.sendKeys(value);");
+		}
+		System.out.println(value + " entred");
+	}
+	/**
+	 * This method Enter text into a text field
+	 * @param map: Web Element
+	 * @param value: value to put in the text field
+	 * @throws Exception 
+	 * 
+	 */
+	public static void enterTextTextArea(LinkedHashMap<String, String> map, String value) throws Exception
+	{
+		printLog("Enter text for "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			testCaseStatus = false;
+			failTestCase("Enter "+ map.get("field_name"), "Element exists", 
+					"Element not found", "Step", "fail", map.get("field_name")+" not found");
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
+			try
+			{
+				JavascriptExecutor jse = (JavascriptExecutor)driver;
+				jse.executeScript("arguments[0].value='"+value+"';", element);
+			/*element.sendKeys(Keys.TAB);
+			element.clear();
+			element.sendKeys(value);
+			holdSeconds(1);
+			element.sendKeys(Keys.TAB);
+			element.clear();
+			element.sendKeys(value);*/
 			}catch (Exception e)
 			{
 				e.printStackTrace();
@@ -758,7 +840,7 @@ public class GuiTools extends InitTools{
 			{
 			    if(e.isDisplayed()) element = e;
 			}
-			//clickElement(map);
+			element.click();
 			element.clear();
 			//System.out.println("element.clear();");
 			/*element.sendKeys(Keys.CONTROL + "a");
@@ -895,6 +977,78 @@ public class GuiTools extends InitTools{
 		}
 	}
 	
+	
+	/**
+	 * This method double clicks on element
+	 * @param map: Web Element
+	 * @throws Exception 
+	 * 
+	 */
+	public static void doubleClickElementJs(HashMap<String, String> map) throws Exception
+	{
+		printLog("Click  on  element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		if (elementExists(locType, locValue))
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isEnabled()) 
+			    	{
+			    		element = e;
+			    	}
+			}
+			try{
+			JavascriptExecutor executor = (JavascriptExecutor)driver;
+			executor.executeScript("arguments[0].click();", element);
+			executor.executeScript("arguments[0].click();", element);
+			}catch(Exception e){e.printStackTrace();}
+			
+		}else
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}
+	}
+	/**
+	 * This method clicks on element
+	 * @param map: Web Element
+	 * @throws Exception 
+	*/
+	public static void clickElement(HashMap<String, String> map) throws Exception
+	{
+		printLog("Click on element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on Gui");
+			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+			    if(e.isDisplayed()) element = e;
+			}
+			try{
+				highlightElement(map, "red");
+				element.sendKeys(Keys.ENTER);
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
 	/**
 	 * This method clicks on niem element
 	 * @param map, Web Element
@@ -938,7 +1092,7 @@ public class GuiTools extends InitTools{
 	/**
 	 * This method enter file name into file type input
 	 * @param map: Web Element
-	 * @param file, the file name to be entred 
+	 * @param file, the file name to be entered 
 	 * @throws Exception 
 	 * 
 	 */
@@ -984,33 +1138,6 @@ public class GuiTools extends InitTools{
 	# send file:
 	file_input.send_keys("C:\\Users\\nicolas\\Documents\\CT\\Séance_du_Lundi_15_février.pdf")*/
 	
-	/**
-	 * This method clicks on element
-	 * @param map: Web Element
-	 * @throws Exception 
-	*/
-	public static void clickElement(HashMap<String, String> map) throws Exception
-	{
-		printLog("Click on element "+ map.get("field_name"));
-		String locType = map.get("locator_type");
-		String locValue = map.get("locator_value");
-		if (!elementExists(locType, locValue))
-		{
-			printLog("Element "+ map.get("field_name")+" was "
-					+ "not found on Gui");
-			failTestCase("Clicking element " + map.get("field_name"), map.get("field_name") + " wasn't found",
-					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
-		}else
-		{
-			WebElement element = null;
-			List<WebElement> items = driver.findElements(byType(locType, locValue));
-			for(WebElement e: items)
-			{
-			    if(e.isDisplayed()) element = e;
-			}
-			element.sendKeys("\n");
-		}
-	}
 	
 
 	/**
@@ -1345,6 +1472,7 @@ public class GuiTools extends InitTools{
 	public static void scrollByPixel(int pixels)
 	{
 		JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+		scrollToTheTopOfPage();
 		executor.executeScript("window.scrollBy(0,"+pixels+")");
 	}
 	
@@ -1772,6 +1900,51 @@ public class GuiTools extends InitTools{
 		}
 		return null;
 	}
+	
+	
+	
+	/**
+	 * This method gets NIEM element attribute
+	 * @param map, gui element
+	 * @param attribute, Element's HTML property
+	 * @throws Exception
+	 */
+	public static String getNiemElementAttribute(HashMap<String, String> map, 
+											 String attribute, int niem) throws Exception
+	{
+		printLog("Get the "+attribute+" of the element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		int index = 0;
+		if (!elementExists(locType, locValue))
+		{
+			printLog("Element "+ map.get("field_name")+" was "
+					+ "not found on GUI");
+			failTestCase("Get attribute element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
+		}else
+		{
+			WebElement element = driver.findElement(byType(locType, locValue));
+			List<WebElement> items = driver.findElements(byType(locType, locValue));
+			for(WebElement e: items)
+			{
+				index++;
+			    if(e.isDisplayed()) 
+		    	{
+		    		element = e;
+		    		if (index == niem) break;
+		    	}
+			}
+			if ("text".equalsIgnoreCase(attribute))
+			return element.getText();
+			else
+			return element.getAttribute(attribute);
+		}
+		return null;
+	}
+	
+	
+	
 	/**
 	 * This method switch to web alert
 	 */

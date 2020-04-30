@@ -79,14 +79,15 @@ public class ExporterLib{
 	{
 		String type = row.get("Content_Type");
 		String timeStamp = "_"+ new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss").format(new Date());
-		String name = type+timeStamp;
+		String name = "Aut_"+type+"_"+timeStamp;
+		System.out.println("dd");
 		boolean created = true;
 		int currentWait = setBrowserTimeOut(3);
 		if(!elementExists(guiMap.get("ContentMenu")))
 		{
 			clickElementJs(guiMap.get("MainMenu"));
 		}
-		clickElementJs(guiMap.get("ContentMenu"));
+		clickNiemElementJs(guiMap.get("ContentMenu"), 1);
 		clickElementJs(guiMap.get("AddContentButton"));
 		clickElementJs(replaceGui(guiMap.get("ContentType"),type));
 		if(elementExists(guiMap.get("ContentName")))
@@ -110,7 +111,7 @@ public class ExporterLib{
 		}
 		if(!"N/A".equalsIgnoreCase(row.get("Content_Title")) && !"".equalsIgnoreCase(row.get("Content_Title")))
 		{
-			enterText(guiMap.get("ContentTitle"), row.get("Content_Title")+timeStamp);
+			enterText(guiMap.get("ContentTitle"), "_"+row.get("Content_Title")+timeStamp);
 		}
 		if(!"N/A".equalsIgnoreCase(row.get("Trade_Lead_Title")) && !"".equalsIgnoreCase(row.get("Trade_Lead_Title")))
 		{
@@ -207,34 +208,27 @@ public class ExporterLib{
 		boolean loginStatus = true;
 		navigateTo(url);
 		int currentWait = setBrowserTimeOut(2);
-		if(!checkElementExists(guiMap.get("UserName")))
+		if(checkElementExists(guiMap.get("LogOut")))
 		{
-			setBrowserTimeOut(currentWait);
+			clickElement(guiMap.get("LogOut"));
+			navigateTo(url);
+		}
+		setBrowserTimeOut(currentWait);
+		enterTextAndClear(guiMap.get("UserName"), user);
+		enterTextAndClear(guiMap.get("Password"), password);
+		clickElementJs(guiMap.get("SubmitButton"));
+		if(! checkElementExists(guiMap.get("HomePage")))
+		{
+			failTestSuite("Login to Exporter portal with user "+user, 
+					"User is able to login", 
+				"Not as expected", "Step", "fail", "Login failed");
+			loginStatus = false;
+		}else
+		{
 			highlightElement(guiMap.get("HomePage"), "green");
 			updateHtmlReport("Login to Exporter portal with user "+user,  "User is able to login", "As expected", 
 					"Step", "pass", "Login to exporter");
-			return true;
-		}else
-		{
-			setBrowserTimeOut(currentWait);
-			enterTextAndClear(guiMap.get("UserName"), user);
-			enterTextAndClear(guiMap.get("Password"), password);
-			clickElementJs(guiMap.get("SubmitButton"));
-			if(! checkElementExists(guiMap.get("HomePage")))
-			{
-				failTestSuite("Login to Exporter portal with user "+user, 
-						"User is able to login", 
-					"Not as expected", "Step", "fail", "Login failed");
-				loginStatus = false;
-			}else
-			{
-				highlightElement(guiMap.get("HomePage"), "green");
-				updateHtmlReport("Login to Exporter portal with user "+user,  "User is able to login", "As expected", 
-						"Step", "pass", "Login to exporter");
-			}
 		}
-		
-		
 		return loginStatus;
 	}
 	/**
