@@ -79,10 +79,10 @@ public class ExporterLib{
 	{
 		String type = row.get("Content_Type");
 		String timeStamp = "_"+ new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss").format(new Date());
-		String name = "Aut_"+type+"_"+timeStamp;
+		String internalTitle = "Aut_"+type+"_"+timeStamp;
 		System.out.println("dd");
 		boolean created = true;
-		int currentWait = setBrowserTimeOut(3);
+		int currentWait = setBrowserTimeOut(2);
 		if(!elementExists(guiMap.get("ContentMenu")))
 		{
 			clickElementJs(guiMap.get("MainMenu"));
@@ -92,13 +92,21 @@ public class ExporterLib{
 		clickElementJs(replaceGui(guiMap.get("ContentType"),type));
 		if(elementExists(guiMap.get("ContentName")))
 		{
-			enterText(guiMap.get("ContentName") ,name);
+			enterText(guiMap.get("ContentName") ,internalTitle);
 		}
+		if(!"N/A".equalsIgnoreCase(row.get("World_Region")))
+		{
+			selectElementByText(guiMap.get("tradeRegion"), row.get("World_Region"));
+		}
+		if(elementExists(guiMap.get("Industries")))
+		{
+			selectElementByText(guiMap.get("Industries"), "Industries");
+		}
+		
 		if(!"N/A".equalsIgnoreCase(row.get("Content_Public_Title")) && !"".equalsIgnoreCase(row.get("Content_Public_Title")))
 		{
 			enterText(guiMap.get("ContentPublicTitle"), row.get("Content_Public_Title"));
 		}
-		
 		if("Yes".equalsIgnoreCase(row.get("ITA_Employee")))
 		{
 			clickElementJs(guiMap.get("ITAEmployeeCheckBox"));
@@ -111,7 +119,7 @@ public class ExporterLib{
 		}
 		if(!"N/A".equalsIgnoreCase(row.get("Content_Title")) && !"".equalsIgnoreCase(row.get("Content_Title")))
 		{
-			enterText(guiMap.get("ContentTitle"), "_"+row.get("Content_Title")+timeStamp);
+			enterText(guiMap.get("ContentTitle"), internalTitle);
 		}
 		if(!"N/A".equalsIgnoreCase(row.get("Trade_Lead_Title")) && !"".equalsIgnoreCase(row.get("Trade_Lead_Title")))
 		{
