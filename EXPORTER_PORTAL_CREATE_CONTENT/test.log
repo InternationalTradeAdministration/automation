@@ -1,0 +1,292 @@
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+dataPoolPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data/datapool/Exporter_Regression.xlsx
+{Id=1.0, Test_Case_Name=Create_Content_Biography, Test_Case_Tag=TC_TAG_001, Test_Case_Description=Create 'Biograph' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=Yes, Content_Category=ITA Partner, Content_Title=Internal Biography, Content_Public_Title=Feature Article Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=2222, Content_Media=Yes, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=2.0, Test_Case_Name=Create_Content_Feature_Article, Test_Case_Tag=TC_TAG_002, Test_Case_Description=Create 'Feature Article' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Feature Article, Content_Public_Title=How To Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=3.0, Test_Case_Name=Create_Content_How_To, Test_Case_Tag=TC_TAG_003, Test_Case_Description=Create 'How-To' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal How To, Content_Public_Title=Image Library Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=4.0, Test_Case_Name=Create_Content_Image_Library, Test_Case_Tag=TC_TAG_004, Test_Case_Description=Create 'Image Library' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal  Image Library, Content_Public_Title=Internship Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=5.0, Test_Case_Name=Create_Content_Internship, Test_Case_Tag=TC_TAG_005, Test_Case_Description=Create 'Internship' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Internship, Content_Public_Title=Knowledge Product Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=N/A, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=6.0, Test_Case_Name=Create_Content_Knowledge_Product, Test_Case_Tag=TC_TAG_006, Test_Case_Description=Create 'Knowledge Product' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Title of Knowledge Product, Content_Public_Title=New Blog Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=N/A, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=7.0, Test_Case_Name=Create_Content_News_Blog, Test_Case_Tag=TC_TAG_007, Test_Case_Description=Create 'News Blog' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Title of New Blog, Content_Public_Title=office Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=8.0, Test_Case_Name=Create_Content_Office, Test_Case_Tag=TC_TAG_008, Test_Case_Description=Create 'Office' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal office, Content_Public_Title=Press Release Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=9.0, Test_Case_Name=Create_Content_Press_Release, Test_Case_Tag=TC_TAG_009, Test_Case_Description=Create 'Press Release' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal  Press Release, Content_Public_Title=serie aggregator Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=10.0, Test_Case_Name=Create_Content_Series_Aggregator, Test_Case_Tag=TC_TAG_010, Test_Case_Description=Create 'Series Aggregator' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=Blog, Content_Title=Internal Series Aggregator, Content_Public_Title=Service Offering Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=11.0, Test_Case_Name=Create_Content_Service_Offering, Test_Case_Tag=TC_TAG_011, Test_Case_Description=Create 'Service Offering' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Service Offering, Content_Public_Title=Success Story Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=12.0, Test_Case_Name=Create_Content_Success_Story, Test_Case_Tag=TC_TAG_012, Test_Case_Description=Create 'Success Story' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Success Story, Content_Public_Title=sub topic Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=13.0, Test_Case_Name=Create_Content_Sub_topic_Page, Test_Case_Tag=TC_TAG_013, Test_Case_Description=Create 'Sub-topic Page' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Sub-topic page, Content_Public_Title=Trade Lead Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=14.0, Test_Case_Name=Create_Content_Trade_Lead, Test_Case_Tag=TC_TAG_014, Test_Case_Description=Create 'Trade Lead' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Trade Lead, Content_Public_Title=Video Library Test - Public, Trade_Lead_Title=Trade Lead Title, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=N/A, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=15.0, Test_Case_Name=Create_Content_Video_Library, Test_Case_Tag=TC_TAG_015, Test_Case_Description=Create 'Video Library' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Video Library, Content_Public_Title=About Us Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=16.0, Test_Case_Name=Create_Content_About_Us, Test_Case_Tag=TC_TAG_016, Test_Case_Description=Create 'About Us' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=Yes, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal About Us, Content_Public_Title=Section Landing Page - S1 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=N/A, Content_Summary=SUMMARY TEST, Content_Body=BODY TEST, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=17.0, Test_Case_Name=Create_Section_Landing_Page_S1, Test_Case_Tag=TC_TAG_017, Test_Case_Description=Create 'Section Landing Page - S1' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S1, Content_Public_Title=Section Landing Page - S2 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=18.0, Test_Case_Name=Create_Section_Landing_Page_S2, Test_Case_Tag=TC_TAG_018, Test_Case_Description=Create 'Section Landing Page - S2' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S2, Content_Public_Title=Section Landing Page - S3 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=19.0, Test_Case_Name=Create_Section_Landing_Page_S3, Test_Case_Tag=TC_TAG_019, Test_Case_Description=Create 'Section Landing Page - S3' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S3, Content_Public_Title=Section Landing Page - S4 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=20.0, Test_Case_Name=Create_Section_Landing_Page_S4, Test_Case_Tag=TC_TAG_020, Test_Case_Description=Create 'Section Landing Page - S4' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S4, Content_Public_Title=Section Landing Page - S5 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=21.0, Test_Case_Name=Create_Section_Landing_Page_S5, Test_Case_Tag=TC_TAG_021, Test_Case_Description=Create 'Section Landing Page - S5' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S5, Content_Public_Title=Section Landing Page - S6 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=22.0, Test_Case_Name=Create_Section_Landing_Page_S6, Test_Case_Tag=TC_TAG_022, Test_Case_Description=Create 'Section Landing Page - S6' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S6, Content_Public_Title=Section Landing Page - S7 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=23.0, Test_Case_Name=Create_Section_Landing_Page_S7, Test_Case_Tag=TC_TAG_023, Test_Case_Description=Create 'Section Landing Page - S7' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S7, Content_Public_Title=Section Landing Page - S8 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=24.0, Test_Case_Name=Create_Section_Landing_Page_S8, Test_Case_Tag=TC_TAG_024, Test_Case_Description=Create 'Section Landing Page - S8' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S8, Content_Public_Title=Section Landing Page - S9 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=25.0, Test_Case_Name=Create_Section_Landing_Page_S9, Test_Case_Tag=TC_TAG_025, Test_Case_Description=Create 'Section Landing Page - S9' content, Cmsmanager=Yes, Publisher=Yes, Editor=No, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Section Landing Page - S9, Content_Public_Title=Topic Landing Page - T1 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=26.0, Test_Case_Name=Create_Topic_Landing_Page_T1, Test_Case_Tag=TC_TAG_026, Test_Case_Description=Create 'Topic Landing Page - T1' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T1, Content_Public_Title=Topic Landing Page - T2 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=27.0, Test_Case_Name=Create_Topic_Landing_Page_T2, Test_Case_Tag=TC_TAG_027, Test_Case_Description=Create 'Topic Landing Page - T2' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T2, Content_Public_Title=Topic Landing Page - T3 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=28.0, Test_Case_Name=Create_Topic_Landing_Page_T3, Test_Case_Tag=TC_TAG_028, Test_Case_Description=Create 'Topic Landing Page - T3' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T3, Content_Public_Title=Topic Landing Page - T4 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=29.0, Test_Case_Name=Create_Topic_Landing_Page_T4, Test_Case_Tag=TC_TAG_029, Test_Case_Description=Create 'Topic Landing Page - T4' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T4, Content_Public_Title=Topic Landing Page - T5 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=30.0, Test_Case_Name=Create_Topic_Landing_Page_T5, Test_Case_Tag=TC_TAG_030, Test_Case_Description=Create 'Topic Landing Page - T5' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T5, Content_Public_Title=Topic Landing Page - T6 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=31.0, Test_Case_Name=Create_Topic_Landing_Page_T6, Test_Case_Tag=TC_TAG_031, Test_Case_Description=Create 'Topic Landing Page - T6' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T6, Content_Public_Title=Topic Landing Page - T7 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=32.0, Test_Case_Name=Create_Topic_Landing_Page_T7, Test_Case_Tag=TC_TAG_032, Test_Case_Description=Create 'Topic Landing Page - T7' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T7, Content_Public_Title=Topic Landing Page - T8 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=33.0, Test_Case_Name=Create_Topic_Landing_Page_T8, Test_Case_Tag=TC_TAG_033, Test_Case_Description=Create 'Topic Landing Page - T8' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T8, Content_Public_Title=Topic Landing Page - T9 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=34.0, Test_Case_Name=Create_Topic_Landing_Page_T9, Test_Case_Tag=TC_TAG_034, Test_Case_Description=Create 'Topic Landing Page - T9' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T9, Content_Public_Title=Topic Landing Page - T10 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=35.0, Test_Case_Name=Create_Topic_Landing_Page_T10, Test_Case_Tag=TC_TAG_035, Test_Case_Description=Create 'Topic Landing Page - T10' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T10, Content_Public_Title=Topic Landing Page - T11 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=36.0, Test_Case_Name=Create_Topic_Landing_Page_T11, Test_Case_Tag=TC_TAG_036, Test_Case_Description=Create 'Topic Landing Page - T11' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T11, Content_Public_Title=Topic Landing Page - T12 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=37.0, Test_Case_Name=Create_Topic_Landing_Page_T12, Test_Case_Tag=TC_TAG_037, Test_Case_Description=Create 'Topic Landing Page - T12' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T12, Content_Public_Title=Topic Landing Page - T14 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=38.0, Test_Case_Name=Create_Topic_Landing_Page_T14, Test_Case_Tag=TC_TAG_038, Test_Case_Description=Create 'Topic Landing Page - T14' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal Topic Landing Page - T14, Content_Public_Title=One-Off Landing Page - C5 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=test, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=37.0, Test_Case_Name=Create_One_Off_Landing_Page_C5, Test_Case_Tag=TC_TAG_039, Test_Case_Description=Create 'One-Off Landing Page - C5' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal One-Off Landing Page - C5, Content_Public_Title=One-Off Landing Page - C6 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=United States, Active=TRUE}
+{Id=38.0, Test_Case_Name=Create_One_Off_Landing_Page_C6, Test_Case_Tag=TC_TAG_040, Test_Case_Description=Create 'One-Off Landing Page - C6' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal One-Off Landing Page - C6, Content_Public_Title=One-Off Landing Page - C11 Test - Public, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+{Id=39.0, Test_Case_Name=Create_One_Off_Landing_Page_C11, Test_Case_Tag=TC_TAG_041, Test_Case_Description=Create 'One-Off Landing Page - C11' content, Cmsmanager=Yes, Publisher=Yes, Editor=Yes, Creator=No, ITA_Employee=No, Content_Category=N/A, Content_Title=Internal One-Off Landing Page - C11, Content_Public_Title=One-Off Landing Page - C11, Trade_Lead_Title=N/A, Content_Business_Office_Unit=N/A, Content_Media=Yes, Content_Summary=N/A, Content_Body=N/A, Page_Contributor=EC#GM-CS|Advocacy-Field|World-Bank, Save_As=Ready for Approval, World_Region=N/A, Active=TRUE}
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+testNgTemplate C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data/template/testng_template.xml
+testNgPath C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/testng.xml
+[TestNGContentHandler] [WARN] It is strongly recommended to add "<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >" at the top of your file, otherwise TestNG may fail or not work as expected.
+[TestNG] Running:
+  C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL\testng.xml
+
+Executing Before class
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+{field_name=Filed On Behalf Of ERROR, field_tag=FiledOnBehalfOfError, locator_type=xpath, locator_value=//span[text()='Filed On Behalf Of (collective entity)']/ancestor::tr[1]//textarea/following-sibling::span[1]}
+{field_name=User name, field_tag=UserName, locator_type=xpath, locator_value=//input[@id='edit-name']}
+{field_name=Pass word, field_tag=Password, locator_type=xpath, locator_value=//input[@id='edit-pass']}
+{field_name=Submit button, field_tag=SubmitButton, locator_type=xpath, locator_value=//button[@id='edit-submit']}
+{field_name=Home page, field_tag=HomePage, locator_type=xpath, locator_value=//img[@alt='International Trade Administration Logo']}
+{field_name=Content menu, field_tag=ContentMenu, locator_type=xpath, locator_value=//a[contains(., 'Content')]}
+{field_name=Add Content menu, field_tag=AddContentButton, locator_type=xpath, locator_value=//a[contains(., 'Add content')]}
+{field_name=Content Type, field_tag=ContentType, locator_type=xpath, locator_value=//span[.='~val~']}
+{field_name=Content text, field_tag=ContentText, locator_type=xpath, locator_value=//label[contains(., '~val~')]/following-sibling::input}
+{field_name=Content Name, field_tag=ContentName, locator_type=xpath, locator_value=//label[(contains(., 'Name')) and not (contains(., 'How To'))]/following-sibling::input}
+{field_name=media Name, field_tag=MediaName, locator_type=xpath, locator_value=//label[(contains(., 'Name')) or (contains(., 'Block Description')) and not (contains(., 'How To'))]/following-sibling::input}
+{field_name=Content Title, field_tag=ContentTitle, locator_type=xpath, locator_value=//label[(contains(., 'Title')) and not (contains(., 'Public'))]/following-sibling::input}
+{field_name=Content Public Title, field_tag=ContentPublicTitle, locator_type=xpath, locator_value=//label[contains(., 'Public Title')]/following-sibling::input}
+{field_name=Trade Lead Content, field_tag=TradeLeadContent, locator_type=xpath, locator_value=//label[contains(., 'Trade Lead Title')]/following-sibling::input}
+{field_name=ITA employee check box, field_tag=ITAEmployeeCheckBox, locator_type=xpath, locator_value=//input[contains(@id, 'edit-field-biography-ita-employee-value')]}
+{field_name=Select Type Category, field_tag=SelectTypeCategory, locator_type=xpath, locator_value=//select[(contains(@id, 'edit-field-biography-type-category') ) or (contains(@id, 'edit-field-news-blog-type-category') )]}
+{field_name=Select Media, field_tag=SelectMedia, locator_type=xpath, locator_value=//input[(@value='Select Image') or (@value='Select Video') or (@value='Select Block')]}
+{field_name=Select Page Contributor, field_tag=SelectPageContributor, locator_type=xpath, locator_value=//table[contains(@id,'field-ua-page-contributor-values')]//tr[~val~]//select[contains(@class, 'simpler-select form-select required simpler-select-root') or contains(@class, 'simpler-select form-select simpler-select-root')]}
+{field_name=Add another Item contributor, field_tag=AddAnotherItem, locator_type=xpath, locator_value=//h4[contains(., 'Page Contributor')]//ancestor::table[1]/following-sibling::div[1 or 2]//input[@value='Add another item']}
+{field_name=Save as, field_tag=SaveAs, locator_type=xpath, locator_value=//select[contains(@id, 'edit-moderation-state-0-state')]}
+{field_name=Button Preview, field_tag=ButtonPreview, locator_type=xpath, locator_value=//input[@id='edit-preview']}
+{field_name=Button Save, field_tag=ButtonSave, locator_type=xpath, locator_value=//input[@id='edit-submit']}
+{field_name=select media btn, field_tag=SelectAttachment, locator_type=xpath, locator_value=//input[(contains(@value, 'Select Image') ) or (contains(@value, 'Select Video')) or (contains(@value, 'Hero Banner'))]}
+{field_name=check media, field_tag=mediaCheckBox, locator_type=xpath, locator_value=//input[contains(@name, 'entity_browser_select[')]}
+{field_name=frame media, field_tag=iFrameMedia, locator_type=xpath, locator_value=//iframe[contains(@id, 'entity_browser') or contains(@id, 'entity-browser')]}
+{field_name=content created, field_tag=ContentCreated, locator_type=xpath, locator_value=//div[contains(., 'as been created.')]}
+{field_name=Main menu, field_tag=MainMenu, locator_type=xpath, locator_value=//a[@id='toolbar-item-administration']}
+{field_name=iframe summary, field_tag=iFrameSummary, locator_type=xpath, locator_value=//iframe[@title='Rich Text Editor, Summary field']}
+{field_name=iframe body, field_tag=iFrameBody, locator_type=xpath, locator_value=//iframe[@title='Rich Text Editor, Body field']}
+{field_name=summary filed, field_tag=summaryFiled, locator_type=xpath, locator_value=//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']}
+{field_name=body filed, field_tag=bodyField, locator_type=xpath, locator_value=//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']}
+{field_name=start and end dates, field_tag=valueDate, locator_type=xpath, locator_value=//input[contains(@id, 'value-date') ]}
+{field_name=log out, field_tag=LogOut, locator_type=xpath, locator_value=//ul[@class='header__dropdown']//a[(.='Log out')]}
+{field_name=trade region, field_tag=tradeRegion, locator_type=xpath, locator_value=//select[contains(@id, 'trade-region')]}
+{field_name=industries, field_tag=Industries, locator_type=xpath, locator_value=//table[@id='field-lp-industry-values']//select[@class='simpler-select form-select required simpler-select-root']}
+beforeMethod()
+beforeMethod()
+Create_Content_Biography
+Create_Content_Biography
+start Test
+https://ita-testing.mobomo.net/user/login___Creator3
+Creating Process...
+Creating Process...
+"chromedriver.exe","33852","Console","1","9,552 K","Unknown","DESKTOP-P47OH58\Mouloud Hamdidouche","0:00:13","N/A"
+33852
+userDir C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL
+this a windows machine
+C:/libs
+Click on element log out
+highlight log out
+log out highlighted 
+Enter text for  User name
+element.sendKeys(value);
+Creator3 entred
+Enter text for  Pass word
+element.sendKeys(value);
+Hamdidouche@14 entred
+Click  on  element Submit button
+highlight Home page
+Home page highlighted 
+dd
+Click  on  element Content menu
+Click  on  element Add Content menu
+Click  on  element Content Type
+Enter text for Content Name
+element.sendKeys(value);
+Aut_Biography__2020-05-04-14.15.03 entred
+Enter text for Content Public Title
+element.sendKeys(value);
+Feature Article Test - Public entred
+Click  on  element ITA employee check box
+Enter text for Content text
+element.sendKeys(value);
+2222 entred
+Enter text for Content Title
+element.sendKeys(value);
+Aut_Biography__2020-05-04-14.15.03 entred
+Click  on  element select media btn
+switch to frame  frame media
+Enter text for media Name
+element.sendKeys(value);
+Internal Biography entred
+Click  on  element check media
+Click  on  element Select Media
+switch to frame  iframe summary
+Enter text for summary filed
+element.sendKeys(value);
+SUMMARY TEST entred
+switch to frame  iframe body
+Enter text for body filed
+element.sendKeys(value);
+BODY TEST entred
+select EC from element Select Page Contributor
+EC selected
+Click on element Add another Item contributor
+highlight Add another Item contributor
+Add another Item contributor highlighted 
+select GM-CS from element Select Page Contributor
+GM-CS selected
+select Advocacy-Field from element Select Page Contributor
+Advocacy-Field selected
+select World-Bank from element Select Page Contributor
+World-Bank selected
+Click on element Add another Item contributor
+highlight Add another Item contributor
+Add another Item contributor highlighted 
+select GM-CS from element Select Page Contributor
+GM-CS selected
+select Advocacy-Field from element Select Page Contributor
+Advocacy-Field selected
+select World-Bank from element Select Page Contributor
+World-Bank selected
+select Ready for Approval from element Save as
+Ready for Approval selected
+Click  on  element Button Save
+highlight content created
+content created highlighted 
+afterMethod()
+Create_Content_Biography
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+beforeMethod()
+beforeMethod()
+Create_Content_Feature_Article
+Create_Content_Feature_Article
+start Test
+https://ita-testing.mobomo.net/user/login___Creator3
+dd
+Click  on  element Content menu
+Click  on  element Add Content menu
+Click  on  element Content Type
+Enter text for Content Public Title
+element.sendKeys(value);
+How To Test - Public entred
+Enter text for Content Title
+element.sendKeys(value);
+Aut_Feature Article__2020-05-04-14.15.41 entred
+switch to frame  iframe summary
+Enter text for summary filed
+element.sendKeys(value);
+SUMMARY TEST entred
+switch to frame  iframe body
+Enter text for body filed
+element.sendKeys(value);
+BODY TEST entred
+select EC from element Select Page Contributor
+EC selected
+Click on element Add another Item contributor
+highlight Add another Item contributor
+Add another Item contributor highlighted 
+select GM-CS from element Select Page Contributor
+GM-CS selected
+select Advocacy-Field from element Select Page Contributor
+Advocacy-Field selected
+select World-Bank from element Select Page Contributor
+World-Bank selected
+select Ready for Approval from element Save as
+Ready for Approval selected
+Click  on  element Button Save
+highlight content created
+content created highlighted 
+afterMethod()
+Create_Content_Feature_Article
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+beforeMethod()
+beforeMethod()
+Create_Content_How_To
+Create_Content_How_To
+start Test
+https://ita-testing.mobomo.net/user/login___Creator3
+dd
+Click  on  element Content menu
+Click  on  element Add Content menu
+Click  on  element Content Type
+Enter text for Content Public Title
+element.sendKeys(value);
+Image Library Test - Public entred
+Enter text for Content Title
+element.sendKeys(value);
+Aut_How-To__2020-05-04-14.16.08 entred
+switch to frame  iframe summary
+Enter text for summary filed
+element.sendKeys(value);
+SUMMARY TEST entred
+switch to frame  iframe body
+frame iframe body was not found on Gui
+afterMethod()
+Create_Content_How_To
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+beforeMethod()
+beforeMethod()
+Create_Content_Image_Library
+Create_Content_Image_Library
+start Test
+https://ita-testing.mobomo.net/user/login___Creator3
+dd
+Click  on  element Content menu
+Click  on  element Add Content menu
+Click  on  element Content Type
+Enter text for Content Public Title
+element.sendKeys(value);
+Internship Test - Public entred
+Enter text for Content Title
+element.sendKeys(value);
+Aut_Image Library__2020-05-04-14.16.48 entred
+Click  on  element select media btn
+switch to frame  frame media
+Enter text for media Name
+element.sendKeys(value);
+Internal  Image Library entred
+Click  on  element check media
+Click  on  element Select Media
+select EC from element Select Page Contributor
+EC selected
+Click on element Add another Item contributor
+highlight Add another Item contributor
+Add another Item contributor highlighted 
+select GM-CS from element Select Page Contributor
+GM-CS selected
+select Advocacy-Field from element Select Page Contributor
+Advocacy-Field selected
+select World-Bank from element Select Page Contributor
+World-Bank selected
+select Ready for Approval from element Save as
+Ready for Approval selected
+Click  on  element Button Save
+highlight content created
+content created highlighted 
+afterMethod()
+Create_Content_Image_Library
+C:\Users\Mouloud Hamdidouche\Desktop\eclipse\SeleniumProjects\EXPORTER_PORTAL/input_data
+beforeMethod()
+beforeMethod()
+Create_Content_Internship
+Create_Content_Internship
+start Test
+https://ita-testing.mobomo.net/user/login___Creator3
+dd
+Click  on  element Content menu
+Click  on  element Add Content menu
+Click  on  element Content Type
