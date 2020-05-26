@@ -1,0 +1,9 @@
+project_name = FTZ-Submit Zone-Garantee Form
+env_name = Testing
+time_out = 15
+url = https://ftzappservice.azurewebsites.net/
+user_name = testdeployment2019@gmail.com
+password = Test123!
+#give browser type= ie, firefox or chrome
+browser_type = chrome
+data_pool_sheet = Exclusion_Conditions.xlsx
