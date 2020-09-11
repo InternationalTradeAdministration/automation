@@ -204,11 +204,20 @@ public class XlsxTools {
 	{
 		ArrayList<LinkedHashMap<String, String>> outputArrayList = 
 					new ArrayList<LinkedHashMap<String, String>>();
-		String [] filters = filterWith.split("=");
-		
+		String [] filters = filterWith.split(";");
+		boolean comply = true;
 		for(int i = 0; i< inputArrayList.size(); i++)
 		{
-			if(filters[1].equalsIgnoreCase(inputArrayList.get(i).get(filters[0])))
+			comply = true;
+			for(int k = 0; k < filters.length; k++)
+			{
+				String [] filter = filters[k].split("=");
+				if(!filter[1].equalsIgnoreCase(inputArrayList.get(i).get(filter[0])))
+				{
+					comply = false;
+				}
+			}
+			if(comply)
 			{
 				outputArrayList.add(inputArrayList.get(i));
 			}

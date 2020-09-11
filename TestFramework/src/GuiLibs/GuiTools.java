@@ -5,6 +5,7 @@
 */
 package GuiLibs;
 import static ReportLibs.ReportTools.printLog;
+
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -21,7 +22,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FileUtils;
 import org.monte.screenrecorder.ScreenRecorder;
 import org.openqa.selenium.Alert;
@@ -38,13 +41,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+
 import InitLibs.InitTools;
 import ReportLibs.HtmlReport;
 import ru.yandex.qatools.ashot.AShot;
@@ -721,6 +723,8 @@ public class GuiTools extends InitTools{
 		}
 		System.out.println(value + " entred");
 	}
+	
+	
 	/**
 	 * This method Enter text into a text field
 	 * @param map: Web Element
@@ -752,13 +756,6 @@ public class GuiTools extends InitTools{
 			{
 				JavascriptExecutor jse = (JavascriptExecutor)driver;
 				jse.executeScript("arguments[0].value='"+value+"';", element);
-			/*element.sendKeys(Keys.TAB);
-			element.clear();
-			element.sendKeys(value);
-			holdSeconds(1);
-			element.sendKeys(Keys.TAB);
-			element.clear();
-			element.sendKeys(value);*/
 			}catch (Exception e)
 			{
 				e.printStackTrace();
@@ -774,7 +771,6 @@ public class GuiTools extends InitTools{
 	 * @param value: value to put in the text field
 	 * @param niem: the niem element
 	 * @throws Exception 
-	 * 
 	 */
 	public static void enterText(LinkedHashMap<String, String> map, String value, int niem) throws Exception
 	{
@@ -842,12 +838,6 @@ public class GuiTools extends InitTools{
 			}
 			element.click();
 			element.clear();
-			//System.out.println("element.clear();");
-			/*element.sendKeys(Keys.CONTROL + "a");
-			System.out.println("element.sendKeys(Keys.CONTROL + );");
-			element.sendKeys(Keys.DELETE);
-			System.out.println("element.sendKeys(Keys.DELETE);");
-			holdSeconds(1);*/
 			try
 			{
 				element.sendKeys(value);
@@ -908,6 +898,42 @@ public class GuiTools extends InitTools{
 		}
 		return present;
 	}
+	
+	
+	/**
+	 * This method checks if element enabled
+	 * @param map: Web element
+	 * @return true if element enabled, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean elementEnabled(HashMap<String, String> map) throws Exception
+	{
+		return elementEnabled(map.get("locator_type"), map.get("locator_value"));
+	}
+	
+	/**
+	 * This method verifies if element enabled
+	 * @param locType: The type of locator
+	 * @param locValue: the value of locator
+	 * @return true if element enabled, false if not
+	 * @throws Exception 
+	 * 
+	 */
+	public static boolean elementEnabled(String locType, String locValue) throws Exception
+	{
+		WebElement element = driver.findElement(byType(locType, locValue));
+	    if(element.isEnabled()) 
+    	{
+    		return true;
+    	}else
+    	{
+    		return false;
+    	}
+	}
+	
+	
+	
 	/**
 	 * This method sets attribute value of element
 	 * @param map: Web Element
@@ -976,6 +1002,9 @@ public class GuiTools extends InitTools{
 					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
 		}
 	}
+	
+	
+	
 	
 	
 	/**
@@ -1662,7 +1691,7 @@ public class GuiTools extends InitTools{
 				}
 				JavascriptExecutor executor = (JavascriptExecutor)getDriver();
 				executor.executeScript("arguments[0].setAttribute('style', 'border:"
-						+ " 2px dashed "+color+";');", element);
+						+ " 4px dashed "+color+";');", element);
 				printLog(map.get("field_name") + " highlighted ");
 			}catch (Exception e)
 			{
@@ -1871,35 +1900,122 @@ public class GuiTools extends InitTools{
 	 * @throws Exception
 	 */
 	public static String getElementAttribute(HashMap<String, String> map, 
-											 String attribute) throws Exception
+											 String attribute) 
 	{
+		String val;
 		printLog("Get the "+attribute+" of the element "+ map.get("field_name"));
 		String locType = map.get("locator_type");
 		String locValue = map.get("locator_value");
-		if (!elementExists(locType, locValue))
-		{
-			printLog("Element "+ map.get("field_name")+" was "
-					+ "not found on GUI");
-			failTestCase("Get attribute element " + map.get("field_name"), map.get("field_name") + " wasn't found",
-					"Not as expected", "VP", "fail", "Klicking element " + map.get("field_name"));
-		}else
-		{
-			WebElement element = driver.findElement(byType(locType, locValue));
-			List<WebElement> items = driver.findElements(byType(locType, locValue));
-			for(WebElement e: items)
+		try {
+			if (!elementExists(locType, locValue))
 			{
-			    if(e.isDisplayed()) 
-			    	{
-			    		element = e;
-			    	}
+				printLog("Element "+ map.get("field_name")+" was "
+						+ "not found on GUI");
+				failTestCase("Get attribute element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+						"Not as expected", "VP", "fail", "selecting element " + map.get("field_name"));
+			}else
+			{
+				try {
+				WebElement element = driver.findElement(byType(locType, locValue));
+				List<WebElement> items = driver.findElements(byType(locType, locValue));
+				for(WebElement e: items)
+				{
+				    if(e.isDisplayed()) 
+				    	{
+				    		element = e;
+				    	}
+				}
+				if ("text".equalsIgnoreCase(attribute))
+				{
+					return element.getText();
+				}
+				else
+				{
+					try {
+					holdMilliSeconds(200);
+					val = element.getAttribute(attribute);
+					return val;
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			if ("text".equalsIgnoreCase(attribute))
-			return element.getText();
-			else
-			return element.getAttribute(attribute);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}
+	
+	
+	
+	
+	/**
+	 * This method gets element list attribute
+	 * @param map, gui element
+	 * @param attribute, Element's HTML property
+	 * @throws Exception
+	 */
+	public static String[] getElementListAttribute(HashMap<String, String> map, 
+											 String attribute) 
+	{
+		String val = null;
+		int i=0;
+		String[] theList = null;
+		printLog("Get the "+attribute+" of the element "+ map.get("field_name"));
+		String locType = map.get("locator_type");
+		String locValue = map.get("locator_value");
+		try {
+			if (!elementExists(locType, locValue))
+			{
+				printLog("Element "+ map.get("field_name")+" was "
+						+ "not found on GUI");
+				failTestCase("Get attribute element " + map.get("field_name"), map.get("field_name") + " wasn't found",
+						"Not as expected", "VP", "fail", "selecting element " + map.get("field_name"));
+			}else
+			{
+				try {
+				WebElement element = driver.findElement(byType(locType, locValue));
+				List<WebElement> items = driver.findElements(byType(locType, locValue));
+				theList =new String[items.size()];
+				for(WebElement e: items)
+				{
+					if ("text".equalsIgnoreCase(attribute))
+					{
+						val =  e.getText();
+					}
+					else
+					{
+						try {
+						holdMilliSeconds(200);
+						val = e.getAttribute(attribute);
+						} catch (Exception ex) {
+							// TODO Auto-generated catch block
+							ex.printStackTrace();
+						}
+					}
+					theList[i] = val;
+					i++;
+				}
+				
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return theList;
+	}
+	
+	
 	
 	
 	

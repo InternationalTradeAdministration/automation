@@ -67,6 +67,7 @@ public class APITools {
 		"&username=" + userName +
 		"&password=" + password;
 		System.out.print(loginURL);
+		userName = "mouloud.hamdidouche@trade.gov.cops";
 		httpPost = new HttpPost();
 		httpPost = new HttpPost(loginURL);
 		HttpResponse response = null;
