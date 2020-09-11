@@ -130,7 +130,7 @@ public class TestOne {
 	*/
 	
 	 
-	 @Test(dataProvider = "fetchingData")
+	@Test(dataProvider = "fetchingData")
 	void validate(int i, LinkedHashMap<String, String> row) throws Exception
 	{
 		printLog("Validate_First_Name"); 	

@@ -6,29 +6,26 @@
 package libs;
 
 import static GuiLibs.GuiTools.checkElementExists;
+import static GuiLibs.GuiTools.clickElementJs;
+import static GuiLibs.GuiTools.elementExists;
+import static GuiLibs.GuiTools.enterText;
 import static GuiLibs.GuiTools.failTestSuite;
+import static GuiLibs.GuiTools.getElementAttribute;
 import static GuiLibs.GuiTools.guiMap;
 import static GuiLibs.GuiTools.highlightElement;
-import static GuiLibs.GuiTools.unHighlightElement;
 import static GuiLibs.GuiTools.holdSeconds;
 import static GuiLibs.GuiTools.navigateTo;
 import static GuiLibs.GuiTools.replaceGui;
-import static GuiLibs.GuiTools.setBrowserTimeOut;
-import static GuiLibs.GuiTools.updateHtmlReport;
-import static GuiLibs.GuiTools.clickElementJs;
-import static GuiLibs.GuiTools.enterText;
-import static GuiLibs.GuiTools.getElementAttribute;
-import static GuiLibs.GuiTools.elementExists;
-import static GuiLibs.GuiTools.holdSeconds;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import static GuiLibs.GuiTools.selectElementByText;
 import static GuiLibs.GuiTools.scrollToElement;
+import static GuiLibs.GuiTools.setBrowserTimeOut;
+import static GuiLibs.GuiTools.unHighlightElement;
+import static GuiLibs.GuiTools.updateHtmlReport;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+
 import javax.swing.JOptionPane;
 public class UserManagementLib{
 	public UserManagementLib() throws IOException {

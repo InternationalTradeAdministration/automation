@@ -52,6 +52,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import javax.swing.JOptionPane;
+
 import GuiLibs.GuiTools;
 import InitLibs.InitTools;
 import ReportLibs.HtmlReport;
@@ -129,9 +131,11 @@ public class ExporterLib{
 		if("Yes".equalsIgnoreCase(row.get("Content_Media")))
 		{
 			clickElementJs(guiMap.get("SelectAttachment"));
+			holdSeconds(4);
 			switchToFrame(guiMap.get("iFrameMedia"));
 			enterText(guiMap.get("MediaName"), 
 					row.get("Content_Title"));
+			System.out.println("");
 			//String originalHadle = switchToWindow();
 			clickNiemElementJs(guiMap.get("mediaCheckBox"), 1);
 			clickElementJs(guiMap.get("SelectMedia"));
@@ -315,7 +319,7 @@ public class ExporterLib{
 	
 	
 	/**
-	 * This method login to ADCVD web application
+	 * This method login to exporter portal web application
 	 * @param url: url for the application
 	 * @param user: user
 	 * @param password: password
@@ -330,9 +334,10 @@ public class ExporterLib{
 		int currentWait = setBrowserTimeOut(2);
 		if(checkElementExists(guiMap.get("LogOut")))
 		{
-			clickElement(guiMap.get("LogOut"));
+			clickElementJs(guiMap.get("LogOut"));
 			navigateTo(url);
 		}
+		
 		setBrowserTimeOut(currentWait);
 		enterTextAndClear(guiMap.get("UserName"), user);
 		enterTextAndClear(guiMap.get("Password"), password);

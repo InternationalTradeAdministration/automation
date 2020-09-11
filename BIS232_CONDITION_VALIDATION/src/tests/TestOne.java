@@ -65,22 +65,7 @@ public class TestOne {
 				XlsxTools.readXlsxSheetWithFirstColKey(conditionSheet, "Aluminum");
 		///
 		jsonFolder = InitTools.getInputDataFolder()+"/json_files";
-		/*jFile = new LinkedHashMap<String, String>();
-		File folder = new File(jsonFolder);
-		File[] listOfFiles = folder.listFiles();
-		for (File file : listOfFiles) {
-		    if (file.isFile() && file.getName().endsWith(".json")) {
-		    	jFile.put(file.getName(), file.getAbsolutePath());
-		    }
-		}*/
-	
-		///
 		scenarios = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "", "");
-		/*dataPoolStep1  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 1", "Active=TRUE");
-		dataPoolStep2  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 2", "Active=TRUE");
-		dataPoolStep3  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 3", "Active=TRUE");
-		dataPoolStep4  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 4", "Active=TRUE");
-		dataPoolStep5  = XlsxTools.readXlsxSheetInOrderAndFilter(dataPoolPath, "Step 5", "Active=TRUE");*/
 		String testNgPath = InitTools.getRootFolder()+"/testng.xml";
 		//build
 		suites.add(testNgPath);//path to xml..
@@ -152,24 +137,7 @@ public class TestOne {
 	@DataProvider(name = "fetchingData")
 	public static Object[][] fetchData() 
 	{
-		/*System.out.println("");
-		try{
-		JSONParser parser = new JSONParser();
-		}catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		*/
 		Object obj [][]= new  Object[scenarios.size()][4];
-		/*int i=0;
-		for (HashMap.Entry<String, String> entry : jFile.entrySet()) 
-		{
-			System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
-			obj[i][0] = entry.getKey();
-			obj[i][1] = entry.getValue();
-			i++;
-		}*/
-				
 		int i = 0;
 		for (HashMap<String, String> map : scenarios)
 		{

@@ -106,16 +106,16 @@ public class FTZFormLib{
 		return loginStatus;
 	}
 	/**
-	 * This method fills up step 1
-	 * @param row: map of test case's data
-	 * @return true if all displayed messages are correct, false if not
+	 * This method create new zone
+	 * @param row: map of test zone's data
+	 * @return true zone created properly, false if not
 	 * @exception Exception
 	*/
 	public static boolean submitFtzZone(HashMap<String, String> row) throws Exception
 	{
 		boolean newForm = true;
 		String elementName = "";
-		int currentWait = setBrowserTimeOut(3); 
+		int currentWait = setBrowserTimeOut(2); 
 		if(!checkElementExists(replaceGui(guiMap.get("inputField"), "Zone_ZoneNumber")))
 		{
 			clickElementJs(replaceGui(guiMap.get("TopMenu"), "Add New Zone") );
@@ -128,8 +128,8 @@ public class FTZFormLib{
 			if(elementName.equalsIgnoreCase("Forms") || elementName.equalsIgnoreCase("Active") )
 			{
 				continue;
-			}else if (elementName.equalsIgnoreCase("Zone_Status") || elementName.equalsIgnoreCase("Zone_PortOfEntry")||
-					elementName.equalsIgnoreCase("Zone_State") || elementName.equalsIgnoreCase("Zone_Grantee_State"))
+			}else if (elementName.equalsIgnoreCase("Zone_StatusId") || elementName.equalsIgnoreCase("Zone_PortOfEntryId")||
+					elementName.equalsIgnoreCase("Zone_StateId") || elementName.equalsIgnoreCase("Zone_Grantee_StateId"))
 			{
 				selectElementByText(replaceGui(guiMap.get("selectField"), elementName), entry.getValue());
 			}else if (elementName.equalsIgnoreCase("Email Address"))
@@ -147,18 +147,18 @@ public class FTZFormLib{
 	/*	holdSeconds(1);
 		Robot robot = new Robot(); 
 		robot.keyPress(KeyEvent.VK_ENTER);	*/
-		currentWait = setBrowserTimeOut(3); 
+		currentWait = setBrowserTimeOut(2); 
 		if(!checkElementExists(guiMap.get("CreateNewFormLabel")))
 		{
 			setBrowserTimeOut(currentWait);
-			updateHtmlReport("Submit new Case form",  "User is able to submit a Case form", "As expected", 
-				"Step", "pass", "create new Case form");
+			updateHtmlReport("Submit new Zone form",  "User is able to submit a new zone form", "As expected", 
+				"Step", "pass", "create new Case form - "+row.get("Forms"));
 		}else
 		{
 			newForm = false;
 			setBrowserTimeOut(currentWait);
-			updateHtmlReport("Submit new address form",  "User is able to submit a Case form", "Not as expected", 
-					"Step", "fail", "create new Case form");
+			updateHtmlReport("Submit new Zone form",  "User is able to submit a Case form", "Not as expected", 
+					"Step", "fail", "create new Case form - "+row.get("Forms"));
 		}
 		return newForm;
 	}

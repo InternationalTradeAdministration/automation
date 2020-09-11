@@ -1,0 +1,9 @@
+project_name = FTZ - Date Validation
+env_name = Testing-Staging
+time_out = 15
+url = https://itadev2-sharedappsvc01.eastus.cloudapp.azure.com/ftzwebapp
+user_name = testdeployment2019@gmail.com
+password = Test123!
+#give browser type= ie, firefox or chrome
+browser_type = chrome
+caseid = CRUD
